@@ -42,6 +42,28 @@ Creates a Gaussian process model based on the nature of the inputs which could b
              For functional inputs, the user might specify a projection method, projection dimension and distance type seeking
              for optimal processing time or metamodel predictability.
 }
+\examples{
+
+# generating input data
+n.tr <- 16
+sIn <- as.matrix(expand.grid(x1 = seq(0,1,length = sqrt(n.tr)), x2 = seq(0,1,length = sqrt(n.tr))))
+fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), matrix(runif(n.tr*22), ncol = 22))
+
+# generating output data
+sOut <- as.matrix(sapply(t(1:n.tr), function(i){
+  x1 <- sIn[i,1]
+  x2 <- sIn[i,2]
+  f1 <- fIn[[1]][i,]
+  f2 <- fIn[[2]][i,]
+  as.numeric(x1 * sin(x2) + x1 * mean(f1) - x2^2 * diff(range(f2)))
+}))
+
+# creating a funGp model
+m1 <- funGp(sIn = sIn, fIn = fIn, sOut = sOut)
+
+# plotting the model
+
+}
 \author{
 José Betancourt
 }
