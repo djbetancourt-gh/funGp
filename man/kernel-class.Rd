@@ -16,7 +16,9 @@ Fill this!!!!!!!!!
 
 \item{\code{varHyp}}{Object of class \code{"numeric"}. Estimated variance parameter.}
 
-\item{\code{lsHyps}}{Object of class \code{"numeric"}. Estimated length-scale parameters.}
+\item{\code{s_lsHyps}}{Object of class \code{"numeric"}. Estimated length-scale parameters for scalar inputs.}
+
+\item{\code{f_lsHyps}}{Object of class \code{"numeric"}. Estimated length-scale parameters for functional inputs.}
 }}
 
 \author{

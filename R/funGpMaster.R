@@ -120,6 +120,10 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
     varHyp <- hypers[1]
     lsHyps <- hypers[-1]
 
+    # fill funGpKern slots specific to the functional-input case
+    kern@s_lsHyps <- lsHyps[1:ds]
+    kern@f_lsHyps <- lsHyps[-c(1:ds)]
+
     # pre-commpute KttInv and KttInv.sOut matrices for prediction and add them to the model
     model@preMats <- preMats_SF(sMs, fMs, sOut, varHyp, lsHyps[1:ds], lsHyps[(ds+1):(ds+df)], kerType)
 
@@ -129,7 +133,7 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
     proj@basis <- basis
     proj@coefs <- fpIn
 
-    # fill funGpModel slots specific to the hybrid-input case
+    # fill funGp slots specific to the hybrid-input case
     model@ds <- ds
     model@df <- df
     model@fDims <- fDims
@@ -164,6 +168,9 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
     varHyp <- hypers[1]
     lsHyps <- hypers[-1]
 
+    # fill funGpKern slots specific to the functional-input case
+    kern@f_lsHyps <- lsHyps
+
     # pre-commpute KttInv and KttInv.sOut matrices for prediction and add them to the model
     model@preMats <- preMats_F(fMs, sOut, varHyp, lsHyps, kerType)
 
@@ -173,7 +180,7 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
     proj@basis <- basis
     proj@coefs <- fpIn
 
-    # fill funGpModel slots specific to the hybrid-input case
+    # fill funGp slots specific to the functional-input case
     model@ds <- 0
     model@df <- df
     model@fDims <- fDims
@@ -191,10 +198,13 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
     varHyp <- hypers[1]
     lsHyps <- hypers[-1]
 
+    # fill funGpKern slots specific to the scalar-input case
+    kern@s_lsHyps <- lsHyps
+
     # pre-commpute KttInv and KttInv.sOut matrices for prediction and add them to the model
     model@preMats <- preMats_S(sMs, sOut, varHyp, lsHyps, kerType)
 
-    # fill funGpModel slots specific to the hybrid-input case
+    # fill funGp slots specific to the scalar-input case
     model@ds <- ds
     model@df <- 0
     model@sIn <- sIn
@@ -207,7 +217,6 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
   kern@kerType <- kerType
   kern@disType <- disType
   kern@varHyp <- varHyp
-  kern@lsHyps <- lsHyps
 
   # fill general funGpModel slots
   model@call <- match.call()

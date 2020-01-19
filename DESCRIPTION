@@ -17,11 +17,10 @@ RoxygenNote: 7.0.2
 Collate: 
     'correlFunctions.R'
     'distanceMatrices.R'
-    'extraDoc.R'
     'funGpKern_Class.R'
     'funGpMaster.R'
     'funGpProj_Class.R'
-    'funGpModel_Class.R'
+    'funGp_Class.R'
     'prediction_F.R'
     'prediction_S.R'
     'prediction_SF.R'

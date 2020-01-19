@@ -98,9 +98,9 @@ predict.funGp <- function(object, sIn.pr = NULL, fIn.pr = NULL, detail = "light"
     fMs.pp <- setFunDistance(fpIn.pr, fpIn.pr, J)
 
     # make predictions based on the Gaussian Conditioning Theorem
-    preds <- makePreds_SF(sMs.tp, sMs.pp, fMs.tp, fMs.pp, object@kern@varHyp, object@kern@lsHyps[1:object@ds],
-                          object@kern@lsHyps[(object@ds+1):(object@ds+object@df)], object@kern@kerType,
-                          object@preMats$L, object@preMats$LInvY, detail)
+    preds <- makePreds_SF(sMs.tp, sMs.pp, fMs.tp, fMs.pp,
+                          object@kern@varHyp, object@kern@s_lsHyps, object@kern@f_lsHyps,
+                          object@kern@kerType, object@preMats$L, object@preMats$LInvY, detail)
 
   } else if (object@df > 0) {
     print("I'm functional!")
@@ -118,7 +118,7 @@ predict.funGp <- function(object, sIn.pr = NULL, fIn.pr = NULL, detail = "light"
     fMs.pp <- setFunDistance(fpIn.pr, fpIn.pr, J)
 
     # make predictions based on the Gaussian Conditioning Theorem
-    preds <- makePreds_F(fMs.tp, fMs.pp, object@kern@varHyp, object@kern@lsHyps, object@kern@kerType,
+    preds <- makePreds_F(fMs.tp, fMs.pp, object@kern@varHyp, object@kern@f_lsHyps, object@kern@kerType,
                          object@preMats$L, object@preMats$LInvY, detail)
 
   } else {
@@ -129,7 +129,7 @@ predict.funGp <- function(object, sIn.pr = NULL, fIn.pr = NULL, detail = "light"
     sMs.pp <- setScalDistance(sIn.pr, sIn.pr)
 
     # make predictions based on the Gaussian Conditioning Theorem
-    preds <- makePreds_S(sMs.tp, sMs.pp, object@kern@varHyp, object@kern@lsHyps, object@kern@kerType,
+    preds <- makePreds_S(sMs.tp, sMs.pp, object@kern@varHyp, object@kern@s_lsHyps, object@kern@kerType,
                          object@preMats$L, object@preMats$LInvY, detail)
   }
 
@@ -197,13 +197,15 @@ show.funGp <- function(object) {
   cat("\n* Hyperparameters:\n")
   cat(paste("  -> variance: ", format(object@kern@varHyp, digits = 4, nsmall = 4), "\n", sep = ""))
   cat("  -> length-scale:\n")
-  ls_s <- object@kern@lsHyps[1:object@ds]
-  for (i in 1:object@ds) {
-    cat(paste("\t ls(X", i, "): ", format(ls_s[i], digits = 4, nsmall = 4), "\n", sep = ""))
+  if (object@ds > 0) {
+    for (i in 1:object@ds) {
+      cat(paste("\t ls(X", i, "): ", format(object@kern@s_lsHyps[i], digits = 4, nsmall = 4), "\n", sep = ""))
+    }
   }
-  ls_f <- object@kern@lsHyps[-c(1:object@ds)]
-  for (i in 1:object@df) {
-    cat(paste("\t ls(F", i, "): ", format(ls_f[i], digits = 4, nsmall = 4), "\n", sep = ""))
+  if (object@df > 0) {
+    for (i in 1:object@df) {
+      cat(paste("\t ls(F", i, "): ", format(object@kern@f_lsHyps[i], digits = 4, nsmall = 4), "\n", sep = ""))
+    }
   }
   cat(paste(rep("_", max(30, (nchar(callTxt)))), collapse = ""))
 }
@@ -226,14 +228,16 @@ if(!isGeneric("getCoef")) {setGeneric(name = "getCoef", def = function(object) s
 setMethod("getCoef", "funGp", function(object) getCoef.funGp(object))
 
 getCoef.funGp <- function(object) {
-  coefs <- c(object@kern@varHyp, object@kern@lsHyps)
+  coefs <- object@kern@varHyp
   names_ls_s <- c()
   if (object@ds > 0) {
     names_ls_s <- paste("ls(X", 1:object@ds, ")", sep = "")
+    coefs <- c(coefs, object@kern@s_lsHyps)
   }
   names_ls_f <- c()
   if (object@df > 0) {
     names_ls_f <- paste("ls(F", 1:object@df, ")", sep = "")
+    coefs <- c(coefs, object@kern@f_lsHyps)
   }
   names(coefs) <- c("var", names_ls_s, names_ls_f)
   return(coefs)
