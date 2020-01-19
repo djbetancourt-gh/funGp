@@ -146,7 +146,16 @@ setMethod("predict", "funGpModel", function(object, ...) predict.funGpModel(obje
 
 # Method to print a hybrid-input funGp model
 # ----------------------------------------------------------------------------------------------------------
+#' @name show
+#' @rdname show-methods
+#' @importFrom methods show
+#' @param object An object to show.
 if(!isGeneric("show")) {setGeneric(name = "show", def = function(object) standardGeneric("show"))}
+
+#' @title Fill!!!!!!!!!!!
+#' @name show
+#' @rdname show-methods
+#' @aliases show,funGpModel-method
 setMethod("show", "funGpModel", function(object) show.funGpModel(object))
 
 show.funGpModel <- function(object) {
