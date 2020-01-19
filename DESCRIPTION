@@ -1,0 +1,30 @@
+Package: funGp
+Type: Package
+Title: Gaussian Process Regression with Functional Inputs
+Version: 0.1.0
+Author: José Betancourt
+Maintainer: José Betancourt <jbetanco@math.univ-toulouse.fr>
+Description: Fitting, validation and prediction of Gaussian process models with functional inputs.
+    (Betancourt et al., 2018) <https://hal.archives-ouvertes.fr/hal-01998724>.
+Note: internal package of the RISCOPE project
+    (ANR, project No.16CE04-0011) <https://perso.math.univ-toulouse.fr/riscope/>.
+License: GPL-3
+Depends: R (>= 3.0.1), methods, foreach
+Suggests: viridis
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.0.2
+Collate: 
+    'correlFunctions.R'
+    'distanceMatrices.R'
+    'extraDoc.R'
+    'funGpKern_Class.R'
+    'funGpMaster.R'
+    'funGpProj_Class.R'
+    'funGpModel_Class.R'
+    'prediction_F.R'
+    'prediction_S.R'
+    'prediction_SF.R'
+    'training_F.R'
+    'training_S.R'
+    'training_SF.R'
