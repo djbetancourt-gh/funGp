@@ -11,5 +11,5 @@
 \item{object}{An object to show.}
 }
 \description{
-Fill!!!!!!!!!!!
+This is my description
 }

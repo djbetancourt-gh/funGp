@@ -152,6 +152,7 @@ setMethod("predict", "funGp", function(object, ...) predict.funGp(object, ...))
 # Method to print a funGp model
 # ----------------------------------------------------------------------------------------------------------
 #' @name show
+#' @description This is my description
 #' @rdname show-methods
 #' @importFrom methods show
 #' @param object An object to show.
@@ -212,6 +213,7 @@ show.funGp <- function(object) {
 # Method to get the list of hyperparameters of a funGp model
 # ----------------------------------------------------------------------------------------------------------
 #' @name getCoef
+#' @description This is my description
 #' @rdname getCoef-methods
 #' @exportMethod getCoef
 #' @param object An object to predict from.
@@ -229,6 +231,26 @@ getCoef.funGp <- function(object) {
   names_ls_f <- paste("ls(F", 1:object@df, ")", sep = "")
   names(coefs) <- c("var", names_ls_s, names_ls_f)
   return(coefs)
+}
+
+
+# Method to get the list of basis functions used for the projection of the functional inputs
+# ----------------------------------------------------------------------------------------------------------
+#' @name getBasis
+#' @description This is my description
+#' @rdname getBasis-methods
+#' @exportMethod getBasis
+#' @param object An object to predict from.
+if(!isGeneric("getBasis")) {setGeneric(name = "getBasis", def = function(object) standardGeneric("getBasis"))}
+
+#' @title Prediction Method for the apk Class
+#' @name getBasis
+#' @rdname getBasis-methods
+#' @aliases getBasis,funGp-method
+setMethod("getBasis", "funGp", function(object) getBasis.funGp(object))
+
+getBasis.funGp <- function(object) {
+  return(object@proj@basis)
 }
 
 
