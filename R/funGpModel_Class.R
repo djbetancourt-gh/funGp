@@ -170,6 +170,9 @@ show.funGpModel <- function(object) {
 
   cat(paste("* Kernel type: ", object@kern@kerType, "\n", sep = ""))
   cat(paste("* Distance type: ", object@kern@disType, "\n", sep = ""))
+  cat(paste("* Distance type: ", object@kern@disType, "\n", sep = ""))
+  cat(paste("* Distance type: ", object@kern@disType, "\n", sep = ""))
+  cat(paste("* Distance type: ", object@kern@disType, "\n", sep = ""))
   cat(paste(rep("_", max(30, (nchar(callTxt)))), collapse = ""))
 }
 # ----------------------------------------------------------------------------------------------------------
