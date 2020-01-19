@@ -53,22 +53,15 @@ setClass("funGpModel",
 # ==========================================================================================================
 # User oriented methods. For documentation of generic methods check the extraDoc.R file
 # ==========================================================================================================
-#' @export predict
-setMethod("predict", "funGpModel", function(object, ...) predict.funGpModel(object, ...))
-
 #' @name predict
-#' @method predict funGpModel
-#'
-#' @title predict for \code{funGpModel} object
-#' @param object A \code{funGpModel} object
-#' @param sIn.pr Fill!!!!!!!!!!
-#' @param fIn.pr Fill!!!!!!!!!!
-#' @param detail Fill!!!!!!!!!!
-#' @param ... Additional arguments
-#'
+#' @rdname predict-methods
+#' @importFrom stats predict
+#' @param object An object to predict from.
+#' @param ... Further arguments for methods.
+#' @export predict
+setGeneric(name = "predict", def = function(object, ...) standardGeneric("predict"))
+
 #' @importFrom stats qnorm
-#'
-#' @export predict.funGpModel
 predict.funGpModel <- function(object, sIn.pr = NULL, fIn.pr = NULL, detail = "light", ...) {
   # =====================================================================================================
   # Prediction checklist
@@ -142,6 +135,12 @@ predict.funGpModel <- function(object, sIn.pr = NULL, fIn.pr = NULL, detail = "l
 
   return(preds)
 }
+
+#' @title Prediction method for the funGp Class
+#' @name predict
+#' @rdname predict-methods
+#' @aliases predict,funGpModel-method
+setMethod("predict", "funGpModel", function(object, ...) predict.funGpModel(object, ...))
 # ----------------------------------------------------------------------------------------------------------
 
 
