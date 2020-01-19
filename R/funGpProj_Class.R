@@ -1,6 +1,17 @@
-#' Class: data structures related to projection of functional inputs
-#'
-#' Fill this!!!!!!!!!
+# ==========================================================================================================
+# Class for projs of funGp models
+# ==========================================================================================================
+
+
+
+# ==========================================================================================================
+# Developer oriented methods
+# ==========================================================================================================
+
+# Constructor of the class
+# ----------------------------------------------------------------------------------------------------------
+#' @title Class: data structures related to projection of functional inputs
+#' @description Fill this!!!!!!!!!
 #'
 #' @slot doProj Object of class \code{"logical"}. Should projection of functional inputs be done?
 #' @slot fpDims Object of class \code{"numeric"}. Projection dimension of each functional input.
@@ -23,3 +34,49 @@ setClass("funGpProj",
                                                      # used for the projection of one fun. input
                         ),
          validity = function(object) {T})
+# ----------------------------------------------------------------------------------------------------------
+
+
+# ==========================================================================================================
+# User oriented methods. For documentation of generic methods check the extraDoc.R file
+# ==========================================================================================================
+
+# Method to print the kernel of a funGp model
+# ----------------------------------------------------------------------------------------------------------
+#' @name show
+#' @description This is my description
+#' @rdname show-methods
+#' @importFrom methods show
+#' @param object An object to show.
+if(!isGeneric("show")) {setGeneric(name = "show", def = function(object) standardGeneric("show"))}
+
+#' @title Fill!!!!!!!!!!!
+#' @name show
+#' @rdname show-methods
+#' @aliases show,funGpProj-method
+#' @keywords internal
+setMethod("show", "funGpProj", function(object) show.funGpProj(object))
+
+show.funGpProj <- function(object) {
+  if (length(object@doProj) == 1) {
+    if (object@doProj) {
+      cat(paste("* Do projection: ", object@doProj, "\n", sep = ""))
+      if (object@doProj) {
+        cat("  -> Proj. dimension:\n")
+        for (i in 1:length(object@fpDims)) {
+          if (object@fpDims[i] > 0) {
+            cat(paste("\t F", i, ": ", object@fpDims[i], "\n", sep = ""))
+          } else {
+            cat(paste("\t F", i, ": not required\n", sep = ""))
+          }
+        }
+      }
+    } else {
+      cat(paste("* Do projection: ", object@doProj, ". Projection was not required for this model.", sep = ""))
+    }
+  } else {
+    cat(paste("The funGp model linked to this kernel does not have functional inputs.",
+           "Projection structures are not defined for it.", sep = " "))
+  }
+}
+# ----------------------------------------------------------------------------------------------------------

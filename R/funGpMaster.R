@@ -72,7 +72,7 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
   # 17.   - lsHyps ......... array (ds + df) ..... estimated length-scale parameters
   # 18. * preMats .......... list (2) ............ KttInv and KttInv.sOut matrices for prediction
   # =====================================================================================================
-  # browser()
+  browser()
   checkVal(as.list(environment()))
 
   # create objects of class funGpProj, funGpKern and funGp
@@ -95,18 +95,29 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
     fDims <- sapply(fIn, ncol)
 
     # Extend to other possible cases!!!!!!!!!!!!!!!!!!
-    if (all(doProj, is.null(fpDims))) {
-      # fpDims <- rep(3, df)
-      fpDims <- c(3,2)
-    }
+    if (doProj) {
+      if (is.null(fpDims)) {
+        # fpDims <- rep(3, df)
+        fpDims <- c(3,2)
+      }
 
-    # project functional inputs
-    basis <- fpIn <- J <- list()
-    for (i in 1:df) {
-      B <- (eigen(cov(fIn[[i]]))$vectors)[,1:fpDims[i]]
-      fpIn[[i]] <- t(solve(t(B) %*% B) %*% t(B) %*% t(fIn[[i]]))
-      J[[i]] <- t(B) %*% B
-      basis[[i]] <- B
+      # project functional inputs
+      basis <- fpIn <- J <- list()
+      for (i in 1:df) {
+        if (fpDims[i] > 0) {
+          B <- (eigen(cov(fIn[[i]]))$vectors)[,1:fpDims[i]]
+          fpIn[[i]] <- t(solve(t(B) %*% B) %*% t(B) %*% t(fIn[[i]]))
+          J[[i]] <- t(B) %*% B
+        } else {
+          J[[i]] <- B <- diag(ncol(fIn[[i]]))
+          fpIn[[i]] <- fIn[[i]]
+        }
+        basis[[i]] <- B
+      }
+    } else {
+      fpDims <- rep(0, df)
+      basis <- J <- lapply(fIn, function(m) diag(ncol(m)))
+      fpIn <- fIn
     }
 
     # compute scalar distance matrices

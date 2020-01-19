@@ -167,9 +167,7 @@ setMethod("show", "funGp", function(object) show.funGp(object))
 show.funGp <- function(object) {
   mainTxt <- "Gaussian Process Model"
   callTxt <- paste("* Call: ", as.expression(object@call), sep = "")
-  cat(paste("\nGaussian Process Model", paste(rep("_", min(30, (nchar(callTxt) - nchar(mainTxt) - 1))), collapse = "")))
-  # cat("----------------------\n")
-  # cat("======================\n\n")
+  cat(paste("\n", mainTxt, paste(rep("_", min(30, (nchar(callTxt) - nchar(mainTxt) - 1))), collapse = "")))
 
   cat(paste("\n\n", callTxt, "\n\n", sep = ""))
 
@@ -186,25 +184,31 @@ show.funGp <- function(object) {
   cat(paste("* Kernel type: ", object@kern@kerType, "\n", sep = ""))
   cat(paste("* Distance type: ", object@kern@disType, "\n\n", sep = ""))
 
-  cat(paste("* Do projection: ", object@proj@doProj, "\n", sep = ""))
-  if (object@proj@doProj) {
-    cat("  -> Proj. dimension:\n")
-    for (i in 1:object@df) {
-      cat(paste("\t F", i, ": ", object@proj@fpDims[i], "\n", sep = ""))
+  if (object@df > 0) {
+    cat(paste("* Do projection: ", object@proj@doProj, "\n", sep = ""))
+    if (object@proj@doProj) {
+      cat("  -> Proj. dimension:\n")
+      for (i in 1:object@df) {
+        if (object@proj@fpDims[i] > 0) {
+          cat(paste("\t F", i, ": ", object@proj@fpDims[i], "\n", sep = ""))
+        } else {
+          cat(paste("\t F", i, ": not required\n", sep = ""))
+        }
+      }
     }
   }
 
   cat("\n* Hyperparameters:\n")
-  cat(paste("  -> variance: ", format(object@kern@varHyp, digits = 4, nsmall = 4), "\n", sep = ""))
+  cat(paste("  -> variance: ", format(object@kern@varHyp, digits = 3, nsmall = 4), "\n", sep = ""))
   cat("  -> length-scale:\n")
   if (object@ds > 0) {
     for (i in 1:object@ds) {
-      cat(paste("\t ls(X", i, "): ", format(object@kern@s_lsHyps[i], digits = 4, nsmall = 4), "\n", sep = ""))
+      cat(paste("\t ls(X", i, "): ", format(object@kern@s_lsHyps[i], digits = 3, nsmall = 4), "\n", sep = ""))
     }
   }
   if (object@df > 0) {
     for (i in 1:object@df) {
-      cat(paste("\t ls(F", i, "): ", format(object@kern@f_lsHyps[i], digits = 4, nsmall = 4), "\n", sep = ""))
+      cat(paste("\t ls(F", i, "): ", format(object@kern@f_lsHyps[i], digits = 3, nsmall = 4), "\n", sep = ""))
     }
   }
   cat(paste(rep("_", max(30, (nchar(callTxt)))), collapse = ""))

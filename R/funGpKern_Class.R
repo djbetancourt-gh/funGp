@@ -52,7 +52,7 @@ if(!isGeneric("show")) {setGeneric(name = "show", def = function(object) standar
 #' @name show
 #' @rdname show-methods
 #' @aliases show,funGpKern-method
-#' @keywords internal
+# @keywords internal
 setMethod("show", "funGpKern", function(object) show.funGpKern(object))
 
 show.funGpKern <- function(object) {
@@ -60,18 +60,18 @@ show.funGpKern <- function(object) {
   cat(paste("* Distance type: ", object@disType, "\n\n", sep = ""))
 
   cat("* Hyperparameters:\n")
-  cat(paste("  -> variance: ", format(object@varHyp, digits = 4, nsmall = 4), "\n", sep = ""))
+  cat(paste("  -> variance: ", format(object@varHyp, digits = 3, nsmall = 4), "\n", sep = ""))
   cat("  -> length-scale:\n")
   ds <- length(object@s_lsHyps)
   if (ds > 0) {
     for (i in 1:ds) {
-      cat(paste("\t ls(X", i, "): ", format(object@s_lsHyps[i], digits = 4, nsmall = 4), "\n", sep = ""))
+      cat(paste("\t ls(X", i, "): ", format(object@s_lsHyps[i], digits = 3, nsmall = 4), "\n", sep = ""))
     }
   }
   df <- length(object@f_lsHyps)
   if (df > 0) {
     for (i in 1:df) {
-      cat(paste("\t ls(F", i, "): ", format(object@f_lsHyps[i], digits = 4, nsmall = 4), "\n", sep = ""))
+      cat(paste("\t ls(F", i, "): ", format(object@f_lsHyps[i], digits = 3, nsmall = 4), "\n", sep = ""))
     }
   }
 }
