@@ -275,6 +275,28 @@ getGram.funGp <- function(object) {
 }
 
 
+# Method to get the list of reduced functional inputs used in the model (coefficents of the projection)
+# ----------------------------------------------------------------------------------------------------------
+#' @name getRedfIn
+#' @description This is my description
+#' @rdname getRedfIn-methods
+#' @exportMethod getRedfIn
+#' @param object An object to predict from.
+if(!isGeneric("getRedfIn")) {setGeneric(name = "getRedfIn", def = function(object) standardGeneric("getRedfIn"))}
+
+#' @title Prediction Method for the apk Class
+#' @name getRedfIn
+#' @rdname getRedfIn-methods
+#' @aliases getRedfIn,funGp-method
+setMethod("getRedfIn", "funGp", function(object) getRedfIn.funGp(object))
+
+getRedfIn.funGp <- function(object) {
+  rfIn <- object@proj@coefs
+  names(rfIn) <- paste("alpha(F", 1:object@df, ")", sep = "")
+  return(rfIn)
+}
+
+
 # Method to get the list of projected functional inputs
 # ----------------------------------------------------------------------------------------------------------
 if(!isGeneric("getProjfuns")) {setGeneric(name = "getProjfuns", def = function(object) standardGeneric("getProjfuns"))}
