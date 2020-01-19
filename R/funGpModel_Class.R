@@ -3,6 +3,7 @@
 # ==========================================================================================================
 
 
+
 # ==========================================================================================================
 # Developer oriented methods
 # ==========================================================================================================
@@ -53,6 +54,9 @@ setClass("funGp",
 # ==========================================================================================================
 # User oriented methods. For documentation of generic methods check the extraDoc.R file
 # ==========================================================================================================
+
+# Method to make predictions with afunGp model
+# ----------------------------------------------------------------------------------------------------------
 #' @name predict
 #' @rdname predict-methods
 #' @importFrom stats predict
@@ -144,7 +148,8 @@ setMethod("predict", "funGp", function(object, ...) predict.funGp(object, ...))
 # ----------------------------------------------------------------------------------------------------------
 
 
-# Method to print a hybrid-input funGp model
+
+# Method to print a funGp model
 # ----------------------------------------------------------------------------------------------------------
 #' @name show
 #' @rdname show-methods
@@ -202,6 +207,30 @@ show.funGp <- function(object) {
   cat(paste(rep("_", max(30, (nchar(callTxt)))), collapse = ""))
 }
 # ----------------------------------------------------------------------------------------------------------
+
+
+# Method to get the list of hyperparameters of a funGp model
+# ----------------------------------------------------------------------------------------------------------
+#' @name getCoef
+#' @rdname getCoef-methods
+#' @exportMethod getCoef
+#' @param object An object to predict from.
+if(!isGeneric("getCoef")) {setGeneric(name = "getCoef", def = function(object) standardGeneric("getCoef"))}
+
+#' @title Prediction Method for the apk Class
+#' @name getCoef
+#' @rdname getCoef-methods
+#' @aliases getCoef,funGp-method
+setMethod("getCoef", "funGp", function(object) getCoef.funGp(object))
+
+getCoef.funGp <- function(object) {
+  coefs <- c(object@kern@varHyp, object@kern@lsHyps)
+  names_ls_s <- paste("ls(X", 1:object@ds, ")", sep = "")
+  names_ls_f <- paste("ls(F", 1:object@df, ")", sep = "")
+  names(coefs) <- c("var", names_ls_s, names_ls_f)
+  return(coefs)
+}
+
 
 # Method to get the list of projected functional inputs
 # ----------------------------------------------------------------------------------------------------------
