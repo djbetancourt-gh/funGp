@@ -344,3 +344,24 @@ getProjgram.funGp <- function(object) {
   }
 }
 # ----------------------------------------------------------------------------------------------------------
+
+
+# Method to get the training covariance matrix
+# ----------------------------------------------------------------------------------------------------------
+#' @name getTrainCov
+#' @description This is my description
+#' @rdname getTrainCov-methods
+#' @exportMethod getTrainCov
+#' @param object An object to predict from.
+if(!isGeneric("getTrainCov")) {setGeneric("getTrainCov", function(object) standardGeneric("getTrainCov"))}
+
+#' @title Prediction Method for the apk Class
+#' @name getTrainCov
+#' @rdname getTrainCov-methods
+#' @aliases getTrainCov,funGp-method
+setMethod("getTrainCov", "funGp", function(object) getTrainCov.funGp(object))
+
+getTrainCov.funGp <- function(object) {
+  return(tcrossprod(object@preMats$L))
+}
+# ----------------------------------------------------------------------------------------------------------
