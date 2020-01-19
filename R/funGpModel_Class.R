@@ -25,13 +25,13 @@
 #' @slot preMats Object of class \code{"list"}. L and LInvY matrices pre-computed for prediction. L is a lower diagonal matrix such that
 #' \eqn{L'L} equals the training cross covariance matrix \eqn{K.tt}. On the other hand, \eqn{LInvY = L^(-1) * sOut}.
 #'
-#' @rdname funGpSF-class
+#' @rdname funGp-class
 #' @include funGpProj_Class.R
 #' @include funGpKern_Class.R
 #'
 #' @author José Betancourt
 #' @export
-setClass("funGpModel",
+setClass("funGp",
          representation(
            call = "language",          # user call reminder
            ds = "numeric",             # number of scalar inputs
@@ -62,7 +62,7 @@ setClass("funGpModel",
 setGeneric(name = "predict", def = function(object, ...) standardGeneric("predict"))
 
 #' @importFrom stats qnorm
-predict.funGpModel <- function(object, sIn.pr = NULL, fIn.pr = NULL, detail = "light", ...) {
+predict.funGp <- function(object, sIn.pr = NULL, fIn.pr = NULL, detail = "light", ...) {
   # =====================================================================================================
   # Prediction checklist
   # =====================================================================================================
@@ -139,8 +139,8 @@ predict.funGpModel <- function(object, sIn.pr = NULL, fIn.pr = NULL, detail = "l
 #' @title Prediction method for the funGp Class
 #' @name predict
 #' @rdname predict-methods
-#' @aliases predict,funGpModel-method
-setMethod("predict", "funGpModel", function(object, ...) predict.funGpModel(object, ...))
+#' @aliases predict,funGp-method
+setMethod("predict", "funGp", function(object, ...) predict.funGp(object, ...))
 # ----------------------------------------------------------------------------------------------------------
 
 
@@ -155,10 +155,10 @@ if(!isGeneric("show")) {setGeneric(name = "show", def = function(object) standar
 #' @title Fill!!!!!!!!!!!
 #' @name show
 #' @rdname show-methods
-#' @aliases show,funGpModel-method
-setMethod("show", "funGpModel", function(object) show.funGpModel(object))
+#' @aliases show,funGp-method
+setMethod("show", "funGp", function(object) show.funGp(object))
 
-show.funGpModel <- function(object) {
+show.funGp <- function(object) {
   mainTxt <- "Gaussian Process Model"
   callTxt <- paste("* Call: ", as.expression(object@call), sep = "")
   cat(paste("\nGaussian Process Model", paste(rep("_", min(30, (nchar(callTxt) - nchar(mainTxt) - 1))), collapse = "")))
@@ -208,9 +208,9 @@ show.funGpModel <- function(object) {
 if(!isGeneric("getProjfuns")) {setGeneric(name = "getProjfuns", def = function(object) standardGeneric("getProjfuns"))}
 #' @rdname getProjfuns
 #' @export
-setMethod("getProjfuns", "funGpModel", function(object) getProjfuns.funGpModel(object))
+setMethod("getProjfuns", "funGp", function(object) getProjfuns.funGp(object))
 
-getProjfuns.funGpModel <- function(object) {
+getProjfuns.funGp <- function(object) {
   if (object@df > 0) {
     fpIn <- list()
     for (i in 1:object@df) {
@@ -229,9 +229,9 @@ if(!isGeneric("getProjgram")) {setGeneric("getProjgram", function(object) standa
 
 #' @rdname getProjgram
 #' @export
-setMethod("getProjgram", "funGpModel", function(object) getProjgram.funGpModel(object))
+setMethod("getProjgram", "funGp", function(object) getProjgram.funGp(object))
 
-getProjgram.funGpModel <- function(object) {
+getProjgram.funGp <- function(object) {
   if (object@df > 0) {
     gram <- list()
     for (i in 1:object@df) {

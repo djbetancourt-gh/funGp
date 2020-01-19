@@ -4,17 +4,17 @@
 
 # Method to print a funGp model
 # ----------------------------------------------------------------------------------------------------------
-#' @title Printing of a funGp model
-#' @description Prints the main features of a funGp model. The list of attributes printed depends on the
-#'              type of model built, which can be scalar-input, functional-input or hybrid-input.
-#'
-#' @param object a funGp model. Might be either a funGp_S, funGp_F or funGp_SF object depending on the type
-#'               of model built.
-#'
-#' @name show.funGpModel
-#'
-#' @author José Betancourt
-NULL
+# @title Printing of a funGp model
+# @description Prints the main features of a funGp model. The list of attributes printed depends on the
+#              type of model built, which can be scalar-input, functional-input or hybrid-input.
+#
+# @param object a funGp model. Might be either a funGp_S, funGp_F or funGp_SF object depending on the type
+#               of model built.
+#
+# @name show.funGpModel
+#
+# @author José Betancourt
+# NULL
 # ----------------------------------------------------------------------------------------------------------
 
 # Method to get the list of projected functional inputs

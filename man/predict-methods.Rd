@@ -2,12 +2,12 @@
 % Please edit documentation in R/funGpModel_Class.R
 \name{predict}
 \alias{predict}
-\alias{predict,funGpModel-method}
+\alias{predict,funGp-method}
 \title{Prediction method for the funGp Class}
 \usage{
 predict(object, ...)
 
-\S4method{predict}{funGpModel}(object, ...)
+\S4method{predict}{funGp}(object, ...)
 }
 \arguments{
 \item{object}{An object to predict from.}

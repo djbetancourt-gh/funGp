@@ -2,10 +2,10 @@
 % Please edit documentation in R/funGpModel_Class.R
 \name{show}
 \alias{show}
-\alias{show,funGpModel-method}
+\alias{show,funGp-method}
 \title{Fill!!!!!!!!!!!}
 \usage{
-\S4method{show}{funGpModel}(object)
+\S4method{show}{funGp}(object)
 }
 \arguments{
 \item{object}{An object to show.}

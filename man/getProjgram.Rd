@@ -2,10 +2,10 @@
 % Please edit documentation in R/extraDoc.R, R/funGpModel_Class.R
 \name{getProjgram}
 \alias{getProjgram}
-\alias{getProjgram,funGpModel-method}
+\alias{getProjgram,funGp-method}
 \title{List of gram matrices}
 \usage{
-\S4method{getProjgram}{funGpModel}(object)
+\S4method{getProjgram}{funGp}(object)
 }
 \arguments{
 \item{object}{a funGp model. Might be either a funGp_S, funGp_F or funGp_SF object depending on the type

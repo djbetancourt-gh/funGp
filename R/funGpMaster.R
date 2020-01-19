@@ -75,10 +75,10 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
   # browser()
   checkVal(as.list(environment()))
 
-  # create objects of class funGpProj, funGpKern and funGpModel
+  # create objects of class funGpProj, funGpKern and funGp
   proj <- new("funGpProj")
   kern <- new("funGpKern")
-  model <- new("funGpModel")
+  model <- new("funGp")
 
   # extract generic information from user inputs
   sOut <- as.matrix(sOut)

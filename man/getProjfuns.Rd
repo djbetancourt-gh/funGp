@@ -2,10 +2,10 @@
 % Please edit documentation in R/extraDoc.R, R/funGpModel_Class.R
 \name{getProjfuns}
 \alias{getProjfuns}
-\alias{getProjfuns,funGpModel-method}
+\alias{getProjfuns,funGp-method}
 \title{List of projected functional inputs}
 \usage{
-\S4method{getProjfuns}{funGpModel}(object)
+\S4method{getProjfuns}{funGp}(object)
 }
 \arguments{
 \item{object}{a funGp model. Might be either a funGp_S, funGp_F or funGp_SF object depending on the type
