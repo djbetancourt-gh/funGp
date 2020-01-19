@@ -227,8 +227,14 @@ setMethod("getCoef", "funGp", function(object) getCoef.funGp(object))
 
 getCoef.funGp <- function(object) {
   coefs <- c(object@kern@varHyp, object@kern@lsHyps)
-  names_ls_s <- paste("ls(X", 1:object@ds, ")", sep = "")
-  names_ls_f <- paste("ls(F", 1:object@df, ")", sep = "")
+  names_ls_s <- c()
+  if (object@ds > 0) {
+    names_ls_s <- paste("ls(X", 1:object@ds, ")", sep = "")
+  }
+  names_ls_f <- c()
+  if (object@df > 0) {
+    names_ls_f <- paste("ls(F", 1:object@df, ")", sep = "")
+  }
   names(coefs) <- c("var", names_ls_s, names_ls_f)
   return(coefs)
 }
@@ -250,28 +256,11 @@ if(!isGeneric("getBasis")) {setGeneric(name = "getBasis", def = function(object)
 setMethod("getBasis", "funGp", function(object) getBasis.funGp(object))
 
 getBasis.funGp <- function(object) {
-  return(object@proj@basis)
-}
-
-
-# Method to get the list of gram matrices based on the basis functions used for the projection of the
-# functional inputs
-# ----------------------------------------------------------------------------------------------------------
-#' @name getGram
-#' @description This is my description
-#' @rdname getGram-methods
-#' @exportMethod getGram
-#' @param object An object to predict from.
-if(!isGeneric("getGram")) {setGeneric(name = "getGram", def = function(object) standardGeneric("getGram"))}
-
-#' @title Prediction Method for the apk Class
-#' @name getGram
-#' @rdname getGram-methods
-#' @aliases getGram,funGp-method
-setMethod("getGram", "funGp", function(object) getGram.funGp(object))
-
-getGram.funGp <- function(object) {
-  return(lapply(object@proj@basis, crossprod))
+  if (object@df > 0) {
+    return(object@proj@basis)
+  } else {
+    cat("The provided funGp model does not have functional inputs. Basis functions are not defined for it.")
+  }
 }
 
 
@@ -291,13 +280,17 @@ if(!isGeneric("getRedfIn")) {setGeneric(name = "getRedfIn", def = function(objec
 setMethod("getRedfIn", "funGp", function(object) getRedfIn.funGp(object))
 
 getRedfIn.funGp <- function(object) {
-  rfIn <- object@proj@coefs
-  names(rfIn) <- paste("alpha(F", 1:object@df, ")", sep = "")
-  return(rfIn)
+  if (object@df > 0) {
+    rfIn <- object@proj@coefs
+    names(rfIn) <- paste("alpha(F", 1:object@df, ")", sep = "")
+    return(rfIn)
+  } else {
+    cat("The provided funGp model does not have functional inputs. Reduced functional inputs are not defined for it.")
+  }
 }
 
 
-# Method to get the list of projected functional (not used directly in the model)
+# Method to get the list of projected functional inputs (not used directly in the model)
 # ----------------------------------------------------------------------------------------------------------
 #' @name getProjfIn
 #' @description This is my description
@@ -313,38 +306,29 @@ if(!isGeneric("getProjfIn")) {setGeneric(name = "getProjfIn", def = function(obj
 setMethod("getProjfIn", "funGp", function(object) getProjfIn.funGp(object))
 
 getProjfIn.funGp <- function(object) {
-  fpIn <- mapply(function(m1, m2) m1 %*% t(m2), m1 = object@proj@coefs, m2 = object@proj@basis)
-  names(fpIn) <- paste("Fp", 1:object@df, sep = "")
-  return(fpIn)
-}
-
-
-# Method to get the list of projected functional inputs
-# ----------------------------------------------------------------------------------------------------------
-if(!isGeneric("getProjfuns")) {setGeneric(name = "getProjfuns", def = function(object) standardGeneric("getProjfuns"))}
-#' @rdname getProjfuns
-#' @export
-setMethod("getProjfuns", "funGp", function(object) getProjfuns.funGp(object))
-
-getProjfuns.funGp <- function(object) {
   if (object@df > 0) {
-    fpIn <- list()
-    for (i in 1:object@df) {
-      fpIn[[i]] <- object@proj@coefs[[i]] %*% t(object@proj@basis[[i]])
-    }
+    fpIn <- mapply(function(m1, m2) m1 %*% t(m2), m1 = object@proj@coefs, m2 = object@proj@basis)
+    names(fpIn) <- paste("Fp", 1:object@df, sep = "")
     return(fpIn)
   } else {
     cat("The provided funGp model does not have functional inputs. Projected functional inputs are not defined for it.")
   }
 }
-# ----------------------------------------------------------------------------------------------------------
+
 
 # Method to get the list of Gram matrices computed from the basis functions
 # ----------------------------------------------------------------------------------------------------------
+#' @name getProjgram
+#' @description This is my description
+#' @rdname getProjgram-methods
+#' @exportMethod getProjgram
+#' @param object An object to predict from.
 if(!isGeneric("getProjgram")) {setGeneric("getProjgram", function(object) standardGeneric("getProjgram"))}
 
-#' @rdname getProjgram
-#' @export
+#' @title Prediction Method for the apk Class
+#' @name getProjgram
+#' @rdname getProjgram-methods
+#' @aliases getProjgram,funGp-method
 setMethod("getProjgram", "funGp", function(object) getProjgram.funGp(object))
 
 getProjgram.funGp <- function(object) {
@@ -353,9 +337,10 @@ getProjgram.funGp <- function(object) {
     for (i in 1:object@df) {
       gram[[i]] <- t(object@proj@basis[[i]]) %*% object@proj@basis[[i]]
     }
+    names(gram) <- paste("G(F", 1:object@df, ")", sep = "")
     return(gram)
   } else {
-    cat("The provided funGp model does not have functional inputs. Thus, the projection Gram matrix is not defined for it.")
+    cat("The provided funGp model does not have functional inputs. The projection Gram matrix is not defined for it.")
   }
 }
 # ----------------------------------------------------------------------------------------------------------
