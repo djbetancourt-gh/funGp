@@ -254,6 +254,27 @@ getBasis.funGp <- function(object) {
 }
 
 
+# Method to get the list of gram matrices based on the basis functions used for the projection of the
+# functional inputs
+# ----------------------------------------------------------------------------------------------------------
+#' @name getGram
+#' @description This is my description
+#' @rdname getGram-methods
+#' @exportMethod getGram
+#' @param object An object to predict from.
+if(!isGeneric("getGram")) {setGeneric(name = "getGram", def = function(object) standardGeneric("getGram"))}
+
+#' @title Prediction Method for the apk Class
+#' @name getGram
+#' @rdname getGram-methods
+#' @aliases getGram,funGp-method
+setMethod("getGram", "funGp", function(object) getGram.funGp(object))
+
+getGram.funGp <- function(object) {
+  return(lapply(object@proj@basis, crossprod))
+}
+
+
 # Method to get the list of projected functional inputs
 # ----------------------------------------------------------------------------------------------------------
 if(!isGeneric("getProjfuns")) {setGeneric(name = "getProjfuns", def = function(object) standardGeneric("getProjfuns"))}
