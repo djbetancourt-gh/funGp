@@ -297,6 +297,28 @@ getRedfIn.funGp <- function(object) {
 }
 
 
+# Method to get the list of projected functional (not used directly in the model)
+# ----------------------------------------------------------------------------------------------------------
+#' @name getProjfIn
+#' @description This is my description
+#' @rdname getProjfIn-methods
+#' @exportMethod getProjfIn
+#' @param object An object to predict from.
+if(!isGeneric("getProjfIn")) {setGeneric(name = "getProjfIn", def = function(object) standardGeneric("getProjfIn"))}
+
+#' @title Prediction Method for the apk Class
+#' @name getProjfIn
+#' @rdname getProjfIn-methods
+#' @aliases getProjfIn,funGp-method
+setMethod("getProjfIn", "funGp", function(object) getProjfIn.funGp(object))
+
+getProjfIn.funGp <- function(object) {
+  fpIn <- mapply(function(m1, m2) m1 %*% t(m2), m1 = object@proj@coefs, m2 = object@proj@basis)
+  names(fpIn) <- paste("Fp", 1:object@df, sep = "")
+  return(fpIn)
+}
+
+
 # Method to get the list of projected functional inputs
 # ----------------------------------------------------------------------------------------------------------
 if(!isGeneric("getProjfuns")) {setGeneric(name = "getProjfuns", def = function(object) standardGeneric("getProjfuns"))}
