@@ -178,10 +178,27 @@ show.funGpModel <- function(object) {
   cat(paste("* Training points: ", object@n.tr, "\n\n", sep = ""))
 
   cat(paste("* Kernel type: ", object@kern@kerType, "\n", sep = ""))
-  cat(paste("* Distance type: ", object@kern@disType, "\n", sep = ""))
-  cat(paste("* Distance type: ", object@kern@disType, "\n", sep = ""))
-  cat(paste("* Distance type: ", object@kern@disType, "\n", sep = ""))
-  cat(paste("* Distance type: ", object@kern@disType, "\n", sep = ""))
+  cat(paste("* Distance type: ", object@kern@disType, "\n\n", sep = ""))
+
+  cat(paste("* Do projection: ", object@proj@doProj, "\n", sep = ""))
+  if (object@proj@doProj) {
+    cat("  -> Proj. dimension:\n")
+    for (i in 1:object@df) {
+      cat(paste("\t F", i, ": ", object@proj@fpDims[i], "\n", sep = ""))
+    }
+  }
+
+  cat("\n* Hyperparameters:\n")
+  cat(paste("  -> variance: ", format(object@kern@varHyp, digits = 4, nsmall = 4), "\n", sep = ""))
+  cat("  -> length-scale:\n")
+  ls_s <- object@kern@lsHyps[1:object@ds]
+  for (i in 1:object@ds) {
+    cat(paste("\t ls(X", i, "): ", format(ls_s[i], digits = 4, nsmall = 4), "\n", sep = ""))
+  }
+  ls_f <- object@kern@lsHyps[-c(1:object@ds)]
+  for (i in 1:object@df) {
+    cat(paste("\t ls(F", i, "): ", format(ls_f[i], digits = 4, nsmall = 4), "\n", sep = ""))
+  }
   cat(paste(rep("_", max(30, (nchar(callTxt)))), collapse = ""))
 }
 # ----------------------------------------------------------------------------------------------------------
