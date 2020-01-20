@@ -148,7 +148,6 @@ setMethod("predict", "funGp", function(object, ...) predict.funGp(object, ...))
 # ----------------------------------------------------------------------------------------------------------
 
 
-
 # Method to print a funGp model
 # ----------------------------------------------------------------------------------------------------------
 #' @name show
@@ -373,3 +372,30 @@ getTrainCov.funGp <- function(object) {
   return(tcrossprod(object@preMats$L))
 }
 # ----------------------------------------------------------------------------------------------------------
+
+
+# Method to plot a funGp model
+# ----------------------------------------------------------------------------------------------------------
+#' @name plotLOO
+#' @description This is my description
+#' @rdname plotLOO-methods
+#' @exportMethod plotLOO
+#' @importFrom graphics lines plot
+#' @param object An object to predict from.
+if(!isGeneric("plotLOO")) {setGeneric("plotLOO", function(object) standardGeneric("plotLOO"))}
+
+#' @title Prediction Method for the apk Class
+#' @name plotLOO
+#' @rdname plotLOO-methods
+#' @aliases plotLOO,funGp-method
+setMethod("plotLOO", "funGp", function(object) plotLOO.funGp(object))
+
+plotLOO.funGp <- function(object) {
+  y_obs <- object@sOut
+  R <- tcrossprod(object@preMats$L)/object@kern@varHyp
+  Rinv <- solve(R)
+  y_pre <- y_obs - diag(Rinv)^(-1) * Rinv %*% y_obs
+  yr <- range(c(y_obs, y_pre))
+  plot(y_obs, y_pre, xlim = yr, ylim = yr, pch = 21, col = "red", bg = "red", xlab = "Observed", ylab = "Predicted")
+  lines(y_obs, y_obs, col = "blue")
+}
