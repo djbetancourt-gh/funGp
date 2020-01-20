@@ -57,6 +57,5 @@ sOut.pr <- as.matrix(sapply(t(1:n.pr), function(i){
   as.numeric(x1 * sin(x2) + x1 * mean(f1) - x2^2 * diff(range(f2)))
 }))
 plotPreds(m1, m1.preds, sOut.pr)
-plotCalib(m1, m1.preds, sOut.pr)
 
 }

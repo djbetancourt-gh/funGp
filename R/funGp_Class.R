@@ -103,7 +103,6 @@ setClass("funGp",
 #'   as.numeric(x1 * sin(x2) + x1 * mean(f1) - x2^2 * diff(range(f2)))
 #' }))
 #' plotPreds(m1, m1.preds, sOut.pr)
-#' plotCalib(m1, m1.preds, sOut.pr)
 #'
 #' @export predict
 setGeneric(name = "predict", def = function(object, ...) standardGeneric("predict"))
@@ -450,7 +449,7 @@ plotLOO.funGp <- function(object) {
 #' @description This is my description
 #' @rdname plotPreds-methods
 #' @exportMethod plotPreds
-#' @importFrom graphics lines plot polygon
+#' @importFrom graphics lines plot polygon layout legend par
 #' @param object An object to predict from.
 #' @param ... Further arguments for methods.
 if(!isGeneric("plotPreds")) {setGeneric("plotPreds", function(object, ...) standardGeneric("plotPreds"))}
@@ -464,46 +463,45 @@ if(!isGeneric("plotPreds")) {setGeneric("plotPreds", function(object, ...) stand
 setMethod("plotPreds", "funGp", function(object, preds, sOut.pr = NULL, ...) plotPreds.funGp(object, preds, sOut.pr))
 
 plotPreds.funGp <- function(object, preds, sOut.pr) {
-  y <- sort(preds$mean)
-  n.pr <- length(y)
-  ll <- (preds$lower95)[order(preds$mean)]
-  ul <- (preds$upper95)[order(preds$mean)]
-
-  plot(1, type = "n", xlab = "Index", ylab = "Predicted", xlim = c(1, n.pr), ylim = range(y))
-  x <- 1:n.pr
-  polygon(c(x, rev(x)), c(ul, rev(ll)), col = "grey85", border = NA)
   if (!is.null(sOut.pr)) {
+    layout(matrix(1:2, nrow = 2))
+    par(mar = c(4.2,4.1,1,2.1))
+    # calibration plot
+    y_obs <- sOut.pr
+    y_pre <- preds$mean
+    yr <- range(c(y_obs, y_pre))
+    plot(y_obs, y_pre, xlim = yr, ylim = yr, pch = 21, col = "red", bg = "red", xlab = "Observed", ylab = "Predicted")
+    lines(y_obs, y_obs, col = "blue")
+
+    # prediction, limits and true curve
+    y <- sort(preds$mean)
+    n.pr <- length(y)
+    ll <- (preds$lower95)[order(preds$mean)]
+    ul <- (preds$upper95)[order(preds$mean)]
+
+    plot(1, type = "n", xlab = "Index", ylab = "Predicted", xlim = c(1, n.pr), ylim = range(y))
+    x <- 1:n.pr
+    polygon(c(x, rev(x)), c(ul, rev(ll)), col = "grey85", border = NA)
     lines(sOut.pr[order(preds$mean)], col = "black")
+    lines(y, col = "red")
+    lines(ll, col = "blue")
+    lines(ul, col = "blue")
+  } else {
+    # prediction, limits and true curve
+    y <- sort(preds$mean)
+    n.pr <- length(y)
+    ll <- (preds$lower95)[order(preds$mean)]
+    ul <- (preds$upper95)[order(preds$mean)]
+
+    plot(1, type = "n", xlab = "Index", ylab = "Predicted", xlim = c(1, n.pr), ylim = range(y))
+    x <- 1:n.pr
+    polygon(c(x, rev(x)), c(ul, rev(ll)), col = "grey85", border = NA)
+    lines(y, col = "red")
+    lines(ll, col = "blue")
+    lines(ul, col = "blue")
   }
-  lines(y, col = "red")
-  lines(ll, col = "blue")
-  lines(ul, col = "blue")
-}
+  legend("topleft", legend = c("True", "Predicted", "95% CIs"), col = c("black", "red", "blue"), lty = 1, cex = 0.8)
 
-
-# Method to plot calibration plot from predictions of a funGp model
-# ----------------------------------------------------------------------------------------------------------
-#' @name plotCalib
-#' @description This is my description
-#' @rdname plotCalib-methods
-#' @exportMethod plotCalib
-#' @importFrom graphics lines plot
-#' @param object An object to predict from.
-#' @param ... Further arguments for methods.
-if(!isGeneric("plotCalib")) {setGeneric("plotCalib", function(object, ...) standardGeneric("plotCalib"))}
-
-#' @title Prediction Method for the apk Class
-#' @name plotCalib
-#' @rdname plotCalib-methods
-#' @aliases plotCalib,funGp-method
-#' @param preds something
-#' @param sOut.pr also
-setMethod("plotCalib", "funGp", function(object, preds, sOut.pr, ...) plotCalib.funGp(object, preds, sOut.pr))
-
-plotCalib.funGp <- function(object, preds, sOut.pr) {
-  y_obs <- sOut.pr
-  y_pre <- preds$mean
-  yr <- range(c(y_obs, y_pre))
-  plot(y_obs, y_pre, xlim = yr, ylim = yr, pch = 21, col = "red", bg = "red", xlab = "Observed", ylab = "Predicted")
-  lines(y_obs, y_obs, col = "blue")
+  # reset plotting default setup
+  par(mar = c(5.1, 4.1, 4.1, 2.1), mfrow = c(1,1))
 }
