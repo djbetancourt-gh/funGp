@@ -103,6 +103,7 @@ setClass("funGp",
 #'   as.numeric(x1 * sin(x2) + x1 * mean(f1) - x2^2 * diff(range(f2)))
 #' }))
 #' plotPreds(m1, m1.preds, sOut.pr)
+#' plotCalib(m1, m1.preds, sOut.pr)
 #'
 #' @export predict
 setGeneric(name = "predict", def = function(object, ...) standardGeneric("predict"))
@@ -477,4 +478,32 @@ plotPreds.funGp <- function(object, preds, sOut.pr) {
   lines(y, col = "red")
   lines(ll, col = "blue")
   lines(ul, col = "blue")
+}
+
+
+# Method to plot calibration plot from predictions of a funGp model
+# ----------------------------------------------------------------------------------------------------------
+#' @name plotCalib
+#' @description This is my description
+#' @rdname plotCalib-methods
+#' @exportMethod plotCalib
+#' @importFrom graphics lines plot
+#' @param object An object to predict from.
+#' @param ... Further arguments for methods.
+if(!isGeneric("plotCalib")) {setGeneric("plotCalib", function(object, ...) standardGeneric("plotCalib"))}
+
+#' @title Prediction Method for the apk Class
+#' @name plotCalib
+#' @rdname plotCalib-methods
+#' @aliases plotCalib,funGp-method
+#' @param preds something
+#' @param sOut.pr also
+setMethod("plotCalib", "funGp", function(object, preds, sOut.pr, ...) plotCalib.funGp(object, preds, sOut.pr))
+
+plotCalib.funGp <- function(object, preds, sOut.pr) {
+  y_obs <- sOut.pr
+  y_pre <- preds$mean
+  yr <- range(c(y_obs, y_pre))
+  plot(y_obs, y_pre, xlim = yr, ylim = yr, pch = 21, col = "red", bg = "red", xlab = "Observed", ylab = "Predicted")
+  lines(y_obs, y_obs, col = "blue")
 }
