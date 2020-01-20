@@ -62,6 +62,48 @@ setClass("funGp",
 #' @importFrom stats predict
 #' @param object An object to predict from.
 #' @param ... Further arguments for methods.
+#'
+#' @examples
+#' # generating input data for training
+#' n.tr <- 25
+#' sIn.tr <- expand.grid(x1 = seq(0,1,length = sqrt(n.tr)), x2 = seq(0,1,length = sqrt(n.tr)))
+#' sIn.tr <- as.matrix(sIn.tr)
+#' fIn.tr <- list(f1 = matrix(runif(n.tr*10), ncol = 10), matrix(runif(n.tr*22), ncol = 22))
+#'
+#' # generating output data for training
+#' sOut.tr <- as.matrix(sapply(t(1:n.tr), function(i){
+#'   x1 <- sIn.tr[i,1]
+#'   x2 <- sIn.tr[i,2]
+#'   f1 <- fIn.tr[[1]][i,]
+#'   f2 <- fIn.tr[[2]][i,]
+#'   as.numeric(x1 * sin(x2) + x1 * mean(f1) - x2^2 * diff(range(f2)))
+#' }))
+#'
+#' # creating a funGp model
+#' m1 <- funGp(sIn = sIn.tr, fIn = fIn.tr, sOut = sOut.tr)
+#'
+#' # generating input data for prediction
+#' n.pr <- 100
+#' sIn.pr <- expand.grid(x1 = seq(0,1,length = sqrt(n.pr)), x2 = seq(0,1,length = sqrt(n.pr)))
+#' sIn.pr <- as.matrix(sIn.pr)
+#' fIn.pr <- list(f1 = matrix(runif(n.pr*10), ncol = 10), matrix(runif(n.pr*22), ncol = 22))
+#'
+#' # making predictions
+#' m1.preds <- predict(m1, sIn.pr = sIn.pr, fIn.pr = fIn.pr)
+#'
+#' # plotting predictions
+#' plotPreds(m1, preds = m1.preds)
+#'
+#' # also possible to compare against true output values
+#' sOut.pr <- as.matrix(sapply(t(1:n.pr), function(i){
+#'   x1 <- sIn.pr[i,1]
+#'   x2 <- sIn.pr[i,2]
+#'   f1 <- fIn.pr[[1]][i,]
+#'   f2 <- fIn.pr[[2]][i,]
+#'   as.numeric(x1 * sin(x2) + x1 * mean(f1) - x2^2 * diff(range(f2)))
+#' }))
+#' plotPreds(m1, m1.preds, sOut.pr)
+#'
 #' @export predict
 setGeneric(name = "predict", def = function(object, ...) standardGeneric("predict"))
 
@@ -398,4 +440,41 @@ plotLOO.funGp <- function(object) {
   yr <- range(c(y_obs, y_pre))
   plot(y_obs, y_pre, xlim = yr, ylim = yr, pch = 21, col = "red", bg = "red", xlab = "Observed", ylab = "Predicted")
   lines(y_obs, y_obs, col = "blue")
+}
+
+
+# Method to plot predictions of a funGp model
+# ----------------------------------------------------------------------------------------------------------
+#' @name plotPreds
+#' @description This is my description
+#' @rdname plotPreds-methods
+#' @exportMethod plotPreds
+#' @importFrom graphics lines plot polygon
+#' @param object An object to predict from.
+#' @param ... Further arguments for methods.
+if(!isGeneric("plotPreds")) {setGeneric("plotPreds", function(object, ...) standardGeneric("plotPreds"))}
+
+#' @title Prediction Method for the apk Class
+#' @name plotPreds
+#' @rdname plotPreds-methods
+#' @aliases plotPreds,funGp-method
+#' @param preds something
+#' @param sOut.pr also
+setMethod("plotPreds", "funGp", function(object, preds, sOut.pr = NULL, ...) plotPreds.funGp(object, preds, sOut.pr))
+
+plotPreds.funGp <- function(object, preds, sOut.pr) {
+  y <- sort(preds$mean)
+  n.pr <- length(y)
+  ll <- (preds$lower95)[order(preds$mean)]
+  ul <- (preds$upper95)[order(preds$mean)]
+
+  plot(1, type = "n", xlab = "Index", ylab = "Predicted", xlim = c(1, n.pr), ylim = range(y))
+  x <- 1:n.pr
+  polygon(c(x, rev(x)), c(ul, rev(ll)), col = "grey85", border = NA)
+  if (!is.null(sOut.pr)) {
+    lines(sOut.pr[order(preds$mean)], col = "black")
+  }
+  lines(y, col = "red")
+  lines(ll, col = "blue")
+  lines(ul, col = "blue")
 }

@@ -23,9 +23,8 @@
 #' @importFrom stats runif
 #'
 #' @examples
-#'
 #' # generating input data
-#' n.tr <- 16
+#' n.tr <- 25
 #' sIn <- as.matrix(expand.grid(x1 = seq(0,1,length = sqrt(n.tr)), x2 = seq(0,1,length = sqrt(n.tr))))
 #' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), matrix(runif(n.tr*22), ncol = 22))
 #'
@@ -42,6 +41,7 @@
 #' m1 <- funGp(sIn = sIn, fIn = fIn, sOut = sOut)
 #'
 #' # plotting the model
+#' plotLOO(m1)
 #'
 #' @author José Betancourt
 #' @export
@@ -72,7 +72,7 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
   # 17.   - lsHyps ......... array (ds + df) ..... estimated length-scale parameters
   # 18. * preMats .......... list (2) ............ KttInv and KttInv.sOut matrices for prediction
   # =====================================================================================================
-  browser()
+  # browser()
   checkVal(as.list(environment()))
 
   # create objects of class funGpProj, funGpKern and funGp

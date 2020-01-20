@@ -17,3 +17,45 @@ predict(object, ...)
 \description{
 Prediction method for the funGp Class
 }
+\examples{
+# generating input data for training
+n.tr <- 25
+sIn.tr <- expand.grid(x1 = seq(0,1,length = sqrt(n.tr)), x2 = seq(0,1,length = sqrt(n.tr)))
+sIn.tr <- as.matrix(sIn.tr)
+fIn.tr <- list(f1 = matrix(runif(n.tr*10), ncol = 10), matrix(runif(n.tr*22), ncol = 22))
+
+# generating output data for training
+sOut.tr <- as.matrix(sapply(t(1:n.tr), function(i){
+  x1 <- sIn.tr[i,1]
+  x2 <- sIn.tr[i,2]
+  f1 <- fIn.tr[[1]][i,]
+  f2 <- fIn.tr[[2]][i,]
+  as.numeric(x1 * sin(x2) + x1 * mean(f1) - x2^2 * diff(range(f2)))
+}))
+
+# creating a funGp model
+m1 <- funGp(sIn = sIn.tr, fIn = fIn.tr, sOut = sOut.tr)
+
+# generating input data for prediction
+n.pr <- 100
+sIn.pr <- expand.grid(x1 = seq(0,1,length = sqrt(n.pr)), x2 = seq(0,1,length = sqrt(n.pr)))
+sIn.pr <- as.matrix(sIn.pr)
+fIn.pr <- list(f1 = matrix(runif(n.pr*10), ncol = 10), matrix(runif(n.pr*22), ncol = 22))
+
+# making predictions
+m1.preds <- predict(m1, sIn.pr = sIn.pr, fIn.pr = fIn.pr)
+
+# plotting predictions
+plotPreds(m1, preds = m1.preds)
+
+# also possible to compare against true output values
+sOut.pr <- as.matrix(sapply(t(1:n.pr), function(i){
+  x1 <- sIn.pr[i,1]
+  x2 <- sIn.pr[i,2]
+  f1 <- fIn.pr[[1]][i,]
+  f2 <- fIn.pr[[2]][i,]
+  as.numeric(x1 * sin(x2) + x1 * mean(f1) - x2^2 * diff(range(f2)))
+}))
+plotPreds(m1, m1.preds, sOut.pr)
+
+}
