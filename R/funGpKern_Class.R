@@ -21,7 +21,7 @@
 #'
 #' @rdname kernel-class
 #'
-#' @author José Betancourt
+#' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 setClass("funGpKern",
          representation(
@@ -46,6 +46,7 @@ setClass("funGpKern",
 #' @rdname show-methods
 #' @importFrom methods show
 #' @param object An object to show.
+#' @author José Betancourt, François Bachoc and Thierry Klein
 if(!isGeneric("show")) {setGeneric(name = "show", def = function(object) standardGeneric("show"))}
 
 #' @title Fill!!!!!!!!!!!

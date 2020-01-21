@@ -7,12 +7,18 @@
 \usage{
 predict(object, ...)
 
-\S4method{predict}{funGp}(object, ...)
+\S4method{predict}{funGp}(object, sIn.pr = NULL, fIn.pr = NULL, detail = "light", ...)
 }
 \arguments{
 \item{object}{An object to predict from.}
 
 \item{...}{Further arguments for methods.}
+
+\item{sIn.pr}{fill!!}
+
+\item{fIn.pr}{fill!!}
+
+\item{detail}{fill!!}
 }
 \description{
 Prediction method for the funGp Class
@@ -58,4 +64,7 @@ sOut.pr <- as.matrix(sapply(t(1:n.pr), function(i){
 }))
 plotPreds(m1, m1.preds, sOut.pr)
 
+}
+\author{
+José Betancourt, François Bachoc and Thierry Klein
 }

@@ -18,7 +18,7 @@
 #'
 #' @keywords internal
 #'
-#' @author José Betancourt
+#' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 setHypers_SF <- function(sIn, fpIn, J, sMs, fMs, sOut, kerType, n.starts, n.presample){
   # browser()
@@ -48,7 +48,7 @@ setHypers_SF <- function(sIn, fpIn, J, sMs, fMs, sOut, kerType, n.starts, n.pres
 #'
 #' @keywords internal
 #'
-#' @author Jose Betancourt
+#' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 setBounds_SF <- function(sMs, fMs){
   # define lower and upper bounds for hypers
@@ -87,8 +87,7 @@ setBounds_SF <- function(sMs, fMs){
 #'
 #' @keywords internal
 #'
-#' @author J. Betancourt.
-#'
+#' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 setSPoints_SF <- function(bnds, sMs, fMs, sOut, kerType, n.starts, n.presample){
   # recover lower and upper limits
@@ -126,13 +125,12 @@ setSPoints_SF <- function(bnds, sMs, fMs, sOut, kerType, n.starts, n.presample){
 #'
 #' @keywords internal
 #'
-#' @author José Betancourt
-#'
 #' @importFrom foreach foreach
 #' @importFrom foreach "%do%"
 #' @importFrom foreach "%dopar%"
 #' @importFrom foreach getDoParRegistered
 #'
+#' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType){
   # if multistart is required then parallelize, else run single optimization
@@ -202,7 +200,7 @@ optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType){
 #'
 #' @keywords internal
 #'
-#' @author José Betancourt
+#' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 negLogLik_funGp_SF <- function(thetas, sMs, fMs, sOut, kerType){
   # recovering length-scale hypers linked to scalar and functional inputs

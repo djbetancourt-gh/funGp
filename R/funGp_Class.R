@@ -30,7 +30,7 @@
 #' @include funGpProj_Class.R
 #' @include funGpKern_Class.R
 #'
-#' @author José Betancourt
+#' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 setClass("funGp",
          representation(
@@ -59,8 +59,11 @@ setClass("funGp",
 # ----------------------------------------------------------------------------------------------------------
 #' @name predict
 #' @rdname predict-methods
-#' @importFrom stats predict
+#' @importFrom stats predict qnorm
 #' @param object An object to predict from.
+#' @param sIn.pr fill!!
+#' @param fIn.pr fill!!
+#' @param detail fill!!
 #' @param ... Further arguments for methods.
 #'
 #' @examples
@@ -104,13 +107,22 @@ setClass("funGp",
 #' }))
 #' plotPreds(m1, m1.preds, sOut.pr)
 #'
+#' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export predict
 setGeneric(name = "predict", def = function(object, ...) standardGeneric("predict"))
 
-#' @importFrom stats qnorm
-predict.funGp <- function(object, sIn.pr = NULL, fIn.pr = NULL, detail = "light", ...) {
+#' @title Prediction method for the funGp Class
+#' @name predict
+#' @rdname predict-methods
+#' @aliases predict,funGp-method
+setMethod("predict", "funGp",
+          function(object, sIn.pr = NULL, fIn.pr = NULL, detail = "light", ...){
+            predict.funGp(object = object, sIn.pr = sIn.pr, fIn.pr = fIn.pr, detail = detail, ...)
+          })
+
+predict.funGp <- function(object, sIn.pr, fIn.pr, detail = "light", ...) {
   # =====================================================================================================
-  # Prediction checklist
+  # Prediction output checklist
   # =====================================================================================================
   # 1.  * mean ............... array (n.pr) .............. predicted mean
   # 2.  * sd ................. array (n.pr) .............. predicted standard deviation
@@ -120,7 +132,7 @@ predict.funGp <- function(object, sIn.pr = NULL, fIn.pr = NULL, detail = "light"
   # 6.  * K.tp ............... matrix(n.tr x n.pr) ....... training vs prediction cross covariance matrix
   # =====================================================================================================
 
-  if (all(object@ds > 0, object@df > 0)) {
+  if (all(object@ds > 0, object@df > 0)) { # Hybrid-input case *******************************************
     print("I'm hybrid!")
 
     # project functional inputs
@@ -144,7 +156,7 @@ predict.funGp <- function(object, sIn.pr = NULL, fIn.pr = NULL, detail = "light"
                           object@kern@varHyp, object@kern@s_lsHyps, object@kern@f_lsHyps,
                           object@kern@kerType, object@preMats$L, object@preMats$LInvY, detail)
 
-  } else if (object@df > 0) {
+  } else if (object@df > 0) { # functional-input case *******************************************
     print("I'm functional!")
 
     # project functional inputs
@@ -163,7 +175,7 @@ predict.funGp <- function(object, sIn.pr = NULL, fIn.pr = NULL, detail = "light"
     preds <- makePreds_F(fMs.tp, fMs.pp, object@kern@varHyp, object@kern@f_lsHyps, object@kern@kerType,
                          object@preMats$L, object@preMats$LInvY, detail)
 
-  } else {
+  } else { # scalar-input case *******************************************
     print("I'm scalar!")
 
     # compute scalar distance matrices
@@ -181,12 +193,6 @@ predict.funGp <- function(object, sIn.pr = NULL, fIn.pr = NULL, detail = "light"
 
   return(preds)
 }
-
-#' @title Prediction method for the funGp Class
-#' @name predict
-#' @rdname predict-methods
-#' @aliases predict,funGp-method
-setMethod("predict", "funGp", function(object, ...) predict.funGp(object, ...))
 # ----------------------------------------------------------------------------------------------------------
 
 
@@ -197,6 +203,8 @@ setMethod("predict", "funGp", function(object, ...) predict.funGp(object, ...))
 #' @rdname show-methods
 #' @importFrom methods show
 #' @param object An object to show.
+#'
+#' @author José Betancourt, François Bachoc and Thierry Klein
 if(!isGeneric("show")) {setGeneric(name = "show", def = function(object) standardGeneric("show"))}
 
 #' @title Fill!!!!!!!!!!!
@@ -262,8 +270,10 @@ show.funGp <- function(object) {
 #' @name getCoef
 #' @description This is my description
 #' @rdname getCoef-methods
-#' @exportMethod getCoef
 #' @param object An object to predict from.
+#'
+#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @exportMethod getCoef
 if(!isGeneric("getCoef")) {setGeneric(name = "getCoef", def = function(object) standardGeneric("getCoef"))}
 
 #' @title Prediction Method for the apk Class
@@ -294,8 +304,10 @@ getCoef.funGp <- function(object) {
 #' @name getBasis
 #' @description This is my description
 #' @rdname getBasis-methods
-#' @exportMethod getBasis
 #' @param object An object to predict from.
+#'
+#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @exportMethod getBasis
 if(!isGeneric("getBasis")) {setGeneric(name = "getBasis", def = function(object) standardGeneric("getBasis"))}
 
 #' @title Prediction Method for the apk Class
@@ -318,8 +330,10 @@ getBasis.funGp <- function(object) {
 #' @name getRedfIn
 #' @description This is my description
 #' @rdname getRedfIn-methods
-#' @exportMethod getRedfIn
 #' @param object An object to predict from.
+#'
+#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @exportMethod getRedfIn
 if(!isGeneric("getRedfIn")) {setGeneric(name = "getRedfIn", def = function(object) standardGeneric("getRedfIn"))}
 
 #' @title Prediction Method for the apk Class
@@ -344,8 +358,10 @@ getRedfIn.funGp <- function(object) {
 #' @name getProjfIn
 #' @description This is my description
 #' @rdname getProjfIn-methods
-#' @exportMethod getProjfIn
 #' @param object An object to predict from.
+#'
+#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @exportMethod getProjfIn
 if(!isGeneric("getProjfIn")) {setGeneric(name = "getProjfIn", def = function(object) standardGeneric("getProjfIn"))}
 
 #' @title Prediction Method for the apk Class
@@ -370,8 +386,10 @@ getProjfIn.funGp <- function(object) {
 #' @name getProjgram
 #' @description This is my description
 #' @rdname getProjgram-methods
-#' @exportMethod getProjgram
 #' @param object An object to predict from.
+#'
+#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @exportMethod getProjgram
 if(!isGeneric("getProjgram")) {setGeneric("getProjgram", function(object) standardGeneric("getProjgram"))}
 
 #' @title Prediction Method for the apk Class
@@ -400,8 +418,10 @@ getProjgram.funGp <- function(object) {
 #' @name getTrainCov
 #' @description This is my description
 #' @rdname getTrainCov-methods
-#' @exportMethod getTrainCov
 #' @param object An object to predict from.
+#'
+#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @exportMethod getTrainCov
 if(!isGeneric("getTrainCov")) {setGeneric("getTrainCov", function(object) standardGeneric("getTrainCov"))}
 
 #' @title Prediction Method for the apk Class
@@ -421,9 +441,11 @@ getTrainCov.funGp <- function(object) {
 #' @name plotLOO
 #' @description This is my description
 #' @rdname plotLOO-methods
-#' @exportMethod plotLOO
 #' @importFrom graphics lines plot
 #' @param object An object to predict from.
+#'
+#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @exportMethod plotLOO
 if(!isGeneric("plotLOO")) {setGeneric("plotLOO", function(object) standardGeneric("plotLOO"))}
 
 #' @title Prediction Method for the apk Class
@@ -441,6 +463,7 @@ plotLOO.funGp <- function(object) {
   plot(y_obs, y_pre, xlim = yr, ylim = yr, pch = 21, col = "red", bg = "red", xlab = "Observed", ylab = "Predicted")
   lines(y_obs, y_obs, col = "blue")
 }
+# ----------------------------------------------------------------------------------------------------------
 
 
 # Method to plot predictions of a funGp model
@@ -448,10 +471,12 @@ plotLOO.funGp <- function(object) {
 #' @name plotPreds
 #' @description This is my description
 #' @rdname plotPreds-methods
-#' @exportMethod plotPreds
 #' @importFrom graphics lines plot polygon layout legend par
 #' @param object An object to predict from.
 #' @param ... Further arguments for methods.
+#'
+#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @exportMethod plotPreds
 if(!isGeneric("plotPreds")) {setGeneric("plotPreds", function(object, ...) standardGeneric("plotPreds"))}
 
 #' @title Prediction Method for the apk Class
@@ -460,7 +485,10 @@ if(!isGeneric("plotPreds")) {setGeneric("plotPreds", function(object, ...) stand
 #' @aliases plotPreds,funGp-method
 #' @param preds something
 #' @param sOut.pr also
-setMethod("plotPreds", "funGp", function(object, preds, sOut.pr = NULL, ...) plotPreds.funGp(object, preds, sOut.pr))
+setMethod("plotPreds", "funGp",
+          function(object, preds, sOut.pr = NULL, ...) {
+            plotPreds.funGp(object = object, preds = preds, sOut.pr = sOut.pr)
+          })
 
 plotPreds.funGp <- function(object, preds, sOut.pr) {
   if (!is.null(sOut.pr)) {
@@ -504,4 +532,169 @@ plotPreds.funGp <- function(object, preds, sOut.pr) {
 
   # reset plotting default setup
   par(mar = c(5.1, 4.1, 4.1, 2.1), mfrow = c(1,1))
+}
+# ----------------------------------------------------------------------------------------------------------
+
+
+# Method to make simulations from afunGp model
+# ----------------------------------------------------------------------------------------------------------
+#' @name simulate
+#' @rdname simulate-methods
+#' @importFrom stats simulate rnorm
+#' @param object An object to simulate from.
+#' @param nsim fill!!!
+#' @param seed fill!!!
+#' @param sIn.sm fill!!
+#' @param fIn.sm fill!!
+#' @param nug.sim fill!!!
+#' @param detail fill!!!
+#' @param ... Further arguments for methods.
+#'
+#' @examples
+#' # generating input data for training
+#' n.tr <- 25
+#' sIn.tr <- expand.grid(x1 = seq(0,1,length = sqrt(n.tr)), x2 = seq(0,1,length = sqrt(n.tr)))
+#' sIn.tr <- as.matrix(sIn.tr)
+#' fIn.tr <- list(f1 = matrix(runif(n.tr*10), ncol = 10), matrix(runif(n.tr*22), ncol = 22))
+#'
+#' # generating output data for training
+#' sOut.tr <- as.matrix(sapply(t(1:n.tr), function(i){
+#'   x1 <- sIn.tr[i,1]
+#'   x2 <- sIn.tr[i,2]
+#'   f1 <- fIn.tr[[1]][i,]
+#'   f2 <- fIn.tr[[2]][i,]
+#'   as.numeric(x1 * sin(x2) + x1 * mean(f1) - x2^2 * diff(range(f2)))
+#' }))
+#'
+#' # creating a funGp model
+#' m1 <- funGp(sIn = sIn.tr, fIn = fIn.tr, sOut = sOut.tr)
+#'
+#' # generating input data for simulation
+#' n.sm <- 100
+#' sIn.sm <- expand.grid(x1 = seq(0,1,length = sqrt(n.sm)), x2 = seq(0,1,length = sqrt(n.sm)))
+#' sIn.sm <- as.matrix(sIn.sm)
+#' fIn.sm <- list(f1 = matrix(runif(n.sm*10), ncol = 10), matrix(runif(n.sm*22), ncol = 22))
+#'
+#' # making simulations
+#' m1.sims <- simulate(m1, nsim = 10, sIn.sm = sIn.sm, fIn.sm = fIn.sm, detail = "full")
+#' matplot(t(m1.sims$obs), type = 'l', col = "grey")
+#' lines(m1.sims$mean, col = "red")
+#' lines(m1.sims$lower95, col = "blue")
+#' lines(m1.sims$upper95, col = "blue")
+#'
+#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @export simulate
+setGeneric(name = "simulate", def = function(object, nsim = 1, seed = NULL, ...) standardGeneric("simulate"))
+
+#' @title Simulation method for the funGp Class
+#' @name simulate
+#' @rdname simulate-methods
+#' @aliases simulate,funGp-method
+setMethod("simulate", "funGp",
+          function(object, nsim = 1, seed = NULL, sIn.sm = NULL, fIn.sm = NULL, nug.sim = 0, detail = "light", ...) {
+            simulate.funGp(object = object, nsim = nsim, seed = seed, sIn.sm = sIn.sm, fIn.sm = fIn.sm,
+                           nug.sim = nug.sim, detail = detail, ...)
+          })
+
+simulate.funGp <- function(object, nsim, seed, sIn.sm, fIn.sm, nug.sim, detail, ...) {
+  checkVal_simulate(as.list(environment()))
+
+  # check which type of model it is
+  if (all(object@ds > 0, object@df > 0)) { # Hybrid-input case *******************************************
+    print("I'm hybrid!")
+
+    # project functional inputs
+    fpIn.sm <- J <- list()
+    for (i in 1:object@df) {
+      B <- object@proj@basis[[i]]
+      fpIn.sm[[i]] <- t(solve(t(B) %*% B) %*% t(B) %*% t(fIn.sm[[i]]))
+      J[[i]] <- t(B) %*% B
+    }
+
+    # compute scalar distance matrices
+    sMs.ts <- setScalDistance(object@sIn, sIn.sm)
+    sMs.ss <- setScalDistance(sIn.sm, sIn.sm)
+
+    # compute functional distance matrices
+    fMs.ts <- setFunDistance(object@proj@coefs, fpIn.sm, J)
+    fMs.ss <- setFunDistance(fpIn.sm, fpIn.sm, J)
+
+    # make simulations based on the Gaussian Conditioning Theorem
+    sims <- makeSims_SF(sMs.ts, sMs.ss, fMs.ts, fMs.ss,
+                          object@kern@varHyp, object@kern@s_lsHyps, object@kern@f_lsHyps,
+                          object@kern@kerType, object@preMats$L, object@preMats$LInvY, nsim, nug.sim, detail)
+
+
+  } else if (object@df > 0) { # functional-input case *******************************************
+    print("I'm functional!")
+
+  } else { # scalar-input case *******************************************
+    print("I'm scalar!")
+  }
+
+  # if detail == 'full', confidence intervals at simulation points are provided,
+  # else the sims list is dropped to a matrix with the observations only
+  if (detail == "full") {
+    # compute confidence intervals
+    sims$lower95 <- sims$mean - qnorm(0.975) * sims$sd
+    sims$upper95 <- sims$mean + qnorm(0.975) * sims$sd
+  } else {
+    sims <- sims$obs
+  }
+
+  return(sims)
+}
+# ----------------------------------------------------------------------------------------------------------
+
+
+#' @title Fill!!!!!!!!!!!
+#' @description Fill!!!!!!!!!!!
+#'
+#' @param env Fill!!!!!!!!!!!
+#'
+#' @author José Betancourt, François Bachoc and Thierry Klein
+checkVal_simulate <- function(env){
+  # recover the model
+  model <- env$object
+
+  if (all(!is.null(model@sIn), !is.null(model@fIn))) { # Hybrid-input case *******************************************
+    # consistency in data structures
+    if (all(is.null(env$sIn.sm), is.null(env$fIn.sm))) {
+      stop(paste("Invalid input. The model has both, scalar and functional inputs. Please provide valid new scalar and\n",
+                 "functional points to proceed with the simulation."))
+    } else if (is.null(env$fIn.sm)) {
+      stop(paste("Inconsistent data structures. The model has both, scalar and functional inputs, but only new scalar points\n",
+                 "for simulation were specified. Please provide also valid new functional points to proceed with the simulation."))
+    } else if (is.null(env$sIn.sm)) {
+      stop(paste("Inconsistent data structures. The model has both, scalar and functional inputs, but only new functional points\n",
+                 "for simulation were specified. Please provide also valid new scalar points to proceed with the simulation."))
+    }
+
+    # consistency in number of points
+    if (!all(nrow(env$sIn.sm) == c(sapply(env$fIn.sm, nrow)))) {
+      stop("Inconsistent number of points. Please check that sIn.sm and each matrix in fIn have all the same number of rows.")
+    }
+
+  } else if(!is.null(model@fIn)) { # functional-input case ***************************************
+    # consistency in data structures
+    if (!is.null(env$sIn.sm)) {
+      stop(paste("Inconsistent data structures. The model has only functional inputs, but new scalar points\n",
+                 "for simulation were specified. Please provide new functional points instead to proceed with the simulation."))
+    }
+    if (is.null(env$fIn.sm)) {
+      stop(paste("Invalid input. The model has scalar inputs. Please provide valid new scalar points to proceed with\n",
+                 "the simulation."))
+    }
+
+  } else if(!is.null(model@sIn)) { # scalar-input case *******************************************
+    # consistency in data structures
+    if (!is.null(env$fIn.sm)) {
+      stop(paste("Inconsistent data structures. The model has only scalar inputs, but new functional points\n",
+                 "for simulation were specified. Please provide new scalar points instead to proceed with the simulation."))
+    }
+    if (is.null(env$sIn.sm)) {
+      stop(paste("Invalid input. The model has functional inputs. Please provide valid new functional points to proceed with\n",
+                 "the simulation."))
+    }
+  }
 }

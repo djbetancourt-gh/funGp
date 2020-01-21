@@ -19,6 +19,6 @@ A correlation matrix of dimension n times n computed from the Matern 5/2 correla
 Applies the Matern 5/2 correlation function to a list of distance matrices using corresponding length-scale parameters.
 }
 \author{
-José Betancourt
+José Betancourt, François Bachoc and Thierry Klein
 }
 \keyword{internal}

@@ -22,7 +22,7 @@
 #'
 #' @rdname proj-Class
 #'
-#' @author José Betancourt
+#' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 setClass("funGpProj",
          representation(
@@ -47,6 +47,7 @@ setClass("funGpProj",
 #' @description This is my description
 #' @rdname show-methods
 #' @importFrom methods show
+#' @author José Betancourt, François Bachoc and Thierry Klein
 #' @param object An object to show.
 if(!isGeneric("show")) {setGeneric(name = "show", def = function(object) standardGeneric("show"))}
 

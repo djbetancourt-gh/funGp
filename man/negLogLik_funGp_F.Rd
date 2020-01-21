@@ -23,6 +23,6 @@ Fill this!!!!!!!!!!
 Fill this!!!!!!!!!!
 }
 \author{
-José Betancourt
+José Betancourt, François Bachoc and Thierry Klein
 }
 \keyword{internal}

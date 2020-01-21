@@ -22,5 +22,5 @@ used for the projection of one functional input.}
 }}
 
 \author{
-José Betancourt
+José Betancourt, François Bachoc and Thierry Klein
 }

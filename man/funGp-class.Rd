@@ -35,5 +35,5 @@ To create a funGp object, use \link[funGp]{funGp} . See also this function for m
 }}
 
 \author{
-José Betancourt
+José Betancourt, François Bachoc and Thierry Klein
 }

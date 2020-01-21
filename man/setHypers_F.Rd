@@ -31,6 +31,6 @@ The hyperparameters.
 Sets good values for the hyperparameters of the Gaussian process model based on optimization.
 }
 \author{
-José Betancourt
+José Betancourt, François Bachoc and Thierry Klein
 }
 \keyword{internal}

@@ -24,6 +24,7 @@ Collate:
     'prediction_F.R'
     'prediction_S.R'
     'prediction_SF.R'
+    'simulation_SF.R'
     'training_F.R'
     'training_S.R'
     'training_SF.R'

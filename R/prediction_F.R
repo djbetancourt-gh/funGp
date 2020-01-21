@@ -1,3 +1,4 @@
+#' @author José Betancourt, François Bachoc and Thierry Klein
 makePreds_F <- function(fMs.tp, fMs.pp, sig2, thetas_f, kerType, L, LInvY, detail){
   # create empty prediction list
   preds <- list()
@@ -17,6 +18,7 @@ makePreds_F <- function(fMs.tp, fMs.pp, sig2, thetas_f, kerType, L, LInvY, detai
   return(preds)
 }
 
+#' @author José Betancourt, François Bachoc and Thierry Klein
 preMats_F <- function(fMs, sOut, sig2, thetas_f, kerType){
   # precompute L and LInvY matrices
   K.tt <- sig2 * setR(thetas_f, fMs, kerType)

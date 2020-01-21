@@ -21,6 +21,6 @@ and the second row the upper limits for the optimization.
 Fill this!!!!!!!!!!
 }
 \author{
-Jose Betancourt
+José Betancourt, François Bachoc and Thierry Klein
 }
 \keyword{internal}

@@ -9,7 +9,7 @@
 #'
 #' @keywords internal
 #'
-#' @author José Betancourt
+#' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 setR <- function(thetas, Ms, kerType) {
   switch(kerType,
@@ -40,7 +40,7 @@ setR <- function(thetas, Ms, kerType) {
 #'
 #' @keywords internal
 #'
-#' @author José Betancourt
+#' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 gaussian_cor <- function(Ms, thetas) {
   # browser()
@@ -63,7 +63,7 @@ gaussian_cor <- function(Ms, thetas) {
 #'
 #' @keywords internal
 #'
-#' @author José Betancourt
+#' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 matern52_cor2 <- function(Ms, thetas) {
   Rm <- matrix(0L, nrow = nrow(Ms[[1]]), ncol = ncol(Ms[[1]]))
@@ -93,7 +93,7 @@ matern52_cor <- function(Ms, thetas) {
 #'
 #' @keywords internal
 #'
-#' @author José Betancourt
+#' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 matern32_cor <- function(Ms, thetas) {
   Rm <- matrix(0L, nrow = nrow(Ms[[1]]), ncol = ncol(Ms[[1]]))

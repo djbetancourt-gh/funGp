@@ -25,6 +25,6 @@ Precomputes the distance matrices that will be used later inside the \emph{funct
              during the optimization of the hyperparmeters of the metamodel.
 }
 \author{
-José Betancourt
+José Betancourt, François Bachoc and Thierry Klein
 }
 \keyword{internal}

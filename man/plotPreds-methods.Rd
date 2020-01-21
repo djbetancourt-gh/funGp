@@ -19,3 +19,6 @@
 \description{
 This is my description
 }
+\author{
+José Betancourt, François Bachoc and Thierry Klein
+}

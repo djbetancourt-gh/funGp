@@ -9,7 +9,7 @@
 #'
 #' @keywords internal
 #'
-#' @author José Betancourt
+#' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 setScalDistance <- function(sIn1, sIn2){
   sMs <- list()
@@ -38,7 +38,7 @@ setScalDistance <- function(sIn1, sIn2){
 #' @importFrom stats cov
 #' @keywords internal
 #'
-#' @author José Betancourt
+#' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 setFunDistance <- function(fpIn1, fpIn2, J){
   df <- length(fpIn1)

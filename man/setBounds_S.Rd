@@ -18,6 +18,6 @@ A matrix with two rows and as many columns as hyperparameters the metamodel requ
 Fill this!!!!!!!!!!
 }
 \author{
-Jose Betancourt
+José Betancourt, François Bachoc and Thierry Klein
 }
 \keyword{internal}

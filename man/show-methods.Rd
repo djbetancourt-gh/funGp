@@ -24,4 +24,11 @@ This is my description
 
 This is my description
 }
+\author{
+José Betancourt, François Bachoc and Thierry Klein
+
+José Betancourt, François Bachoc and Thierry Klein
+
+José Betancourt, François Bachoc and Thierry Klein
+}
 \keyword{internal}

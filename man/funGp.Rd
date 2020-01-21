@@ -65,5 +65,5 @@ plotLOO(m1)
 
 }
 \author{
-José Betancourt
+José Betancourt, François Bachoc and Thierry Klein
 }

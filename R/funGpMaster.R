@@ -43,7 +43,7 @@
 #' # plotting the model
 #' plotLOO(m1)
 #'
-#' @author José Betancourt
+#' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerType = "matern5_2", disType = "functional",
                   n.starts = 1, n.presample = 1) {
@@ -73,7 +73,7 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
   # 18. * preMats .......... list (2) ............ KttInv and KttInv.sOut matrices for prediction
   # =====================================================================================================
   # browser()
-  checkVal(as.list(environment()))
+  checkVal_funGp(as.list(environment()))
 
   # create objects of class funGpProj, funGpKern and funGp
   proj <- new("funGpProj")
@@ -247,9 +247,8 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
 #'
 #' @param env Fill!!!!!!!!!!!
 #'
-#' @author José Betancourt
-checkVal <- function(env){
-  # browser()
+#' @author José Betancourt, François Bachoc and Thierry Klein
+checkVal_funGp <- function(env){
   if (all(!is.null(env$sIn), !is.null(env$fIn))) { # Hybrid-input case *******************************************
 
     # consistency in number of points

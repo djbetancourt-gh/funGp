@@ -15,7 +15,7 @@
 #'
 #' @keywords internal
 #'
-#' @author José Betancourt
+#' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 setHypers_F <- function(fpIn, J, fMs, sOut, kerType, n.starts, n.presample){
   # 1. set hypercube for solution space
@@ -42,7 +42,7 @@ setHypers_F <- function(fpIn, J, fMs, sOut, kerType, n.starts, n.presample){
 #'
 #' @keywords internal
 #'
-#' @author Jose Betancourt
+#' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 setBounds_F <- function(fMs){
   # define lower and upper bounds for hypers
@@ -72,8 +72,7 @@ setBounds_F <- function(fMs){
 #'
 #' @keywords internal
 #'
-#' @author J. Betancourt.
-#'
+#' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 setSPoints_F <- function(bnds, fMs, sOut, kerType, n.starts, n.presample){
   # recover lower and upper limits
@@ -110,8 +109,7 @@ setSPoints_F <- function(bnds, fMs, sOut, kerType, n.starts, n.presample){
 #'
 #' @keywords internal
 #'
-#' @author José Betancourt
-#'
+#' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 optimHypers_F <- function(spoints, n.starts, bnds, fMs, sOut, kerType){
   # if multistart is required then parallelize, else run single optimization
@@ -174,7 +172,7 @@ optimHypers_F <- function(spoints, n.starts, bnds, fMs, sOut, kerType){
 #'
 #' @keywords internal
 #'
-#' @author José Betancourt
+#' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 negLogLik_funGp_F <- function(thetas_f, fMs, sOut, kerType){
   # Estimation of the correlation matrix
