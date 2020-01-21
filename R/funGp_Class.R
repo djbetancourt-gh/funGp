@@ -487,10 +487,10 @@ if(!isGeneric("plotPreds")) {setGeneric("plotPreds", function(object, ...) stand
 #' @param sOut.pr also
 setMethod("plotPreds", "funGp",
           function(object, preds, sOut.pr = NULL, ...) {
-            plotPreds.funGp(object = object, preds = preds, sOut.pr = sOut.pr)
+            plotPreds.funGp(preds = preds, sOut.pr = sOut.pr)
           })
 
-plotPreds.funGp <- function(object, preds, sOut.pr) {
+plotPreds.funGp <- function(preds, sOut.pr) {
   if (!is.null(sOut.pr)) {
     layout(matrix(1:2, nrow = 2))
     par(mar = c(4.2,4.1,1,2.1))
@@ -713,3 +713,45 @@ checkVal_simulate <- function(env){
     }
   }
 }
+
+
+# Method to plot simulations of a funGp model
+# ----------------------------------------------------------------------------------------------------------
+#' @name plotSims
+#' @description This is my description
+#' @rdname plotSims-methods
+#' @param object An object to predict from.
+#' @param ... Further arguments for methods.
+#'
+#' @importFrom graphics matplot
+#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @exportMethod plotSims
+if(!isGeneric("plotSims")) {setGeneric("plotSims", function(object, ...) standardGeneric("plotSims"))}
+
+#' @title Fill Method for the apk Class
+#' @name plotSims
+#' @rdname plotSims-methods
+#' @aliases plotSims,funGp-method
+#' @param sims something
+#' @param detail fill!!!!
+setMethod("plotSims", "funGp",
+          function(object, sims = sims, detail = "full", ...) {
+            plotSims.funGp(sims = sims, detail = detail)
+          })
+
+plotSims.funGp <- function(sims, detail) {
+  if (!is.list(sims)) {
+    detail <- "light"
+  }
+
+  if (detail == "light") {
+    matplot(t(sims$obs), type = "l", lty = 1, col = "palegreen4", xlab = "Sim. index", ylab = "Output")
+  } else {
+    matplot(t(sims$obs), type = "l", lty = 1, col = "grey", xlab = "Sim. index", ylab = "Output")
+    lines(sims$mean, col = "red")
+    lines(sims$lower95, col = "blue")
+    lines(sims$upper95, col = "blue")
+    legend("topleft", legend = c("Sims", "Mean", "95% CIs"), col = c("grey50", "red", "blue"), lty = 1, cex = 0.8)
+  }
+}
+# ----------------------------------------------------------------------------------------------------------
