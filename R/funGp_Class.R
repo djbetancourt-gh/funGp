@@ -624,12 +624,27 @@ simulate.funGp <- function(object, nsim, seed, sIn.sm, fIn.sm, nug.sim, detail, 
                           object@kern@varHyp, object@kern@s_lsHyps, object@kern@f_lsHyps,
                           object@kern@kerType, object@preMats$L, object@preMats$LInvY, nsim, nug.sim, detail)
 
-
   } else if (object@df > 0) { # functional-input case *******************************************
     print("I'm functional!")
 
+    # compute functional distance matrices
+    fMs.ts <- setFunDistance(object@proj@coefs, fpIn.sm, J)
+    fMs.ss <- setFunDistance(fpIn.sm, fpIn.sm, J)
+
+    # make simulations based on the Gaussian Conditioning Theorem
+    sims <- makeSims_F(fMs.ts, fMs.ss, object@kern@varHyp, object@kern@f_lsHyps, object@kern@kerType,
+                       object@preMats$L, object@preMats$LInvY, nsim, nug.sim, detail)
+
   } else { # scalar-input case *******************************************
     print("I'm scalar!")
+
+    # compute scalar distance matrices
+    sMs.ts <- setScalDistance(object@sIn, sIn.sm)
+    sMs.ss <- setScalDistance(sIn.sm, sIn.sm)
+
+    # make simulations based on the Gaussian Conditioning Theorem
+    sims <- makeSims_S(sMs.ts, sMs.ss, object@kern@varHyp, object@kern@s_lsHyps, object@kern@kerType,
+                       object@preMats$L, object@preMats$LInvY, nsim, nug.sim, detail)
   }
 
   # if detail == 'full', confidence intervals at simulation points are provided,

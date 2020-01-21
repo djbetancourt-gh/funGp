@@ -1,11 +1,11 @@
 #' @author José Betancourt, François Bachoc and Thierry Klein
-makeSims_SF <- function(sMs.ts, sMs.ss, fMs.ts, fMs.ss, sig2, thetas_s, thetas_f, kerType, L, LInvY, nsim, nug.sim, detail){
+makeSims_S <- function(sMs.ts, sMs.ss, sig2, thetas_s, kerType, L, LInvY, nsim, nug.sim, detail){
   # create empty prediction list
   sims <- list()
 
   # compute and store conditional realizations
-  K.ts <- sig2 * setR(thetas_s, sMs.ts, kerType) * setR(thetas_f, fMs.ts, kerType)
-  K.ss <- sig2 * setR(thetas_s, sMs.ss, kerType) * setR(thetas_f, fMs.ss, kerType)
+  K.ts <- sig2 * setR(thetas_s, sMs.ts, kerType)
+  K.ss <- sig2 * setR(thetas_s, sMs.ss, kerType)
   LInvK <- backsolve(L, K.ts, upper.tri = F)
   ys.mean <- t(LInvK) %*% LInvY
   n.sm <- nrow(K.ss)
