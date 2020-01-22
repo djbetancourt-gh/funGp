@@ -99,7 +99,7 @@ setClass("funGp",
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerType = "matern5_2", disType = "functional",
-                  n.starts = 1, n.presample = 1) {
+                  n.starts = 1, n.presample = 20) {
   # =====================================================================================================
   # Attributes checklist
   # =====================================================================================================
@@ -136,6 +136,7 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
   # extract generic information from user inputs
   sOut <- as.matrix(sOut)
   n.tr <- length(sOut)
+  n.presample <- max(n.presample, n.starts)
 
   # 3 possible cases
   # Case 1: scalar and functional

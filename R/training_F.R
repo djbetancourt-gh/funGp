@@ -45,9 +45,7 @@ setHypers_F <- function(fpIn, J, fMs, sOut, kerType, n.starts, n.presample){
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 setBounds_F <- function(fMs){
-  # define lower and upper bounds for hypers
-
-  # lower and upper bounds for length-scale hypers linked to functional inputs
+  # define lower and upper bounds for length-scale hypers linked to functional inputs
   mxf <- sapply(fMs, max)
   ll_f <- 10^-10
   ul_f <- 2 * mxf
@@ -78,17 +76,17 @@ setSPoints_F <- function(bnds, fMs, sOut, kerType, n.starts, n.presample){
   # recover lower and upper limits
   ll <- bnds[1,]
   ul <- bnds[2,]
+  n.ls <- ncol(bnds)
 
   # generate random uniform points to test
-  allspoints <- matrix(runif((ncol(bnds) * n.starts * n.presample)),
-                       nrow = ncol(bnds), ncol = (n.starts * n.presample))
+  allspoints <- matrix(runif(n.ls * n.presample), nrow = n.ls, ncol = n.presample)
   allspoints <- ll + allspoints * (ul - ll)
 
   # compute fitness of each starting point
-  fitvec <- apply(allspoints, 2, function(v) negLogLik_funGp_F(v, fMs, sOut, kerType))
+  fitvec <- apply(allspoints, 2, negLogLik_funGp_F, fMs, sOut, kerType)
 
   # get the best n.starts points
-  spoints <- as.matrix(allspoints[,order(fitvec, decreasing = T)[1:n.starts]])
+  spoints <- allspoints[,order(fitvec)[1:n.starts], drop = F]
 
   return(spoints)
 }
@@ -113,7 +111,7 @@ setSPoints_F <- function(bnds, fMs, sOut, kerType, n.starts, n.presample){
 #' @export
 optimHypers_F <- function(spoints, n.starts, bnds, fMs, sOut, kerType){
   # if multistart is required then parallelize, else run single optimization
-  if (ncol(spoints) == 1){
+  if (n.starts == 1){
     optOut <- optim(par = as.numeric(spoints), fn = negLogLik_funGp_F, method = "L-BFGS-B",
                     lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
                     fMs = fMs, sOut = sOut, kerType = kerType)
@@ -140,7 +138,7 @@ optimHypers_F <- function(spoints, n.starts, bnds, fMs, sOut, kerType){
     fitvec <- lapply(optOutList, function(sol) sol$value)
 
     # recover best solution
-    optOut <- optOutList[[which.max(fitvec)]]
+    optOut <- optOutList[[which.min(fitvec)]]
   }
 
   # recovering relevant information for the estimation of the process a priori variance
@@ -185,7 +183,6 @@ negLogLik_funGp_F <- function(thetas_f, fMs, sOut, kerType){
   sig2 <- crossprod(UInvY)/n.tr
 
   # compute loglikelihood
-  # DiceKgiging 2108
   llik <- -0.5 * (n.tr * log(2*pi*sig2) + 2*sum(log(diag(U))) + n.tr)
 
   return(-llik)

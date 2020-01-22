@@ -51,8 +51,6 @@ setHypers_SF <- function(sIn, fpIn, J, sMs, fMs, sOut, kerType, n.starts, n.pres
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 setBounds_SF <- function(sMs, fMs){
-  # define lower and upper bounds for hypers
-
   # lower and upper bounds for length-scale hypers linked to scalar inputs
   mxs <- sapply(sMs, max)
   ll_s <- 10^-10
@@ -93,17 +91,17 @@ setSPoints_SF <- function(bnds, sMs, fMs, sOut, kerType, n.starts, n.presample){
   # recover lower and upper limits
   ll <- bnds[1,]
   ul <- bnds[2,]
+  n.ls <- ncol(bnds)
 
   # generate random uniform points to test
-  allspoints <- matrix(runif((ncol(bnds) * n.starts * n.presample)),
-                       nrow = ncol(bnds), ncol = (n.starts * n.presample))
+  allspoints <- matrix(runif(n.ls * n.presample), nrow = n.ls, ncol = n.presample)
   allspoints <- ll + allspoints * (ul - ll)
 
   # compute fitness of each starting point
-  fitvec <- apply(allspoints, 2, function(v) negLogLik_funGp_SF(v, sMs, fMs, sOut, kerType))
+  fitvec <- apply(allspoints, 2, negLogLik_funGp_SF, sMs, fMs, sOut, kerType)
 
   # get the best n.starts points
-  spoints <- as.matrix(allspoints[,order(fitvec, decreasing = T)[1:n.starts]])
+  spoints <- allspoints[,order(fitvec)[1:n.starts], drop = F]
 
   return(spoints)
 }
@@ -134,7 +132,7 @@ setSPoints_SF <- function(bnds, sMs, fMs, sOut, kerType, n.starts, n.presample){
 #' @export
 optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType){
   # if multistart is required then parallelize, else run single optimization
-  if (ncol(spoints) == 1){
+  if (n.starts == 1){
     optOut <- optim(par = as.numeric(spoints), fn = negLogLik_funGp_SF, method = "L-BFGS-B",
                    lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
                    sMs = sMs, fMs = fMs, sOut = sOut, kerType = kerType)
@@ -161,7 +159,7 @@ optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType){
     fitvec <- lapply(optOutList, function(sol) sol$value)
 
     # recover best solution
-    optOut <- optOutList[[which.max(fitvec)]]
+    optOut <- optOutList[[which.min(fitvec)]]
   }
 
   # recovering length-scale hypers linked to scalar and functional inputs

@@ -27,6 +27,7 @@ Collate:
     'simulation_F.R'
     'simulation_S.R'
     'simulation_SF.R'
+    'tests.R'
     'training_F.R'
     'training_S.R'
     'training_SF.R'

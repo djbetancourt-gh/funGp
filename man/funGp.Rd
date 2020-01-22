@@ -13,7 +13,7 @@ funGp(
   kerType = "matern5_2",
   disType = "functional",
   n.starts = 1,
-  n.presample = 1
+  n.presample = 20
 )
 }
 \arguments{
