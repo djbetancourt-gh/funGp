@@ -76,12 +76,12 @@ setClass("funGp",
 #' @importFrom stats runif
 #'
 #' @examples
-#' # generating input data
+#' # generating input data for training
 #' n.tr <- 25
-#' sIn <- as.matrix(expand.grid(x1 = seq(0,1,length = sqrt(n.tr)), x2 = seq(0,1,length = sqrt(n.tr))))
+#' sIn <- as.matrix(expand.grid(x1 = seq(0,1,length = 5), x2 = seq(0,1,length = 5)))
 #' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), matrix(runif(n.tr*22), ncol = 22))
 #'
-#' # generating output data
+#' # generating output data for training
 #' sOut <- as.matrix(sapply(t(1:n.tr), function(i){
 #'   x1 <- sIn[i,1]
 #'   x2 <- sIn[i,2]
@@ -294,50 +294,6 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
 # -------------------------------------------------------------------------------------------------------------------------------------
 
 
-#' @title Fill!!!!!!!!!!!
-#' @description Fill!!!!!!!!!!!
-#'
-#' @param env Fill!!!!!!!!!!!
-#'
-#' @author José Betancourt, François Bachoc and Thierry Klein
-checkVal_funGp <- function(env){
-  if (all(!is.null(env$sIn), !is.null(env$fIn))) { # Hybrid-input case *******************************************
-
-    # consistency in number of points
-    if (length(unique(c(nrow(env$sIn), as.numeric(sapply(env$fIn, nrow)), length(env$sOut)))) > 1) {
-      stop("Inconsistent number of points. Please check that sIn, sOut and each matrix in fIn have all the same number of rows.")
-    }
-
-    # consistency in number of points
-    if (!is.null(env$fpDims)) {
-      if (length(env$fpDims) != length(env$fIn)) {
-        stop(paste("Inconsistent number of projection dimensions. The functional input list has", length(env$fIn), "elements, but",
-                   length(env$fpDims), "projection dimensions were specified."))
-      }
-    }
-
-  } else if(!is.null(env$fIn)) { # functional-input case ***************************************
-    # check validity and consistency of user inputs
-    if (length(unique(c(as.numeric(sapply(env$fIn, nrow)), length(env$sOut)))) > 1) {
-      stop("Inconsistent number of points. Please check that sOut and each matrix in fIn have all the same number of rows.")
-    }
-    if (!is.null(env$fpDims)) {
-      if (length(env$fpDims) != length(env$fIn)) {
-        stop(paste("Inconsistent number of projection dimensions. The functional input list has", length(env$fIn), "elements, but",
-                   length(env$fpDims), "projection dimensions were specified."))
-      }
-    }
-
-  } else if(!is.null(env$sIn)) { # scalar-input case *******************************************
-    # check validity and consistency of user inputs
-    if (nrow(env$sIn) != length(env$sOut)) {
-      stop("Inconsistent number of points. Please check that sIn and sOut have the same number of rows.")
-    }
-  }
-}
-# ----------------------------------------------------------------------------------------------------------
-
-
 # Method to print a funGp model
 # ----------------------------------------------------------------------------------------------------------
 #' @name show
@@ -358,7 +314,7 @@ setMethod("show", "funGp", function(object) show.funGp(object))
 show.funGp <- function(object) {
   mainTxt <- "Gaussian Process Model"
   callTxt <- paste("* Call: ", as.expression(object@call), sep = "")
-  cat(paste("\n", mainTxt, paste(rep("_", min(30, (nchar(callTxt) - nchar(mainTxt) - 1))), collapse = "")))
+  cat(paste("\n", mainTxt, paste(rep("_", min(30, (nchar(callTxt) - nchar(mainTxt) - 1))), collapse = ""), sep = ""))
 
   cat(paste("\n\n", callTxt, "\n\n", sep = ""))
 
@@ -702,8 +658,9 @@ plotLOO.funGp <- function(object) {
   Rinv <- solve(R)
   y_pre <- y_obs - diag(Rinv)^(-1) * Rinv %*% y_obs
   yr <- range(c(y_obs, y_pre))
-  plot(y_obs, y_pre, xlim = yr, ylim = yr, pch = 21, col = "red", bg = "red", xlab = "Observed", ylab = "Predicted")
-  lines(y_obs, y_obs, col = "blue")
+  plot(y_obs, y_pre, xlim = yr, ylim = yr, pch = 21, col = "red", bg = "red",
+       main = "Model diagnostic by leave-one-out cross-valitation", xlab = "Observed", ylab = "Predicted")
+  lines(yr, yr, col = "blue")
 }
 # ----------------------------------------------------------------------------------------------------------
 
@@ -734,43 +691,41 @@ setMethod("plotPreds", "funGp",
 
 plotPreds.funGp <- function(preds, sOut.pr) {
   if (!is.null(sOut.pr)) {
-    layout(matrix(1:2, nrow = 2))
-    par(mar = c(4.2,4.1,1,2.1))
+    layout(matrix(2:1, nrow = 2))
+    par(mar = c(4.1, 4.1, 2.5, 2.1))
+  }
+
+  # sorted mean and 95% limits and true curve
+  y <- sort(preds$mean)
+  n.pr <- length(y)
+  ll <- (preds$lower95)[order(preds$mean)]
+  ul <- (preds$upper95)[order(preds$mean)]
+
+  plot(1, type = "n", xlim = c(1, n.pr), ylim = range(y), main = "Sorted predictions", xlab = "Index", ylab = "Predicted")
+  x <- 1:n.pr
+  polygon(c(x, rev(x)), c(ul, rev(ll)), col = "grey85", border = NA)
+  lines(y, col = "red")
+  lines(ll, col = "blue")
+  lines(ul, col = "blue")
+
+  if (!is.null(sOut.pr)) {
+    # complement for sorted output plot
+    lines(sOut.pr[order(preds$mean)], col = "black")
+    legend("topleft", legend = c("True", "Pred. mean", "95% CIs"), col = c("black", "red", "blue"), lty = 1, cex = 0.8)
+
     # calibration plot
     y_obs <- sOut.pr
     y_pre <- preds$mean
     yr <- range(c(y_obs, y_pre))
-    plot(y_obs, y_pre, xlim = yr, ylim = yr, pch = 21, col = "red", bg = "red", xlab = "Observed", ylab = "Predicted")
+    plot(y_obs, y_pre, xlim = yr, ylim = yr, pch = 21, col = "red", bg = "red",
+         main = "Model predictions at new input points", xlab = "Observed", ylab = "Predicted")
     lines(y_obs, y_obs, col = "blue")
 
-    # prediction, limits and true curve
-    y <- sort(preds$mean)
-    n.pr <- length(y)
-    ll <- (preds$lower95)[order(preds$mean)]
-    ul <- (preds$upper95)[order(preds$mean)]
-
-    plot(1, type = "n", xlab = "Index", ylab = "Predicted", xlim = c(1, n.pr), ylim = range(y))
-    x <- 1:n.pr
-    polygon(c(x, rev(x)), c(ul, rev(ll)), col = "grey85", border = NA)
-    lines(sOut.pr[order(preds$mean)], col = "black")
-    lines(y, col = "red")
-    lines(ll, col = "blue")
-    lines(ul, col = "blue")
   } else {
-    # prediction, limits and true curve
-    y <- sort(preds$mean)
-    n.pr <- length(y)
-    ll <- (preds$lower95)[order(preds$mean)]
-    ul <- (preds$upper95)[order(preds$mean)]
-
-    plot(1, type = "n", xlab = "Index", ylab = "Predicted", xlim = c(1, n.pr), ylim = range(y))
-    x <- 1:n.pr
-    polygon(c(x, rev(x)), c(ul, rev(ll)), col = "grey85", border = NA)
-    lines(y, col = "red")
-    lines(ll, col = "blue")
-    lines(ul, col = "blue")
+    # complement for sorted output plot
+    lines(sOut.pr[order(preds$mean)], col = "black")
+    legend("topleft", legend = c("Pred. mean", "95% CIs"), col = c("black", "red", "blue"), lty = 1, cex = 0.8)
   }
-  legend("topleft", legend = c("True", "Predicted", "95% CIs"), col = c("black", "red", "blue"), lty = 1, cex = 0.8)
 
   # reset plotting default setup
   par(mar = c(5.1, 4.1, 4.1, 2.1), mfrow = c(1,1))
@@ -804,17 +759,20 @@ setMethod("plotSims", "funGp",
 
 plotSims.funGp <- function(sims, detail) {
   if (!is.list(sims)) {
-    detail <- "light"
-  }
-
-  if (detail == "light") {
-    matplot(t(sims$obs), type = "l", lty = 1, col = "palegreen4", xlab = "Sim. index", ylab = "Output")
+    matplot(t(sims), type = "l", lty = 1, col = "palegreen4",
+            main = "Simulations from a funGp model", xlab = "Sim. index", ylab = "Output")
   } else {
-    matplot(t(sims$obs), type = "l", lty = 1, col = "grey", xlab = "Sim. index", ylab = "Output")
-    lines(sims$mean, col = "red")
-    lines(sims$lower95, col = "blue")
-    lines(sims$upper95, col = "blue")
-    legend("topleft", legend = c("Sims", "Mean", "95% CIs"), col = c("grey50", "red", "blue"), lty = 1, cex = 0.8)
+    if (detail == "light") {
+      matplot(t(sims$obs), type = "l", lty = 1, col = "palegreen4",
+              main = "Simulations from a funGp model", xlab = "Sim. index", ylab = "Output")
+    } else {
+      matplot(t(sims$obs), type = "l", lty = 1, col = "grey",
+              main = "Simulations from a funGp model", xlab = "Sim. index", ylab = "Output")
+      lines(sims$mean, col = "red")
+      lines(sims$lower95, col = "blue")
+      lines(sims$upper95, col = "blue")
+      legend("topleft", legend = c("Sims", "Mean", "95% CIs"), col = c("grey50", "red", "blue"), lty = 1, cex = 0.8)
+    }
   }
 }
 # ----------------------------------------------------------------------------------------------------------
@@ -1000,6 +958,51 @@ getTrainCov.funGp <- function(object) {
 # ==========================================================================================================
 # Validators
 # ==========================================================================================================
+
+# Function to check that user inputs for 'funGp' function are ok
+# ----------------------------------------------------------------------------------------------------------
+#' @title Fill!!!!!!!!!!!
+#' @description Fill!!!!!!!!!!!
+#'
+#' @param env Fill!!!!!!!!!!!
+#'
+#' @author José Betancourt, François Bachoc and Thierry Klein
+checkVal_funGp <- function(env){
+  if (all(!is.null(env$sIn), !is.null(env$fIn))) { # Hybrid-input case *******************************************
+
+    # consistency in number of points
+    if (length(unique(c(nrow(env$sIn), as.numeric(sapply(env$fIn, nrow)), length(env$sOut)))) > 1) {
+      stop("Inconsistent number of points. Please check that sIn, sOut and each matrix in fIn have all the same number of rows.")
+    }
+
+    # consistency in number of points
+    if (!is.null(env$fpDims)) {
+      if (length(env$fpDims) != length(env$fIn)) {
+        stop(paste("Inconsistent number of projection dimensions. The functional input list has", length(env$fIn), "elements, but",
+                   length(env$fpDims), "projection dimensions were specified."))
+      }
+    }
+
+  } else if(!is.null(env$fIn)) { # functional-input case ***************************************
+    # check validity and consistency of user inputs
+    if (length(unique(c(as.numeric(sapply(env$fIn, nrow)), length(env$sOut)))) > 1) {
+      stop("Inconsistent number of points. Please check that sOut and each matrix in fIn have all the same number of rows.")
+    }
+    if (!is.null(env$fpDims)) {
+      if (length(env$fpDims) != length(env$fIn)) {
+        stop(paste("Inconsistent number of projection dimensions. The functional input list has", length(env$fIn), "elements, but",
+                   length(env$fpDims), "projection dimensions were specified."))
+      }
+    }
+
+  } else if(!is.null(env$sIn)) { # scalar-input case *******************************************
+    # check validity and consistency of user inputs
+    if (nrow(env$sIn) != length(env$sOut)) {
+      stop("Inconsistent number of points. Please check that sIn and sOut have the same number of rows.")
+    }
+  }
+}
+# ----------------------------------------------------------------------------------------------------------
 
 # Function to check that user inputs for 'predict' method are ok
 # ----------------------------------------------------------------------------------------------------------

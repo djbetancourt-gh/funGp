@@ -47,12 +47,12 @@ functional or hybrid. For functional inputs, the user might specify a projection
 dimension and distance type seeking for optimal processing time or metamodel predictability.
 }
 \examples{
-# generating input data
+# generating input data for training
 n.tr <- 25
-sIn <- as.matrix(expand.grid(x1 = seq(0,1,length = sqrt(n.tr)), x2 = seq(0,1,length = sqrt(n.tr))))
+sIn <- as.matrix(expand.grid(x1 = seq(0,1,length = 5), x2 = seq(0,1,length = 5)))
 fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), matrix(runif(n.tr*22), ncol = 22))
 
-# generating output data
+# generating output data for training
 sOut <- as.matrix(sapply(t(1:n.tr), function(i){
   x1 <- sIn[i,1]
   x2 <- sIn[i,2]
