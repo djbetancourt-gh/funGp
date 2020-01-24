@@ -691,8 +691,8 @@ setMethod("update", "funGp",
             # dispatch based on the type of model and process required
             if (all(object@ds > 0, object@df > 0)) {
               # check what does the user want to do
-              compInOut <- any(!is.null(sIn.nw), !is.null(fIn.nw), !is.null(fIn.nw))
-              subsInOut <- any(!is.null(sIn.sb), !is.null(fIn.sb), !is.null(fIn.sb))
+              compInOut <- any(!is.null(sIn.nw), !is.null(fIn.nw), !is.null(sOut.nw))
+              subsInOut <- any(!is.null(sIn.sb), !is.null(fIn.sb), !is.null(sOut.sb))
               subsHypers <- any(!is.null(var.sb), !is.null(ls.sb))
             }
 browser()
@@ -724,8 +724,19 @@ update_InOut_sb.funGp <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb) {
   # extract generic information from user inputs
   sOut <- model@sOut
 
+  # provide substituting output if not specified by the user
+  if(is.null(sOut.sb)) sOut.sb <- sOut[ind.sb,,drop = F]
+
   # check which type of model it is
   if (all(model@ds > 0, model@df > 0)) { # Hybrid-input case *******************************************
+    # extract information from user inputs specific to the hybrid-input case
+    sIn <- model@sIn
+    fIn <- model@fIn
+
+    # provide substituting inputs if not specified by the user
+    if(is.null(sIn.sb)) sIn.sb <- sIn[ind.sb,,drop = F]
+    if(is.null(fIn.sb)) fIn.sb <- lapply(fIn, function(M) M[ind.sb,,drop = F])
+
     # check for duplicates in the substituting points
     res <- checkDuplicates(sBench = sIn.sb, fBench = fIn.sb, sCand = sIn.sb, fCand = fIn.sb, oCand = sOut.sb, iCand = ind.sb)
 
@@ -745,18 +756,9 @@ update_InOut_sb.funGp <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb) {
       ind.sb <- res$iClean
     }
 
-    # extract information from user inputs specific to the hybrid-input case
-    if (!is.null(sIn)) {
-      sIn <- model@sIn
-      # sIn[ind.sb,] <- as.matrix(sIn.sb)
-    }
-
-    # fIn <- mapply(function(fullM, sbM) {fullM[ind.sb,] <- sbM; return(fullM)}, fIn, fIn.sb)
-    fIn <- model@fIn
-
     # check for duplicated bewteen substituting inputs and existing inputs at not substituting rows
     sIn.exsb <- sIn[-ind.sb,]
-    fIn.exsb <- lapply(fIn, function(M) M[-ind.sb,])
+    fIn.exsb <- lapply(fIn, function(M) M[-ind.sb,,drop = F])
     res <- checkDuplicates(sBench = sIn.exsb, fBench = fIn.exsb, sCand = sIn.sb, fCand = fIn.sb, oCand = sOut.sb, iCand = ind.sb)
 
     # update substituting data
@@ -849,17 +851,16 @@ checkDuplicates <- function(sBench, fBench, sCand, fCand, oCand, iCand){
   if (isTRUE(all.equal(bchM, cndM))) {
     ind.dp <- which(duplicated(bchM) | duplicated(bchM[nrow(bchM):1, ])[nrow(bchM):1])
   } else {
-    # ind.dp <- which(apply(t(1:nrow(cndM)), 2, function(i) any(apply(bchM, 1, function(M, v) isTRUE(all.equal(M, v)), cndM[i,]))))
-    ind.dp <- which(tail(duplicated(rbind(bchM, cndM)), nrow(cndM))) # to test!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    ind.dp <- which(tail(duplicated(rbind(bchM, cndM)), nrow(cndM)))
   }
 
 
   # drop duplicates if there is any
   if (length(ind.dp) > 0) {
-    sClean <- sCand[-ind.dp,]
-    fClean <- lapply(fCand, function(M) M[-ind.dp,])
-    oClean <- oCand[-ind.dp,]
-    iClean <- iCand[-ind.dp,]
+    sClean <- sCand[-ind.dp,,drop = F]
+    fClean <- lapply(fCand, function(M) M[-ind.dp,,drop = F])
+    oClean <- oCand[-ind.dp,,drop = F]
+    iClean <- iCand[-ind.dp,,drop = F]
   } else {
     sClean <- sCand
     fClean <- fCand
