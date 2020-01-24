@@ -47,9 +47,9 @@ functional or hybrid. For functional inputs, the user might specify a projection
 dimension and distance type seeking for optimal processing time or metamodel predictability.
 }
 \examples{
-# generating input data for training
+set.seed(100)
 n.tr <- 25
-sIn <- as.matrix(expand.grid(x1 = seq(0,1,length = 5), x2 = seq(0,1,length = 5)))
+sIn <- expand.grid(x1 = seq(0,1,length = sqrt(n.tr)), x2 = seq(0,1,length = sqrt(n.tr)))
 fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), matrix(runif(n.tr*22), ncol = 22))
 
 # generating output data for training
@@ -58,7 +58,9 @@ sOut <- as.matrix(sapply(t(1:n.tr), function(i){
   x2 <- sIn[i,2]
   f1 <- fIn[[1]][i,]
   f2 <- fIn[[2]][i,]
-  as.numeric(x1 * sin(x2) + x1 * mean(f1) - x2^2 * diff(range(f2)))
+  t1 <- seq(0,1,length = length(f1))
+  t2 <- seq(0,1,length = length(f2))
+  as.numeric(x1 + 2 * x2 + 4 * mean(t1 * f1) + mean(f2))
 }))
 
 # creating a funGp model

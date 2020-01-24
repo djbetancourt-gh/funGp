@@ -39,36 +39,45 @@ simulate(object, nsim = 1, seed = NULL, ...)
 Simulation method for the funGp Class
 }
 \examples{
-# generating input data for training
+set.seed(100)
 n.tr <- 25
-sIn.tr <- expand.grid(x1 = seq(0,1,length = sqrt(n.tr)), x2 = seq(0,1,length = sqrt(n.tr)))
-sIn.tr <- as.matrix(sIn.tr)
-fIn.tr <- list(f1 = matrix(runif(n.tr*10), ncol = 10), matrix(runif(n.tr*22), ncol = 22))
+sIn <- expand.grid(x1 = seq(0,1,length = sqrt(n.tr)), x2 = seq(0,1,length = sqrt(n.tr)))
+fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), matrix(runif(n.tr*22), ncol = 22))
 
 # generating output data for training
-sOut.tr <- as.matrix(sapply(t(1:n.tr), function(i){
-  x1 <- sIn.tr[i,1]
-  x2 <- sIn.tr[i,2]
-  f1 <- fIn.tr[[1]][i,]
-  f2 <- fIn.tr[[2]][i,]
-  as.numeric(x1 * sin(x2) + x1 * mean(f1) - x2^2 * diff(range(f2)))
+sOut <- as.matrix(sapply(t(1:n.tr), function(i){
+  x1 <- sIn[i,1]
+  x2 <- sIn[i,2]
+  f1 <- fIn[[1]][i,]
+  f2 <- fIn[[2]][i,]
+  t1 <- seq(0,1,length = length(f1))
+  t2 <- seq(0,1,length = length(f2))
+  as.numeric(x1 + 2 * x2 + 4 * mean(t1 * f1) + mean(f2))
 }))
 
 # creating a funGp model
-m1 <- funGp(sIn = sIn.tr, fIn = fIn.tr, sOut = sOut.tr)
+m1 <- funGp(sIn = sIn, fIn = fIn, sOut = sOut)
 
 # generating input data for simulation
+set.seed(100)
 n.sm <- 100
 sIn.sm <- expand.grid(x1 = seq(0,1,length = sqrt(n.sm)), x2 = seq(0,1,length = sqrt(n.sm)))
-sIn.sm <- as.matrix(sIn.sm)
 fIn.sm <- list(f1 = matrix(runif(n.sm*10), ncol = 10), matrix(runif(n.sm*22), ncol = 22))
 
-# making simulations
-m1.sims <- simulate(m1, nsim = 10, sIn.sm = sIn.sm, fIn.sm = fIn.sm, detail = "full")
-matplot(t(m1.sims$obs), type = 'l', col = "grey")
-lines(m1.sims$mean, col = "red")
-lines(m1.sims$lower95, col = "blue")
-lines(m1.sims$upper95, col = "blue")
+# making light simulations
+m1.sims_l <- simulate(m1, nsim = 10, sIn.sm = sIn.sm, fIn.sm = fIn.sm)
+
+# plotting light simulations
+plotSims(m1, m1.sims_l)
+
+# making full simulations
+m1.sims_f <- simulate(m1, nsim = 10, sIn.sm = sIn.sm, fIn.sm = fIn.sm, detail = "full")
+
+# plotting full simulations in full mode
+plotSims(m1, m1.sims_f)
+
+# plotting full simulations in light mode
+plotSims(m1, m1.sims_f, detail = "light")
 
 }
 \author{

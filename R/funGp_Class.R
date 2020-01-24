@@ -76,9 +76,9 @@ setClass("funGp",
 #' @importFrom stats runif
 #'
 #' @examples
-#' # generating input data for training
+#' set.seed(100)
 #' n.tr <- 25
-#' sIn <- as.matrix(expand.grid(x1 = seq(0,1,length = 5), x2 = seq(0,1,length = 5)))
+#' sIn <- expand.grid(x1 = seq(0,1,length = sqrt(n.tr)), x2 = seq(0,1,length = sqrt(n.tr)))
 #' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), matrix(runif(n.tr*22), ncol = 22))
 #'
 #' # generating output data for training
@@ -87,7 +87,9 @@ setClass("funGp",
 #'   x2 <- sIn[i,2]
 #'   f1 <- fIn[[1]][i,]
 #'   f2 <- fIn[[2]][i,]
-#'   as.numeric(x1 * sin(x2) + x1 * mean(f1) - x2^2 * diff(range(f2)))
+#'   t1 <- seq(0,1,length = length(f1))
+#'   t2 <- seq(0,1,length = length(f2))
+#'   as.numeric(x1 + 2 * x2 + 4 * mean(t1 * f1) + mean(f2))
 #' }))
 #'
 #' # creating a funGp model
@@ -144,6 +146,7 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
   # Case 3: scalar only
   if (all(!is.null(sIn), !is.null(fIn))) { # Hybrid-input case *******************************************
     # extract information from user inputs specific to the hybrid-input case
+    sIn <- as.matrix(sIn)
     ds <- ncol(sIn)
     df <- length(fIn)
     fDims <- sapply(fIn, ncol)
@@ -151,8 +154,8 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
     # Extend to other possible cases!!!!!!!!!!!!!!!!!!
     if (doProj) {
       if (is.null(fpDims)) {
-        # fpDims <- rep(3, df)
-        fpDims <- c(3,2)
+        fpDims <- rep(3, df)
+        # fpDims <- c(3,2)
       }
 
       # project functional inputs
@@ -212,8 +215,8 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
 
     # Extend to other possible cases!!!!!!!!!!!!!!!!!!
     if (all(doProj, is.null(fpDims))) {
-      # fpDims <- rep(3, df)
-      fpDims <- c(3,2)
+      fpDims <- rep(3, df)
+      # fpDims <- c(3,2)
     }
 
     # project functional inputs
@@ -253,6 +256,7 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
 
   } else if(!is.null(sIn)) { # scalar-input case *******************************************
     # extract information from user inputs specific to the scalar-input case
+    sIn <- as.matrix(sIn)
     ds <- ncol(sIn)
 
     # compute scalar distance matrices
@@ -310,35 +314,35 @@ if(!isGeneric("show")) {setGeneric(name = "show", def = function(object) standar
 #' @name show
 #' @rdname show-methods
 #' @aliases show,funGp-method
-setMethod("show", "funGp", function(object) show.funGp(object))
+setMethod("show", "funGp", function(object) show.funGp(model = object))
 
-show.funGp <- function(object) {
+show.funGp <- function(model) {
   mainTxt <- "Gaussian Process Model"
-  callTxt <- paste("* Call: ", as.expression(object@call), sep = "")
+  callTxt <- paste("* Call: ", as.expression(model@call), sep = "")
   cat(paste("\n", mainTxt, paste(rep("_", min(30, (nchar(callTxt) - nchar(mainTxt) - 1))), collapse = ""), sep = ""))
 
   cat(paste("\n\n", callTxt, "\n\n", sep = ""))
 
-  cat(paste("* Scalar inputs: ", object@ds, "\n", sep = ""))
-  cat(paste("* Functional inputs: ", object@df, "\n", sep = ""))
-  if (object@df > 0) {
+  cat(paste("* Scalar inputs: ", model@ds, "\n", sep = ""))
+  cat(paste("* Functional inputs: ", model@df, "\n", sep = ""))
+  if (model@df > 0) {
     cat("  -> Dimension:\n")
-    for (i in 1:object@df) {
-      cat(paste("\t F", i, ": ", object@fDims[i], "\n", sep = ""))
+    for (i in 1:model@df) {
+      cat(paste("\t F", i, ": ", model@fDims[i], "\n", sep = ""))
     }
   }
-  cat(paste("* Training points: ", object@n.tr, "\n\n", sep = ""))
+  cat(paste("* Training points: ", model@n.tr, "\n\n", sep = ""))
 
-  cat(paste("* Kernel type: ", object@kern@kerType, "\n", sep = ""))
-  cat(paste("* Distance type: ", object@kern@disType, "\n\n", sep = ""))
+  cat(paste("* Kernel type: ", model@kern@kerType, "\n", sep = ""))
+  cat(paste("* Distance type: ", model@kern@disType, "\n\n", sep = ""))
 
-  if (object@df > 0) {
-    cat(paste("* Do projection: ", object@proj@doProj, "\n", sep = ""))
-    if (object@proj@doProj) {
+  if (model@df > 0) {
+    cat(paste("* Do projection: ", model@proj@doProj, "\n", sep = ""))
+    if (model@proj@doProj) {
       cat("  -> Proj. dimension:\n")
-      for (i in 1:object@df) {
-        if (object@proj@fpDims[i] > 0) {
-          cat(paste("\t F", i, ": ", object@proj@fpDims[i], "\n", sep = ""))
+      for (i in 1:model@df) {
+        if (model@proj@fpDims[i] > 0) {
+          cat(paste("\t F", i, ": ", model@proj@fpDims[i], "\n", sep = ""))
         } else {
           cat(paste("\t F", i, ": not required\n", sep = ""))
         }
@@ -347,23 +351,23 @@ show.funGp <- function(object) {
   }
 
   cat("\n* Hyperparameters:\n")
-  cat(paste("  -> variance: ", format(object@kern@varHyp, digits = 3, nsmall = 4), "\n", sep = ""))
+  cat(paste("  -> variance: ", format(model@kern@varHyp, digits = 3, nsmall = 4), "\n", sep = ""))
   cat("  -> length-scale:\n")
-  if (object@ds > 0) {
-    for (i in 1:object@ds) {
-      cat(paste("\t ls(X", i, "): ", format(object@kern@s_lsHyps[i], digits = 3, nsmall = 4), "\n", sep = ""))
+  if (model@ds > 0) {
+    for (i in 1:model@ds) {
+      cat(paste("\t ls(X", i, "): ", format(model@kern@s_lsHyps[i], digits = 3, nsmall = 4), "\n", sep = ""))
     }
   }
-  if (object@df > 0) {
-    for (i in 1:object@df) {
-      cat(paste("\t ls(F", i, "): ", format(object@kern@f_lsHyps[i], digits = 3, nsmall = 4), "\n", sep = ""))
+  if (model@df > 0) {
+    for (i in 1:model@df) {
+      cat(paste("\t ls(F", i, "): ", format(model@kern@f_lsHyps[i], digits = 3, nsmall = 4), "\n", sep = ""))
     }
   }
   cat(paste(rep("_", max(30, (nchar(callTxt)))), collapse = ""))
 }
 # ----------------------------------------------------------------------------------------------------------
 
-# Method to make predictions with afunGp model
+# Method to make predictions with a funGp model
 # ----------------------------------------------------------------------------------------------------------
 #' @name predict
 #' @rdname predict-methods
@@ -425,10 +429,10 @@ setGeneric(name = "predict", def = function(object, ...) standardGeneric("predic
 #' @aliases predict,funGp-method
 setMethod("predict", "funGp",
           function(object, sIn.pr = NULL, fIn.pr = NULL, detail = "light", ...){
-            predict.funGp(object = object, sIn.pr = sIn.pr, fIn.pr = fIn.pr, detail = detail, ...)
+            predict.funGp(model = object, sIn.pr = sIn.pr, fIn.pr = fIn.pr, detail = detail)
           })
 
-predict.funGp <- function(object, sIn.pr, fIn.pr, detail = "light", ...) {
+predict.funGp <- function(model, sIn.pr, fIn.pr, detail = "light") {
   # =====================================================================================================
   # Prediction output checklist
   # =====================================================================================================
@@ -440,59 +444,65 @@ predict.funGp <- function(object, sIn.pr, fIn.pr, detail = "light", ...) {
   # 6.  * K.tp ............... matrix(n.tr x n.pr) ....... training vs prediction cross covariance matrix
   # =====================================================================================================
 
-  if (all(object@ds > 0, object@df > 0)) { # Hybrid-input case *******************************************
+  if (all(model@ds > 0, model@df > 0)) { # Hybrid-input case *******************************************
     print("I'm hybrid!")
+
+    # set required data format
+    sIn.pr <- as.matrix(sIn.pr)
 
     # project functional inputs
     fpIn.pr <- J <- list()
-    for (i in 1:object@df) {
-      B <- object@proj@basis[[i]]
+    for (i in 1:model@df) {
+      B <- model@proj@basis[[i]]
       fpIn.pr[[i]] <- t(solve(t(B) %*% B) %*% t(B) %*% t(fIn.pr[[i]]))
       J[[i]] <- t(B) %*% B
     }
 
     # compute scalar distance matrices
-    sMs.tp <- setScalDistance(object@sIn, sIn.pr)
+    sMs.tp <- setScalDistance(model@sIn, sIn.pr)
     sMs.pp <- setScalDistance(sIn.pr, sIn.pr)
 
     # compute functional distance matrices
-    fMs.tp <- setFunDistance(object@proj@coefs, fpIn.pr, J)
+    fMs.tp <- setFunDistance(model@proj@coefs, fpIn.pr, J)
     fMs.pp <- setFunDistance(fpIn.pr, fpIn.pr, J)
 
     # make predictions based on the Gaussian Conditioning Theorem
     preds <- makePreds_SF(sMs.tp, sMs.pp, fMs.tp, fMs.pp,
-                          object@kern@varHyp, object@kern@s_lsHyps, object@kern@f_lsHyps,
-                          object@kern@kerType, object@preMats$L, object@preMats$LInvY, detail)
+                          model@kern@varHyp, model@kern@s_lsHyps, model@kern@f_lsHyps,
+                          model@kern@kerType, model@preMats$L, model@preMats$LInvY, detail)
 
-  } else if (object@df > 0) { # functional-input case *******************************************
+  } else if (model@df > 0) { # functional-input case *******************************************
     print("I'm functional!")
 
     # project functional inputs
     fpIn.pr <- J <- list()
-    for (i in 1:object@df) {
-      B <- object@proj@basis[[i]]
+    for (i in 1:model@df) {
+      B <- model@proj@basis[[i]]
       fpIn.pr[[i]] <- t(solve(t(B) %*% B) %*% t(B) %*% t(fIn.pr[[i]]))
       J[[i]] <- t(B) %*% B
     }
 
     # compute functional distance matrices
-    fMs.tp <- setFunDistance(object@proj@coefs, fpIn.pr, J)
+    fMs.tp <- setFunDistance(model@proj@coefs, fpIn.pr, J)
     fMs.pp <- setFunDistance(fpIn.pr, fpIn.pr, J)
 
     # make predictions based on the Gaussian Conditioning Theorem
-    preds <- makePreds_F(fMs.tp, fMs.pp, object@kern@varHyp, object@kern@f_lsHyps, object@kern@kerType,
-                         object@preMats$L, object@preMats$LInvY, detail)
+    preds <- makePreds_F(fMs.tp, fMs.pp, model@kern@varHyp, model@kern@f_lsHyps, model@kern@kerType,
+                         model@preMats$L, model@preMats$LInvY, detail)
 
   } else { # scalar-input case *******************************************
     print("I'm scalar!")
 
+    # set required data format
+    sIn.pr <- as.matrix(sIn.pr)
+
     # compute scalar distance matrices
-    sMs.tp <- setScalDistance(object@sIn, sIn.pr)
+    sMs.tp <- setScalDistance(model@sIn, sIn.pr)
     sMs.pp <- setScalDistance(sIn.pr, sIn.pr)
 
     # make predictions based on the Gaussian Conditioning Theorem
-    preds <- makePreds_S(sMs.tp, sMs.pp, object@kern@varHyp, object@kern@s_lsHyps, object@kern@kerType,
-                         object@preMats$L, object@preMats$LInvY, detail)
+    preds <- makePreds_S(sMs.tp, sMs.pp, model@kern@varHyp, model@kern@s_lsHyps, model@kern@kerType,
+                         model@preMats$L, model@preMats$LInvY, detail)
   }
 
   # compute confidence intervals
@@ -504,7 +514,7 @@ predict.funGp <- function(object, sIn.pr, fIn.pr, detail = "light", ...) {
 # ----------------------------------------------------------------------------------------------------------
 
 
-# Method to make simulations from afunGp model
+# Method to make simulations from a funGp model
 # ----------------------------------------------------------------------------------------------------------
 #' @name simulate
 #' @rdname simulate-methods
@@ -519,36 +529,45 @@ predict.funGp <- function(object, sIn.pr, fIn.pr, detail = "light", ...) {
 #' @param ... Further arguments for methods.
 #'
 #' @examples
-#' # generating input data for training
+#' set.seed(100)
 #' n.tr <- 25
-#' sIn.tr <- expand.grid(x1 = seq(0,1,length = sqrt(n.tr)), x2 = seq(0,1,length = sqrt(n.tr)))
-#' sIn.tr <- as.matrix(sIn.tr)
-#' fIn.tr <- list(f1 = matrix(runif(n.tr*10), ncol = 10), matrix(runif(n.tr*22), ncol = 22))
+#' sIn <- expand.grid(x1 = seq(0,1,length = sqrt(n.tr)), x2 = seq(0,1,length = sqrt(n.tr)))
+#' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), matrix(runif(n.tr*22), ncol = 22))
 #'
 #' # generating output data for training
-#' sOut.tr <- as.matrix(sapply(t(1:n.tr), function(i){
-#'   x1 <- sIn.tr[i,1]
-#'   x2 <- sIn.tr[i,2]
-#'   f1 <- fIn.tr[[1]][i,]
-#'   f2 <- fIn.tr[[2]][i,]
-#'   as.numeric(x1 * sin(x2) + x1 * mean(f1) - x2^2 * diff(range(f2)))
+#' sOut <- as.matrix(sapply(t(1:n.tr), function(i){
+#'   x1 <- sIn[i,1]
+#'   x2 <- sIn[i,2]
+#'   f1 <- fIn[[1]][i,]
+#'   f2 <- fIn[[2]][i,]
+#'   t1 <- seq(0,1,length = length(f1))
+#'   t2 <- seq(0,1,length = length(f2))
+#'   as.numeric(x1 + 2 * x2 + 4 * mean(t1 * f1) + mean(f2))
 #' }))
 #'
 #' # creating a funGp model
-#' m1 <- funGp(sIn = sIn.tr, fIn = fIn.tr, sOut = sOut.tr)
+#' m1 <- funGp(sIn = sIn, fIn = fIn, sOut = sOut)
 #'
 #' # generating input data for simulation
+#' set.seed(100)
 #' n.sm <- 100
 #' sIn.sm <- expand.grid(x1 = seq(0,1,length = sqrt(n.sm)), x2 = seq(0,1,length = sqrt(n.sm)))
-#' sIn.sm <- as.matrix(sIn.sm)
 #' fIn.sm <- list(f1 = matrix(runif(n.sm*10), ncol = 10), matrix(runif(n.sm*22), ncol = 22))
 #'
-#' # making simulations
-#' m1.sims <- simulate(m1, nsim = 10, sIn.sm = sIn.sm, fIn.sm = fIn.sm, detail = "full")
-#' matplot(t(m1.sims$obs), type = 'l', col = "grey")
-#' lines(m1.sims$mean, col = "red")
-#' lines(m1.sims$lower95, col = "blue")
-#' lines(m1.sims$upper95, col = "blue")
+#' # making light simulations
+#' m1.sims_l <- simulate(m1, nsim = 10, sIn.sm = sIn.sm, fIn.sm = fIn.sm)
+#'
+#' # plotting light simulations
+#' plotSims(m1, m1.sims_l)
+#'
+#' # making full simulations
+#' m1.sims_f <- simulate(m1, nsim = 10, sIn.sm = sIn.sm, fIn.sm = fIn.sm, detail = "full")
+#'
+#' # plotting full simulations in full mode
+#' plotSims(m1, m1.sims_f)
+#'
+#' # plotting full simulations in light mode
+#' plotSims(m1, m1.sims_f, detail = "light")
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export simulate
@@ -560,59 +579,65 @@ setGeneric(name = "simulate", def = function(object, nsim = 1, seed = NULL, ...)
 #' @aliases simulate,funGp-method
 setMethod("simulate", "funGp",
           function(object, nsim = 1, seed = NULL, sIn.sm = NULL, fIn.sm = NULL, nug.sim = 0, detail = "light", ...) {
-            simulate.funGp(object = object, nsim = nsim, seed = seed, sIn.sm = sIn.sm, fIn.sm = fIn.sm,
-                           nug.sim = nug.sim, detail = detail, ...)
+            simulate.funGp(model = object, nsim = nsim, seed = seed, sIn.sm = sIn.sm, fIn.sm = fIn.sm,
+                           nug.sim = nug.sim, detail = detail)
           })
 
-simulate.funGp <- function(object, nsim, seed, sIn.sm, fIn.sm, nug.sim, detail, ...) {
+simulate.funGp <- function(model, nsim, seed, sIn.sm, fIn.sm, nug.sim, detail) {
   checkVal_simulate(as.list(environment()))
 
   # check which type of model it is
-  if (all(object@ds > 0, object@df > 0)) { # Hybrid-input case *******************************************
+  if (all(model@ds > 0, model@df > 0)) { # Hybrid-input case *******************************************
     print("I'm hybrid!")
+
+    # set required data format
+    sIn.sm <- as.matrix(sIn.sm)
 
     # project functional inputs
     fpIn.sm <- J <- list()
-    for (i in 1:object@df) {
-      B <- object@proj@basis[[i]]
+    for (i in 1:model@df) {
+      B <- model@proj@basis[[i]]
       fpIn.sm[[i]] <- t(solve(t(B) %*% B) %*% t(B) %*% t(fIn.sm[[i]]))
       J[[i]] <- t(B) %*% B
     }
 
     # compute scalar distance matrices
-    sMs.ts <- setScalDistance(object@sIn, sIn.sm)
+    sMs.ts <- setScalDistance(model@sIn, sIn.sm)
     sMs.ss <- setScalDistance(sIn.sm, sIn.sm)
 
     # compute functional distance matrices
-    fMs.ts <- setFunDistance(object@proj@coefs, fpIn.sm, J)
+    fMs.ts <- setFunDistance(model@proj@coefs, fpIn.sm, J)
     fMs.ss <- setFunDistance(fpIn.sm, fpIn.sm, J)
 
     # make simulations based on the Gaussian Conditioning Theorem
     sims <- makeSims_SF(sMs.ts, sMs.ss, fMs.ts, fMs.ss,
-                        object@kern@varHyp, object@kern@s_lsHyps, object@kern@f_lsHyps,
-                        object@kern@kerType, object@preMats$L, object@preMats$LInvY, nsim, nug.sim, detail)
+                        model@kern@varHyp, model@kern@s_lsHyps, model@kern@f_lsHyps,
+                        model@kern@kerType, model@preMats$L, model@preMats$LInvY, nsim, nug.sim, detail)
 
-  } else if (object@df > 0) { # functional-input case *******************************************
+  } else if (model@df > 0) { # functional-input case *******************************************
     print("I'm functional!")
 
     # compute functional distance matrices
-    fMs.ts <- setFunDistance(object@proj@coefs, fpIn.sm, J)
+    fMs.ts <- setFunDistance(model@proj@coefs, fpIn.sm, J)
     fMs.ss <- setFunDistance(fpIn.sm, fpIn.sm, J)
 
     # make simulations based on the Gaussian Conditioning Theorem
-    sims <- makeSims_F(fMs.ts, fMs.ss, object@kern@varHyp, object@kern@f_lsHyps, object@kern@kerType,
-                       object@preMats$L, object@preMats$LInvY, nsim, nug.sim, detail)
+    sims <- makeSims_F(fMs.ts, fMs.ss, model@kern@varHyp, model@kern@f_lsHyps, model@kern@kerType,
+                       model@preMats$L, model@preMats$LInvY, nsim, nug.sim, detail)
 
   } else { # scalar-input case *******************************************
     print("I'm scalar!")
 
+    # set required data format
+    sIn.sm <- as.matrix(sIn.sm)
+
     # compute scalar distance matrices
-    sMs.ts <- setScalDistance(object@sIn, sIn.sm)
+    sMs.ts <- setScalDistance(model@sIn, sIn.sm)
     sMs.ss <- setScalDistance(sIn.sm, sIn.sm)
 
     # make simulations based on the Gaussian Conditioning Theorem
-    sims <- makeSims_S(sMs.ts, sMs.ss, object@kern@varHyp, object@kern@s_lsHyps, object@kern@kerType,
-                       object@preMats$L, object@preMats$LInvY, nsim, nug.sim, detail)
+    sims <- makeSims_S(sMs.ts, sMs.ss, model@kern@varHyp, model@kern@s_lsHyps, model@kern@kerType,
+                       model@preMats$L, model@preMats$LInvY, nsim, nug.sim, detail)
   }
 
   # if detail == 'full', confidence intervals at simulation points are provided,
@@ -626,6 +651,306 @@ simulate.funGp <- function(object, nsim, seed, sIn.sm, fIn.sm, nug.sim, detail, 
   }
 
   return(sims)
+}
+# ----------------------------------------------------------------------------------------------------------
+
+
+# Method to update a funGp model
+# ----------------------------------------------------------------------------------------------------------
+#' @name update
+#' @rdname update-methods
+#' @importFrom stats update
+#' @importFrom utils tail
+#' @param object An object to update.
+#' @param sIn.nw Fill!!!
+#' @param fIn.nw Fill!!!
+#' @param sOut.nw Fill!!!
+#' @param sIn.sb Fill!!!
+#' @param fIn.sb Fill!!!
+#' @param sOut.sb Fill!!!
+#' @param ind.sb Fill!!!
+#' @param var.sb Fill!!!
+#' @param ls.sb Fill!!!
+#' @param ... Further arguments for methods.
+#'
+# @examples
+#'
+#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @export update
+setGeneric(name = "update", def = function(object, ...) standardGeneric("update"))
+
+#' @title Updating method for the funGp Class
+#' @name update
+#' @rdname update-methods
+#' @aliases update,funGp-method
+setMethod("update", "funGp",
+          function(object, sIn.nw = NULL, fIn.nw = NULL, sOut.nw = NULL,
+                   sIn.sb = NULL, fIn.sb = NULL, sOut.sb = NULL, ind.sb = NULL,
+                   var.sb = NULL, ls.sb = NULL, ...) {
+            # browser()
+            # dispatch based on the type of model and process required
+            if (all(object@ds > 0, object@df > 0)) {
+              # check what does the user want to do
+              compInOut <- any(!is.null(sIn.nw), !is.null(fIn.nw), !is.null(fIn.nw))
+              subsInOut <- any(!is.null(sIn.sb), !is.null(fIn.sb), !is.null(fIn.sb))
+              subsHypers <- any(!is.null(var.sb), !is.null(ls.sb))
+            }
+browser()
+            if (all(isTRUE(compInOut), !isTRUE(subsInOut), !isTRUE(subsHypers))) {
+              # Case 1: only add some data
+              modelup <- update_InOut_nw.funGp(model = object, sIn.nw = sIn.nw, fIn.nw = fIn.nw, sOut.nw = sOut.nw)
+
+            } else if (all(!isTRUE(compInOut), isTRUE(subsInOut), !isTRUE(subsHypers))) {
+              # Case 2: only substitute some data
+              modelup <- update_InOut_sb.funGp(model = object, sIn.sb = sIn.sb, fIn.sb = fIn.sb, sOut.sb = sOut.sb, ind.sb = ind.sb)
+            }
+
+            if (all(!isTRUE(compInOut), !isTRUE(subsInOut), !isTRUE(subsHypers))) {
+              warning("No data to update the model was provided. The model is returned in its original state.")
+              return(object)
+            }
+            return(modelup)
+          })
+
+update_InOut_sb.funGp <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb) {
+  print("Case 2: only substitute some data")
+  # checkVal_simulate(as.list(environment())) !!!!!!!!!!!!!!!!!!!
+  # check here the rows in each structure!!!
+
+  browser()
+  # duplicate the model for clarity
+  modelup <- model
+
+  # extract generic information from user inputs
+  sOut <- model@sOut
+
+  # check which type of model it is
+  if (all(model@ds > 0, model@df > 0)) { # Hybrid-input case *******************************************
+    # check for duplicates in the substituting points
+    res <- checkDuplicates(sBench = sIn.sb, fBench = fIn.sb, sCand = sIn.sb, fCand = fIn.sb, oCand = sOut.sb, iCand = ind.sb)
+
+    # update substituting data and warn if required
+    if (length(res$iClean) == 0) {
+      warning(paste("No substituting points left after checking for duplicates in the substituting input points. ",
+                    "The model is returned in its original state.", sep = ""))
+      return(model)
+    } else {
+      if (length(res$ind.dp) > 0) {
+        warning(paste("There are some duplicates in the substituting inputs. Duplicates have been ignored.\n",
+                      "Duplicate substitute points: ", res$ind.dp, sep = ""))
+      }
+      sIn.sb <- res$sClean
+      fIn.sb <- res$fClean
+      sOut.sb <- res$oClean
+      ind.sb <- res$iClean
+    }
+
+    # extract information from user inputs specific to the hybrid-input case
+    if (!is.null(sIn)) {
+      sIn <- model@sIn
+      # sIn[ind.sb,] <- as.matrix(sIn.sb)
+    }
+
+    # fIn <- mapply(function(fullM, sbM) {fullM[ind.sb,] <- sbM; return(fullM)}, fIn, fIn.sb)
+    fIn <- model@fIn
+
+    # check for duplicated bewteen substituting inputs and existing inputs at not substituting rows
+    sIn.exsb <- sIn[-ind.sb,]
+    fIn.exsb <- lapply(fIn, function(M) M[-ind.sb,])
+    res <- checkDuplicates(sBench = sIn.exsb, fBench = fIn.exsb, sCand = sIn.sb, fCand = fIn.sb, oCand = sOut.sb, iCand = ind.sb)
+
+    # update substituting data
+    if (length(res$iClean) == 0) {
+      warning(paste("No substituting points left after cross-checking for duplicates against the inputs already. ",
+                    "contained in the model. The model is returned in its original state.", sep = ""))
+      return(model)
+    } else {
+      if (length(res$ind.dp) > 0) {
+        warning(paste("There are some duplicates in the substituting inputs. Duplicates have been ignored.\n",
+                      "Duplicate substitute points: ", res$ind.dp, sep = ""))
+      }
+      sIn.sb <- res$sClean
+      fIn.sb <- res$fClean
+      sOut.sb <- res$oClean
+      ind.sb <- res$iClean
+
+      # recover inputs and outputs after duplicates check
+      sIn[res$iClean,] <- res$sClean
+      fIn <- mapply(function(M, x) {M[res$iClean,] <- x; return(M)}, fIn, res$fClean)
+      sOut[res$iClean,] <- res$oClean
+
+      # extract information from previous model specific to the hybrid-input case
+      ds <- model@ds
+      df <- model@df
+      doProj <- model@proj@doProj
+      fpDims <- model@proj@fpDims
+
+      # Extend to other possible cases!!!!!!!!!!!!!!!!!!
+      if (doProj) {
+        # project functional inputs
+        basis <- fpIn <- J <- list()
+        for (i in 1:df) {
+          if (fpDims[i] > 0) {
+            B <- (eigen(cov(fIn[[i]]))$vectors)[,1:fpDims[i]]
+            fpIn[[i]] <- t(solve(t(B) %*% B) %*% t(B) %*% t(fIn[[i]]))
+            J[[i]] <- t(B) %*% B
+          } else {
+            J[[i]] <- B <- diag(ncol(fIn[[i]]))
+            fpIn[[i]] <- fIn[[i]]
+          }
+          basis[[i]] <- B
+        }
+      } else {
+        basis <- J <- lapply(fIn, function(m) diag(ncol(m)))
+        fpIn <- fIn
+      }
+      # compute scalar distance matrices
+      sMs <- setScalDistance(sIn, sIn)
+
+      # compute functional distance matrices
+      fMs <- setFunDistance(fpIn, fpIn, J)
+
+      # pre-commpute KttInv and KttInv.sOut matrices for prediction and add them to the model
+      modelup@preMats <- preMats_SF(sMs, fMs, sOut, model@kern@varHyp, model@kern@s_lsHyps,
+                                    model@kern@f_lsHyps, model@kern@kerType)
+
+      # fill funGpProj slots specific to the hybrid-input case
+      modelup@proj@basis <- basis
+      modelup@proj@coefs <- fpIn
+
+      # fill funGp slots specific to the hybrid-input case
+      modelup@sIn <- sIn
+      modelup@fIn <- fIn
+    }
+
+  } else if (model@df > 0) { # functional-input case *******************************************
+    print("I'm functional!")
+
+
+  } else { # scalar-input case *******************************************
+
+  }
+
+  # fill general funGpModel slots
+  modelup@sOut <- sOut
+
+  return(modelup)
+}
+
+checkDuplicates <- function(sBench, fBench, sCand, fCand, oCand, iCand){
+  browser()
+  # merge the benchmark inputs into a single matrix
+  bchM <- cbind(sBench, do.call(cbind, fBench))
+
+  # merge the candidate inputs into a single matrix
+  cndM <- cbind(sCand, do.call(cbind, fCand))
+
+  # identify duplicates
+  if (isTRUE(all.equal(bchM, cndM))) {
+    ind.dp <- which(duplicated(bchM) | duplicated(bchM[nrow(bchM):1, ])[nrow(bchM):1])
+  } else {
+    # ind.dp <- which(apply(t(1:nrow(cndM)), 2, function(i) any(apply(bchM, 1, function(M, v) isTRUE(all.equal(M, v)), cndM[i,]))))
+    ind.dp <- which(tail(duplicated(rbind(bchM, cndM)), nrow(cndM))) # to test!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  }
+
+
+  # drop duplicates if there is any
+  if (length(ind.dp) > 0) {
+    sClean <- sCand[-ind.dp,]
+    fClean <- lapply(fCand, function(M) M[-ind.dp,])
+    oClean <- oCand[-ind.dp,]
+    iClean <- iCand[-ind.dp,]
+  } else {
+    sClean <- sCand
+    fClean <- fCand
+    oClean <- oCand
+    iClean <- iCand
+  }
+  res <- list(sClean = sClean, fClean = fClean, oClean = oClean, iClean = iClean, ind.dp = ind.dp)
+
+  return(res)
+}
+
+update_InOut_nw.funGp <- function(model, sIn.nw, fIn.nw, sOut.nw) {
+  print("Case 1: only add some data")
+  # checkVal_simulate(as.list(environment())) !!!!!!!!!!!!!!!!!!!
+  # check here that all inputs and outputs are provided, else stop!
+  # check for duplicates, warn and remove
+
+  # duplicate the model for clarity
+  modelup <- model
+
+  # extract generic information from user inputs
+  sOut <- rbind(model@sOut, sOut.nw)
+
+  # check which type of model it is
+  if (all(model@ds > 0, model@df > 0)) { # Hybrid-input case *******************************************
+    print("I'm hybrid!")
+
+    # set required data format
+    sIn.nw <- as.matrix(sIn.nw)
+
+    # extract information from user inputs specific to the hybrid-input case
+    sIn <- rbind(model@sIn, sIn.nw)
+    fIn <- mapply(rbind, model@fIn, fIn.nw)
+
+    # extract information from previous model specific to the hybrid-input case
+    ds <- model@ds
+    df <- model@df
+    doProj <- model@proj@doProj
+    fpDims <- model@proj@fpDims
+
+    browser()
+
+    # Extend to other possible cases!!!!!!!!!!!!!!!!!!
+    if (doProj) {
+      # project functional inputs
+      basis <- fpIn <- J <- list()
+      for (i in 1:df) {
+        if (fpDims[i] > 0) {
+          B <- (eigen(cov(fIn[[i]]))$vectors)[,1:fpDims[i]]
+          fpIn[[i]] <- t(solve(t(B) %*% B) %*% t(B) %*% t(fIn[[i]]))
+          J[[i]] <- t(B) %*% B
+        } else {
+          J[[i]] <- B <- diag(ncol(fIn[[i]]))
+          fpIn[[i]] <- fIn[[i]]
+        }
+        basis[[i]] <- B
+      }
+    } else {
+      basis <- J <- lapply(fIn, function(m) diag(ncol(m)))
+      fpIn <- fIn
+    }
+    # compute scalar distance matrices
+    sMs <- setScalDistance(sIn, sIn)
+
+    # compute functional distance matrices
+    fMs <- setFunDistance(fpIn, fpIn, J)
+
+    # pre-commpute KttInv and KttInv.sOut matrices for prediction and add them to the model
+    modelup@preMats <- preMats_SF(sMs, fMs, sOut, model@kern@varHyp, model@kern@s_lsHyps,
+                                  model@kern@f_lsHyps, model@kern@kerType)
+
+    # fill funGpProj slots specific to the hybrid-input case
+    modelup@proj@basis <- basis
+    modelup@proj@coefs <- fpIn
+
+    # fill funGp slots specific to the hybrid-input case
+    modelup@sIn <- sIn
+    modelup@fIn <- fIn
+
+  } else if (model@df > 0) { # functional-input case *******************************************
+    print("I'm functional!")
+
+
+  } else { # scalar-input case *******************************************
+
+  }
+
+  # fill general funGpModel slots
+  modelup@sOut <- sOut
+
+  return(modelup)
 }
 # ----------------------------------------------------------------------------------------------------------
 
@@ -651,11 +976,11 @@ if(!isGeneric("plotLOO")) {setGeneric("plotLOO", function(object) standardGeneri
 #' @name plotLOO
 #' @rdname plotLOO-methods
 #' @aliases plotLOO,funGp-method
-setMethod("plotLOO", "funGp", function(object) plotLOO.funGp(object))
+setMethod("plotLOO", "funGp", function(object) plotLOO.funGp(model = object))
 
-plotLOO.funGp <- function(object) {
-  y_obs <- object@sOut
-  R <- tcrossprod(object@preMats$L)/object@kern@varHyp
+plotLOO.funGp <- function(model) {
+  y_obs <- model@sOut
+  R <- tcrossprod(model@preMats$L)/model@kern@varHyp
   Rinv <- solve(R)
   y_pre <- y_obs - diag(Rinv)^(-1) * Rinv %*% y_obs
   yr <- range(c(y_obs, y_pre))
@@ -799,19 +1124,19 @@ if(!isGeneric("getCoef")) {setGeneric(name = "getCoef", def = function(object) s
 #' @name getCoef
 #' @rdname getCoef-methods
 #' @aliases getCoef,funGp-method
-setMethod("getCoef", "funGp", function(object) getCoef.funGp(object))
+setMethod("getCoef", "funGp", function(object) getCoef.funGp(model = object))
 
-getCoef.funGp <- function(object) {
-  coefs <- object@kern@varHyp
+getCoef.funGp <- function(model) {
+  coefs <- model@kern@varHyp
   names_ls_s <- c()
-  if (object@ds > 0) {
-    names_ls_s <- paste("ls(X", 1:object@ds, ")", sep = "")
-    coefs <- c(coefs, object@kern@s_lsHyps)
+  if (model@ds > 0) {
+    names_ls_s <- paste("ls(X", 1:model@ds, ")", sep = "")
+    coefs <- c(coefs, model@kern@s_lsHyps)
   }
   names_ls_f <- c()
-  if (object@df > 0) {
-    names_ls_f <- paste("ls(F", 1:object@df, ")", sep = "")
-    coefs <- c(coefs, object@kern@f_lsHyps)
+  if (model@df > 0) {
+    names_ls_f <- paste("ls(F", 1:model@df, ")", sep = "")
+    coefs <- c(coefs, model@kern@f_lsHyps)
   }
   names(coefs) <- c("var", names_ls_s, names_ls_f)
   return(coefs)
@@ -833,11 +1158,11 @@ if(!isGeneric("getBasis")) {setGeneric(name = "getBasis", def = function(object)
 #' @name getBasis
 #' @rdname getBasis-methods
 #' @aliases getBasis,funGp-method
-setMethod("getBasis", "funGp", function(object) getBasis.funGp(object))
+setMethod("getBasis", "funGp", function(object) getBasis.funGp(model = object))
 
-getBasis.funGp <- function(object) {
-  if (object@df > 0) {
-    return(object@proj@basis)
+getBasis.funGp <- function(model) {
+  if (model@df > 0) {
+    return(model@proj@basis)
   } else {
     cat("The provided funGp model does not have functional inputs. Basis functions are not defined for it.")
   }
@@ -859,12 +1184,12 @@ if(!isGeneric("getRedfIn")) {setGeneric(name = "getRedfIn", def = function(objec
 #' @name getRedfIn
 #' @rdname getRedfIn-methods
 #' @aliases getRedfIn,funGp-method
-setMethod("getRedfIn", "funGp", function(object) getRedfIn.funGp(object))
+setMethod("getRedfIn", "funGp", function(object) getRedfIn.funGp(model = object))
 
-getRedfIn.funGp <- function(object) {
-  if (object@df > 0) {
-    rfIn <- object@proj@coefs
-    names(rfIn) <- paste("alpha(F", 1:object@df, ")", sep = "")
+getRedfIn.funGp <- function(model) {
+  if (model@df > 0) {
+    rfIn <- model@proj@coefs
+    names(rfIn) <- paste("alpha(F", 1:model@df, ")", sep = "")
     return(rfIn)
   } else {
     cat("The provided funGp model does not have functional inputs. Reduced functional inputs are not defined for it.")
@@ -887,12 +1212,12 @@ if(!isGeneric("getProjfIn")) {setGeneric(name = "getProjfIn", def = function(obj
 #' @name getProjfIn
 #' @rdname getProjfIn-methods
 #' @aliases getProjfIn,funGp-method
-setMethod("getProjfIn", "funGp", function(object) getProjfIn.funGp(object))
+setMethod("getProjfIn", "funGp", function(object) getProjfIn.funGp(model = object))
 
-getProjfIn.funGp <- function(object) {
-  if (object@df > 0) {
-    fpIn <- mapply(function(m1, m2) m1 %*% t(m2), m1 = object@proj@coefs, m2 = object@proj@basis)
-    names(fpIn) <- paste("Fp", 1:object@df, sep = "")
+getProjfIn.funGp <- function(model) {
+  if (model@df > 0) {
+    fpIn <- mapply(function(m1, m2) m1 %*% t(m2), m1 = model@proj@coefs, m2 = model@proj@basis)
+    names(fpIn) <- paste("Fp", 1:model@df, sep = "")
     return(fpIn)
   } else {
     cat("The provided funGp model does not have functional inputs. Projected functional inputs are not defined for it.")
@@ -915,15 +1240,15 @@ if(!isGeneric("getProjgram")) {setGeneric("getProjgram", function(object) standa
 #' @name getProjgram
 #' @rdname getProjgram-methods
 #' @aliases getProjgram,funGp-method
-setMethod("getProjgram", "funGp", function(object) getProjgram.funGp(object))
+setMethod("getProjgram", "funGp", function(object) getProjgram.funGp(model = object))
 
-getProjgram.funGp <- function(object) {
-  if (object@df > 0) {
+getProjgram.funGp <- function(model) {
+  if (model@df > 0) {
     gram <- list()
-    for (i in 1:object@df) {
-      gram[[i]] <- t(object@proj@basis[[i]]) %*% object@proj@basis[[i]]
+    for (i in 1:model@df) {
+      gram[[i]] <- t(model@proj@basis[[i]]) %*% model@proj@basis[[i]]
     }
-    names(gram) <- paste("G(F", 1:object@df, ")", sep = "")
+    names(gram) <- paste("G(F", 1:model@df, ")", sep = "")
     return(gram)
   } else {
     cat("The provided funGp model does not have functional inputs. The projection Gram matrix is not defined for it.")
@@ -947,10 +1272,10 @@ if(!isGeneric("getTrainCov")) {setGeneric("getTrainCov", function(object) standa
 #' @name getTrainCov
 #' @rdname getTrainCov-methods
 #' @aliases getTrainCov,funGp-method
-setMethod("getTrainCov", "funGp", function(object) getTrainCov.funGp(object))
+setMethod("getTrainCov", "funGp", function(object) getTrainCov.funGp(model = object))
 
-getTrainCov.funGp <- function(object) {
-  return(tcrossprod(object@preMats$L))
+getTrainCov.funGp <- function(model) {
+  return(tcrossprod(model@preMats$L))
 }
 # ----------------------------------------------------------------------------------------------------------
 
@@ -1015,7 +1340,7 @@ checkVal_funGp <- function(env){
 #' @author José Betancourt, François Bachoc and Thierry Klein
 checkVal_simulate <- function(env){
   # recover the model
-  model <- env$object
+  model <- env$model
 
   if (all(!is.null(model@sIn), !is.null(model@fIn))) { # Hybrid-input case *******************************************
     # consistency in data structures
