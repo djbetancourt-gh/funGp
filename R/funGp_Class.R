@@ -712,6 +712,38 @@ browser()
             return(modelup)
           })
 
+checkVal_InOut_sb <- function(env) {
+  # recover the model
+  model <- env$model
+  if (all(!is.null(model@sIn), !is.null(model@fIn))) { # Hybrid-input case *******************************************
+    # consistency in number of points
+    if (!all(nrow(env$sIn.sb) == c(sapply(env$fIn.sb, nrow), nrow(env$sOut.sb)))) {
+      stop("Inconsistent number of points. Please check that sIn.sb, each matrix in fIn.sb and sOut.sb have all the same number\nof rows.")
+    }
+    if (nrow(env$sIn.sb) != length(env$ind.sb)) {
+      stop(paste("Inconsistent number of points in your replacement index vector ind.sb. Please check that it has the same number of\n",
+                 "rows than sIn.sb, each matrix in fIn.sb and sOut.sb.", sep = ""))
+    }
+
+    # validity of subtituting index
+    # should be an integer
+    if (any(env$ind.sb %% 1 != 0)) {
+      stop(paste(c("Replacement indices should be integer numbers. Please check the following positions of your ind.sb vector: ",
+                 which(env$ind.sb %% 1 != 0)), sep = "", collapse = " "))
+    }
+    # should > 0 and < n.tot
+    if (!all(env$ind.sb > 0 & env$ind.sb < model@n.tr)) { # replace by n.tot!!!!!!!!!!!!!!!!!!!!!!!
+      stop(paste(c("Replacement indices shuold be integers in [1, model@n.tot]. Please check the following positions of your ind.sb vector: ",
+                 which(!(env$ind.sb > 0 & env$ind.sb < model@n.tr))), sep = "", collapse = " "))
+    }
+    # should not contain duplicates
+    if (anyDuplicated(env$ind.sb)) {
+      stop(paste(c("Replacement indices shuold be unique. Please check the following positions of your ind.sb vector: ",
+                 which(duplicated(env$ind.sb) | duplicated(env$ind.sb, fromLast = TRUE))), sep = "", collapse = " "))
+    }
+  }
+}
+
 update_InOut_sb.funGp <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb) {
   print("Case 2: only substitute some data")
   # checkVal_simulate(as.list(environment())) !!!!!!!!!!!!!!!!!!!
@@ -726,6 +758,7 @@ update_InOut_sb.funGp <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb) {
 
   # provide substituting output if not specified by the user
   if(is.null(sOut.sb)) sOut.sb <- sOut[ind.sb,,drop = F]
+  sOut.sb <- as.matrix(sOut.sb)
 
   # check which type of model it is
   if (all(model@ds > 0, model@df > 0)) { # Hybrid-input case *******************************************
@@ -736,6 +769,9 @@ update_InOut_sb.funGp <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb) {
     # provide substituting inputs if not specified by the user
     if(is.null(sIn.sb)) sIn.sb <- sIn[ind.sb,,drop = F]
     if(is.null(fIn.sb)) fIn.sb <- lapply(fIn, function(M) M[ind.sb,,drop = F])
+
+    # check for validty of substituting data
+    checkVal_InOut_sb(as.list(environment()))
 
     # check for duplicates in the substituting points
     res <- checkDuplicates(sBench = sIn.sb, fBench = fIn.sb, sCand = sIn.sb, fCand = fIn.sb, oCand = sOut.sb, iCand = ind.sb)
@@ -1357,8 +1393,8 @@ checkVal_simulate <- function(env){
     }
 
     # consistency in number of points
-    if (!all(nrow(env$sIn.sm) == c(sapply(env$fIn.sm, nrow)))) {
-      stop("Inconsistent number of points. Please check that sIn.sm and each matrix in fIn have all the same number of rows.")
+    if (!all(nrow(env$sIn.sm) == sapply(env$fIn.sm, nrow))) {
+      stop("Inconsistent number of points. Please check that sIn.sm and each matrix in fIn.sm have all the same number of rows.")
     }
 
   } else if(!is.null(model@fIn)) { # functional-input case ***************************************
