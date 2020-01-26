@@ -669,6 +669,7 @@ simulate.funGp <- function(model, nsim, seed, sIn.sm, fIn.sm, nug.sim, detail) {
 #' @param fIn.sb Fill!!!
 #' @param sOut.sb Fill!!!
 #' @param ind.sb Fill!!!
+#' @param ind.dl Fill!!!
 #' @param var.sb Fill!!!
 #' @param ls.sb Fill!!!
 #' @param ... Further arguments for methods.
@@ -686,26 +687,27 @@ setGeneric(name = "update", def = function(object, ...) standardGeneric("update"
 setMethod("update", "funGp",
           function(object, sIn.nw = NULL, fIn.nw = NULL, sOut.nw = NULL,
                    sIn.sb = NULL, fIn.sb = NULL, sOut.sb = NULL, ind.sb = NULL,
-                   var.sb = NULL, ls.sb = NULL, ...) {
+                   ind.dl = NULL, var.sb = NULL, ls.sb = NULL, ...) {
             # browser()
             # dispatch based on the type of model and process required
             if (all(object@ds > 0, object@df > 0)) {
               # check what does the user want to do
-              compInOut <- any(!is.null(sIn.nw), !is.null(fIn.nw), !is.null(sOut.nw))
-              subsInOut <- any(!is.null(sIn.sb), !is.null(fIn.sb), !is.null(sOut.sb))
-              subsHypers <- any(!is.null(var.sb), !is.null(ls.sb))
+              newInOut <- any(!is.null(sIn.nw), !is.null(fIn.nw), !is.null(sOut.nw))
+              subInOut <- any(!is.null(sIn.sb), !is.null(fIn.sb), !is.null(sOut.sb))
+              delInOut <- !is.null(ind.dl)
+              subHypers <- any(!is.null(var.sb), !is.null(ls.sb))
             }
 browser()
-            if (all(isTRUE(compInOut), !isTRUE(subsInOut), !isTRUE(subsHypers))) {
+            if (all(isTRUE(newInOut), !isTRUE(subInOut), !isTRUE(delInOut), !isTRUE(subHypers))) {
               # Case 1: only add some data
               modelup <- update_InOut_nw.funGp(model = object, sIn.nw = sIn.nw, fIn.nw = fIn.nw, sOut.nw = sOut.nw)
 
-            } else if (all(!isTRUE(compInOut), isTRUE(subsInOut), !isTRUE(subsHypers))) {
+            } else if (all(!isTRUE(newInOut), isTRUE(subInOut), !isTRUE(subHypers))) {
               # Case 2: only substitute some data
               modelup <- update_InOut_sb.funGp(model = object, sIn.sb = sIn.sb, fIn.sb = fIn.sb, sOut.sb = sOut.sb, ind.sb = ind.sb)
             }
 
-            if (all(!isTRUE(compInOut), !isTRUE(subsInOut), !isTRUE(subsHypers))) {
+            if (all(!isTRUE(newInOut), !isTRUE(subInOut), !isTRUE(subHypers))) {
               warning("No data to update the model was provided. The model is returned in its original state.")
               return(object)
             }

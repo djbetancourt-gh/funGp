@@ -16,6 +16,7 @@ update(object, ...)
   fIn.sb = NULL,
   sOut.sb = NULL,
   ind.sb = NULL,
+  ind.dl = NULL,
   var.sb = NULL,
   ls.sb = NULL,
   ...
@@ -39,6 +40,8 @@ update(object, ...)
 \item{sOut.sb}{Fill!!!}
 
 \item{ind.sb}{Fill!!!}
+
+\item{ind.dl}{Fill!!!}
 
 \item{var.sb}{Fill!!!}
 
