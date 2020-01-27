@@ -5,7 +5,16 @@
 \alias{plotPreds,funGp-method}
 \title{Prediction Method for the apk Class}
 \usage{
-\S4method{plotPreds}{funGp}(object, preds, sOut.pr = NULL, ...)
+\S4method{plotPreds}{funGp}(
+  object,
+  preds,
+  sOut.pr = NULL,
+  xlim_c = NULL,
+  ylim_c = NULL,
+  justCal = F,
+  justLin = F,
+  ...
+)
 }
 \arguments{
 \item{object}{An object to predict from.}
@@ -13,6 +22,14 @@
 \item{preds}{something}
 
 \item{sOut.pr}{also}
+
+\item{xlim_c}{also}
+
+\item{ylim_c}{also}
+
+\item{justCal}{also}
+
+\item{justLin}{also}
 
 \item{...}{Further arguments for methods.}
 }

@@ -12,6 +12,8 @@ To create a funGp object, use \link[funGp]{funGp} . See also this function for m
 \describe{
 \item{\code{call}}{Object of class \code{"language"}. User call reminder.}
 
+\item{\code{type}}{Object of class \code{"character"}. Type of model based on inputs structure. To be chosen from {"scalar", "functional", "hybrid"}.}
+
 \item{\code{ds}}{Object of class \code{"numeric"}. Number of scalar inputs.}
 
 \item{\code{df}}{Object of class \code{"numeric"}. Number of functional inputs.}
@@ -23,6 +25,8 @@ To create a funGp object, use \link[funGp]{funGp} . See also this function for m
 \item{\code{fIn}}{Object of class \code{"list"}. Functional inputs. Each element of the list contains a functional input in the form of a matrix.}
 
 \item{\code{sOut}}{Object of class \code{"matrix"}. Scalar output.}
+
+\item{\code{n.tot}}{Object of class \code{"integer"}. Number of observed points (not necessarily all are used for prediction).}
 
 \item{\code{n.tr}}{Object of class \code{"integer"}. Number of training points.}
 

@@ -25,6 +25,7 @@
 #' \href{https://drive.google.com/open?id=0B5dR1D0AmTvsb01qcmJ0UWg1TlE}{Functional-input
 #' Gaussian process regression with funGp - An introductory tour}
 #'
+#' @author José Betancourt, François Bachoc and Thierry Klein
 #' @docType package
 #' @name funGp-package
 NULL

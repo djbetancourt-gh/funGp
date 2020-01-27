@@ -38,3 +38,6 @@ Fill!!!
 Gaussian process regression with funGp - An introductory tour}
 }
 
+\author{
+José Betancourt, François Bachoc and Thierry Klein
+}

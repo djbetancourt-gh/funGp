@@ -67,6 +67,7 @@
 #' @rdname black-boxes
 NULL
 
+
 #' BBK_1
 #' @export
 #' @keywords internal
@@ -80,6 +81,7 @@ fgp_BB1 <- function(sIn, fIn, n.tr){
   }))
   return(sOut)
 }
+
 
 #' BBK_2
 #' @export
@@ -98,7 +100,7 @@ fgp_BB2 <- function(sIn, fIn, n.tr){
 }
 
 
-#' # MFR_1
+#' MFR_1
 #' @export
 #' @keywords internal
 fgp_BB3 <- function(sIn, fIn, n.tr){
@@ -114,9 +116,10 @@ fgp_BB3 <- function(sIn, fIn, n.tr){
   return(sOut)
 }
 
-# MFR_2p
-# Second analytical example in preprint of Muehlenstaedt, Fruth & Roustant (2016)
-# @export
+
+#' MFR_2p
+#' @export
+#' @keywords internal
 fgp_BB4 <- function(sIn, fIn, n.tr){
   sOut <- as.matrix(sapply(t(1:n.tr), function(i){
     x1 <- sIn[i,1]
@@ -136,9 +139,10 @@ fgp_BB4 <- function(sIn, fIn, n.tr){
   return(sOut)
 }
 
-# MFR_2f
-# Second analytical example in final version of Muehlenstaedt, Fruth & Roustant (2016)
-# @export
+
+#' MFR_2f
+#' @export
+#' @keywords internal
 fgp_BB5 <- function(sIn, fIn, n.tr){
   sOut <- as.matrix(sapply(t(1:n.tr), function(i){
     x1 <- sIn[i,1]
@@ -158,9 +162,10 @@ fgp_BB5 <- function(sIn, fIn, n.tr){
   return(sOut)
 }
 
-# NHMPP
-# Function inspired by the analytical example in Nanty, Helbert, Marrel, Pérot, Prieur (2016)
-# @export
+
+#' NHMPP
+#' @export
+#' @keywords internal
 fgp_BB6 <- function(sIn, fIn, n.tr){
   sOut <- as.matrix(sapply(t(1:n.tr), function(i){
     x1 <- sIn[i,1]

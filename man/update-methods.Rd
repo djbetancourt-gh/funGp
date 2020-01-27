@@ -18,7 +18,10 @@ update(object, ...)
   ind.sb = NULL,
   ind.dl = NULL,
   var.sb = NULL,
-  ls.sb = NULL,
+  ls_s.sb = NULL,
+  ls_f.sb = NULL,
+  varls.reestim = F,
+  ls.reestim = F,
   ...
 )
 }
@@ -45,7 +48,13 @@ update(object, ...)
 
 \item{var.sb}{Fill!!!}
 
-\item{ls.sb}{Fill!!!}
+\item{ls_s.sb}{Fill!!!}
+
+\item{ls_f.sb}{Fill!!!}
+
+\item{varls.reestim}{Fill!!!}
+
+\item{ls.reestim}{Fill!!!}
 }
 \description{
 Updating method for the funGp Class

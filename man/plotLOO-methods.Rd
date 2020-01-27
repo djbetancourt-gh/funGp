@@ -5,10 +5,16 @@
 \alias{plotLOO,funGp-method}
 \title{Prediction Method for the apk Class}
 \usage{
-\S4method{plotLOO}{funGp}(object)
+\S4method{plotLOO}{funGp}(object, xlim = NULL, ylim = NULL)
 }
 \arguments{
 \item{object}{An object to predict from.}
+
+\item{xlim}{something}
+
+\item{ylim}{something}
+
+\item{...}{fill}
 }
 \description{
 This is my description
