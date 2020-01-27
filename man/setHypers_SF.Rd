@@ -4,7 +4,20 @@
 \alias{setHypers_SF}
 \title{Optimization of hyperparameters for funGp models}
 \usage{
-setHypers_SF(sIn, fpIn, J, sMs, fMs, sOut, kerType, n.starts, n.presample)
+setHypers_SF(
+  sIn,
+  fpIn,
+  J,
+  sMs,
+  fMs,
+  sOut,
+  kerType,
+  var.known,
+  ls_s.known,
+  ls_f.known,
+  n.starts,
+  n.presample
+)
 }
 \arguments{
 \item{sIn}{a matrix of scalar input values to train the model. Each column must match an input variable and each row a training point.}
@@ -24,6 +37,12 @@ between the functional observation coordinates.}
 \item{sOut}{a vector (or 1-column matrix) containing the values of the scalar output at the training points.}
 
 \item{kerType}{a character string indicating the covariance structure to be used, to be choosen between "gauss", "matern5_2" or "matern3_2".}
+
+\item{var.known}{Fill!!!!!!!!!!}
+
+\item{ls_s.known}{Fill!!!!!!!!!!}
+
+\item{ls_f.known}{Fill!!!!!!!!!!}
 
 \item{n.starts}{Fill!!!!!!!!!!}
 

@@ -12,6 +12,9 @@
 #' between the functional observation coordinates.
 #' @param sOut a vector (or 1-column matrix) containing the values of the scalar output at the training points.
 #' @param kerType a character string indicating the covariance structure to be used, to be choosen between "gauss", "matern5_2" or "matern3_2".
+#' @param var.known Fill!!!!!!!!!!
+#' @param ls_s.known Fill!!!!!!!!!!
+#' @param ls_f.known Fill!!!!!!!!!!
 #' @param n.starts Fill!!!!!!!!!!
 #' @param n.presample Fill!!!!!!!!!!
 #' @return The hyperparameters.
@@ -20,18 +23,47 @@
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
-setHypers_SF <- function(sIn, fpIn, J, sMs, fMs, sOut, kerType, n.starts, n.presample){
-  # browser()
-  # 1. set hypercube for solution space
-  bnds <- setBounds_SF(sMs, fMs)
+setHypers_SF <- function(sIn, fpIn, J, sMs, fMs, sOut, kerType, var.known, ls_s.known, ls_f.known, n.starts, n.presample){
+  # if all the length-scale coefficients are known, skip optim  and compute var analytically. Else optimize
+  if (all(!is.null(ls_s.known), !is.null(ls_f.known))) {
+    # 1. estimation of the correlation matrix
+    n.tr <- length(sOut)
+    R <- setR(ls_s.known, sMs, kerType) * setR(ls_f.known, fMs, kerType) # + diag(10^-8, nrow = n.tr, ncol = n.tr)!!!!!!!!!!!
+    U <- chol(R)
 
-  # 2. set starting points
-  cat("** Presampling...\n")
-  spoints <- setSPoints_SF(bnds, sMs, fMs, sOut, kerType, n.starts, n.presample)
+    # 2. estimate the a priori process variance
+    cat("** Computing optimal variance...\n")
+    sig2 <- analyticVar_llik_SF(U, sOut, n.tr)
 
-  # 3. Perform optimization
-  cat("** Optimising...\n")
-  return(optimHypers_SF(spoints, n.starts, bnds, sMs, fMs, sOut, kerType))
+    # 3. merge hyperparameters and return
+    return(c(sig2, ls_s.known, ls_f.known))
+
+  } else {
+    # 1. set hypercube for solution space
+    if (all(is.null(ls_s.known), is.null(ls_f.known))) { # case 1: all ls coefficients are unknown
+      bnds <- setBounds_SF(sMs, fMs)
+    } else if (is.null(ls_f.known)) { # case 2: only the functional ls coefficients are unknown
+      bnds <- setBounds_F(fMs)
+    } else { # case 3: only the scalar ls coefficients are unknown
+      bnds <- setBounds_S(sMs)
+    }
+
+    # 2. set up variance function
+    if (is.null(var.known)) { # the variance is computed based on the analytic formula for optimal var given ls with loglikelihood
+      varfun <- analyticVar_llik_SF
+    } else { # the variance is set fixed at its known value using a closure
+      g <- function(var.known) function(...) var.known
+      varfun <- g(var.known)
+    }
+
+    # 3. set starting points
+    cat("** Presampling...\n")
+    spoints <- setSPoints_SF(bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known, n.starts, n.presample)
+
+    # 4. Perform optimization
+    cat("** Optimising...\n")
+    return(optimHypers_SF(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known))
+  }
 }
 # -------------------------------------------------------------------------------------------------------------------------------------
 
@@ -87,7 +119,7 @@ setBounds_SF <- function(sMs, fMs){
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
-setSPoints_SF <- function(bnds, sMs, fMs, sOut, kerType, n.starts, n.presample){
+setSPoints_SF <- function(bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known, n.starts, n.presample){
   # recover lower and upper limits
   ll <- bnds[1,]
   ul <- bnds[2,]
@@ -97,8 +129,15 @@ setSPoints_SF <- function(bnds, sMs, fMs, sOut, kerType, n.starts, n.presample){
   allspoints <- matrix(runif(n.ls * n.presample), nrow = n.ls, ncol = n.presample)
   allspoints <- ll + allspoints * (ul - ll)
 
+  # complement the candidate points with pre-fixed ls coefficients if available
+  if (!is.null(ls_f.known)) {
+    allspoints <- rbind(allspoints, matrix(ls_f.known, nrow = length(ls_f.known), ncol = n.presample))
+  } else if (!is.null(ls_s.known)) {
+    allspoints <- rbind(matrix(ls_s.known, nrow = length(ls_s.known), ncol = n.presample), allspoints)
+  }
+
   # compute fitness of each starting point
-  fitvec <- apply(allspoints, 2, negLogLik_funGp_SF, sMs, fMs, sOut, kerType)
+  fitvec <- apply(allspoints, 2, negLogLik_funGp_SF, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known)
 
   # get the best n.starts points
   spoints <- allspoints[,order(fitvec)[1:n.starts], drop = F]
@@ -130,12 +169,13 @@ setSPoints_SF <- function(bnds, sMs, fMs, sOut, kerType, n.starts, n.presample){
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
-optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType){
+optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known){
   # if multistart is required then parallelize, else run single optimization
   if (n.starts == 1){
     optOut <- optim(par = as.numeric(spoints), fn = negLogLik_funGp_SF, method = "L-BFGS-B",
                    lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
-                   sMs = sMs, fMs = fMs, sOut = sOut, kerType = kerType)
+                   sMs = sMs, fMs = fMs, sOut = sOut, kerType = kerType,
+                   varfun = varfun, ls_s.known = ls_s.known, ls_f.known = ls_f.known)
   } else {
     # if (!requireNamespace("foreach", quietly = TRUE)){
     if (!getDoParRegistered()){
@@ -143,13 +183,15 @@ optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType){
       optOutList <- "%do%"(foreach(i = 1:n.starts, .errorhandling = 'remove'), {
         optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_SF, method = "L-BFGS-B",
               lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
-              sMs = sMs, fMs = fMs, sOut = sOut, kerType = kerType)})
+              sMs = sMs, fMs = fMs, sOut = sOut, kerType = kerType,
+              varfun = varfun, ls_s.known = ls_s.known, ls_f.known = ls_f.known)})
     } else {
       cat("Parallel backend register found. Multistart optimizations done in parallel.\n")
       optOutList <- "%dopar%"(foreach(i = 1:n.starts, .errorhandling = 'remove'), {
         optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_SF, method = "L-BFGS-B",
               lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
-              sMs = sMs, fMs = fMs, sOut = sOut, kerType = kerType)})
+              sMs = sMs, fMs = fMs, sOut = sOut, kerType = kerType,
+              varfun = varfun, ls_s.known = ls_s.known, ls_f.known = ls_f.known)})
     }
 
     # check if there are usable results
@@ -165,8 +207,16 @@ optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType){
   # recovering length-scale hypers linked to scalar and functional inputs
   ds <- length(sMs)
   df <- length(fMs)
-  thetas_s <- optOut$par[1:ds]
-  thetas_f <- optOut$par[(ds+1):(ds+df)]
+  if (all(is.null(ls_s.known), is.null(ls_f.known))) { # case 1: all ls coefficients are unknown
+    thetas_s <- optOut$par[1:ds]
+    thetas_f <- optOut$par[(ds+1):(ds+df)]
+  } else if (is.null(ls_f.known)) { # case 2: only the functional ls coefficients are unknown
+    thetas_s <- ls_s.known
+    thetas_f <- optOut$par[(ds+1):(ds+df)]
+  } else { # case 3: only the scalar ls coefficients are unknown
+    thetas_s <- optOut$par[1:ds]
+    thetas_f <- ls_f.known
+  }
 
   # recovering relevant information for the estimation of the process a priori variance
   n.tr <- length(sOut)
@@ -174,8 +224,7 @@ optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType){
   U <- chol(R)
 
   # estimation of the variance
-  UInvY <- backsolve(t(U), sOut, upper.tri = F)
-  sig2 <- crossprod(UInvY)/n.tr
+  sig2 <- varfun(U, sOut, n.tr)
 
   return(c(sig2, c(thetas_s, thetas_f)))
 }
@@ -200,12 +249,20 @@ optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType){
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
-negLogLik_funGp_SF <- function(thetas, sMs, fMs, sOut, kerType){
+negLogLik_funGp_SF <- function(thetas, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known){
   # recovering length-scale hypers linked to scalar and functional inputs
   ds <- length(sMs)
   df <- length(fMs)
-  thetas_s <- thetas[1:ds]
-  thetas_f <- thetas[(ds+1):(ds+df)]
+  if (all(is.null(ls_s.known), is.null(ls_f.known))) { # case 1: all ls coefficients are unknown
+    thetas_s <- thetas[1:ds]
+    thetas_f <- thetas[(ds+1):(ds+df)]
+  } else if (is.null(ls_f.known)) { # case 2: only the functional ls coefficients are unknown
+    thetas_s <- ls_s.known
+    thetas_f <- thetas[(ds+1):(ds+df)]
+  } else { # case 3: only the scalar ls coefficients are unknown
+    thetas_s <- thetas[1:ds]
+    thetas_f <- ls_f.known
+  }
 
   # Estimation of the correlation matrix
   n.tr <- length(sOut)
@@ -213,13 +270,20 @@ negLogLik_funGp_SF <- function(thetas, sMs, fMs, sOut, kerType){
   U <- chol(R)
 
   # Estimation of the a priori process variance
-  UInvY <- backsolve(t(U), sOut, upper.tri = F)
-  sig2 <- crossprod(UInvY)/n.tr
+  sig2 <- varfun(U, sOut, n.tr)
 
   # compute loglikelihood
   # DiceKgiging 2108
   llik <- -0.5 * (n.tr * log(2*pi*sig2) + 2*sum(log(diag(U))) + n.tr)
 
   return(-llik)
+}
+# =========================================================================================================
+
+
+# =========================================================================================================
+analyticVar_llik_SF <- function(U, sOut, n.tr) {
+  UInvY <- backsolve(t(U), sOut, upper.tri = F)
+  return(crossprod(UInvY)/n.tr)
 }
 # =========================================================================================================

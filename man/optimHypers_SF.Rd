@@ -4,7 +4,18 @@
 \alias{optimHypers_SF}
 \title{Optimizing the hyperparameters}
 \usage{
-optimHypers_SF(spoints, n.starts, bnds, sMs, fMs, sOut, kerType)
+optimHypers_SF(
+  spoints,
+  n.starts,
+  bnds,
+  sMs,
+  fMs,
+  sOut,
+  kerType,
+  varfun,
+  ls_s.known,
+  ls_f.known
+)
 }
 \arguments{
 \item{spoints}{Fill this!!!!!!!!!!}

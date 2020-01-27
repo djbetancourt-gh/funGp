@@ -4,7 +4,16 @@
 \alias{negLogLik_funGp_SF}
 \title{Setting up of starting points for optimization of hyperparameters}
 \usage{
-negLogLik_funGp_SF(thetas, sMs, fMs, sOut, kerType)
+negLogLik_funGp_SF(
+  thetas,
+  sMs,
+  fMs,
+  sOut,
+  kerType,
+  varfun,
+  ls_s.known,
+  ls_f.known
+)
 }
 \arguments{
 \item{thetas}{Fill this!!!!!!!!!!}

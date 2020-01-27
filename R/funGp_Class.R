@@ -70,6 +70,9 @@ setClass("funGp",
 #' @param fpDims an optional array with the projection dimension for each functional input.
 #' @param kerType an optional character specifying the covariance structure to be used. To be chosen between
 #' "gauss", "matern5_2" and "matern3_2". Default is "matern5_2".
+#' @param var.hyp fill!!!!!!
+#' @param ls_s.hyp fill!!!!!!
+#' @param ls_f.hyp fill!!!!!!
 #' @param disType an optional character specifying the distance function to use for the functional inputs
 #' within the covariance function. To be chosen between "scalar" and "functional". Default is "functional".
 #' @param n.starts Fill!!!!!!!!!!
@@ -105,7 +108,7 @@ setClass("funGp",
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerType = "matern5_2", disType = "functional",
-                  n.starts = 1, n.presample = 20) {
+                  var.hyp = NULL, ls_s.hyp = NULL, ls_f.hyp = NULL, n.starts = 1, n.presample = 20) {
   # =====================================================================================================
   # Attributes checklist
   # =====================================================================================================
@@ -187,10 +190,15 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
     # compute functional distance matrices
     fMs <- setFunDistance(fpIn, fpIn, J)
 
-    # optimize hyperparameters
-    hypers <- setHypers_SF(sIn, fpIn, J, sMs, fMs, sOut, kerType, n.starts, n.presample)
-    varHyp <- hypers[1]
-    lsHyps <- hypers[-1]
+    # optimize hyperparameters if some is required
+    if (all(!is.null(var.hyp), !is.null(ls_s.hyp), !is.null(ls_f.hyp))) {
+      varHyp <- var.hyp
+      lsHyps <- c(ls_s.hyp, ls_f.hyp)
+    } else {
+      hypers <- setHypers_SF(sIn, fpIn, J, sMs, fMs, sOut, kerType, var.hyp, ls_s.hyp, ls_f.hyp, n.starts, n.presample)
+      varHyp <- hypers[1]
+      lsHyps <- hypers[-1]
+    }
 
     # fill funGpKern slots specific to the functional-input case
     kern@s_lsHyps <- lsHyps[1:ds]
@@ -236,10 +244,15 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
     # compute functional distance matrices
     fMs <- setFunDistance(fpIn, fpIn, J)
 
-    # optimize hyperparameters
-    hypers <- setHypers_F(fpIn, J, fMs, sOut, kerType, n.starts, n.presample)
-    varHyp <- hypers[1]
-    lsHyps <- hypers[-1]
+    # optimize hyperparameters if some is required
+    if (!all(is.null(var.hyp), !is.null(ls_f.hyp))) {
+      varHyp <- var.hyp
+      lsHyps <- ls_f.hyp
+    } else {
+      hypers <- setHypers_F(fpIn, J, fMs, sOut, kerType, n.starts, n.presample)
+      varHyp <- hypers[1]
+      lsHyps <- hypers[-1]
+    }
 
     # fill funGpKern slots specific to the functional-input case
     kern@f_lsHyps <- lsHyps
@@ -268,10 +281,15 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
     # compute scalar distance matrices
     sMs <- setScalDistance(sIn, sIn)
 
-    # optimize hyperparameters
-    hypers <- setHypers_S(sIn, sMs, sOut, kerType, n.starts, n.presample)
-    varHyp <- hypers[1]
-    lsHyps <- hypers[-1]
+    # optimize hyperparameters if some is required
+    if (!all(is.null(var.hyp), !is.null(ls_f.hyp))) {
+      varHyp <- var.hyp
+      lsHyps <- ls_s.hyp
+    } else {
+      hypers <- setHypers_S(sIn, sMs, sOut, kerType, n.starts, n.presample)
+      varHyp <- hypers[1]
+      lsHyps <- hypers[-1]
+    }
 
     # fill funGpKern slots specific to the scalar-input case
     kern@s_lsHyps <- lsHyps
@@ -682,8 +700,9 @@ simulate.funGp <- function(model, nsim, seed, sIn.sm, fIn.sm, nug.sim, detail) {
 #' @param var.sb Fill!!!
 #' @param ls_s.sb Fill!!!
 #' @param ls_f.sb Fill!!!
-#' @param varls.reestim Fill!!!
-#' @param ls.reestim Fill!!!
+#' @param var.re Fill!!!
+#' @param ls_s.re Fill!!!
+#' @param ls_f.re Fill!!!
 #' @param ... Further arguments for methods.
 #'
 # @examples
@@ -700,12 +719,12 @@ setMethod("update", "funGp",
           function(object, sIn.nw = NULL, fIn.nw = NULL, sOut.nw = NULL,
                    sIn.sb = NULL, fIn.sb = NULL, sOut.sb = NULL, ind.sb = NULL,
                    ind.dl = NULL, var.sb = NULL, ls_s.sb = NULL, ls_f.sb = NULL,
-                   varls.reestim = F, ls.reestim = F, ...) {
+                   var.re = F, ls_s.re = F, ls_f.re = F, ...) {
 
             # check what does the user want to do
             delInOut <- !is.null(ind.dl)
             subHypers <- any(!is.null(var.sb), !is.null(ls_s.sb), !is.null(ls_f.sb))
-            reeHypers <- any(isTRUE(varls.reestim), isTRUE(ls.reestim))
+            reeHypers <- any(isTRUE(var.re), isTRUE(ls_s.re), isTRUE(ls_f.re))
             if (object@type == "hybrid") {
               subInOut <- any(!is.null(sIn.sb), !is.null(fIn.sb), !is.null(sOut.sb))
               newInOut <- any(!is.null(sIn.nw), !is.null(fIn.nw), !is.null(sOut.nw))
@@ -717,13 +736,21 @@ setMethod("update", "funGp",
               newInOut <- any(!is.null(sIn.nw), !is.null(sOut.nw))
             }
 
+            # task names
+            # (1) data deletion, (2) data substitution, (3) data addition,
+            # (4) var substitution, (5) ls_s substitution, (6) ls_f substitution,
+            # (7) var re-estimation, (8) ls_s re-estimation, (9) ls_f re-estimation
+            tasknames <- c("data deletion", "data substitution", "data addition",
+                           "var substitution", "ls_s substitution", "ls_f substitution",
+                           "var re-estimation", "ls_s re-estimation", "ls_f re-estimation")
+
             # identify and drop conflicting tasks
             # ----------------------------------------------------
             dptasks <- c()
             if (all(delInOut, subInOut)) { # were deletion and substitution of data both requested?
               dptasks <- c(dptasks, 1, 2)
 
-              if (reeHypers) { # was re-estimation of hyperparameters also requested?
+              if (isTRUE(var.re)) { # was re-estimation of var also requested?
                 dptasks <- c(dptasks, 6, 7)
               }
             }
@@ -774,8 +801,6 @@ setMethod("update", "funGp",
 
             # print update summary
             # ----------------------------------------------------
-            tasknames <- c("data deletion", "data substitution", "data addition", "var substitution",
-                           "ls substitution", "var and ls re-estimation", "ls re-estimation")
             if (length(cptasks) > 0) { # list of complete tasks if there is any
               cat("--------------\n")
               cat("Update summary\n")

@@ -12,6 +12,9 @@ funGp(
   fpDims = NULL,
   kerType = "matern5_2",
   disType = "functional",
+  var.hyp = NULL,
+  ls_s.hyp = NULL,
+  ls_f.hyp = NULL,
   n.starts = 1,
   n.presample = 20
 )
@@ -36,6 +39,12 @@ reduction.}
 
 \item{disType}{an optional character specifying the distance function to use for the functional inputs
 within the covariance function. To be chosen between "scalar" and "functional". Default is "functional".}
+
+\item{var.hyp}{fill!!!!!!}
+
+\item{ls_s.hyp}{fill!!!!!!}
+
+\item{ls_f.hyp}{fill!!!!!!}
 
 \item{n.starts}{Fill!!!!!!!!!!}
 
