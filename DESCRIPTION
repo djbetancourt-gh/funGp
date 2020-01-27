@@ -1,6 +1,6 @@
 Package: funGp
 Type: Package
-Title: Gaussian Process Regression with Functional Inputs
+Title: Functional-input Gaussian Process Regression
 Version: 0.1.0
 Author: José Betancourt
 Maintainer: José Betancourt <jbetanco@math.univ-toulouse.fr>
@@ -15,8 +15,11 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.0.2
 Collate: 
+    'checkers.R'
+    'cleanUpdate.R'
     'correlFunctions.R'
     'distanceMatrices.R'
+    'examplesManual.R'
     'funGp.R'
     'funGpKern_Class.R'
     'funGpMaster.R'
@@ -33,4 +36,5 @@ Collate:
     'training_F.R'
     'training_S.R'
     'training_SF.R'
+    'update_functions.R'
 VignetteBuilder: R.rsp
