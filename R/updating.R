@@ -1,7 +1,7 @@
 funGpbidon <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerType = "matern5_2", disType = "functional",
                        var.hyp = NULL, ls_s.hyp = NULL, ls_f.hyp = NULL, n.starts = 1, n.presample = 20) {
   checkVal_funGp(as.list(environment()))
-# browser()
+  # browser()
   # create objects of class funGpProj, funGpKern and funGp
   proj <- new("funGpProj")
   kern <- new("funGpKern")
@@ -197,7 +197,6 @@ funGpbidon <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, 
 # Function to delete some data
 # ----------------------------------------------------------------------------------------------------------
 upd_del <- function(model, ind.dl, remake = F) {
-  # browser()
   # duplicate the original model to build the updated one
   modelup <- model
 
@@ -210,10 +209,11 @@ upd_del <- function(model, ind.dl, remake = F) {
     fIn <- lapply(model@fIn, function(M) M[-ind.dl,])
     sOut <- model@sOut[-ind.dl,,drop = F]
 
-    # request new model to refunGp if requested
+    # the model is re-made if this is the last one in the sequence of requested tasks
     if (remake) {
-      modelup <- funGpbidon(sIn = sIn, fIn = fIn, sOut = sOut, var.hyp = model@kern@varHyp,
-                            ls_s.hyp = model@kern@s_lsHyps, ls_f.hyp = model@kern@f_lsHyps)
+      modelup <- funGp(sIn = sIn, fIn = fIn, sOut = sOut, doProj = model@proj@doProj, fpDims = model@proj@fpDims,
+                       kerType = model@kern@kerType, disType = model@kern@disType, var.hyp = model@kern@varHyp,
+                       ls_s.hyp = model@kern@s_lsHyps, ls_f.hyp = model@kern@f_lsHyps)
     } else {
       modelup@sIn <- sIn
       modelup@fIn <- fIn
@@ -229,9 +229,11 @@ upd_del <- function(model, ind.dl, remake = F) {
     fIn <- lapply(fIn, function(M) M[-ind.dl,])
     sOut <- sOut[-ind.dl,,drop = F]
 
-    # request new model to refunGp if requested
+    # the model is re-made if this is the last one in the sequence of requested tasks
     if (remake) {
-      modelup <- funGpbidon(fIn = fIn, sOut = sOut, var.hyp = model@kern@varHyp, ls_f.hyp = model@kern@f_lsHyps)
+      modelup <- funGp(fIn = fIn, sOut = sOut, doProj = model@proj@doProj, fpDims = model@proj@fpDims,
+                       kerType = model@kern@kerType, disType = model@kern@disType,
+                       var.hyp = model@kern@varHyp, ls_f.hyp = model@kern@f_lsHyps)
     } else {
       modelup@fIn <- fIn
       modelup@sOut <- sOut
@@ -248,7 +250,8 @@ upd_del <- function(model, ind.dl, remake = F) {
 
     # request new model to refunGp if requested
     if (remake) {
-      modelup <- funGpbidon(sIn = sIn, sOut = sOut, var.hyp = model@kern@varHyp, ls_s.hyp = model@kern@s_lsHyps)
+      modelup <- funGp(sIn = sIn, sOut = sOut, kerType = model@kern@kerType,
+                       var.hyp = model@kern@varHyp, ls_s.hyp = model@kern@s_lsHyps)
     } else {
       modelup@sIn <- sIn
       modelup@sOut <- sOut

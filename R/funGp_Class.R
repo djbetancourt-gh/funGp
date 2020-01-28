@@ -720,213 +720,144 @@ setMethod("update", "funGp",
                    sIn.sb = NULL, fIn.sb = NULL, sOut.sb = NULL, ind.sb = NULL,
                    ind.dl = NULL, var.sb = NULL, ls_s.sb = NULL, ls_f.sb = NULL,
                    var.re = F, ls_s.re = F, ls_f.re = F, ...) {
+            update.funGp(model = object, sIn.nw = sIn.nw, fIn.nw = fIn.nw, sOut.nw = sOut.nw,
+                         sIn.sb = sIn.sb, fIn.sb = fIn.sb, sOut.sb = sOut.sb, ind.sb = ind.sb,
+                         ind.dl = ind.dl,
+                         var.sb = var.sb, ls_s.sb = ls_s.sb, ls_f.sb = ls_f.sb,
+                         var.re = var.re, ls_s.re = ls_s.re, ls_f.re = ls_f.re)
+            })
 
-            # check what does the user want to do
-            delInOut <- !is.null(ind.dl)
-            subHypers <- any(!is.null(var.sb), !is.null(ls_s.sb), !is.null(ls_f.sb))
-            reeHypers <- any(isTRUE(var.re), isTRUE(ls_s.re), isTRUE(ls_f.re))
-            if (object@type == "hybrid") {
-              subInOut <- any(!is.null(sIn.sb), !is.null(fIn.sb), !is.null(sOut.sb))
-              newInOut <- any(!is.null(sIn.nw), !is.null(fIn.nw), !is.null(sOut.nw))
-            } else if (object@type == "functional") {
-              subInOut <- any(!is.null(fIn.sb), !is.null(sOut.sb))
-              newInOut <- any(!is.null(fIn.nw), !is.null(sOut.nw))
-            } else if (object@type == "scalar") {
-              subInOut <- any(!is.null(sIn.sb), !is.null(sOut.sb))
-              newInOut <- any(!is.null(sIn.nw), !is.null(sOut.nw))
-            }
+update.funGp <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb, ind.sb, ind.dl,
+                         var.sb, ls_s.sb, ls_f.sb, var.re, ls_s.re, ls_f.re) {
+  browser()
+  # check what does the user want to do
+  delInOut <- !is.null(ind.dl)
+  subHypers <- any(!is.null(var.sb), !is.null(ls_s.sb), !is.null(ls_f.sb))
+  reeHypers <- any(isTRUE(var.re), isTRUE(ls_s.re), isTRUE(ls_f.re))
+  if (model@type == "hybrid") {
+    subInOut <- any(!is.null(sIn.sb), !is.null(fIn.sb), !is.null(sOut.sb))
+    newInOut <- any(!is.null(sIn.nw), !is.null(fIn.nw), !is.null(sOut.nw))
+  } else if (model@type == "functional") {
+    subInOut <- any(!is.null(fIn.sb), !is.null(sOut.sb))
+    newInOut <- any(!is.null(fIn.nw), !is.null(sOut.nw))
+  } else if (model@type == "scalar") {
+    subInOut <- any(!is.null(sIn.sb), !is.null(sOut.sb))
+    newInOut <- any(!is.null(sIn.nw), !is.null(sOut.nw))
+  }
 
-            # task names
-            # (1) data deletion, (2) data substitution, (3) data addition,
-            # (4) var substitution, (5) ls_s substitution, (6) ls_f substitution,
-            # (7) var re-estimation, (8) ls_s re-estimation, (9) ls_f re-estimation
-            tasknames <- c("data deletion", "data substitution", "data addition",
-                           "var substitution", "ls_s substitution", "ls_f substitution",
-                           "var re-estimation", "ls_s re-estimation", "ls_f re-estimation")
+  # task names
+  # (1) data deletion, (2) data substitution, (3) data addition,
+  # (4) var substitution, (5) ls_s substitution, (6) ls_f substitution,
+  # (7) var re-estimation, (8) ls_s re-estimation, (9) ls_f re-estimation
+  tasknames <- c("data deletion", "data substitution", "data addition",
+                 "var substitution", "ls_s substitution", "ls_f substitution",
+                 "var re-estimation", "ls_s re-estimation", "ls_f re-estimation")
 
-            # identify and drop conflicting tasks
-            # ----------------------------------------------------
-            dptasks <- c()
-            if (all(delInOut, subInOut)) { # were deletion and substitution of data both requested?
-              dptasks <- c(dptasks, 1, 2)
+  # identify and drop conflicting tasks
+  # ----------------------------------------------------
+  dptasks <- c()
+  if (all(delInOut, subInOut)) { # were deletion and substitution of data both requested?
+    dptasks <- c(dptasks, 1, 2)
 
-              if (isTRUE(var.re)) { # was re-estimation of var also requested?
-                dptasks <- c(dptasks, 6, 7)
-              }
-            }
+    if (isTRUE(var.re)) { # was re-estimation of var also requested?
+      dptasks <- c(dptasks, 7)
+    }
+    if (isTRUE(ls_s.re)) { # was re-estimation of ls_s also requested?
+      dptasks <- c(dptasks, 8)
+    }
+    if (isTRUE(ls_f.re)) { # was re-estimation of ls_f also requested?
+      dptasks <- c(dptasks, 9)
+    }
+  }
 
-            if (all(subHypers, reeHypers)) { # were substitution and re-estimation of hyperparameters both requested?
-              dptasks <- c(dptasks, 4, 5, 6, 7)
-            }
+  if (all(!is.null(var.sb), isTRUE(var.re))) { # were substitution and re-estimation of var both requested?
+    dptasks <- c(dptasks, 4, 7)
+  }
+  if (all(!is.null(ls_s.sb), isTRUE(ls_s.re))) { # were substitution and re-estimation of ls_s both requested?
+    dptasks <- c(dptasks, 5, 8)
+  }
+  if (all(!is.null(ls_f.sb), isTRUE(ls_f.re))) { # were substitution and re-estimation of ls_f both requested?
+    dptasks <- c(dptasks, 6, 9)
+  }
 
-            # remove duplicates from dropped vector
-            dptasks <- unique(dptasks)
-            # ----------------------------------------------------
+  # remove duplicates from dropped vector
+  dptasks <- unique(dptasks)
+  # ----------------------------------------------------
 
-# browser()
-            # perform not dropped tasks
-            # ----------------------------------------------------
-            modelup <- object
-            cptasks <- c()
-            if (delInOut & !(1 %in% dptasks)) {
-              modelup <- upd_del(model = object, ind.dl = ind.dl, remake = all(!newInOut, !subHypers, remake = !reeHypers))
-              modelup@call <- object@call
-              modelup@n.tr <- object@n.tr
-              cptasks <- c(cptasks, 1)
-            }
-            if (subInOut & !(2 %in% dptasks)) {
-              modelup <- upd_subData(model = object, sIn.sb = sIn.sb, fIn.sb = fIn.sb,
-                                    sOut.sb = tryCatch(as.matrix(sOut.sb), error = function(e) sOut.sb), ind.sb = ind.sb,
-                                    remake = all(!newInOut, !subHypers, !reeHypers))
-              modelup@call <- object@call
-              cptasks <- c(cptasks, 2)
-            }
-            if (newInOut) {
-              modelup <- upd_add(model = object, sIn.nw = sIn.nw, fIn.nw = fIn.nw, sOut.nw = as.matrix(sOut.nw),
-                                 remake = all(!subHypers, !reeHypers))
-              modelup@call <- object@call
-              modelup@n.tr <- object@n.tr
-              cptasks <- c(cptasks, 3)
-            }
-            if (subHypers & any(!(c(4,5) %in% dptasks))) {
-              modelup <- upd_subHypers(model = object, var.sb = var.sb, ls_s.sb = ls_s.sb, ls_f.sb = ls_f.sb)
-              if (!is.null(var.sb) & !(4 %in% dptasks)) cptasks <- c(cptasks, 4)
-              if (!is.null(ls.sb) & !(5 %in% dptasks)) cptasks <- c(cptasks, 5)
-            }
-            if (reeHypers & any(!(c(6,7) %in% dptasks))) {
-              if (!is.null(varls.reestim) & !(6 %in% dptasks)) cptasks <- c(cptasks, 6)
-              if (!is.null(ls.reestim) & !(7 %in% dptasks)) cptasks <- c(cptasks, 7)
-            }
-            # ----------------------------------------------------
+  # browser()
+  # perform not dropped tasks
+  # ----------------------------------------------------
+  modelup <- model
+  cptasks <- c()
+  if (delInOut & !(1 %in% dptasks)) {
+    modelup <- upd_del(model = modelup, ind.dl = ind.dl, remake = all(!newInOut, !subHypers, remake = !reeHypers))
+    modelup@call <- model@call
+    modelup@n.tr <- model@n.tr
+    cptasks <- c(cptasks, 1)
+  }
+  if (subInOut & !(2 %in% dptasks)) {
+    modelup <- upd_subData(model = modelup, sIn.sb = sIn.sb, fIn.sb = fIn.sb,
+                           sOut.sb = tryCatch(as.matrix(sOut.sb), error = function(e) sOut.sb), ind.sb = ind.sb,
+                           remake = all(!newInOut, !subHypers, !reeHypers))
+    modelup@call <- model@call
+    cptasks <- c(cptasks, 2)
+  }
+  if (newInOut) {
+    modelup <- upd_add(model = modelup, sIn.nw = sIn.nw, fIn.nw = fIn.nw, sOut.nw = as.matrix(sOut.nw),
+                       remake = all(!subHypers, !reeHypers))
+    modelup@call <- model@call
+    modelup@n.tr <- model@n.tr
+    cptasks <- c(cptasks, 3)
+  }
+  if (subHypers & any(!(c(4,5,6) %in% dptasks))) {
+    modelup <- upd_subHypers(model = modelup, var.sb = var.sb, ls_s.sb = ls_s.sb, ls_f.sb = ls_f.sb)
+    if (!is.null(var.sb) & !(4 %in% dptasks)) cptasks <- c(cptasks, 4)
+    if (!is.null(ls_s.sb) & !(5 %in% dptasks)) cptasks <- c(cptasks, 5)
+    if (!is.null(ls_f.sb) & !(6 %in% dptasks)) cptasks <- c(cptasks, 6)
+  }
+  if (reeHypers & any(!(c(7,8,9) %in% dptasks))) {
+    if (!is.null(var.re) & !(7 %in% dptasks)) cptasks <- c(cptasks, 7)
+    if (!is.null(ls_s.re) & !(8 %in% dptasks)) cptasks <- c(cptasks, 8)
+    if (!is.null(ls_f.re) & !(9 %in% dptasks)) cptasks <- c(cptasks, 9)
+  }
+  # ----------------------------------------------------
 
-            # print update summary
-            # ----------------------------------------------------
-            if (length(cptasks) > 0) { # list of complete tasks if there is any
-              cat("--------------\n")
-              cat("Update summary\n")
-              cat("--------------\n\n")
+  # print update summary
+  # ----------------------------------------------------
+  if (length(cptasks) > 0) { # list of complete tasks if there is any
+    cat("--------------\n")
+    cat("Update summary\n")
+    cat("--------------\n\n")
 
-              cat("* Complete tasks:\n")
-              ct <- tasknames[cptasks]
-              for (t in ct) {
-                cat(paste("  - ", t, "\n", sep = ""))
-              }
-            }
+    cat("* Complete tasks:\n")
+    ct <- tasknames[cptasks]
+    for (t in ct) {
+      cat(paste("  - ", t, "\n", sep = ""))
+    }
+  }
 
-            if (length(dptasks) > 0) { # list of dropped tasks if there is any
-              if (length(cptasks) == 0) {
-                cat("--------------\n")
-                cat("Update summary\n")
-                cat("--------------\n")
-              }
+  if (length(dptasks) > 0) { # list of dropped tasks if there is any
+    if (length(cptasks) == 0) {
+      cat("--------------\n")
+      cat("Update summary\n")
+      cat("--------------\n")
+    }
 
-              cat("\n* Dropped tasks:\n")
-              dt <- tasknames[dptasks]
-              for (t in dt) {
-                cat(paste("  - ", t, "\n", sep = ""))
-              }
-              cat("\n* Recall that:\n")
-              cat(" - Data deletion and substitution are not compatible tasks\n")
-              cat(" - Hyperparameters substitution and re-estimation are not compatible tasks\n")
-              cat(" - Hyperparameters re-estimation is automatically dropped when data deletion and substitution are both requested\n")
-              cat(" -> Please check ?funGp:::update for more details\n")
-            }
-            # ----------------------------------------------------
+    cat("\n* Dropped tasks:\n")
+    dt <- tasknames[dptasks]
+    for (t in dt) {
+      cat(paste("  - ", t, "\n", sep = ""))
+    }
+    cat("\n* Recall that:\n")
+    cat(" - Data deletion and substitution are not compatible tasks\n")
+    cat(" - Hyperparameters substitution and re-estimation are not compatible tasks\n")
+    cat(" - Hyperparameters re-estimation is automatically dropped when data deletion and substitution are both requested\n")
+    cat(" -> Please check ?funGp:::update for more details\n")
+  }
+  # ----------------------------------------------------
 
-            return(modelup)
-          })
-
-
-
-
-
-
-
-
-
-# update_InOut_nw.funGp <- function(model, sIn.nw, fIn.nw, sOut.nw) {
-#   print("Case 1: only add some data")
-#   # checkVal_simulate(as.list(environment())) !!!!!!!!!!!!!!!!!!!
-#   # check here that all inputs and outputs are provided, else stop!
-#   # check for duplicates, warn and remove
-#
-#   # duplicate the model for clarity
-#   modelup <- model
-#
-#   # extract generic information from user inputs
-#   sOut <- rbind(model@sOut, sOut.nw)
-#
-#   # check which type of model it is
-#   if (all(model@ds > 0, model@df > 0)) { # Hybrid-input case *******************************************
-#     print("I'm hybrid!")
-#
-#     # set required data format
-#     sIn.nw <- as.matrix(sIn.nw)
-#
-#     # extract information from user inputs specific to the hybrid-input case
-#     sIn <- rbind(model@sIn, sIn.nw)
-#     fIn <- mapply(rbind, model@fIn, fIn.nw)
-#
-#     # extract information from previous model specific to the hybrid-input case
-#     ds <- model@ds
-#     df <- model@df
-#     doProj <- model@proj@doProj
-#     fpDims <- model@proj@fpDims
-#
-#     # browser()
-#
-#     # Extend to other possible cases!!!!!!!!!!!!!!!!!!
-#     if (doProj) {
-#       # project functional inputs
-#       basis <- fpIn <- J <- list()
-#       for (i in 1:df) {
-#         if (fpDims[i] > 0) {
-#           B <- (eigen(cov(fIn[[i]]))$vectors)[,1:fpDims[i]]
-#           fpIn[[i]] <- t(solve(t(B) %*% B) %*% t(B) %*% t(fIn[[i]]))
-#           J[[i]] <- t(B) %*% B
-#         } else {
-#           J[[i]] <- B <- diag(ncol(fIn[[i]]))
-#           fpIn[[i]] <- fIn[[i]]
-#         }
-#         basis[[i]] <- B
-#       }
-#     } else {
-#       basis <- J <- lapply(fIn, function(m) diag(ncol(m)))
-#       fpIn <- fIn
-#     }
-#     # compute scalar distance matrices
-#     sMs <- setScalDistance(sIn, sIn)
-#
-#     # compute functional distance matrices
-#     fMs <- setFunDistance(fpIn, fpIn, J)
-#
-#     # pre-commpute KttInv and KttInv.sOut matrices for prediction and add them to the model
-#     modelup@preMats <- preMats_SF(sMs, fMs, sOut, model@kern@varHyp, model@kern@s_lsHyps,
-#                                   model@kern@f_lsHyps, model@kern@kerType)
-#
-#     # fill funGpProj slots specific to the hybrid-input case
-#     modelup@proj@basis <- basis
-#     modelup@proj@coefs <- fpIn
-#
-#     # fill funGp slots specific to the hybrid-input case
-#     modelup@sIn <- sIn
-#     modelup@fIn <- fIn
-#
-#   } else if (model@df > 0) { # functional-input case *******************************************
-#     print("I'm functional!")
-#
-#
-#   } else { # scalar-input case *******************************************
-#
-#   }
-#
-#   # fill general funGpModel slots
-#   modelup@sOut <- sOut
-#   modelup@n.tot <- modelup@n.tot + nrow(sIn.nw) # change this when re-estimation is implemented!!!!!!!!!!!!!!!!!!!!!!!
-#
-#   return(modelup)
-# }
-# # ----------------------------------------------------------------------------------------------------------
+  return(modelup)
+}
 
 
 

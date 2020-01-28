@@ -16,7 +16,6 @@ LazyData: true
 RoxygenNote: 7.0.2
 Collate: 
     'checkers.R'
-    'cleanUpdate.R'
     'correlFunctions.R'
     'distanceMatrices.R'
     'examplesManual.R'
@@ -36,5 +35,5 @@ Collate:
     'training_F.R'
     'training_S.R'
     'training_SF.R'
-    'update_functions.R'
+    'updating.R'
 VignetteBuilder: R.rsp
