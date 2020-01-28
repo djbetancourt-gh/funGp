@@ -6,13 +6,12 @@
 # ----------------------------------------------------------------------------------------------------------
 checkVal_funGp <- function(env){
   if (all(!is.null(env$sIn), !is.null(env$fIn))) { # Hybrid-input case *******************************************
-
     # consistency in number of points
     if (length(unique(c(nrow(env$sIn), as.numeric(sapply(env$fIn, nrow)), length(env$sOut)))) > 1) {
       stop("Inconsistent number of points. Please check that sIn, sOut and each matrix in fIn have all the same number of rows.")
     }
 
-    # consistency in number of points
+    # consistency in projection dimension
     if (!is.null(env$fpDims)) {
       if (length(env$fpDims) != length(env$fIn)) {
         stop(paste("Inconsistent number of projection dimensions. The functional input list has", length(env$fIn), "elements, but",
@@ -25,6 +24,8 @@ checkVal_funGp <- function(env){
     if (length(unique(c(as.numeric(sapply(env$fIn, nrow)), length(env$sOut)))) > 1) {
       stop("Inconsistent number of points. Please check that sOut and each matrix in fIn have all the same number of rows.")
     }
+
+    # consistency in projection dimension
     if (!is.null(env$fpDims)) {
       if (length(env$fpDims) != length(env$fIn)) {
         stop(paste("Inconsistent number of projection dimensions. The functional input list has", length(env$fIn), "elements, but",
@@ -42,55 +43,70 @@ checkVal_funGp <- function(env){
 # ----------------------------------------------------------------------------------------------------------
 
 
-# predict validator
-# ----------------------------------------------------------------------------------------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# predict and simulate validator
 # ----------------------------------------------------------------------------------------------------------
-
-
-# simulate validator
-# ----------------------------------------------------------------------------------------------------------
-checkVal_simulate <- function(env){
+checkVal_pred_and_sim <- function(env){
   # recover the model
   model <- env$model
 
-  if (all(!is.null(model@sIn), !is.null(model@fIn))) { # Hybrid-input case *******************************************
+  # identify if the check is for prediction or simulation and set data sructures and text fields accordingly
+  if (all(is.null(env$sIn.sm), is.null(env$fIn.sm))) { # is for prediction
+    if(!is.null(env$sIn.pr)) {sIn.ch <- env$sIn.pr; sName <- "sIn.pr"} else sIn.ch <- NULL
+    if(!is.null(env$fIn.pr)) {fIn.ch <- env$fIn.pr; fName <- "fIn.pr"} else fIn.ch <- NULL
+    taskName <- "prediction"
+
+  } else { # is for simulation
+    if(!is.null(env$sIn.sm)) {sIn.ch <- env$sIn.sm; sName <- "sIn.sm"} else sIn.ch <- NULL
+    if(!is.null(env$fIn.sm)) {fIn.ch <- env$fIn.sm; fName <- "fIn.sm"} else fIn.ch <- NULL
+    taskName <- "simulation"
+  }
+
+  if (model@type == "hybrid") { # Hybrid-input case *******************************************
     # consistency in data structures
-    if (all(is.null(env$sIn.sm), is.null(env$fIn.sm))) {
-      stop(paste("Invalid input. The model has both, scalar and functional inputs. Please provide valid new scalar and\n",
-                 "functional points to proceed with the simulation."))
-    } else if (is.null(env$fIn.sm)) {
-      stop(paste("Inconsistent data structures. The model has both, scalar and functional inputs, but only new scalar points\n",
-                 "for simulation were specified. Please provide also valid new functional points to proceed with the simulation."))
-    } else if (is.null(env$sIn.sm)) {
-      stop(paste("Inconsistent data structures. The model has both, scalar and functional inputs, but only new functional points\n",
-                 "for simulation were specified. Please provide also valid new scalar points to proceed with the simulation."))
+    if (all(is.null(sIn.ch), is.null(fIn.ch))) {
+      stop(paste("Invalid input. The model has both, scalar and functional inputs. Please provide valid scalar and\n ",
+                 "functional points to proceed with the ", taskName, "."))
+    } else if (is.null(fIn.ch)) {
+      stop(paste("Inconsistent data structures. The model has both, scalar and functional inputs, but only scalar points\n ",
+                 "for ", taskName, " were specified. Please provide also valid new functional points to proceed with the ", taskName, "."))
+    } else if (is.null(sIn.ch)) {
+      stop(paste("Inconsistent data structures. The model has both, scalar and functional inputs, but only functional points\n ",
+                 "for ", taskName, " were specified. Please provide also valid new scalar points to proceed with the ", taskName, "."))
     }
 
     # consistency in number of points
-    if (!all(nrow(env$sIn.sm) == sapply(env$fIn.sm, nrow))) {
-      stop("Inconsistent number of points. Please check that sIn.sm and each matrix in fIn.sm have all the same number of rows.")
+    if (!all(nrow(sIn.ch) == sapply(fIn.ch, nrow))) {
+      stop("Inconsistent number of points. Please check that ", sName, " and each matrix in ", fName, " have all the same number of rows.")
     }
 
-  } else if(!is.null(model@fIn)) { # functional-input case ***************************************
+  } else if(model@type == "functional") { # functional-input case ***************************************
     # consistency in data structures
-    if (!is.null(env$sIn.sm)) {
-      stop(paste("Inconsistent data structures. The model has only functional inputs, but new scalar points\n",
-                 "for simulation were specified. Please provide new functional points instead to proceed with the simulation."))
+    if (all(!is.null(sIn.ch), !is.null(sIn.ch))) {
+      stop(paste("Inconsistent data structures. The model has only functional inputs, but also scalar points\n ",
+                 "for ", taskName, " were specified. Please provide only new functional points to proceed with the ", taskName, "."))
     }
-    if (is.null(env$fIn.sm)) {
-      stop(paste("Invalid input. The model has scalar inputs. Please provide valid new scalar points to proceed with\n",
-                 "the simulation."))
+    if (!is.null(sIn.ch)) {
+      stop(paste("Inconsistent data structures. The model has only functional inputs, but scalar points\n ",
+                 "for ", taskName, " were specified. Please provide new functional points instead to proceed with the ", taskName, "."))
+    }
+    if (is.null(fIn.ch)) {
+      stop(paste("Invalid input. The model has functional inputs. Please provide valid new functional points to proceed with\n ",
+                 "the ", taskName, "."))
     }
 
-  } else if(!is.null(model@sIn)) { # scalar-input case *******************************************
+  } else { # scalar-input case *******************************************
     # consistency in data structures
-    if (!is.null(env$fIn.sm)) {
-      stop(paste("Inconsistent data structures. The model has only scalar inputs, but new functional points\n",
-                 "for simulation were specified. Please provide new scalar points instead to proceed with the simulation."))
+    if (all(!is.null(sIn.ch), !is.null(fIn.ch))) {
+      stop(paste("Inconsistent data structures. The model has only scalar inputs, but also functional points\n ",
+                 "for ", taskName, " were specified. Please provide only new scalar points to proceed with the ", taskName, "."))
     }
-    if (is.null(env$sIn.sm)) {
-      stop(paste("Invalid input. The model has functional inputs. Please provide valid new functional points to proceed with\n",
-                 "the simulation."))
+    if (!is.null(fIn.ch)) {
+      stop(paste("Inconsistent data structures. The model has only scalar inputs, but functional points\n ",
+                 "for ", taskName, " were specified. Please provide new scalar points instead to proceed with the ", taskName, "."))
+    }
+    if (is.null(sIn.ch)) {
+      stop(paste("Invalid input. The model has scalar inputs. Please provide valid new scalar points to proceed with\n ",
+                 "the ", taskName, "."))
     }
   }
 }
@@ -125,17 +141,16 @@ check_del <- function(env) {
 
 # upd_subData validator
 # ----------------------------------------------------------------------------------------------------------
-check_sub <- function(env) {
-  # browser()
+check_subData <- function(env) {
   # recover the model
   model <- env$model
   if (model@type == "hybrid") { # Hybrid-input case *******************************************
     # consistency in number of points
     if (!check_nrows_mlm(env$sIn.sb, env$fIn.sb, env$sOut.sb)) {
-      stop("Inconsistent number of points. Please check that sIn.sb, each matrix in fIn.sb and sOut.sb have all the same number\nof rows.")
+      stop("Inconsistent number of points. Please check that sIn.sb, each matrix in fIn.sb and sOut.sb have all the same number\n of rows.")
     }
     if (nrow(env$sIn.sb) != length(env$ind.sb)) {
-      stop(paste("Inconsistent number of points in your replacement index vector ind.sb. Please check that it has the same number of\n",
+      stop(paste("Inconsistent number of points in your replacement index vector ind.sb. Please check that it has the same number of\n ",
                  "rows than sIn.sb, each matrix in fIn.sb and sOut.sb.", sep = ""))
     }
 
@@ -145,17 +160,17 @@ check_sub <- function(env) {
       stop("Inconsistent number of points. Please check that each matrix in fIn.sb and sOut.sb have all the same number of rows.")
     }
     if (nrow(env$fIn.sb[[1]]) != length(env$ind.sb)) {
-      stop(paste("Inconsistent number of points in your replacement index vector ind.sb. Please check that it has the same number of\n",
+      stop(paste("Inconsistent number of points in your replacement index vector ind.sb. Please check that it has the same number of\n ",
                  "rows than each matrix in fIn.sb and sOut.sb.", sep = ""))
     }
 
-  } else if (model@type == "scalar") { # scalar-input case *******************************************
+  } else { # scalar-input case *******************************************
     # consistency in number of points
     if (!check_nrows_mm(env$sIn.sb, env$sOut.sb)) {
       stop("Inconsistent number of points. Please check that sIn.sb and sOut.sb have the same number of rows.")
     }
     if (nrow(env$sIn.sb) != length(env$ind.sb)) {
-      stop(paste("Inconsistent number of points in your replacement index vector ind.sb. Please check that it has the same number of\n",
+      stop(paste("Inconsistent number of points in your replacement index vector ind.sb. Please check that it has the same number of\n ",
                  "rows than sIn.sb and sOut.sb.", sep = ""))
     }
   }
@@ -183,13 +198,13 @@ check_sub <- function(env) {
 # upd_add validator
 # ----------------------------------------------------------------------------------------------------------
 check_add <- function(env) {
-  # browser()
   # recover the model
   model <- env$model
+
   if (model@type == "hybrid") { # Hybrid-input case *******************************************
     # consistency in number of points
     if (!check_nrows_mlm(env$sIn.nw, env$fIn.nw, env$sOut.nw)) {
-      stop("Inconsistent number of points. Please check that sIn.nw, each matrix in fIn.nw and sOut.nw have all the same number\nof rows.")
+      stop("Inconsistent number of points. Please check that sIn.nw, each matrix in fIn.nw and sOut.nw have all the same number\n of rows.")
     }
 
   } else if (model@type == "functional") { # functional-input case *******************************************
@@ -198,7 +213,7 @@ check_add <- function(env) {
       stop("Inconsistent number of points. Please check that each matrix in fIn.nw and sOut.nw have all the same number of rows.")
     }
 
-  } else if (model@type == "scalar") { # scalar-input case *******************************************
+  } else { # scalar-input case *******************************************
     # consistency in number of points
     if (!check_nrows_mm(env$sIn.nw, env$sOut.nw)) {
       stop("Inconsistent number of points. Please check that sIn.nw and sOut.nw have the same number of rows.")
@@ -208,11 +223,55 @@ check_add <- function(env) {
 # ----------------------------------------------------------------------------------------------------------
 
 # upd_subHypers validator
-# ----------------------------------------------------------------------------------------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # ----------------------------------------------------------------------------------------------------------
+check_subHypers <- function(env) {
+  # recover the model
+  model <- env$model
 
-# upd_reeHypers validator
-# ----------------------------------------------------------------------------------------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  # validity of variance if provided: should be > 0
+  if (!is.null(env$var.sb)) if (env$var.sb <= 0) stop("The variance should be a positive real number. Please check your inputs.")
+
+  if (model@type == "hybrid") { # Hybrid-input case *******************************************
+    # consistency of dimension of scalar length-scale vector if provided
+    if (!is.null(env$ls_s.sb)) {
+      if (length(model@kern@s_lsHyps) != length(env$ls_s.sb)) {
+        stop(paste("The model has ", length(model@kern@s_lsHyps), " scalar length-scale parameters, but you provided",
+                   length(env$ls_s.sb), " instead for substitution. Please check your inputs.", sep = ""))
+      }
+      if (env$ls_s.sb <= 0) stop("Length-scale parameters should be positive real numbers. Please check your ls_s.sb vector.")
+    }
+
+    # consistency of dimension of functional length-scale vector if provided
+    if (!is.null(env$ls_f.sb)) {
+      if (length(model@kern@f_lsHyps) != length(env$ls_f.sb)) {
+        stop(paste("The model has ", length(model@kern@f_lsHyps), " functional length-scale parameters, but you provided",
+                   length(env$ls_f.sb), " instead for substitution. Please check your inputs.", sep = ""))
+      }
+      if (env$ls_f.sb <= 0) stop("Length-scale parameters should be positive real numbers. Please check your ls_f.sb vector.")
+    }
+
+
+  } else if (model@type == "functional") { # functional-input case *******************************************
+    # consistency of dimension of functional length-scale vector if provided
+    if (!is.null(env$ls_f.sb)) {
+      if (length(model@kern@f_lsHyps) != length(env$ls_f.sb)) {
+        stop(paste("The model has ", length(model@kern@f_lsHyps), " functional length-scale parameters, but you provided",
+                   length(env$ls_f.sb), " instead for substitution. Please check your inputs.", sep = ""))
+      }
+      if (env$ls_f.sb <= 0) stop("Length-scale parameters should be positive real numbers. Please check your ls_f.sb vector.")
+    }
+
+  } else { # scalar-input case *******************************************
+    # consistency of dimension of scalar length-scale vector if provided
+    if (!is.null(env$ls_s.sb)) {
+      if (length(model@kern@s_lsHyps) != length(env$ls_s.sb)) {
+        stop(paste("The model has ", length(model@kern@s_lsHyps), " scalar length-scale parameters, but you provided",
+                   length(env$ls_s.sb), " instead for substitution. Please check your inputs.", sep = ""))
+      }
+      if (env$ls_s.sb <= 0) stop("Length-scale parameters should be positive real numbers. Please check your ls_s.sb vector.")
+    }
+  }
+}
 # ----------------------------------------------------------------------------------------------------------
 
 

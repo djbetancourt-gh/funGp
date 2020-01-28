@@ -94,7 +94,7 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake) {
     if(is.null(fIn.sb)) fIn.sb <- lapply(fIn, function(M) M[ind.sb,,drop = F])
 
     # check for validty of substituting data
-    check_sub(as.list(environment()))
+    check_subData(as.list(environment()))
 
     # check for duplicates in the substituting points
     ind.dp <- check_duplicates_SF(sIn.sb, fIn.sb, sIn.sb, fIn.sb)
@@ -165,7 +165,7 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake) {
     if(is.null(fIn.sb)) fIn.sb <- lapply(fIn, function(M) M[ind.sb,,drop = F])
 
     # check for validty of substituting data
-    check_sub(as.list(environment()))
+    check_subData(as.list(environment()))
 
     # check for duplicates in the substituting points
     ind.dp <- check_duplicates_F(fIn.sb, fIn.sb)
@@ -230,7 +230,7 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake) {
     if(is.null(sIn.sb)) sIn.sb <- sIn[ind.sb]
 
     # check for validty of substituting data
-    check_sub(as.list(environment()))
+    check_subData(as.list(environment()))
 
     # check for duplicates in the substituting points
     ind.dp <- check_duplicates_S(sIn.sb, sIn.sb)
@@ -459,6 +459,7 @@ upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake) {
 # ----------------------------------------------------------------------------------------------------------
 upd_subHypers <- function(model, var.sb, ls_s.sb, ls_f.sb) {
   # check validty of substituting hypers
+  check_subHypers(as.list(environment()))
 
   # var is always necessary, so if no specified, get it from original model
   if (is.null(var.sb)) var.sb <- model@kern@varHyp
@@ -517,8 +518,6 @@ upd_subHypers <- function(model, var.sb, ls_s.sb, ls_f.sb) {
 # Function to substitute some Hyperparameters
 # ----------------------------------------------------------------------------------------------------------
 upd_reeHypers <- function(model, var.re, ls_s.re, ls_f.re) {
-  # check validty of substituting hypers
-
   # var is always necessary, so if no required to re-estimate, get it from original model
   if (!isTRUE(var.re)) var.up <- model@kern@varHyp else var.up <- NULL
 

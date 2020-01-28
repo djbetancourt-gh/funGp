@@ -109,32 +109,7 @@ setClass("funGp",
 #' @export
 funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerType = "matern5_2", disType = "functional",
                   var.hyp = NULL, ls_s.hyp = NULL, ls_f.hyp = NULL, n.starts = 1, n.presample = 20) {
-  # =====================================================================================================
-  # Attributes checklist
-  # =====================================================================================================
-  # 0.  * funCall .......... call ................ functional call
-  # 1.  * ds ............... scalar .............. number of scalar inputs
-  # 2.  * df ............... scalar .............. number of functional inputs
-  # 3.  * fDims ............ array (df) .......... dimension of each functional input
-  # 4.  * sIn .............. matrix (n x ds) ..... scalar inputs
-  # 5.  * fIn .............. list (df) ........... each element (n x fDims_i) contains a functional input
-  # 6.  * sOut ............. matrix (n x 1) ...... scalar output
-  # 7.  * n.tr ............. scalar .............. number of training points
-  # 8.  * proj ............. proj ................ structures related to the projection
-  # 9.    - doProj ......... boolean ............. should projection of functional inputs be done?
-  # 10.   - fpDims ......... array (df) .......... projection dimension of each functional input
-  # 11.   - basis .......... list (df) ........... each element (fDims_i x fpDims_i) contains the basis
-  #                                                functions used for the projection of one fun. input
-  # 12.   - coefs .......... list (df) ........... each element (n x fpDims_i) contains the coefficients
-  #                                                used for the projection of one fun. input
-  # 13. * kern ............. kernel .............. structures related to the kernel
-  # 14.   - kerType ........ char ................ kernel type from {"gauss", "matern5_2", "matern3_2"}
-  # 15.   - disType ........ char ................ distance type from {"scalar", "functional"}
-  # 16.   - varHyp ......... scalar .............. estimated variance parameter
-  # 17.   - lsHyps ......... array (ds + df) ..... estimated length-scale parameters
-  # 18. * preMats .......... list (2) ............ KttInv and KttInv.sOut matrices for prediction
-  # =====================================================================================================
-  # browser()
+  # check validity of user inputs
   checkVal_funGp(as.list(environment()))
 
   # create objects of class funGpProj, funGpKern and funGp
@@ -320,6 +295,31 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
   model@proj <- proj
   model@kern <- kern
 
+  # =====================================================================================================
+  # Attributes checklist
+  # =====================================================================================================
+  # 0.  * funCall .......... call ................ functional call
+  # 1.  * ds ............... scalar .............. number of scalar inputs
+  # 2.  * df ............... scalar .............. number of functional inputs
+  # 3.  * fDims ............ array (df) .......... dimension of each functional input
+  # 4.  * sIn .............. matrix (n x ds) ..... scalar inputs
+  # 5.  * fIn .............. list (df) ........... each element (n x fDims_i) contains a functional input
+  # 6.  * sOut ............. matrix (n x 1) ...... scalar output
+  # 7.  * n.tr ............. scalar .............. number of training points
+  # 8.  * proj ............. proj ................ structures related to the projection
+  # 9.    - doProj ......... boolean ............. should projection of functional inputs be done?
+  # 10.   - fpDims ......... array (df) .......... projection dimension of each functional input
+  # 11.   - basis .......... list (df) ........... each element (fDims_i x fpDims_i) contains the basis
+  #                                                functions used for the projection of one fun. input
+  # 12.   - coefs .......... list (df) ........... each element (n x fpDims_i) contains the coefficients
+  #                                                used for the projection of one fun. input
+  # 13. * kern ............. kernel .............. structures related to the kernel
+  # 14.   - kerType ........ char ................ kernel type from {"gauss", "matern5_2", "matern3_2"}
+  # 15.   - disType ........ char ................ distance type from {"scalar", "functional"}
+  # 16.   - varHyp ......... scalar .............. estimated variance parameter
+  # 17.   - lsHyps ......... array (ds + df) ..... estimated length-scale parameters
+  # 18. * preMats .......... list (2) ............ KttInv and KttInv.sOut matrices for prediction
+  # =====================================================================================================
   return(model)
 }
 # -------------------------------------------------------------------------------------------------------------------------------------
@@ -460,16 +460,8 @@ setMethod("predict", "funGp",
           })
 
 predict.funGp <- function(model, sIn.pr, fIn.pr, detail = "light") {
-  # =====================================================================================================
-  # Prediction output checklist
-  # =====================================================================================================
-  # 1.  * mean ............... array (n.pr) .............. predicted mean
-  # 2.  * sd ................. array (n.pr) .............. predicted standard deviation
-  # 3.  * lower95 ............ array (n.pr) .............. lower bounds of 95% confidence intervals
-  # 4.  * upper95 ............ array (n.pr) .............. upper bounds of 95% confidence intervals
-  # 5.  * K.pp ............... matrix(n.pr x n.pr) ....... conditional covariance matrix
-  # 6.  * K.tp ............... matrix(n.tr x n.pr) ....... training vs prediction cross covariance matrix
-  # =====================================================================================================
+  # check validity of user inputs
+  checkVal_pred_and_sim(as.list(environment()))
 
   if (all(model@ds > 0, model@df > 0)) { # Hybrid-input case *******************************************
     print("I'm hybrid!")
@@ -536,6 +528,16 @@ predict.funGp <- function(model, sIn.pr, fIn.pr, detail = "light") {
   preds$lower95 <- preds$mean - qnorm(0.975) * preds$sd
   preds$upper95 <- preds$mean + qnorm(0.975) * preds$sd
 
+  # =====================================================================================================
+  # Prediction output checklist
+  # =====================================================================================================
+  # 1.  * mean ............... array (n.pr) .............. predicted mean
+  # 2.  * sd ................. array (n.pr) .............. predicted standard deviation
+  # 3.  * lower95 ............ array (n.pr) .............. lower bounds of 95% confidence intervals
+  # 4.  * upper95 ............ array (n.pr) .............. upper bounds of 95% confidence intervals
+  # 5.  * K.pp ............... matrix(n.pr x n.pr) ....... conditional covariance matrix
+  # 6.  * K.tp ............... matrix(n.tr x n.pr) ....... training vs prediction cross covariance matrix
+  # =====================================================================================================
   return(preds)
 }
 # ----------------------------------------------------------------------------------------------------------
@@ -611,7 +613,8 @@ setMethod("simulate", "funGp",
           })
 
 simulate.funGp <- function(model, nsim, seed, sIn.sm, fIn.sm, nug.sim, detail) {
-  checkVal_simulate(as.list(environment()))
+  # check validity of user inputs
+  checkVal_pred_and_sim(as.list(environment()))
 
   # check which type of model it is
   if (all(model@ds > 0, model@df > 0)) { # Hybrid-input case *******************************************
@@ -729,7 +732,6 @@ setMethod("update", "funGp",
 
 update.funGp <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb, ind.sb, ind.dl,
                          var.sb, ls_s.sb, ls_f.sb, var.re, ls_s.re, ls_f.re) {
-  # browser()
   # check what does the user want to do
   delInOut <- !is.null(ind.dl)
   subHypers <- any(!is.null(var.sb), !is.null(ls_s.sb), !is.null(ls_f.sb))
@@ -750,8 +752,8 @@ update.funGp <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb
   # (4) var substitution, (5) ls_s substitution, (6) ls_f substitution,
   # (7) var re-estimation, (8) ls_s re-estimation, (9) ls_f re-estimation
   tasknames <- c("data deletion", "data substitution", "data addition",
-                 "var substitution", "scalar l-scale substitution", "functional l-scale substitution",
-                 "var re-estimation", "scalar l-scale re-estimation", "functional l-scale re-estimation")
+                 "var substitution", "scalar length-scale substitution", "functional length-scale substitution",
+                 "var re-estimation", "scalar length-scale re-estimation", "functional length-scale re-estimation")
 
   # identify and drop conflicting tasks
   # ----------------------------------------------------
@@ -787,11 +789,21 @@ update.funGp <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb
     ls_f.re <- F
   }
 
+  if (model@type == "functional") {
+    if (isTRUE(ls_s.re)) { # was re-estimation of scalar length-scale coefs requested for a functional model?
+      dptasks <- c(dptasks, 8)
+    }
+  }
+  if (model@type == "scalar") {
+    if (isTRUE(ls_f.re)) { # was re-estimation of functional length-scale coefs requested for a scalar model?
+      dptasks <- c(dptasks, 9)
+    }
+  }
+
   # remove duplicates from dropped vector
   dptasks <- unique(dptasks)
   # ----------------------------------------------------
 
-  # browser()
   # perform not dropped tasks
   # ----------------------------------------------------
   modelup <- model
@@ -863,6 +875,8 @@ update.funGp <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb
     cat(" - Data points deletion and substitution are not compatible tasks\n")
     cat(" - Hyperparameters substitution and re-estimation are not compatible tasks\n")
     cat(" - Hyperparameters re-estimation is automatically dropped when data deletion and substitution are both requested\n")
+    cat(" - Scalar length-scale coeficients re-estimation is automatically dropped when the model has only functional inputs\n")
+    cat(" - Functional length-scale coeficients re-estimation is automatically dropped when the model has only scalar inputs\n")
     cat(" -> Please check ?funGp::update for more details\n")
   }
   # ----------------------------------------------------
