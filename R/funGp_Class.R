@@ -750,8 +750,8 @@ update.funGp <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb
   # (4) var substitution, (5) ls_s substitution, (6) ls_f substitution,
   # (7) var re-estimation, (8) ls_s re-estimation, (9) ls_f re-estimation
   tasknames <- c("data deletion", "data substitution", "data addition",
-                 "var substitution", "scalar ls substitution", "functional ls substitution",
-                 "var re-estimation", "scalar ls re-estimation", "functional ls re-estimation")
+                 "var substitution", "scalar l-scale substitution", "functional l-scale substitution",
+                 "var re-estimation", "scalar l-scale re-estimation", "functional l-scale re-estimation")
 
   # identify and drop conflicting tasks
   # ----------------------------------------------------
@@ -768,16 +768,23 @@ update.funGp <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb
     if (isTRUE(ls_f.re)) { # was re-estimation of ls_f also requested?
       dptasks <- c(dptasks, 9)
     }
+
   }
 
   if (all(!is.null(var.sb), isTRUE(var.re))) { # were substitution and re-estimation of var both requested?
     dptasks <- c(dptasks, 4, 7)
+    var.sb <- NULL
+    var.re <- F
   }
   if (all(!is.null(ls_s.sb), isTRUE(ls_s.re))) { # were substitution and re-estimation of ls_s both requested?
     dptasks <- c(dptasks, 5, 8)
+    ls_s.sb <- NULL
+    ls_s.re <- F
   }
   if (all(!is.null(ls_f.sb), isTRUE(ls_f.re))) { # were substitution and re-estimation of ls_f both requested?
     dptasks <- c(dptasks, 6, 9)
+    ls_f.sb <- NULL
+    ls_f.re <- F
   }
 
   # remove duplicates from dropped vector
@@ -816,9 +823,10 @@ update.funGp <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb
     if (!is.null(ls_f.sb) & !(6 %in% dptasks)) cptasks <- c(cptasks, 6)
   }
   if (reeHypers & any(!(c(7,8,9) %in% dptasks))) {
-    if (!is.null(var.re) & !(7 %in% dptasks)) cptasks <- c(cptasks, 7)
-    if (!is.null(ls_s.re) & !(8 %in% dptasks)) cptasks <- c(cptasks, 8)
-    if (!is.null(ls_f.re) & !(9 %in% dptasks)) cptasks <- c(cptasks, 9)
+    modelup <- upd_reeHypers(model = modelup, var.re = var.re, ls_s.re = ls_s.re, ls_f.re = ls_f.re)
+    if (isTRUE(var.re) & !(7 %in% dptasks)) cptasks <- c(cptasks, 7)
+    if (isTRUE(ls_s.re) & !(8 %in% dptasks)) cptasks <- c(cptasks, 8)
+    if (isTRUE(ls_f.re) & !(9 %in% dptasks)) cptasks <- c(cptasks, 9)
   }
   # ----------------------------------------------------
 
@@ -849,10 +857,10 @@ update.funGp <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb
       cat(paste("  - ", t, "\n", sep = ""))
     }
     cat("\n* Recall that:\n")
-    cat(" - Data deletion and substitution are not compatible tasks\n")
+    cat(" - Data points deletion and substitution are not compatible tasks\n")
     cat(" - Hyperparameters substitution and re-estimation are not compatible tasks\n")
     cat(" - Hyperparameters re-estimation is automatically dropped when data deletion and substitution are both requested\n")
-    cat(" -> Please check ?funGp:::update for more details\n")
+    cat(" -> Please check ?funGp::update for more details\n")
   }
   # ----------------------------------------------------
 
