@@ -4,7 +4,7 @@
 \alias{negLogLik_funGp_F}
 \title{Setting up of starting points for optimization of hyperparameters}
 \usage{
-negLogLik_funGp_F(thetas_f, fMs, sOut, kerType)
+negLogLik_funGp_F(thetas_f, fMs, sOut, kerType, varfun)
 }
 \arguments{
 \item{fMs}{a list with as many elements as functional input variables. Each element of the list is a n times n matrix of differences

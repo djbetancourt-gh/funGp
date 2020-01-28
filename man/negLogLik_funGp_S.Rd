@@ -4,7 +4,7 @@
 \alias{negLogLik_funGp_S}
 \title{Setting up of starting points for optimization of hyperparameters}
 \usage{
-negLogLik_funGp_S(thetas_s, sMs, sOut, kerType)
+negLogLik_funGp_S(thetas_s, sMs, sOut, kerType, varfun)
 }
 \arguments{
 \item{sMs}{a list with as many elements as scalar input variables. Each element of the list is a n times n matrix of differences

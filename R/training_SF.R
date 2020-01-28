@@ -24,7 +24,7 @@
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 setHypers_SF <- function(sIn, fpIn, J, sMs, fMs, sOut, kerType, var.known, ls_s.known, ls_f.known, n.starts, n.presample){
-  # if all the length-scale coefficients are known, skip optim  and compute var analytically. Else optimize
+  # if all the length-scale coefficients are known, skip optim and compute var analytically. Else optimize
   if (all(!is.null(ls_s.known), !is.null(ls_f.known))) {
     # 1. estimation of the correlation matrix
     n.tr <- length(sOut)
@@ -33,7 +33,7 @@ setHypers_SF <- function(sIn, fpIn, J, sMs, fMs, sOut, kerType, var.known, ls_s.
 
     # 2. estimate the a priori process variance
     cat("** Computing optimal variance...\n")
-    sig2 <- analyticVar_llik_SF(U, sOut, n.tr)
+    sig2 <- analyticVar_llik(U, sOut, n.tr)
 
     # 3. merge hyperparameters and return
     return(c(sig2, ls_s.known, ls_f.known))
@@ -50,7 +50,7 @@ setHypers_SF <- function(sIn, fpIn, J, sMs, fMs, sOut, kerType, var.known, ls_s.
 
     # 2. set up variance function
     if (is.null(var.known)) { # the variance is computed based on the analytic formula for optimal var given ls with loglikelihood
-      varfun <- analyticVar_llik_SF
+      varfun <- analyticVar_llik
     } else { # the variance is set fixed at its known value using a closure
       g <- function(var.known) function(...) var.known
       varfun <- g(var.known)
@@ -282,7 +282,7 @@ negLogLik_funGp_SF <- function(thetas, sMs, fMs, sOut, kerType, varfun, ls_s.kno
 
 
 # =========================================================================================================
-analyticVar_llik_SF <- function(U, sOut, n.tr) {
+analyticVar_llik <- function(U, sOut, n.tr) {
   UInvY <- backsolve(t(U), sOut, upper.tri = F)
   return(crossprod(UInvY)/n.tr)
 }

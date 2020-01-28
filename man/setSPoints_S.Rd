@@ -4,7 +4,7 @@
 \alias{setSPoints_S}
 \title{Setting up of starting points for optimization of hyperparameters}
 \usage{
-setSPoints_S(bnds, sMs, sOut, kerType, n.starts, n.presample)
+setSPoints_S(bnds, sMs, sOut, kerType, varfun, n.starts, n.presample)
 }
 \arguments{
 \item{bnds}{Fill this!!!!!!!!!!}

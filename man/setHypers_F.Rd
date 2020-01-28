@@ -4,7 +4,17 @@
 \alias{setHypers_F}
 \title{Optimization of hyperparameters for funGp models}
 \usage{
-setHypers_F(fpIn, J, fMs, sOut, kerType, n.starts, n.presample)
+setHypers_F(
+  fpIn,
+  J,
+  fMs,
+  sOut,
+  kerType,
+  var.known,
+  ls_f.known,
+  n.starts,
+  n.presample
+)
 }
 \arguments{
 \item{fpIn}{a list with as many elements as functional inputs. The i-th element must be a matrix with the projection coefficients
@@ -19,6 +29,10 @@ between the functional observation coordinates.}
 \item{sOut}{a vector (or 1-column matrix) containing the values of the scalar output at the training points.}
 
 \item{kerType}{a character string indicating the covariance structure to be used, to be choosen between "gauss", "matern5_2" or "matern3_2".}
+
+\item{var.known}{Fill!!!!!!!!!!}
+
+\item{ls_f.known}{Fill!!!!!!!!!!}
 
 \item{n.starts}{Fill!!!!!!!!!!}
 

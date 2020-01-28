@@ -245,11 +245,11 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
     fMs <- setFunDistance(fpIn, fpIn, J)
 
     # optimize hyperparameters if some is required
-    if (!all(is.null(var.hyp), !is.null(ls_f.hyp))) {
+    if (all(!is.null(var.hyp), !is.null(ls_f.hyp))) {
       varHyp <- var.hyp
       lsHyps <- ls_f.hyp
     } else {
-      hypers <- setHypers_F(fpIn, J, fMs, sOut, kerType, n.starts, n.presample)
+      hypers <- setHypers_F(fpIn, J, fMs, sOut, kerType, var.hyp, ls_f.hyp, n.starts, n.presample)
       varHyp <- hypers[1]
       lsHyps <- hypers[-1]
     }
@@ -282,11 +282,11 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
     sMs <- setScalDistance(sIn, sIn)
 
     # optimize hyperparameters if some is required
-    if (!all(is.null(var.hyp), !is.null(ls_f.hyp))) {
+    if (all(!is.null(var.hyp), !is.null(ls_s.hyp))) {
       varHyp <- var.hyp
       lsHyps <- ls_s.hyp
     } else {
-      hypers <- setHypers_S(sIn, sMs, sOut, kerType, n.starts, n.presample)
+      hypers <- setHypers_S(sIn, sMs, sOut, kerType, var.hyp, ls_s.hyp, n.starts, n.presample)
       varHyp <- hypers[1]
       lsHyps <- hypers[-1]
     }
@@ -304,7 +304,7 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
     model@type = "scalar"
 
   } else { # error: no inputs were provided
-    stop("User must provide either a scalar-input matrix, a functional-input list or both of them. None has been detected.")
+    stop("The user must provide either a scalar-input matrix, a functional-input list or both of them. None has been detected.")
   }
 
   # fill general funGpKern slots

@@ -6,6 +6,8 @@
 #' between the scalar observation coordinates.
 #' @param sOut a vector (or 1-column matrix) containing the values of the scalar output at the training points.
 #' @param kerType a character string indicating the covariance structure to be used, to be choosen between "gauss", "matern5_2" or "matern3_2".
+#' @param var.known Fill!!!!!!!!!!
+#' @param ls_s.known Fill!!!!!!!!!!
 #' @param n.starts Fill!!!!!!!!!!
 #' @param n.presample Fill!!!!!!!!!!
 #' @return The hyperparameters.
@@ -14,17 +16,41 @@
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
-setHypers_S <- function(sIn, sMs, sOut, kerType, n.starts, n.presample){
-  # 1. set hypercube for solution space
-  bnds <- setBounds_S(sMs)
+setHypers_S <- function(sIn, sMs, sOut, kerType, var.known, ls_s.known, n.starts, n.presample){
+  # if the length-scale coefficients are known, skip optim and compute var analytically. Else optimize
+  if (!is.null(ls_s.known)) {
+    # 1. estimation of the correlation matrix
+    n.tr <- length(sOut)
+    R <- setR(ls_s.known, sMs, kerType) # + diag(10^-8, nrow = n.tr, ncol = n.tr)!!!!!!!!!!!
+    U <- chol(R)
 
-  # 2. set starting points
-  cat("** Presampling...\n")
-  spoints <- setSPoints_S(bnds, sMs, sOut, kerType, n.starts, n.presample)
+    # 2. estimate the a priori process variance
+    cat("** Computing optimal variance...\n")
+    sig2 <- analyticVar_llik(U, sOut, n.tr)
 
-  # 3. Perform optimization
-  cat("** Optimising...\n")
-  return(optimHypers_S(spoints, n.starts, bnds, sMs, sOut, kerType))
+    # 3. merge hyperparameters and return
+    return(c(sig2, ls_s.known))
+
+  } else {
+    # 1. set hypercube for solution space
+    bnds <- setBounds_S(sMs)
+
+    # 2. set up variance function
+    if (is.null(var.known)) { # the variance is computed based on the analytic formula for optimal var given ls with loglikelihood
+      varfun <- analyticVar_llik
+    } else { # the variance is set fixed at its known value using a closure
+      g <- function(var.known) function(...) var.known
+      varfun <- g(var.known)
+    }
+
+    # 3. set starting points
+    cat("** Presampling...\n")
+    spoints <- setSPoints_S(bnds, sMs, sOut, kerType, varfun, n.starts, n.presample)
+
+    # 4. Perform optimization
+    cat("** Optimising...\n")
+    return(optimHypers_S(spoints, n.starts, bnds, sMs, sOut, kerType, varfun))
+  }
 }
 # -------------------------------------------------------------------------------------------------------------------------------------
 
@@ -69,7 +95,7 @@ setBounds_S <- function(sMs){
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
-setSPoints_S <- function(bnds, sMs, sOut, kerType, n.starts, n.presample){
+setSPoints_S <- function(bnds, sMs, sOut, kerType, varfun, n.starts, n.presample){
   # recover lower and upper limits
   ll <- bnds[1,]
   ul <- bnds[2,]
@@ -80,7 +106,7 @@ setSPoints_S <- function(bnds, sMs, sOut, kerType, n.starts, n.presample){
   allspoints <- ll + allspoints * (ul - ll)
 
   # compute fitness of each starting point
-  fitvec <- apply(allspoints, 2, negLogLik_funGp_S, sMs, sOut, kerType)
+  fitvec <- apply(allspoints, 2, negLogLik_funGp_S, sMs, sOut, kerType, varfun)
 
   # get the best n.starts points
   spoints <- allspoints[,order(fitvec)[1:n.starts], drop = F]
@@ -106,12 +132,12 @@ globalVariables('i')
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
-optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType){
+optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType, varfun){
   # if multistart is required then parallelize, else run single optimization
   if (n.starts == 1){
     optOut <- optim(par = as.numeric(spoints), fn = negLogLik_funGp_S, method = "L-BFGS-B",
                     lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
-                    sMs = sMs, sOut = sOut, kerType = kerType)
+                    sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun)
   } else {
     # if (!requireNamespace("foreach", quietly = TRUE)){
     if (!getDoParRegistered()){
@@ -119,13 +145,13 @@ optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType){
       optOutList <- "%do%"(foreach(i = 1:n.starts, .errorhandling = 'remove'), {
         optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
               lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
-              sMs = sMs, sOut = sOut, kerType = kerType)})
+              sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun)})
     } else {
       cat("Parallel backend register found. Multistart optimizations done in parallel.\n")
       optOutList <- "%dopar%"(foreach(i = 1:n.starts, .errorhandling = 'remove'), {
         optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
               lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
-              sMs = sMs, sOut = sOut, kerType = kerType)})
+              sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun)})
     }
 
     # check if there are usable results
@@ -145,8 +171,7 @@ optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType){
   U <- chol(R)
 
   # estimation of the variance
-  UInvY <- backsolve(t(U), sOut, upper.tri = F)
-  sig2 <- crossprod(UInvY)/n.tr
+  sig2 <- varfun(U, sOut, n.tr)
 
   return(c(sig2, thetas_s))
 }
@@ -169,15 +194,14 @@ optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType){
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
-negLogLik_funGp_S <- function(thetas_s, sMs, sOut, kerType){
+negLogLik_funGp_S <- function(thetas_s, sMs, sOut, kerType, varfun){
   # Estimation of the correlation matrix
   n.tr <- length(sOut)
   R <- setR(thetas_s, sMs, kerType) # + diag(10^-8, nrow = n.tr, ncol = n.tr)
   U <- chol(R)
 
   # Estimation of the a priori process variance
-  UInvY <- backsolve(t(U), sOut, upper.tri = F)
-  sig2 <- crossprod(UInvY)/n.tr
+  sig2 <- varfun(U, sOut, n.tr)
 
   # compute loglikelihood
   llik <- -0.5 * (n.tr * log(2*pi*sig2) + 2*sum(log(diag(U))) + n.tr)
