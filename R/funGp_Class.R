@@ -729,7 +729,7 @@ setMethod("update", "funGp",
 
 update.funGp <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb, ind.sb, ind.dl,
                          var.sb, ls_s.sb, ls_f.sb, var.re, ls_s.re, ls_f.re) {
-  browser()
+  # browser()
   # check what does the user want to do
   delInOut <- !is.null(ind.dl)
   subHypers <- any(!is.null(var.sb), !is.null(ls_s.sb), !is.null(ls_f.sb))

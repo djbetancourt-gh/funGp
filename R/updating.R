@@ -267,7 +267,6 @@ upd_del <- function(model, ind.dl, remake = F) {
 # Function to substitute some data
 # ----------------------------------------------------------------------------------------------------------
 upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake = F) {
-  # browser()
   # duplicate the original model to build the updated one
   modelup <- model
 
@@ -275,7 +274,7 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake = F) {
   sOut <- model@sOut
 
   # identify the special case of only substituting in sOut
-  if(all(is.null(sIn.sb), is.null(fIn.sb), !is.null(sOut.sb))) justOut = T else justOut = F
+  if(all(is.null(sIn.sb), is.null(fIn.sb), !is.null(sOut.sb))) justOut <- T else justOut <- F
 
   # provide substituting output if not specified by the user
   if(is.null(sOut.sb)) sOut.sb <- sOut[ind.sb,,drop = F]
@@ -340,8 +339,9 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake = F) {
         modelup@sOut <- sOut
         model@n.tot <- length(sOut)
       } else {
-        modelup <- funGpbidon(sIn = sIn, fIn = fIn, sOut = sOut, var.hyp = model@kern@varHyp,
-                              ls_s.hyp = model@kern@s_lsHyps, ls_f.hyp = model@kern@f_lsHyps)
+        modelup <- funGp(sIn = sIn, fIn = fIn, sOut = sOut, doProj = model@proj@doProj, fpDims = model@proj@fpDims,
+                         kerType = model@kern@kerType, disType = model@kern@disType, var.hyp = model@kern@varHyp,
+                         ls_s.hyp = model@kern@s_lsHyps, ls_f.hyp = model@kern@f_lsHyps)
       }
     } else {
       modelup@sIn <- sIn
@@ -403,7 +403,9 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake = F) {
         modelup@sOut <- sOut
         model@n.tot <- length(sOut)
       } else {
-        modelup <- funGpbidon(fIn = fIn, sOut = sOut, var.hyp = model@kern@varHyp, ls_f.hyp = model@kern@f_lsHyps)
+        modelup <- funGp(fIn = fIn, sOut = sOut, doProj = model@proj@doProj, fpDims = model@proj@fpDims,
+                         kerType = model@kern@kerType, disType = model@kern@disType,
+                         var.hyp = model@kern@varHyp, ls_f.hyp = model@kern@f_lsHyps)
       }
     } else {
       modelup@fIn <- fIn
@@ -437,7 +439,7 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake = F) {
     }
 
     # check for duplicates bewteen substituting inputs and existing inputs at not substituting rows
-    dIn.exsb <- sIn[-ind.sb,,drop = F]
+    sIn.exsb <- sIn[-ind.sb,,drop = F]
     ind.dp <- check_duplicates_S(sIn.exsb, sIn.sb)
 
     if (length(ind.sb) == length(ind.dp)) {
@@ -464,7 +466,8 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake = F) {
         modelup@sOut <- sOut
         model@n.tot <- length(sOut)
       } else {
-        modelup <- funGpbidon(sIn = sIn, sOut = sOut, var.hyp = model@kern@varHyp, ls_s.hyp = model@kern@s_lsHyps)
+        modelup <- funGp(sIn = sIn, sOut = sOut, kerType = model@kern@kerType,
+                         var.hyp = model@kern@varHyp, ls_s.hyp = model@kern@s_lsHyps)
       }
     } else {
       modelup@sIn <- sIn
