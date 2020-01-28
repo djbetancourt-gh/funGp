@@ -458,7 +458,6 @@ upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake) {
 # Function to substitute some Hyperparameters
 # ----------------------------------------------------------------------------------------------------------
 upd_subHypers <- function(model, var.sb, ls_s.sb, ls_f.sb) {
-  # browser()
   # check validty of substituting hypers
 
   # var is always necessary, so if no specified, get it from original model
@@ -518,7 +517,6 @@ upd_subHypers <- function(model, var.sb, ls_s.sb, ls_f.sb) {
 # Function to substitute some Hyperparameters
 # ----------------------------------------------------------------------------------------------------------
 upd_reeHypers <- function(model, var.re, ls_s.re, ls_f.re) {
-  # browser()
   # check validty of substituting hypers
 
   # var is always necessary, so if no required to re-estimate, get it from original model

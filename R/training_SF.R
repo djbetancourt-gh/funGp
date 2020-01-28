@@ -130,13 +130,14 @@ setSPoints_SF <- function(bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_
   allspoints <- ll + allspoints * (ul - ll)
 
   # complement the candidate points with pre-fixed ls coefficients if available
-  if (!is.null(ls_f.known)) {
-    allspoints <- rbind(allspoints, matrix(ls_f.known, nrow = length(ls_f.known), ncol = n.presample))
-  } else if (!is.null(ls_s.known)) {
-    allspoints <- rbind(matrix(ls_s.known, nrow = length(ls_s.known), ncol = n.presample), allspoints)
-  }
+  # if (!is.null(ls_f.known)) {
+  #   fullspoints <- rbind(allspoints, matrix(ls_f.known, nrow = length(ls_f.known), ncol = n.presample))
+  # } else if (!is.null(ls_s.known)) {
+  #   fullspoints <- rbind(matrix(ls_s.known, nrow = length(ls_s.known), ncol = n.presample), allspoints)
+  # }
 
   # compute fitness of each starting point
+  # fitvec <- apply(fullspoints, 2, negLogLik_funGp_SF, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known)
   fitvec <- apply(allspoints, 2, negLogLik_funGp_SF, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known)
 
   # get the best n.starts points
@@ -212,9 +213,9 @@ optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, var
     thetas_f <- optOut$par[(ds+1):(ds+df)]
   } else if (is.null(ls_f.known)) { # case 2: only the functional ls coefficients are unknown
     thetas_s <- ls_s.known
-    thetas_f <- optOut$par[(ds+1):(ds+df)]
+    thetas_f <- optOut$par
   } else { # case 3: only the scalar ls coefficients are unknown
-    thetas_s <- optOut$par[1:ds]
+    thetas_s <- optOut$par
     thetas_f <- ls_f.known
   }
 
@@ -258,9 +259,9 @@ negLogLik_funGp_SF <- function(thetas, sMs, fMs, sOut, kerType, varfun, ls_s.kno
     thetas_f <- thetas[(ds+1):(ds+df)]
   } else if (is.null(ls_f.known)) { # case 2: only the functional ls coefficients are unknown
     thetas_s <- ls_s.known
-    thetas_f <- thetas[(ds+1):(ds+df)]
+    thetas_f <- thetas
   } else { # case 3: only the scalar ls coefficients are unknown
-    thetas_s <- thetas[1:ds]
+    thetas_s <- thetas
     thetas_f <- ls_f.known
   }
 

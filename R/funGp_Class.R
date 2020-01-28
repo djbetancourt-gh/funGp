@@ -818,12 +818,15 @@ update.funGp <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb
   }
   if (subHypers & any(!(c(4,5,6) %in% dptasks))) {
     modelup <- upd_subHypers(model = modelup, var.sb = var.sb, ls_s.sb = ls_s.sb, ls_f.sb = ls_f.sb)
+    modelup@call <- model@call
+    modelup@n.tr <- model@n.tr
     if (!is.null(var.sb) & !(4 %in% dptasks)) cptasks <- c(cptasks, 4)
     if (!is.null(ls_s.sb) & !(5 %in% dptasks)) cptasks <- c(cptasks, 5)
     if (!is.null(ls_f.sb) & !(6 %in% dptasks)) cptasks <- c(cptasks, 6)
   }
   if (reeHypers & any(!(c(7,8,9) %in% dptasks))) {
     modelup <- upd_reeHypers(model = modelup, var.re = var.re, ls_s.re = ls_s.re, ls_f.re = ls_f.re)
+    modelup@call <- model@call
     if (isTRUE(var.re) & !(7 %in% dptasks)) cptasks <- c(cptasks, 7)
     if (isTRUE(ls_s.re) & !(8 %in% dptasks)) cptasks <- c(cptasks, 8)
     if (isTRUE(ls_f.re) & !(9 %in% dptasks)) cptasks <- c(cptasks, 9)
