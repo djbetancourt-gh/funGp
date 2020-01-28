@@ -23,8 +23,8 @@
 #' \eqn{L'L} equals the training cross covariance matrix \eqn{K.tt}. On the other hand, \eqn{LInvY = L^(-1) * sOut}.
 #'
 #' @rdname funGp-class
-#' @include funGpProj_Class.R
-#' @include funGpKern_Class.R
+#' @include 2_funGpProj_Class.R
+#' @include 2_funGpKern_Class.R
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
@@ -1211,111 +1211,5 @@ setMethod("getTrainCov", "funGp", function(object) getTrainCov.funGp(model = obj
 
 getTrainCov.funGp <- function(model) {
   return(tcrossprod(model@preMats$L))
-}
-# ----------------------------------------------------------------------------------------------------------
-
-
-
-# ==========================================================================================================
-# Validators
-# ==========================================================================================================
-
-# Function to check that user inputs for 'funGp' function are ok
-# ----------------------------------------------------------------------------------------------------------
-#' @title Fill!!!!!!!!!!!
-#' @description Fill!!!!!!!!!!!
-#'
-#' @param env Fill!!!!!!!!!!!
-#'
-#' @author José Betancourt, François Bachoc and Thierry Klein
-checkVal_funGp <- function(env){
-  if (all(!is.null(env$sIn), !is.null(env$fIn))) { # Hybrid-input case *******************************************
-
-    # consistency in number of points
-    if (length(unique(c(nrow(env$sIn), as.numeric(sapply(env$fIn, nrow)), length(env$sOut)))) > 1) {
-      stop("Inconsistent number of points. Please check that sIn, sOut and each matrix in fIn have all the same number of rows.")
-    }
-
-    # consistency in number of points
-    if (!is.null(env$fpDims)) {
-      if (length(env$fpDims) != length(env$fIn)) {
-        stop(paste("Inconsistent number of projection dimensions. The functional input list has", length(env$fIn), "elements, but",
-                   length(env$fpDims), "projection dimensions were specified."))
-      }
-    }
-
-  } else if(!is.null(env$fIn)) { # functional-input case ***************************************
-    # check validity and consistency of user inputs
-    if (length(unique(c(as.numeric(sapply(env$fIn, nrow)), length(env$sOut)))) > 1) {
-      stop("Inconsistent number of points. Please check that sOut and each matrix in fIn have all the same number of rows.")
-    }
-    if (!is.null(env$fpDims)) {
-      if (length(env$fpDims) != length(env$fIn)) {
-        stop(paste("Inconsistent number of projection dimensions. The functional input list has", length(env$fIn), "elements, but",
-                   length(env$fpDims), "projection dimensions were specified."))
-      }
-    }
-
-  } else if(!is.null(env$sIn)) { # scalar-input case *******************************************
-    # check validity and consistency of user inputs
-    if (nrow(env$sIn) != length(env$sOut)) {
-      stop("Inconsistent number of points. Please check that sIn and sOut have the same number of rows.")
-    }
-  }
-}
-# ----------------------------------------------------------------------------------------------------------
-
-# Function to check that user inputs for 'predict' method are ok
-# ----------------------------------------------------------------------------------------------------------
-#' @title Fill!!!!!!!!!!!
-#' @description Fill!!!!!!!!!!!
-#'
-#' @param env Fill!!!!!!!!!!!
-#'
-#' @author José Betancourt, François Bachoc and Thierry Klein
-checkVal_simulate <- function(env){
-  # recover the model
-  model <- env$model
-
-  if (all(!is.null(model@sIn), !is.null(model@fIn))) { # Hybrid-input case *******************************************
-    # consistency in data structures
-    if (all(is.null(env$sIn.sm), is.null(env$fIn.sm))) {
-      stop(paste("Invalid input. The model has both, scalar and functional inputs. Please provide valid new scalar and\n",
-                 "functional points to proceed with the simulation."))
-    } else if (is.null(env$fIn.sm)) {
-      stop(paste("Inconsistent data structures. The model has both, scalar and functional inputs, but only new scalar points\n",
-                 "for simulation were specified. Please provide also valid new functional points to proceed with the simulation."))
-    } else if (is.null(env$sIn.sm)) {
-      stop(paste("Inconsistent data structures. The model has both, scalar and functional inputs, but only new functional points\n",
-                 "for simulation were specified. Please provide also valid new scalar points to proceed with the simulation."))
-    }
-
-    # consistency in number of points
-    if (!all(nrow(env$sIn.sm) == sapply(env$fIn.sm, nrow))) {
-      stop("Inconsistent number of points. Please check that sIn.sm and each matrix in fIn.sm have all the same number of rows.")
-    }
-
-  } else if(!is.null(model@fIn)) { # functional-input case ***************************************
-    # consistency in data structures
-    if (!is.null(env$sIn.sm)) {
-      stop(paste("Inconsistent data structures. The model has only functional inputs, but new scalar points\n",
-                 "for simulation were specified. Please provide new functional points instead to proceed with the simulation."))
-    }
-    if (is.null(env$fIn.sm)) {
-      stop(paste("Invalid input. The model has scalar inputs. Please provide valid new scalar points to proceed with\n",
-                 "the simulation."))
-    }
-
-  } else if(!is.null(model@sIn)) { # scalar-input case *******************************************
-    # consistency in data structures
-    if (!is.null(env$fIn.sm)) {
-      stop(paste("Inconsistent data structures. The model has only scalar inputs, but new functional points\n",
-                 "for simulation were specified. Please provide new scalar points instead to proceed with the simulation."))
-    }
-    if (is.null(env$sIn.sm)) {
-      stop(paste("Invalid input. The model has functional inputs. Please provide valid new functional points to proceed with\n",
-                 "the simulation."))
-    }
-  }
 }
 # ----------------------------------------------------------------------------------------------------------
