@@ -484,7 +484,6 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake = F) {
 # Function to add some data
 # ----------------------------------------------------------------------------------------------------------
 upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake = F) {
-  # browser()
   # check validty of substituting data
   check_add(as.list(environment()))
 
@@ -536,8 +535,9 @@ upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake = F) {
 
     # request new model to refunGp if requested
     if (remake) {
-      modelup <- funGpbidon(sIn = sIn, fIn = fIn, sOut = sOut, var.hyp = model@kern@varHyp,
-                            ls_s.hyp = model@kern@s_lsHyps, ls_f.hyp = model@kern@f_lsHyps)
+      modelup <- funGp(sIn = sIn, fIn = fIn, sOut = sOut, doProj = model@proj@doProj, fpDims = model@proj@fpDims,
+                       kerType = model@kern@kerType, disType = model@kern@disType, var.hyp = model@kern@varHyp,
+                       ls_s.hyp = model@kern@s_lsHyps, ls_f.hyp = model@kern@f_lsHyps)
     } else {
       modelup@sIn <- sIn
       modelup@fIn <- fIn
@@ -583,7 +583,9 @@ upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake = F) {
 
     # request new model to refunGp if requested
     if (remake) {
-      modelup <- funGpbidon(fIn = fIn, sOut = sOut, var.hyp = model@kern@varHyp, ls_f.hyp = model@kern@f_lsHyps)
+      modelup <- funGp(fIn = fIn, sOut = sOut, doProj = model@proj@doProj, fpDims = model@proj@fpDims,
+                       kerType = model@kern@kerType, disType = model@kern@disType,
+                       var.hyp = model@kern@varHyp, ls_f.hyp = model@kern@f_lsHyps)
     } else {
       modelup@fIn <- fIn
       modelup@sOut <- sOut
@@ -628,7 +630,8 @@ upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake = F) {
 
     # request new model to refunGp if requested
     if (remake) {
-      modelup <- funGpbidon(sIn = sIn, sOut = sOut, var.hyp = model@kern@varHyp, ls_s.hyp = model@kern@s_lsHyps)
+      modelup <- funGp(sIn = sIn, sOut = sOut, kerType = model@kern@kerType,
+                       var.hyp = model@kern@varHyp, ls_s.hyp = model@kern@s_lsHyps)
     } else {
       modelup@sIn <- sIn
       modelup@sOut <- sOut
