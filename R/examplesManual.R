@@ -238,9 +238,13 @@ section_1.4.d_update_subshypers <- function(){
 
   # defining var hyperparameter for substitution
   var.sb <- 3
+  ls_s.sb <- c(2.44, 1.15)
+  ls_f.sb <- c(5.83, 4.12)
 
   # updating the model
   m1up <- update(m1, var.sb = var.sb)
+  m1up <- update(m1, ls_s.sb = ls_s.sb)
+  m1up <- update(m1, ls_f.sb = ls_f.sb)
 }
 
 

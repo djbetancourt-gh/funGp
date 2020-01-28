@@ -750,8 +750,8 @@ update.funGp <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb
   # (4) var substitution, (5) ls_s substitution, (6) ls_f substitution,
   # (7) var re-estimation, (8) ls_s re-estimation, (9) ls_f re-estimation
   tasknames <- c("data deletion", "data substitution", "data addition",
-                 "var substitution", "ls_s substitution", "ls_f substitution",
-                 "var re-estimation", "ls_s re-estimation", "ls_f re-estimation")
+                 "var substitution", "scalar ls substitution", "functional ls substitution",
+                 "var re-estimation", "scalar ls re-estimation", "functional ls re-estimation")
 
   # identify and drop conflicting tasks
   # ----------------------------------------------------

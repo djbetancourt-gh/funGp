@@ -1,192 +1,192 @@
-funGpbidon <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerType = "matern5_2", disType = "functional",
-                       var.hyp = NULL, ls_s.hyp = NULL, ls_f.hyp = NULL, n.starts = 1, n.presample = 20) {
-  checkVal_funGp(as.list(environment()))
-  # browser()
-  # create objects of class funGpProj, funGpKern and funGp
-  proj <- new("funGpProj")
-  kern <- new("funGpKern")
-  model <- new("funGp")
-
-  # extract generic information from user inputs
-  sOut <- as.matrix(sOut)
-  n.tr <- length(sOut)
-  n.presample <- max(n.presample, n.starts)
-
-  # 3 possible cases
-  # Case 1: scalar and functional
-  # Case 2: functional only
-  # Case 3: scalar only
-  if (all(!is.null(sIn), !is.null(fIn))) { # Hybrid-input case *******************************************
-    # extract information from user inputs specific to the hybrid-input case
-    sIn <- as.matrix(sIn)
-    ds <- ncol(sIn)
-    df <- length(fIn)
-    fDims <- sapply(fIn, ncol)
-
-    # Extend to other possible cases!!!!!!!!!!!!!!!!!!
-    if (doProj) {
-      if (is.null(fpDims)) {
-        fpDims <- rep(3, df)
-        # fpDims <- c(3,2)
-      }
-
-      # project functional inputs
-      basis <- fpIn <- J <- list()
-      for (i in 1:df) {
-        if (fpDims[i] > 0) {
-          B <- (eigen(cov(fIn[[i]]))$vectors)[,1:fpDims[i]]
-          fpIn[[i]] <- t(solve(t(B) %*% B) %*% t(B) %*% t(fIn[[i]]))
-          J[[i]] <- t(B) %*% B
-        } else {
-          J[[i]] <- B <- diag(ncol(fIn[[i]]))
-          fpIn[[i]] <- fIn[[i]]
-        }
-        basis[[i]] <- B
-      }
-    } else {
-      fpDims <- rep(0, df)
-      basis <- J <- lapply(fIn, function(m) diag(ncol(m)))
-      fpIn <- fIn
-    }
-
-    # compute scalar distance matrices
-    sMs <- setScalDistance(sIn, sIn)
-
-    # compute functional distance matrices
-    fMs <- setFunDistance(fpIn, fpIn, J)
-
-    # optimize hyperparameters if some if required
-    if (!all(is.null(var.hyp), !is.null(ls_s.hyp), !is.null(ls_f.hyp))) {
-      varHyp <- var.hyp
-      lsHyps <- c(ls_s.hyp, ls_f.hyp)
-    } else {
-      hypers <- setHypers_SF(sIn, fpIn, J, sMs, fMs, sOut, kerType, n.starts, n.presample)
-      varHyp <- hypers[1]
-      lsHyps <- hypers[-1]
-    }
-
-    # fill funGpKern slots specific to the functional-input case
-    kern@s_lsHyps <- lsHyps[1:ds]
-    kern@f_lsHyps <- lsHyps[-c(1:ds)]
-
-    # pre-commpute KttInv and KttInv.sOut matrices for prediction and add them to the model
-    model@preMats <- preMats_SF(sMs, fMs, sOut, varHyp, lsHyps[1:ds], lsHyps[(ds+1):(ds+df)], kerType)
-
-    # fill funGpProj slots specific to the hybrid-input case
-    proj@doProj <- doProj
-    proj@fpDims <- fpDims
-    proj@basis <- basis
-    proj@coefs <- fpIn
-
-    # fill funGp slots specific to the hybrid-input case
-    model@ds <- ds
-    model@df <- df
-    model@fDims <- fDims
-    model@sIn <- sIn
-    model@fIn <- fIn
-    model@type = "hybrid"
-
-  } else if(!is.null(fIn)) { # functional-input case ***************************************
-    # extract information from user inputs specific to the functional-input case
-    df <- length(fIn)
-    fDims <- sapply(fIn, ncol)
-
-    # Extend to other possible cases!!!!!!!!!!!!!!!!!!
-    if (all(doProj, is.null(fpDims))) {
-      fpDims <- rep(3, df)
-      # fpDims <- c(3,2)
-    }
-
-    # project functional inputs
-    basis <- fpIn <- J <- list()
-    for (i in 1:df) { # functional-input case
-      B <- (eigen(cov(fIn[[i]]))$vectors)[,1:fpDims[i]]
-      fpIn[[i]] <- t(solve(t(B) %*% B) %*% t(B) %*% t(fIn[[i]]))
-      J[[i]] <- t(B) %*% B
-      basis[[i]] <- B
-    }
-
-    # compute functional distance matrices
-    fMs <- setFunDistance(fpIn, fpIn, J)
-
-    # optimize hyperparameters if some if required
-    if (!all(is.null(var.hyp), !is.null(ls_f.hyp))) {
-      varHyp <- var.hyp
-      lsHyps <- ls_f.hyp
-    } else {
-      hypers <- setHypers_F(fpIn, J, fMs, sOut, kerType, n.starts, n.presample)
-      varHyp <- hypers[1]
-      lsHyps <- hypers[-1]
-    }
-
-    # fill funGpKern slots specific to the functional-input case
-    kern@f_lsHyps <- lsHyps
-
-    # pre-commpute KttInv and KttInv.sOut matrices for prediction and add them to the model
-    model@preMats <- preMats_F(fMs, sOut, varHyp, lsHyps, kerType)
-
-    # fill funGpProj slots specific to the hybrid-input case
-    proj@doProj <- doProj
-    proj@fpDims <- fpDims
-    proj@basis <- basis
-    proj@coefs <- fpIn
-
-    # fill funGp slots specific to the functional-input case
-    model@ds <- 0
-    model@df <- df
-    model@fDims <- fDims
-    model@fIn <- fIn
-    model@type = "functional"
-
-  } else if(!is.null(sIn)) { # scalar-input case *******************************************
-    # extract information from user inputs specific to the scalar-input case
-    sIn <- as.matrix(sIn)
-    ds <- ncol(sIn)
-
-    # compute scalar distance matrices
-    sMs <- setScalDistance(sIn, sIn)
-
-    # optimize hyperparameters if some if required
-    if (!all(is.null(var.hyp), !is.null(ls_f.hyp))) {
-      varHyp <- var.hyp
-      lsHyps <- ls_s.hyp
-    } else {
-      hypers <- setHypers_S(sIn, sMs, sOut, kerType, n.starts, n.presample)
-      varHyp <- hypers[1]
-      lsHyps <- hypers[-1]
-    }
-
-    # fill funGpKern slots specific to the scalar-input case
-    kern@s_lsHyps <- lsHyps
-
-    # pre-commpute KttInv and KttInv.sOut matrices for prediction and add them to the model
-    model@preMats <- preMats_S(sMs, sOut, varHyp, lsHyps, kerType)
-
-    # fill funGp slots specific to the scalar-input case
-    model@ds <- ds
-    model@df <- 0
-    model@sIn <- sIn
-    model@type = "scalar"
-
-  } else { # error: no inputs were provided
-    stop("User must provide either a scalar-input matrix, a functional-input list or both of them. None has been detected.")
-  }
-
-  # fill general funGpKern slots
-  kern@kerType <- kerType
-  kern@disType <- disType
-  kern@varHyp <- varHyp
-
-  # fill general funGpModel slots
-  model@call <- match.call()
-  model@sOut <- sOut
-  model@n.tot <- n.tr
-  model@n.tr <- n.tr
-  model@proj <- proj
-  model@kern <- kern
-
-  return(model)
-}
+# funGpbidon <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerType = "matern5_2", disType = "functional",
+#                        var.hyp = NULL, ls_s.hyp = NULL, ls_f.hyp = NULL, n.starts = 1, n.presample = 20) {
+#   checkVal_funGp(as.list(environment()))
+#   # browser()
+#   # create objects of class funGpProj, funGpKern and funGp
+#   proj <- new("funGpProj")
+#   kern <- new("funGpKern")
+#   model <- new("funGp")
+#
+#   # extract generic information from user inputs
+#   sOut <- as.matrix(sOut)
+#   n.tr <- length(sOut)
+#   n.presample <- max(n.presample, n.starts)
+#
+#   # 3 possible cases
+#   # Case 1: scalar and functional
+#   # Case 2: functional only
+#   # Case 3: scalar only
+#   if (all(!is.null(sIn), !is.null(fIn))) { # Hybrid-input case *******************************************
+#     # extract information from user inputs specific to the hybrid-input case
+#     sIn <- as.matrix(sIn)
+#     ds <- ncol(sIn)
+#     df <- length(fIn)
+#     fDims <- sapply(fIn, ncol)
+#
+#     # Extend to other possible cases!!!!!!!!!!!!!!!!!!
+#     if (doProj) {
+#       if (is.null(fpDims)) {
+#         fpDims <- rep(3, df)
+#         # fpDims <- c(3,2)
+#       }
+#
+#       # project functional inputs
+#       basis <- fpIn <- J <- list()
+#       for (i in 1:df) {
+#         if (fpDims[i] > 0) {
+#           B <- (eigen(cov(fIn[[i]]))$vectors)[,1:fpDims[i]]
+#           fpIn[[i]] <- t(solve(t(B) %*% B) %*% t(B) %*% t(fIn[[i]]))
+#           J[[i]] <- t(B) %*% B
+#         } else {
+#           J[[i]] <- B <- diag(ncol(fIn[[i]]))
+#           fpIn[[i]] <- fIn[[i]]
+#         }
+#         basis[[i]] <- B
+#       }
+#     } else {
+#       fpDims <- rep(0, df)
+#       basis <- J <- lapply(fIn, function(m) diag(ncol(m)))
+#       fpIn <- fIn
+#     }
+#
+#     # compute scalar distance matrices
+#     sMs <- setScalDistance(sIn, sIn)
+#
+#     # compute functional distance matrices
+#     fMs <- setFunDistance(fpIn, fpIn, J)
+#
+#     # optimize hyperparameters if some if required
+#     if (!all(is.null(var.hyp), !is.null(ls_s.hyp), !is.null(ls_f.hyp))) {
+#       varHyp <- var.hyp
+#       lsHyps <- c(ls_s.hyp, ls_f.hyp)
+#     } else {
+#       hypers <- setHypers_SF(sIn, fpIn, J, sMs, fMs, sOut, kerType, n.starts, n.presample)
+#       varHyp <- hypers[1]
+#       lsHyps <- hypers[-1]
+#     }
+#
+#     # fill funGpKern slots specific to the functional-input case
+#     kern@s_lsHyps <- lsHyps[1:ds]
+#     kern@f_lsHyps <- lsHyps[-c(1:ds)]
+#
+#     # pre-commpute KttInv and KttInv.sOut matrices for prediction and add them to the model
+#     model@preMats <- preMats_SF(sMs, fMs, sOut, varHyp, lsHyps[1:ds], lsHyps[(ds+1):(ds+df)], kerType)
+#
+#     # fill funGpProj slots specific to the hybrid-input case
+#     proj@doProj <- doProj
+#     proj@fpDims <- fpDims
+#     proj@basis <- basis
+#     proj@coefs <- fpIn
+#
+#     # fill funGp slots specific to the hybrid-input case
+#     model@ds <- ds
+#     model@df <- df
+#     model@fDims <- fDims
+#     model@sIn <- sIn
+#     model@fIn <- fIn
+#     model@type = "hybrid"
+#
+#   } else if(!is.null(fIn)) { # functional-input case ***************************************
+#     # extract information from user inputs specific to the functional-input case
+#     df <- length(fIn)
+#     fDims <- sapply(fIn, ncol)
+#
+#     # Extend to other possible cases!!!!!!!!!!!!!!!!!!
+#     if (all(doProj, is.null(fpDims))) {
+#       fpDims <- rep(3, df)
+#       # fpDims <- c(3,2)
+#     }
+#
+#     # project functional inputs
+#     basis <- fpIn <- J <- list()
+#     for (i in 1:df) { # functional-input case
+#       B <- (eigen(cov(fIn[[i]]))$vectors)[,1:fpDims[i]]
+#       fpIn[[i]] <- t(solve(t(B) %*% B) %*% t(B) %*% t(fIn[[i]]))
+#       J[[i]] <- t(B) %*% B
+#       basis[[i]] <- B
+#     }
+#
+#     # compute functional distance matrices
+#     fMs <- setFunDistance(fpIn, fpIn, J)
+#
+#     # optimize hyperparameters if some if required
+#     if (!all(is.null(var.hyp), !is.null(ls_f.hyp))) {
+#       varHyp <- var.hyp
+#       lsHyps <- ls_f.hyp
+#     } else {
+#       hypers <- setHypers_F(fpIn, J, fMs, sOut, kerType, n.starts, n.presample)
+#       varHyp <- hypers[1]
+#       lsHyps <- hypers[-1]
+#     }
+#
+#     # fill funGpKern slots specific to the functional-input case
+#     kern@f_lsHyps <- lsHyps
+#
+#     # pre-commpute KttInv and KttInv.sOut matrices for prediction and add them to the model
+#     model@preMats <- preMats_F(fMs, sOut, varHyp, lsHyps, kerType)
+#
+#     # fill funGpProj slots specific to the hybrid-input case
+#     proj@doProj <- doProj
+#     proj@fpDims <- fpDims
+#     proj@basis <- basis
+#     proj@coefs <- fpIn
+#
+#     # fill funGp slots specific to the functional-input case
+#     model@ds <- 0
+#     model@df <- df
+#     model@fDims <- fDims
+#     model@fIn <- fIn
+#     model@type = "functional"
+#
+#   } else if(!is.null(sIn)) { # scalar-input case *******************************************
+#     # extract information from user inputs specific to the scalar-input case
+#     sIn <- as.matrix(sIn)
+#     ds <- ncol(sIn)
+#
+#     # compute scalar distance matrices
+#     sMs <- setScalDistance(sIn, sIn)
+#
+#     # optimize hyperparameters if some if required
+#     if (!all(is.null(var.hyp), !is.null(ls_f.hyp))) {
+#       varHyp <- var.hyp
+#       lsHyps <- ls_s.hyp
+#     } else {
+#       hypers <- setHypers_S(sIn, sMs, sOut, kerType, n.starts, n.presample)
+#       varHyp <- hypers[1]
+#       lsHyps <- hypers[-1]
+#     }
+#
+#     # fill funGpKern slots specific to the scalar-input case
+#     kern@s_lsHyps <- lsHyps
+#
+#     # pre-commpute KttInv and KttInv.sOut matrices for prediction and add them to the model
+#     model@preMats <- preMats_S(sMs, sOut, varHyp, lsHyps, kerType)
+#
+#     # fill funGp slots specific to the scalar-input case
+#     model@ds <- ds
+#     model@df <- 0
+#     model@sIn <- sIn
+#     model@type = "scalar"
+#
+#   } else { # error: no inputs were provided
+#     stop("User must provide either a scalar-input matrix, a functional-input list or both of them. None has been detected.")
+#   }
+#
+#   # fill general funGpKern slots
+#   kern@kerType <- kerType
+#   kern@disType <- disType
+#   kern@varHyp <- varHyp
+#
+#   # fill general funGpModel slots
+#   model@call <- match.call()
+#   model@sOut <- sOut
+#   model@n.tot <- n.tr
+#   model@n.tr <- n.tr
+#   model@proj <- proj
+#   model@kern <- kern
+#
+#   return(model)
+# }
 # -------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -196,10 +196,7 @@ funGpbidon <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, 
 
 # Function to delete some data
 # ----------------------------------------------------------------------------------------------------------
-upd_del <- function(model, ind.dl, remake = F) {
-  # duplicate the original model to build the updated one
-  modelup <- model
-
+upd_del <- function(model, ind.dl, remake) {
   # check for validty of substituting data
   ind.dl <- check_del(as.list(environment()))
 
@@ -215,6 +212,7 @@ upd_del <- function(model, ind.dl, remake = F) {
                        kerType = model@kern@kerType, disType = model@kern@disType, var.hyp = model@kern@varHyp,
                        ls_s.hyp = model@kern@s_lsHyps, ls_f.hyp = model@kern@f_lsHyps)
     } else {
+      modelup <- model
       modelup@sIn <- sIn
       modelup@fIn <- fIn
       modelup@sOut <- sOut
@@ -235,6 +233,7 @@ upd_del <- function(model, ind.dl, remake = F) {
                        kerType = model@kern@kerType, disType = model@kern@disType,
                        var.hyp = model@kern@varHyp, ls_f.hyp = model@kern@f_lsHyps)
     } else {
+      modelup <- model
       modelup@fIn <- fIn
       modelup@sOut <- sOut
       model@n.tot <- length(sOut)
@@ -253,6 +252,7 @@ upd_del <- function(model, ind.dl, remake = F) {
       modelup <- funGp(sIn = sIn, sOut = sOut, kerType = model@kern@kerType,
                        var.hyp = model@kern@varHyp, ls_s.hyp = model@kern@s_lsHyps)
     } else {
+      modelup <- model
       modelup@sIn <- sIn
       modelup@sOut <- sOut
       model@n.tot <- length(sOut)
@@ -266,10 +266,7 @@ upd_del <- function(model, ind.dl, remake = F) {
 
 # Function to substitute some data
 # ----------------------------------------------------------------------------------------------------------
-upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake = F) {
-  # duplicate the original model to build the updated one
-  modelup <- model
-
+upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake) {
   # extract generic information from the model
   sOut <- model@sOut
 
@@ -330,9 +327,10 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake = F) {
     fIn <- mapply(function(M, x) {M[ind.sb,] <- x; return(M)}, fIn, fIn.sb)
     sOut[ind.sb,] <- sOut.sb
 
-    # request new model to refunGp if requested
+    # the model is re-made if this is the last one in the sequence of requested tasks
     if (remake) {
       if (justOut) {
+        modelup <- model
         modelup@preMats$LInvY <- backsolve(model@preMats$L, sOut, upper.tri = F)
         modelup@sIn <- sIn
         modelup@fIn <- fIn
@@ -344,6 +342,7 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake = F) {
                          ls_s.hyp = model@kern@s_lsHyps, ls_f.hyp = model@kern@f_lsHyps)
       }
     } else {
+      modelup <- model
       modelup@sIn <- sIn
       modelup@fIn <- fIn
       modelup@sOut <- sOut
@@ -395,9 +394,10 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake = F) {
     fIn <- mapply(function(M, x) {M[ind.sb,] <- x; return(M)}, fIn, fIn.sb)
     sOut[ind.sb,] <- sOut.sb
 
-    # request new model to refunGp if requested
+    # the model is re-made if this is the last one in the sequence of requested tasks
     if (remake) {
       if (justOut) {
+        modelup <- model
         modelup@preMats$LInvY <- backsolve(model@preMats$L, sOut, upper.tri = F)
         modelup@fIn <- fIn
         modelup@sOut <- sOut
@@ -408,6 +408,7 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake = F) {
                          var.hyp = model@kern@varHyp, ls_f.hyp = model@kern@f_lsHyps)
       }
     } else {
+      modelup <- model
       modelup@fIn <- fIn
       modelup@sOut <- sOut
       model@n.tot <- length(sOut)
@@ -458,9 +459,10 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake = F) {
     sIn[ind.sb,] <- sIn.sb
     sOut[ind.sb,] <- sOut.sb
 
-    # request new model to refunGp if requested
+    # the model is re-made if this is the last one in the sequence of requested tasks
     if (remake) {
       if (justOut) {
+        modelup <- model
         modelup@preMats$LInvY <- backsolve(model@preMats$L, sOut, upper.tri = F)
         modelup@sIn <- sIn
         modelup@sOut <- sOut
@@ -470,6 +472,7 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake = F) {
                          var.hyp = model@kern@varHyp, ls_s.hyp = model@kern@s_lsHyps)
       }
     } else {
+      modelup <- model
       modelup@sIn <- sIn
       modelup@sOut <- sOut
       model@n.tot <- length(sOut)
@@ -483,12 +486,9 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake = F) {
 
 # Function to add some data
 # ----------------------------------------------------------------------------------------------------------
-upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake = F) {
+upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake) {
   # check validty of substituting data
   check_add(as.list(environment()))
-
-  # duplicate the original model to build the updated one
-  modelup <- model
 
   # extract generic information from the model
   sOut <- model@sOut
@@ -533,16 +533,17 @@ upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake = F) {
     fIn <- Map(rbind, fIn, fIn.nw)
     sOut <- rbind(sOut, sOut.nw)
 
-    # request new model to refunGp if requested
+    # the model is re-made if this is the last one in the sequence of requested tasks
     if (remake) {
       modelup <- funGp(sIn = sIn, fIn = fIn, sOut = sOut, doProj = model@proj@doProj, fpDims = model@proj@fpDims,
                        kerType = model@kern@kerType, disType = model@kern@disType, var.hyp = model@kern@varHyp,
                        ls_s.hyp = model@kern@s_lsHyps, ls_f.hyp = model@kern@f_lsHyps)
     } else {
+      modelup <- model
       modelup@sIn <- sIn
       modelup@fIn <- fIn
       modelup@sOut <- sOut
-      model@n.tot <- length(sOut)
+      modelup@n.tot <- length(sOut)
     }
 
   } else if (model@type == "functional") { # functional-input case *******************************************
@@ -581,15 +582,16 @@ upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake = F) {
     fIn <- Map(rbind, fIn, fIn.nw)
     sOut <- rbind(sOut, sOut.nw)
 
-    # request new model to refunGp if requested
+    # the model is re-made if this is the last one in the sequence of requested tasks
     if (remake) {
       modelup <- funGp(fIn = fIn, sOut = sOut, doProj = model@proj@doProj, fpDims = model@proj@fpDims,
                        kerType = model@kern@kerType, disType = model@kern@disType,
                        var.hyp = model@kern@varHyp, ls_f.hyp = model@kern@f_lsHyps)
     } else {
+      modelup <- model
       modelup@fIn <- fIn
       modelup@sOut <- sOut
-      model@n.tot <- length(sOut)
+      modelup@n.tot <- length(sOut)
     }
 
   } else { # scalar-input case *******************************************
@@ -628,14 +630,15 @@ upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake = F) {
     sIn <- rbind(sIn, sIn.nw)
     sOut <- rbind(sOut, sOut.nw)
 
-    # request new model to refunGp if requested
+    # the model is re-made if this is the last one in the sequence of requested tasks
     if (remake) {
       modelup <- funGp(sIn = sIn, sOut = sOut, kerType = model@kern@kerType,
                        var.hyp = model@kern@varHyp, ls_s.hyp = model@kern@s_lsHyps)
     } else {
+      modelup <- model
       modelup@sIn <- sIn
       modelup@sOut <- sOut
-      model@n.tot <- length(sOut)
+      modelup@n.tot <- length(sOut)
     }
   }
 
@@ -646,77 +649,60 @@ upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake = F) {
 
 # Function to substitute some Hyperparameters
 # ----------------------------------------------------------------------------------------------------------
-upd_subHypers <- function(model, var.sb, ls_s.sb, ls_f.sb) {
+upd_subHypers <- function(model, var.sb, ls_s.sb, ls_f.sb, remake) {
   # browser()
   # check validty of substituting hypers
-  check_add(as.list(environment()))
 
-  # duplicate the original model to build the updated one
-  modelup <- model
+  # var is always necessary, so if no specified, get it from original model
+  if (is.null(var.sb)) var.sb <- model@kern@varHyp
 
-  if (model@type == "hybrid") { # Hybrid-input case *******************************************
+  # if only var needs to be substituted, no need to call funGp
+  if (all(is.null(ls_s.sb), is.null(ls_f.sb))) {
+    # duplicate the original model to build the updated one
+    modelup <- model
 
+    # recover R and set up the training self-covariance matrix with the substituting variance
+    R <- tcrossprod(model@preMats$L)/model@kern@varHyp
+    K.tt <- var.sb * R
 
-    # remake model according to the case
-    # 1. var, ls_s, ls_f
-    # 2. var, ls_s
-    # 3. var, ls_f
-    # 4. ls_s, ls_f
-    # 5. ls_s
-    # 6. ls_f
-    if (!is.null(var.sb)) {
-      if (!is.null(ls_s.sb)) {
-        if (!is.null(ls_f.sb)) { # case 1: Substitute all hypers
+    # build preMats and replace them in the model
+    L <- t(chol(K.tt))
+    LInvY <- backsolve(L, model@sOut, upper.tri = F)
+    modelup@preMats <- list(L = L, LInvY = LInvY)
 
-        } else { # case 2: Substitute the var and ls_s
+    # update the variance slot
+    modelup@kern@varHyp <- var.sb
 
-        }
-      } else if (!is.null(ls_f.sb)) { # case 3: Substitute the var and ls_f
-
-      }
-    } else if (!is.null(ls_s.sb)) {
-      if (!is.null(ls_f.sb)) { # case 4: Substitute ls_s and ls_f
-
-      } else { # case 5: Substitute only ls_s
-
-      }
-    } else { # case 6: Substitute only ls_f
-
+  } else if (model@type == "hybrid") { # Hybrid-input case *******************************************
+    # the model is re-made if this is the last one in the sequence of requested tasks
+    if (all(!is.null(ls_f.sb), is.null(ls_s.sb))) {
+      modelup <- funGp(sIn = model@sIn, fIn = model@fIn, sOut = model@sOut, doProj = model@proj@doProj, fpDims = model@proj@fpDims,
+                       kerType = model@kern@kerType, disType = model@kern@disType, var.hyp = var.sb,
+                       ls_s.hyp = model@kern@s_lsHyps, ls_f.hyp = ls_f.sb)
+    } else if(all(!is.null(ls_s.sb), is.null(ls_f.sb))) {
+      modelup <- funGp(sIn = model@sIn, fIn = model@fIn, sOut = model@sOut, doProj = model@proj@doProj, fpDims = model@proj@fpDims,
+                       kerType = model@kern@kerType, disType = model@kern@disType, var.hyp = var.sb,
+                       ls_s.hyp = ls_s.sb, ls_f.hyp = model@kern@f_lsHyps)
+    } else {
+      modelup <- funGp(sIn = model@sIn, fIn = model@fIn, sOut = model@sOut, doProj = model@proj@doProj, fpDims = model@proj@fpDims,
+                       kerType = model@kern@kerType, disType = model@kern@disType, var.hyp = var.sb,
+                       ls_s.hyp = ls_s.sb, ls_f.hyp = ls_f.sb)
     }
 
-
-    # if (all(!is.null(var.sb), !is.null(ls_s.sb), !is.null(ls_f.sb))) {
-    #   modelup <- upd_add(model = object, var.sb = var.sb, ls_s.sb = ls_s.sb, ls_f.sb = ls_f.sb)
-    # } else if (all(!is.null(var.sb), !is.null(ls_s.sb))) {
-    #   modelup <- upd_add(model = object, var.sb = var.sb, ls_s.sb = ls_s.sb)
-    # } else if (all(!is.null(var.sb), !is.null(ls_f.sb))) {
-    #   modelup <- upd_add(model = object, var.sb = var.sb, ls_f.sb = ls_f.sb)
-    # } else if (all(!is.null(ls_s.sb), !is.null(ls_f.sb))) {
-    #   modelup <- upd_add(model = object, ls_s.sb = ls_s.sb, ls_f.sb = ls_f.sb)
-    # } else if (!is.null(var.sb)) {
-    #   modelup <- upd_add(model = object, var.sb = var.sb)
-    # } else if (!is.null(ls_s.sb)) {
-    #   modelup <- upd_add(model = object, ls_s.sb = ls_s.sb)
-    # } else if (!is.null(ls_f.sb)) {
-    #   modelup <- upd_add(model = object, ls_f.sb = ls_f.sb)
-    # }
-
   } else if (model@type == "functional") { # functional-input case *******************************************
-
+    # the model is re-made if this is the last one in the sequence of requested tasks
+    modelup <- funGp(fIn = model@fIn, sOut = model@sOut, doProj = model@proj@doProj, fpDims = model@proj@fpDims,
+                     kerType = model@kern@kerType, disType = model@kern@disType,
+                     var.hyp = var.sb, ls_f.hyp = ls_f.sb)
 
   } else { # scalar-input case *******************************************
+    # the model is re-made if this is the last one in the sequence of requested tasks
+    modelup <- funGp(sIn = model@sIn, sOut = model@sOut, kerType = model@kern@kerType,
+                     var.hyp = var.sb, ls_s.hyp = ls_s.sb)
 
   }
 
   return(modelup)
-
-
-
-
-
-
-
-
 }
 # ----------------------------------------------------------------------------------------------------------
 
