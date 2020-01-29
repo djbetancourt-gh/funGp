@@ -1,4 +1,5 @@
-#' Creating a model
+# Creating a model
+# ----------------------------------------------------------------------------------------------------------
 section_1.1_create <- function(){
   # generating input data for training
   set.seed(100)
@@ -21,7 +22,8 @@ section_1.1_create <- function(){
 # ----------------------------------------------------------------------------------------------------------
 
 
-#' Making predictions
+# Making predictions
+# ----------------------------------------------------------------------------------------------------------
 section_1.2_predict <- function(){
   # building the model
   set.seed(100)
@@ -56,16 +58,16 @@ section_1.2_predict <- function(){
   # checking content of the list
   summary(m1.preds_f)
 
-  # plotting predictions without true output
+  # plotting full predictions without true output
   plotPreds(m1, preds = m1.preds_f)
 
-  # plotting predictions along with true output
+  # plotting full predictions along with true output
   plotPreds(m1, m1.preds_f, sOut.pr)
 }
 # ----------------------------------------------------------------------------------------------------------
 
 
-#' Making simulations
+# Making simulations
 section_1.3_simulate <- function(){
   # building the model
   set.seed(100)
@@ -103,6 +105,7 @@ section_1.3_simulate <- function(){
 
 
 # Making updates: deletion
+# ----------------------------------------------------------------------------------------------------------
 section_1.4.a_update_delete <- function(){
   # building the initial model
   set.seed(100)
@@ -154,6 +157,7 @@ section_1.4.a_update_delete <- function(){
 
 
 # Making updates: substitution
+# ----------------------------------------------------------------------------------------------------------
 section_1.4.b_update_substitute <- function(){
   # building the initial model
   set.seed(100)
@@ -197,6 +201,7 @@ section_1.4.b_update_substitute <- function(){
 
 
 # Making updates: addition
+# ----------------------------------------------------------------------------------------------------------
 section_1.4.c_update_addition <- function(){
   # building the initial model
   set.seed(100)
@@ -226,7 +231,9 @@ section_1.4.c_update_addition <- function(){
 }
 # ----------------------------------------------------------------------------------------------------------
 
+
 # Making updates: substitution of hyperparameters
+# ----------------------------------------------------------------------------------------------------------
 section_1.4.d_update_subshypers <- function(){
   # building the initial model
   set.seed(100)
@@ -248,6 +255,33 @@ section_1.4.d_update_subshypers <- function(){
 }
 
 
+# Making updates: re-estimation of hyperparameters
+# ----------------------------------------------------------------------------------------------------------
+# building the initial model
+section_1.4.e_update_reeshypers <- function(){
+  set.seed(100)
+  n.tr <- 25
+  sIn <- expand.grid(x1 = seq(0,1,length = sqrt(n.tr)), x2 = seq(0,1,length = sqrt(n.tr)))
+  fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
+  sOut <- fgp_BB3(sIn, fIn, n.tr)
+  m1 <- funGp(sIn = sIn, fIn = fIn, sOut = sOut)
+
+  # defining var hyperparameter for substitution
+  var.sb <- 3
+  ls_s.sb <- c(2.44, 1.15)
+  ls_f.sb <- c(5.83, 4.12)
+
+  # updating the model
+  m1 <- update(m1, var.sb = var.sb)
+  m1up <- update(m1, var.re = T)
+  m1 <- update(m1, ls_s.sb = ls_s.sb)
+  m1up <- update(m1, ls_s.re = T)
+  m1 <- update(m1, ls_f.sb = ls_f.sb)
+  m1up <- update(m1, ls_f.re = T)
+  m1 <- update(m1, var.sb = var.sb, ls_s.sb = ls_s.sb, ls_f.sb = ls_f.sb)
+  m1up <- update(m1, var.re = T, ls_s.re = T, ls_f.re = T)
+}
+# ----------------------------------------------------------------------------------------------------------
 
 #' A tester
 #'

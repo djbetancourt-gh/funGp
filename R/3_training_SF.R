@@ -1,11 +1,11 @@
 #' @title Optimization of hyperparameters for funGp models
 #' @description Sets good values for the hyperparameters of the Gaussian process model based on optimization.
 #'
-#' @param sIn a matrix of scalar input values to train the model. Each column must match an input variable and each row a training point.
-#' @param fpIn a list with as many elements as functional inputs. The i-th element must be a matrix with the projection coefficients
-#' for the i-th functional input.
-#' @param J a list with as many elements as functional inputs. The i-th element must be the Gram matrix of the basis functions used for
-#' the projection of the i-th functional input.
+# @param sIn a matrix of scalar input values to train the model. Each column must match an input variable and each row a training point.
+# @param fpIn a list with as many elements as functional inputs. The i-th element must be a matrix with the projection coefficients
+# for the i-th functional input.
+# @param J a list with as many elements as functional inputs. The i-th element must be the Gram matrix of the basis functions used for
+# the projection of the i-th functional input.
 #' @param sMs a list with as many elements as scalar input variables. Each element of the list is a n times n matrix of differences
 #' between the scalar observation coordinates.
 #' @param fMs a list with as many elements as functional input variables. Each element of the list is a n times n matrix of differences
@@ -23,7 +23,7 @@
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
-setHypers_SF <- function(sIn, fpIn, J, sMs, fMs, sOut, kerType, var.known, ls_s.known, ls_f.known, n.starts, n.presample){
+setHypers_SF <- function(sMs, fMs, sOut, kerType, var.known, ls_s.known, ls_f.known, n.starts, n.presample){
   # if all the length-scale coefficients are known, skip optim and compute var analytically. Else optimize
   if (all(!is.null(ls_s.known), !is.null(ls_f.known))) {
     # 1. estimation of the correlation matrix

@@ -11,13 +11,13 @@
 #' @slot type Object of class \code{"character"}. Type of model based on inputs structure. To be chosen from {"scalar", "functional", "hybrid"}.
 #' @slot ds Object of class \code{"numeric"}. Number of scalar inputs.
 #' @slot df Object of class \code{"numeric"}. Number of functional inputs.
-#' @slot fDims Object of class \code{"numeric"}. Dimension of each functional input.
+#' @slot f_dims Object of class \code{"numeric"}. Dimension of each functional input.
 #' @slot sIn Object of class \code{"matrix"}. Scalar inputs.
 #' @slot fIn Object of class \code{"list"}. Functional inputs. Each element of the list contains a functional input in the form of a matrix.
 #' @slot sOut Object of class \code{"matrix"}. Scalar output.
 #' @slot n.tot Object of class \code{"integer"}. Number of observed points (not necessarily all are used for prediction).
 #' @slot n.tr Object of class \code{"integer"}. Number of training points.
-#' @slot proj Object of class \code{"funGpProj"}. Data structures related to the projection.
+#' @slot f_proj Object of class \code{"funGpProj"}. Data structures related to the projection of functional inputs.
 #' @slot kern Object of class \code{"funGpKern"}. Data structures related to the kernel.
 #' @slot preMats Object of class \code{"list"}. L and LInvY matrices pre-computed for prediction. L is a lower diagonal matrix such that
 #' \eqn{L'L} equals the training cross covariance matrix \eqn{K.tt}. On the other hand, \eqn{LInvY = L^(-1) * sOut}.
@@ -34,13 +34,13 @@ setClass("funGp",
            type = "character",         # Type of model. To be chosen from {"scalar", "functional", "hybrid"}.
            ds = "numeric",             # number of scalar inputs
            df = "numeric",             # number of functional inputs
-           fDims = "numeric",          # dimension of each functional input
+           f_dims = "numeric",         # dimension of each functional input
            sIn = "matrix",             # scalar inputs
            fIn = "list",               # each element (n x fDims_i) contains a functional input
            sOut = "matrix",            # scalar output
            n.tot = "integer",          # number of observed points
            n.tr = "integer",           # number of training points
-           proj = "funGpProj",         # structures related to the projection
+           f_proj = "funGpProj",         # structures related to the projection of functional inputs
            kern = "funGpKern",         # structures related to the kernel
            preMats = "list"            # Pre-computed KttInv and KttInv.sOut matrices
          ),
@@ -65,16 +65,16 @@ setClass("funGp",
 #' matrix.
 #' @param sOut a vector (or 1-column matrix) containing the values of the scalar output at the training
 #' points.
-#' @param doProj a boolean indicating whether a projection of the inputs should be done for dimension
 #' reduction.
-#' @param fpDims an optional array with the projection dimension for each functional input.
 #' @param kerType an optional character specifying the covariance structure to be used. To be chosen between
 #' "gauss", "matern5_2" and "matern3_2". Default is "matern5_2".
+#' @param f_disType an optional character specifying the distance function to use for the functional inputs
+#' within the covariance function. To be chosen between "scalar" and "functional". Default is "functional".
+#' @param f_pdims an optional array with the projection dimension for each functional input.
+#' @param f_family fill!!!!!!
 #' @param var.hyp fill!!!!!!
 #' @param ls_s.hyp fill!!!!!!
 #' @param ls_f.hyp fill!!!!!!
-#' @param disType an optional character specifying the distance function to use for the functional inputs
-#' within the covariance function. To be chosen between "scalar" and "functional". Default is "functional".
 #' @param n.starts Fill!!!!!!!!!!
 #' @param n.presample Fill!!!!!!!!!!
 #'
@@ -107,13 +107,21 @@ setClass("funGp",
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
-funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerType = "matern5_2", disType = "functional",
-                  var.hyp = NULL, ls_s.hyp = NULL, ls_f.hyp = NULL, n.starts = 1, n.presample = 20) {
+funGp <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
+                  f_disType = "functional", f_pdims = 3, f_family = "PCA",
+                  var.hyp = NULL, ls_s.hyp = NULL, ls_f.hyp = NULL,
+                  n.starts = 1, n.presample = 20) {
+  # extend simplified user inputs to full versions
+  if (!is.null(fIn)) {
+    if (length(f_disType) == 1) f_disType <- rep(f_disType, length(fIn))
+    if (length(f_pdims) == 1) f_pdims <- rep(f_pdims, length(fIn))
+    if (length(f_family) == 1) f_family <- rep(f_family, length(fIn))
+  }
+
   # check validity of user inputs
   checkVal_funGp(as.list(environment()))
 
-  # create objects of class funGpProj, funGpKern and funGp
-  proj <- new("funGpProj")
+  # create objects of class funGpKern and funGp
   kern <- new("funGpKern")
   model <- new("funGp")
 
@@ -131,46 +139,34 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
     sIn <- as.matrix(sIn)
     ds <- ncol(sIn)
     df <- length(fIn)
-    fDims <- sapply(fIn, ncol)
+    f_dims <- sapply(fIn, ncol)
 
-    # Extend to other possible cases!!!!!!!!!!!!!!!!!!
-    if (doProj) {
-      if (is.null(fpDims)) {
-        fpDims <- rep(3, df)
-        # fpDims <- c(3,2)
-      }
-
-      # project functional inputs
-      basis <- fpIn <- J <- list()
-      for (i in 1:df) {
-        if (fpDims[i] > 0) {
-          B <- (eigen(cov(fIn[[i]]))$vectors)[,1:fpDims[i]]
-          fpIn[[i]] <- t(solve(t(B) %*% B) %*% t(B) %*% t(fIn[[i]]))
-          J[[i]] <- t(B) %*% B
-        } else {
-          J[[i]] <- B <- diag(ncol(fIn[[i]]))
-          fpIn[[i]] <- fIn[[i]]
-        }
-        basis[[i]] <- B
-      }
-    } else {
-      fpDims <- rep(0, df)
-      basis <- J <- lapply(fIn, function(m) diag(ncol(m)))
-      fpIn <- fIn
-    }
+    # perform projection of functional inputs
+    # the projection is such that F = X * B' + e, with
+    #
+    # n: input points
+    # k: original dimension
+    # p: projection dimension
+    # F: original inputs ............. matrix of dimension nxk
+    # B: basis functions ............. matrix of dimension pxk (one basis per column)
+    # X: projection coefficients ..... matrix of dimension nxp
+    bcj <- dimReduction(fIn, df, f_pdims, f_family)
+    f_basis <- bcj$basis
+    f_coefs <- bcj$coefs
+    f_J <- bcj$J
 
     # compute scalar distance matrices
     sMs <- setScalDistance(sIn, sIn)
 
     # compute functional distance matrices
-    fMs <- setFunDistance(fpIn, fpIn, J)
+    fMs <- setFunDistance(f_coefs, f_coefs, f_J)
 
     # optimize hyperparameters if some is required
     if (all(!is.null(var.hyp), !is.null(ls_s.hyp), !is.null(ls_f.hyp))) {
       varHyp <- var.hyp
       lsHyps <- c(ls_s.hyp, ls_f.hyp)
     } else {
-      hypers <- setHypers_SF(sIn, fpIn, J, sMs, fMs, sOut, kerType, var.hyp, ls_s.hyp, ls_f.hyp, n.starts, n.presample)
+      hypers <- setHypers_SF(sMs, fMs, sOut, kerType, var.hyp, ls_s.hyp, ls_f.hyp, n.starts, n.presample)
       varHyp <- hypers[1]
       lsHyps <- hypers[-1]
     }
@@ -182,49 +178,50 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
     # pre-commpute KttInv and KttInv.sOut matrices for prediction and add them to the model
     model@preMats <- preMats_SF(sMs, fMs, sOut, varHyp, lsHyps[1:ds], lsHyps[(ds+1):(ds+df)], kerType)
 
-    # fill funGpProj slots specific to the hybrid-input case
-    proj@doProj <- doProj
-    proj@fpDims <- fpDims
-    proj@basis <- basis
-    proj@coefs <- fpIn
+    # create objects funGpProj and fill with info specific to the hybrid-input case
+    f_proj <- new("funGpProj")
+    f_proj@pdims <- f_pdims
+    f_proj@family <- f_family
+    f_proj@basis <- f_basis
+    f_proj@coefs <- f_coefs
 
     # fill funGp slots specific to the hybrid-input case
     model@ds <- ds
     model@df <- df
-    model@fDims <- fDims
+    model@f_dims <- f_dims
     model@sIn <- sIn
     model@fIn <- fIn
     model@type = "hybrid"
+    model@f_proj <- f_proj
 
   } else if(!is.null(fIn)) { # functional-input case ***************************************
     # extract information from user inputs specific to the functional-input case
     df <- length(fIn)
-    fDims <- sapply(fIn, ncol)
+    f_dims <- sapply(fIn, ncol)
 
-    # Extend to other possible cases!!!!!!!!!!!!!!!!!!
-    if (all(doProj, is.null(fpDims))) {
-      fpDims <- rep(3, df)
-      # fpDims <- c(3,2)
-    }
-
-    # project functional inputs
-    basis <- fpIn <- J <- list()
-    for (i in 1:df) { # functional-input case
-      B <- (eigen(cov(fIn[[i]]))$vectors)[,1:fpDims[i]]
-      fpIn[[i]] <- t(solve(t(B) %*% B) %*% t(B) %*% t(fIn[[i]]))
-      J[[i]] <- t(B) %*% B
-      basis[[i]] <- B
-    }
+    # perform projection of functional inputs
+    # the projection is such that F = X * B' + e, with
+    #
+    # n: input points
+    # k: original dimension
+    # p: projection dimension
+    # F: original inputs ............. matrix of dimension nxk
+    # B: basis functions ............. matrix of dimension pxk (one basis per column)
+    # X: projection coefficients ..... matrix of dimension nxp
+    bcj <- dimReduction(fIn, df, f_pdims, f_family)
+    f_basis <- bcj$basis
+    f_coefs <- bcj$coefs
+    f_J <- bcj$J
 
     # compute functional distance matrices
-    fMs <- setFunDistance(fpIn, fpIn, J)
+    fMs <- setFunDistance(f_coefs, f_coefs, f_J)
 
     # optimize hyperparameters if some is required
     if (all(!is.null(var.hyp), !is.null(ls_f.hyp))) {
       varHyp <- var.hyp
       lsHyps <- ls_f.hyp
     } else {
-      hypers <- setHypers_F(fpIn, J, fMs, sOut, kerType, var.hyp, ls_f.hyp, n.starts, n.presample)
+      hypers <- setHypers_F(fMs, sOut, kerType, var.hyp, ls_f.hyp, n.starts, n.presample)
       varHyp <- hypers[1]
       lsHyps <- hypers[-1]
     }
@@ -235,18 +232,20 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
     # pre-commpute KttInv and KttInv.sOut matrices for prediction and add them to the model
     model@preMats <- preMats_F(fMs, sOut, varHyp, lsHyps, kerType)
 
-    # fill funGpProj slots specific to the hybrid-input case
-    proj@doProj <- doProj
-    proj@fpDims <- fpDims
-    proj@basis <- basis
-    proj@coefs <- fpIn
+    # create objects funGpProj and fill with info specific to the functional-input case
+    f_proj <- new("funGpProj")
+    f_proj@pdims <- f_pdims
+    f_proj@family <- f_family
+    f_proj@basis <- f_basis
+    f_proj@coefs <- f_coefs
 
     # fill funGp slots specific to the functional-input case
     model@ds <- 0
     model@df <- df
-    model@fDims <- fDims
+    model@f_dims <- f_dims
     model@fIn <- fIn
     model@type = "functional"
+    model@f_proj <- f_proj
 
   } else if(!is.null(sIn)) { # scalar-input case *******************************************
     # extract information from user inputs specific to the scalar-input case
@@ -284,7 +283,7 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
 
   # fill general funGpKern slots
   kern@kerType <- kerType
-  kern@disType <- disType
+  kern@f_disType <- f_disType
   kern@varHyp <- varHyp
 
   # fill general funGpModel slots
@@ -292,7 +291,6 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
   model@sOut <- sOut
   model@n.tot <- n.tr
   model@n.tr <- n.tr
-  model@proj <- proj
   model@kern <- kern
 
   # =====================================================================================================
@@ -307,18 +305,17 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
   # 6.  * sOut ............. matrix (n x 1) ...... scalar output
   # 7.  * n.tr ............. scalar .............. number of training points
   # 8.  * proj ............. proj ................ structures related to the projection
-  # 9.    - doProj ......... boolean ............. should projection of functional inputs be done?
-  # 10.   - fpDims ......... array (df) .......... projection dimension of each functional input
-  # 11.   - basis .......... list (df) ........... each element (fDims_i x fpDims_i) contains the basis
+  # 9.    - fpDims ......... array (df) .......... projection dimension of each functional input
+  # 10.   - basis .......... list (df) ........... each element (fDims_i x fpDims_i) contains the basis
   #                                                functions used for the projection of one fun. input
-  # 12.   - coefs .......... list (df) ........... each element (n x fpDims_i) contains the coefficients
+  # 11.   - coefs .......... list (df) ........... each element (n x fpDims_i) contains the coefficients
   #                                                used for the projection of one fun. input
-  # 13. * kern ............. kernel .............. structures related to the kernel
-  # 14.   - kerType ........ char ................ kernel type from {"gauss", "matern5_2", "matern3_2"}
-  # 15.   - disType ........ char ................ distance type from {"scalar", "functional"}
-  # 16.   - varHyp ......... scalar .............. estimated variance parameter
-  # 17.   - lsHyps ......... array (ds + df) ..... estimated length-scale parameters
-  # 18. * preMats .......... list (2) ............ KttInv and KttInv.sOut matrices for prediction
+  # 12. * kern ............. kernel .............. structures related to the kernel
+  # 13.   - kerType ........ char ................ kernel type from {"gauss", "matern5_2", "matern3_2"}
+  # 14.   - disType ........ char ................ distance type from {"scalar", "functional"}
+  # 15.   - varHyp ......... scalar .............. estimated variance parameter
+  # 16.   - lsHyps ......... array (ds + df) ..... estimated length-scale parameters
+  # 17. * preMats .......... list (2) ............ KttInv and KttInv.sOut matrices for prediction
   # =====================================================================================================
   return(model)
 }
@@ -331,6 +328,7 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, doProj = T, fpDims = NULL, kerTy
 #' @description This is my description
 #' @rdname show-methods
 #' @importFrom methods show
+#' @importFrom knitr kable
 #' @param object An object to show.
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
@@ -344,40 +342,26 @@ setMethod("show", "funGp", function(object) show.funGp(model = object))
 
 show.funGp <- function(model) {
   mainTxt <- "Gaussian Process Model"
-  callTxt <- paste("* Call: ", as.expression(model@call), sep = "")
-  cat(paste("\n", mainTxt, paste(rep("_", min(30, (nchar(callTxt) - nchar(mainTxt) - 1))), collapse = ""), sep = ""))
+  cat(paste("\n", mainTxt, paste(rep("_", 36), collapse = ""), sep = ""))
 
-  cat(paste("\n\n", callTxt, "\n\n", sep = ""))
-
-  cat(paste("* Scalar inputs: ", model@ds, "\n", sep = ""))
-  cat(paste("* Functional inputs: ", model@df, "\n", sep = ""))
+  cat(paste("\n\n* Scalar inputs: ", model@ds, "\n", sep = ""))
+  cat(paste("* Functional inputs: ", model@df, "", sep = ""))
   if (model@df > 0) {
-    cat("  -> Dimension:\n")
-    for (i in 1:model@df) {
-      cat(paste("\t F", i, ": ", model@fDims[i], "\n", sep = ""))
+    # browser()
+    np <- min(model@df, 8)
+    G <- cbind(paste("F", 1:np, sep = ""), model@f_dims, model@f_proj@pdims, model@f_proj@family, model@kern@f_disType)
+    colnames(G) <- c("Input", "Orig. dim", "Proj. dim", "Family", "Distance")
+    if (np < model@df) {
+      G <- rbind(G, rep("...", 5))
     }
+    print(kable(G, align = 'c', row.names = F))
   }
-  cat(paste("* Loaded data points: ", model@n.tot, "\n", sep = ""))
+
+  cat(paste("\n* Total data points: ", model@n.tot, "\n", sep = ""))
   cat(paste("* Trained with: ", model@n.tr, "\n\n", sep = ""))
 
   cat(paste("* Kernel type: ", model@kern@kerType, "\n", sep = ""))
-  cat(paste("* Distance type: ", model@kern@disType, "\n\n", sep = ""))
-
-  if (model@df > 0) {
-    cat(paste("* Do projection: ", model@proj@doProj, "\n", sep = ""))
-    if (model@proj@doProj) {
-      cat("  -> Proj. dimension:\n")
-      for (i in 1:model@df) {
-        if (model@proj@fpDims[i] > 0) {
-          cat(paste("\t F", i, ": ", model@proj@fpDims[i], "\n", sep = ""))
-        } else {
-          cat(paste("\t F", i, ": not required\n", sep = ""))
-        }
-      }
-    }
-  }
-
-  cat("\n* Hyperparameters:\n")
+  cat("* Hyperparameters:\n")
   cat(paste("  -> variance: ", format(model@kern@varHyp, digits = 3, nsmall = 4), "\n", sep = ""))
   cat("  -> length-scale:\n")
   if (model@ds > 0) {
@@ -390,7 +374,7 @@ show.funGp <- function(model) {
       cat(paste("\t ls(F", i, "): ", format(model@kern@f_lsHyps[i], digits = 3, nsmall = 4), "\n", sep = ""))
     }
   }
-  cat(paste(rep("_", max(30, (nchar(callTxt)))), collapse = ""))
+  cat(paste(rep("_", 58), collapse = ""))
 }
 # ----------------------------------------------------------------------------------------------------------
 
@@ -470,20 +454,17 @@ predict.funGp <- function(model, sIn.pr, fIn.pr, detail = "light") {
     sIn.pr <- as.matrix(sIn.pr)
 
     # project functional inputs
-    fpIn.pr <- J <- list()
-    for (i in 1:model@df) {
-      B <- model@proj@basis[[i]]
-      fpIn.pr[[i]] <- t(solve(t(B) %*% B) %*% t(B) %*% t(fIn.pr[[i]]))
-      J[[i]] <- t(B) %*% B
-    }
+    f_basis <- model@f_proj@basis
+    f_coefs.pr <- mapply(function(B, f) t(solve(crossprod(B), tcrossprod(t(B),f))), f_basis, fIn.pr, SIMPLIFY = F)
+    f_J <- lapply(f_basis, crossprod)
 
     # compute scalar distance matrices
     sMs.tp <- setScalDistance(model@sIn, sIn.pr)
     sMs.pp <- setScalDistance(sIn.pr, sIn.pr)
 
     # compute functional distance matrices
-    fMs.tp <- setFunDistance(model@proj@coefs, fpIn.pr, J)
-    fMs.pp <- setFunDistance(fpIn.pr, fpIn.pr, J)
+    fMs.tp <- setFunDistance(model@f_proj@coefs, f_coefs.pr, f_J)
+    fMs.pp <- setFunDistance(f_coefs.pr, f_coefs.pr, f_J)
 
     # make predictions based on the Gaussian Conditioning Theorem
     preds <- makePreds_SF(sMs.tp, sMs.pp, fMs.tp, fMs.pp,
@@ -494,16 +475,13 @@ predict.funGp <- function(model, sIn.pr, fIn.pr, detail = "light") {
     print("I'm functional!")
 
     # project functional inputs
-    fpIn.pr <- J <- list()
-    for (i in 1:model@df) {
-      B <- model@proj@basis[[i]]
-      fpIn.pr[[i]] <- t(solve(t(B) %*% B) %*% t(B) %*% t(fIn.pr[[i]]))
-      J[[i]] <- t(B) %*% B
-    }
+    f_basis <- model@f_proj@basis
+    f_coefs.pr <- mapply(function(B, f) t(solve(crossprod(B), tcrossprod(t(B),f))), f_basis, fIn.pr, SIMPLIFY = F)
+    f_J <- lapply(f_basis, crossprod)
 
     # compute functional distance matrices
-    fMs.tp <- setFunDistance(model@proj@coefs, fpIn.pr, J)
-    fMs.pp <- setFunDistance(fpIn.pr, fpIn.pr, J)
+    fMs.tp <- setFunDistance(model@f_proj@coefs, f_coefs.pr, f_J)
+    fMs.pp <- setFunDistance(f_coefs.pr, f_coefs.pr, f_J)
 
     # make predictions based on the Gaussian Conditioning Theorem
     preds <- makePreds_F(fMs.tp, fMs.pp, model@kern@varHyp, model@kern@f_lsHyps, model@kern@kerType,
@@ -624,20 +602,17 @@ simulate.funGp <- function(model, nsim, seed, sIn.sm, fIn.sm, nug.sim, detail) {
     sIn.sm <- as.matrix(sIn.sm)
 
     # project functional inputs
-    fpIn.sm <- J <- list()
-    for (i in 1:model@df) {
-      B <- model@proj@basis[[i]]
-      fpIn.sm[[i]] <- t(solve(t(B) %*% B) %*% t(B) %*% t(fIn.sm[[i]]))
-      J[[i]] <- t(B) %*% B
-    }
+    f_basis <- model@f_proj@basis
+    f_coefs.sm <- mapply(function(B, f) t(solve(crossprod(B), tcrossprod(t(B),f))), f_basis, fIn.sm, SIMPLIFY = F)
+    f_J <- lapply(f_basis, crossprod)
 
     # compute scalar distance matrices
     sMs.ts <- setScalDistance(model@sIn, sIn.sm)
     sMs.ss <- setScalDistance(sIn.sm, sIn.sm)
 
     # compute functional distance matrices
-    fMs.ts <- setFunDistance(model@proj@coefs, fpIn.sm, J)
-    fMs.ss <- setFunDistance(fpIn.sm, fpIn.sm, J)
+    fMs.ts <- setFunDistance(model@f_proj@coefs, f_coefs.sm, f_J)
+    fMs.ss <- setFunDistance(f_coefs.sm, f_coefs.sm, f_J)
 
     # make simulations based on the Gaussian Conditioning Theorem
     sims <- makeSims_SF(sMs.ts, sMs.ss, fMs.ts, fMs.ss,
@@ -647,9 +622,14 @@ simulate.funGp <- function(model, nsim, seed, sIn.sm, fIn.sm, nug.sim, detail) {
   } else if (model@df > 0) { # functional-input case *******************************************
     print("I'm functional!")
 
+    # project functional inputs
+    f_basis <- model@f_proj@basis
+    f_coefs.sm <- mapply(function(B, f) t(solve(crossprod(B), tcrossprod(t(B),f))), f_basis, fIn.sm, SIMPLIFY = F)
+    f_J <- lapply(f_basis, crossprod)
+
     # compute functional distance matrices
-    fMs.ts <- setFunDistance(model@proj@coefs, fpIn.sm, J)
-    fMs.ss <- setFunDistance(fpIn.sm, fpIn.sm, J)
+    fMs.ts <- setFunDistance(model@f_proj@coefs, f_coefs.sm, f_J)
+    fMs.ss <- setFunDistance(f_coefs.sm, f_coefs.sm, f_J)
 
     # make simulations based on the Gaussian Conditioning Theorem
     sims <- makeSims_F(fMs.ts, fMs.ss, model@kern@varHyp, model@kern@f_lsHyps, model@kern@kerType,

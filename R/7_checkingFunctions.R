@@ -12,10 +12,10 @@ checkVal_funGp <- function(env){
     }
 
     # consistency in projection dimension
-    if (!is.null(env$fpDims)) {
-      if (length(env$fpDims) != length(env$fIn)) {
+    if (!is.null(env$f_pdims)) {
+      if (length(env$f_pdims) != length(env$fIn)) {
         stop(paste("Inconsistent number of projection dimensions. The functional input list has", length(env$fIn), "elements, but",
-                   length(env$fpDims), "projection dimensions were specified."))
+                   length(env$f_pdims), "projection dimensions were specified."))
       }
     }
 
@@ -26,10 +26,15 @@ checkVal_funGp <- function(env){
     }
 
     # consistency in projection dimension
-    if (!is.null(env$fpDims)) {
-      if (length(env$fpDims) != length(env$fIn)) {
-        stop(paste("Inconsistent number of projection dimensions. The functional input list has", length(env$fIn), "elements, but",
-                   length(env$fpDims), "projection dimensions were specified."))
+    if (!is.null(env$f_pdims)) {
+      if (length(env$f_pdims) != length(env$fIn)) {
+        if (length(env$f_pdims) == 1) {
+          stop(paste("Inconsistent number of projection dimensions. The functional input list has", length(env$fIn), "elements, but only",
+                     length(env$f_pdims), "projection dimension was specified."))
+        } else {
+          stop(paste("Inconsistent number of projection dimensions. The functional input list has", length(env$fIn), "elements, but",
+                     length(env$f_pdims), "projection dimensions were specified."))
+        }
       }
     }
 
@@ -238,7 +243,7 @@ check_subHypers <- function(env) {
         stop(paste("The model has ", length(model@kern@s_lsHyps), " scalar length-scale parameters, but you provided",
                    length(env$ls_s.sb), " instead for substitution. Please check your inputs.", sep = ""))
       }
-      if (env$ls_s.sb <= 0) stop("Length-scale parameters should be positive real numbers. Please check your ls_s.sb vector.")
+      if (any(env$ls_s.sb <= 0)) stop("Length-scale parameters should be positive real numbers. Please check your ls_s.sb vector.")
     }
 
     # consistency of dimension of functional length-scale vector if provided
@@ -247,7 +252,7 @@ check_subHypers <- function(env) {
         stop(paste("The model has ", length(model@kern@f_lsHyps), " functional length-scale parameters, but you provided",
                    length(env$ls_f.sb), " instead for substitution. Please check your inputs.", sep = ""))
       }
-      if (env$ls_f.sb <= 0) stop("Length-scale parameters should be positive real numbers. Please check your ls_f.sb vector.")
+      if (any(env$ls_f.sb <= 0)) stop("Length-scale parameters should be positive real numbers. Please check your ls_f.sb vector.")
     }
 
 

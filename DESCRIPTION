@@ -9,7 +9,7 @@ Description: Fitting, validation and prediction of Gaussian process models with 
 Note: internal package of the RISCOPE project
     (ANR, project No.16CE04-0011) <https://perso.math.univ-toulouse.fr/riscope/>.
 License: GPL-3
-Depends: R (>= 3.0.1), methods, foreach
+Depends: R (>= 3.0.1), methods, foreach, knitr
 Suggests: viridis, R.rsp
 Encoding: UTF-8
 LazyData: true
@@ -32,8 +32,10 @@ Collate:
     '7_blackBoxFunctions.R'
     '7_checkingFunctions.R'
     '7_correlFunctions.R'
+    '7_dimRedFunctions.R'
     '7_distanceFunctions.R'
     '8_examplesManual.R'
     '8_examplesPackage.R'
     'zzz_Paralelizacion.R'
+    'zzz_auxFunctions.R'
 VignetteBuilder: R.rsp

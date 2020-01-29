@@ -12,7 +12,7 @@ Fill this!!!!!!!!!
 \describe{
 \item{\code{kerType}}{Object of class \code{"character"}. Kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}.}
 
-\item{\code{disType}}{Object of class \code{"character"}. Distance type. To be chosen from {"scalar", "functional"}.}
+\item{\code{f_disType}}{Object of class \code{"character"}. Distance type. To be chosen from {"scalar", "functional"}.}
 
 \item{\code{varHyp}}{Object of class \code{"numeric"}. Estimated variance parameter.}
 

@@ -8,10 +8,10 @@ funGp(
   sIn = NULL,
   fIn = NULL,
   sOut,
-  doProj = T,
-  fpDims = NULL,
   kerType = "matern5_2",
-  disType = "functional",
+  f_disType = "functional",
+  f_pdims = 3,
+  f_family = "PCA",
   var.hyp = NULL,
   ls_s.hyp = NULL,
   ls_f.hyp = NULL,
@@ -27,18 +27,18 @@ and each row a training point.}
 matrix.}
 
 \item{sOut}{a vector (or 1-column matrix) containing the values of the scalar output at the training
-points.}
-
-\item{doProj}{a boolean indicating whether a projection of the inputs should be done for dimension
+points.
 reduction.}
-
-\item{fpDims}{an optional array with the projection dimension for each functional input.}
 
 \item{kerType}{an optional character specifying the covariance structure to be used. To be chosen between
 "gauss", "matern5_2" and "matern3_2". Default is "matern5_2".}
 
-\item{disType}{an optional character specifying the distance function to use for the functional inputs
+\item{f_disType}{an optional character specifying the distance function to use for the functional inputs
 within the covariance function. To be chosen between "scalar" and "functional". Default is "functional".}
+
+\item{f_pdims}{an optional array with the projection dimension for each functional input.}
+
+\item{f_family}{fill!!!!!!}
 
 \item{var.hyp}{fill!!!!!!}
 

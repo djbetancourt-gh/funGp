@@ -18,7 +18,7 @@ To create a funGp object, use \link[funGp]{funGp} . See also this function for m
 
 \item{\code{df}}{Object of class \code{"numeric"}. Number of functional inputs.}
 
-\item{\code{fDims}}{Object of class \code{"numeric"}. Dimension of each functional input.}
+\item{\code{f_dims}}{Object of class \code{"numeric"}. Dimension of each functional input.}
 
 \item{\code{sIn}}{Object of class \code{"matrix"}. Scalar inputs.}
 
@@ -30,7 +30,7 @@ To create a funGp object, use \link[funGp]{funGp} . See also this function for m
 
 \item{\code{n.tr}}{Object of class \code{"integer"}. Number of training points.}
 
-\item{\code{proj}}{Object of class \code{"funGpProj"}. Data structures related to the projection.}
+\item{\code{f_proj}}{Object of class \code{"funGpProj"}. Data structures related to the projection of functional inputs.}
 
 \item{\code{kern}}{Object of class \code{"funGpKern"}. Data structures related to the kernel.}
 

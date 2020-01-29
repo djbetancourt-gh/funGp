@@ -5,9 +5,6 @@
 \title{Optimization of hyperparameters for funGp models}
 \usage{
 setHypers_SF(
-  sIn,
-  fpIn,
-  J,
   sMs,
   fMs,
   sOut,
@@ -20,14 +17,6 @@ setHypers_SF(
 )
 }
 \arguments{
-\item{sIn}{a matrix of scalar input values to train the model. Each column must match an input variable and each row a training point.}
-
-\item{fpIn}{a list with as many elements as functional inputs. The i-th element must be a matrix with the projection coefficients
-for the i-th functional input.}
-
-\item{J}{a list with as many elements as functional inputs. The i-th element must be the Gram matrix of the basis functions used for
-the projection of the i-th functional input.}
-
 \item{sMs}{a list with as many elements as scalar input variables. Each element of the list is a n times n matrix of differences
 between the scalar observation coordinates.}
 

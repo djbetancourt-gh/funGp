@@ -1,10 +1,6 @@
 #' @title Optimization of hyperparameters for funGp models
 #' @description Sets good values for the hyperparameters of the Gaussian process model based on optimization.
 #'
-#' @param fpIn a list with as many elements as functional inputs. The i-th element must be a matrix with the projection coefficients
-#' for the i-th functional input.
-#' @param J a list with as many elements as functional inputs. The i-th element must be the Gram matrix of the basis functions used for
-#' the projection of the i-th functional input.
 #' @param fMs a list with as many elements as functional input variables. Each element of the list is a n times n matrix of differences
 #' between the functional observation coordinates.
 #' @param sOut a vector (or 1-column matrix) containing the values of the scalar output at the training points.
@@ -19,7 +15,7 @@
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
-setHypers_F <- function(fpIn, J, fMs, sOut, kerType, var.known, ls_f.known, n.starts, n.presample){
+setHypers_F <- function(fMs, sOut, kerType, var.known, ls_f.known, n.starts, n.presample){
   # if the length-scale coefficients are known, skip optim and compute var analytically. Else optimize
   if (!is.null(ls_f.known)) {
     # 1. estimation of the correlation matrix

@@ -3,7 +3,7 @@
 \docType{package}
 \name{funGp-package}
 \alias{funGp-package}
-\title{funGp: Fill!!!!}
+\title{Gaussian Process Models for Scalar and Functional Inputs}
 \description{
 Fill!!!
 }

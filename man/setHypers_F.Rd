@@ -4,25 +4,9 @@
 \alias{setHypers_F}
 \title{Optimization of hyperparameters for funGp models}
 \usage{
-setHypers_F(
-  fpIn,
-  J,
-  fMs,
-  sOut,
-  kerType,
-  var.known,
-  ls_f.known,
-  n.starts,
-  n.presample
-)
+setHypers_F(fMs, sOut, kerType, var.known, ls_f.known, n.starts, n.presample)
 }
 \arguments{
-\item{fpIn}{a list with as many elements as functional inputs. The i-th element must be a matrix with the projection coefficients
-for the i-th functional input.}
-
-\item{J}{a list with as many elements as functional inputs. The i-th element must be the Gram matrix of the basis functions used for
-the projection of the i-th functional input.}
-
 \item{fMs}{a list with as many elements as functional input variables. Each element of the list is a n times n matrix of differences
 between the functional observation coordinates.}
 
