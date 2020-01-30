@@ -16,7 +16,8 @@ funGp(
   ls_s.hyp = NULL,
   ls_f.hyp = NULL,
   n.starts = 1,
-  n.presample = 20
+  n.presample = 20,
+  nugget = 10^-8
 )
 }
 \arguments{
@@ -49,6 +50,8 @@ within the covariance function. To be chosen between "scalar" and "functional". 
 \item{n.starts}{Fill!!!!!!!!!!}
 
 \item{n.presample}{Fill!!!!!!!!!!}
+
+\item{nugget}{Fill!!!!!!!!!!}
 }
 \description{
 Creates a Gaussian process model based on the nature of the inputs which could be scalar,
@@ -62,7 +65,8 @@ sIn <- expand.grid(x1 = seq(0,1,length = sqrt(n.tr)), x2 = seq(0,1,length = sqrt
 fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), matrix(runif(n.tr*22), ncol = 22))
 
 # generating output data for training
-sOut <- as.matrix(sapply(t(1:n.tr), function(i){
+sOut <- as.matrix(sapply(t(1:n.tr),
+function(i){
   x1 <- sIn[i,1]
   x2 <- sIn[i,2]
   f1 <- fIn[[1]][i,]

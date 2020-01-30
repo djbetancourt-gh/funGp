@@ -1,5 +1,5 @@
 #' @author José Betancourt, François Bachoc and Thierry Klein
-makeSims_F <- function(fMs.ts, fMs.ss, sig2, thetas_f, kerType, L, LInvY, nsim, nug.sim, detail){
+makeSims_F <- function(fMs.ts, fMs.ss, sig2, thetas_f, kerType, L, LInvY, nsim, nugget.sm, detail){
   # create empty prediction list
   sims <- list()
 
@@ -9,7 +9,7 @@ makeSims_F <- function(fMs.ts, fMs.ss, sig2, thetas_f, kerType, L, LInvY, nsim, 
   LInvK <- backsolve(L, K.ts, upper.tri = F)
   ys.mean <- t(LInvK) %*% LInvY
   n.sm <- nrow(K.ss)
-  ys.noise <- t(chol(K.ss - t(LInvK) %*% LInvK + diag(nug.sim, n.sm))) %*% matrix(rnorm(n.sm * nsim), n.sm, nsim)
+  ys.noise <- t(chol(K.ss - t(LInvK) %*% LInvK + diag(nugget.sm, n.sm))) %*% matrix(rnorm(n.sm * nsim), n.sm, nsim)
   sims$obs <- t(matrix(ys.mean, n.sm, nsim) + ys.noise)
 
   if (detail == "full") {

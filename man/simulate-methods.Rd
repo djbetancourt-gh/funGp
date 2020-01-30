@@ -13,7 +13,7 @@ simulate(object, nsim = 1, seed = NULL, ...)
   seed = NULL,
   sIn.sm = NULL,
   fIn.sm = NULL,
-  nug.sim = 0,
+  nugget.sm = 0,
   detail = "light",
   ...
 )
@@ -31,7 +31,7 @@ simulate(object, nsim = 1, seed = NULL, ...)
 
 \item{fIn.sm}{fill!!}
 
-\item{nug.sim}{fill!!!}
+\item{nugget.sm}{fill!!!}
 
 \item{detail}{fill!!!}
 }

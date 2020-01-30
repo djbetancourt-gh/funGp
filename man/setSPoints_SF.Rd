@@ -14,7 +14,8 @@ setSPoints_SF(
   ls_s.known,
   ls_f.known,
   n.starts,
-  n.presample
+  n.presample,
+  nugget
 )
 }
 \arguments{

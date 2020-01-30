@@ -12,7 +12,8 @@ setHypers_S(
   var.known,
   ls_s.known,
   n.starts,
-  n.presample
+  n.presample,
+  nugget
 )
 }
 \arguments{
@@ -32,6 +33,8 @@ between the scalar observation coordinates.}
 \item{n.starts}{Fill!!!!!!!!!!}
 
 \item{n.presample}{Fill!!!!!!!!!!}
+
+\item{nugget}{Fill!!!!!!!!!!}
 }
 \value{
 The hyperparameters.

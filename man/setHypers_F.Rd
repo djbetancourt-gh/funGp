@@ -4,7 +4,16 @@
 \alias{setHypers_F}
 \title{Optimization of hyperparameters for funGp models}
 \usage{
-setHypers_F(fMs, sOut, kerType, var.known, ls_f.known, n.starts, n.presample)
+setHypers_F(
+  fMs,
+  sOut,
+  kerType,
+  var.known,
+  ls_f.known,
+  n.starts,
+  n.presample,
+  nugget
+)
 }
 \arguments{
 \item{fMs}{a list with as many elements as functional input variables. Each element of the list is a n times n matrix of differences
@@ -21,6 +30,8 @@ between the functional observation coordinates.}
 \item{n.starts}{Fill!!!!!!!!!!}
 
 \item{n.presample}{Fill!!!!!!!!!!}
+
+\item{nugget}{Fill!!!!!!!!!!}
 }
 \value{
 The hyperparameters.

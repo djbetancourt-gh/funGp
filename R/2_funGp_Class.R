@@ -19,6 +19,7 @@
 #' @slot n.tr Object of class \code{"integer"}. Number of training points.
 #' @slot f_proj Object of class \code{"funGpProj"}. Data structures related to the projection of functional inputs.
 #' @slot kern Object of class \code{"funGpKern"}. Data structures related to the kernel.
+#' @slot nugget Object of class \code{"numeric"}. Fill!!!!!!!!!!
 #' @slot preMats Object of class \code{"list"}. L and LInvY matrices pre-computed for prediction. L is a lower diagonal matrix such that
 #' \eqn{L'L} equals the training cross covariance matrix \eqn{K.tt}. On the other hand, \eqn{LInvY = L^(-1) * sOut}.
 #'
@@ -40,8 +41,9 @@ setClass("funGp",
            sOut = "matrix",            # scalar output
            n.tot = "integer",          # number of observed points
            n.tr = "integer",           # number of training points
-           f_proj = "funGpProj",         # structures related to the projection of functional inputs
+           f_proj = "funGpProj",       # structures related to the projection of functional inputs
            kern = "funGpKern",         # structures related to the kernel
+           nugget = "numeric",         # Fill!!!!!!!!!!
            preMats = "list"            # Pre-computed KttInv and KttInv.sOut matrices
          ),
          validity = function(object) {T})
@@ -77,6 +79,7 @@ setClass("funGp",
 #' @param ls_f.hyp fill!!!!!!
 #' @param n.starts Fill!!!!!!!!!!
 #' @param n.presample Fill!!!!!!!!!!
+#' @param nugget Fill!!!!!!!!!!
 #'
 #' @importFrom methods new
 #' @importFrom stats optim
@@ -89,7 +92,8 @@ setClass("funGp",
 #' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), matrix(runif(n.tr*22), ncol = 22))
 #'
 #' # generating output data for training
-#' sOut <- as.matrix(sapply(t(1:n.tr), function(i){
+#' sOut <- as.matrix(sapply(t(1:n.tr),
+#' function(i){
 #'   x1 <- sIn[i,1]
 #'   x2 <- sIn[i,2]
 #'   f1 <- fIn[[1]][i,]
@@ -110,7 +114,7 @@ setClass("funGp",
 funGp <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
                   f_disType = "L2_bygroup", f_pdims = 3, f_family = "PCA",
                   var.hyp = NULL, ls_s.hyp = NULL, ls_f.hyp = NULL,
-                  n.starts = 1, n.presample = 20) {
+                  n.starts = 1, n.presample = 20, nugget = 10^-8) {
   # extend simplified user inputs to full versions
   if (!is.null(fIn)) {
     if (length(f_disType) == 1) f_disType <- rep(f_disType, length(fIn))
@@ -167,7 +171,7 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
       varHyp <- var.hyp
       lsHyps <- c(ls_s.hyp, ls_f.hyp)
     } else {
-      hypers <- setHypers_SF(sMs, fMs, sOut, kerType, var.hyp, ls_s.hyp, ls_f.hyp, n.starts, n.presample)
+      hypers <- setHypers_SF(sMs, fMs, sOut, kerType, var.hyp, ls_s.hyp, ls_f.hyp, n.starts, n.presample, nugget)
       varHyp <- hypers[1]
       lsHyps <- hypers[-1]
     }
@@ -217,7 +221,7 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
       varHyp <- var.hyp
       lsHyps <- ls_f.hyp
     } else {
-      hypers <- setHypers_F(fMs, sOut, kerType, var.hyp, ls_f.hyp, n.starts, n.presample)
+      hypers <- setHypers_F(fMs, sOut, kerType, var.hyp, ls_f.hyp, n.starts, n.presample, nugget)
       varHyp <- hypers[1]
       lsHyps <- hypers[-1]
     }
@@ -257,7 +261,7 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
       varHyp <- var.hyp
       lsHyps <- ls_s.hyp
     } else {
-      hypers <- setHypers_S(sIn, sMs, sOut, kerType, var.hyp, ls_s.hyp, n.starts, n.presample)
+      hypers <- setHypers_S(sIn, sMs, sOut, kerType, var.hyp, ls_s.hyp, n.starts, n.presample, nugget)
       varHyp <- hypers[1]
       lsHyps <- hypers[-1]
     }
@@ -289,6 +293,7 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
   model@n.tot <- n.tr
   model@n.tr <- n.tr
   model@kern <- kern
+  model@nugget <- nugget
 
   # =====================================================================================================
   # Attributes checklist
@@ -537,7 +542,7 @@ predict.funGp <- function(model, sIn.pr, fIn.pr, detail = "light") {
 #' @param seed fill!!!
 #' @param sIn.sm fill!!
 #' @param fIn.sm fill!!
-#' @param nug.sim fill!!!
+#' @param nugget.sm fill!!!
 #' @param detail fill!!!
 #' @param ... Further arguments for methods.
 #'
@@ -591,12 +596,12 @@ setGeneric(name = "simulate", def = function(object, nsim = 1, seed = NULL, ...)
 #' @rdname simulate-methods
 #' @aliases simulate,funGp-method
 setMethod("simulate", "funGp",
-          function(object, nsim = 1, seed = NULL, sIn.sm = NULL, fIn.sm = NULL, nug.sim = 0, detail = "light", ...) {
+          function(object, nsim = 1, seed = NULL, sIn.sm = NULL, fIn.sm = NULL, nugget.sm = 0, detail = "light", ...) {
             simulate.funGp(model = object, nsim = nsim, seed = seed, sIn.sm = sIn.sm, fIn.sm = fIn.sm,
-                           nug.sim = nug.sim, detail = detail)
+                           nugget.sm = nugget.sm, detail = detail)
           })
 
-simulate.funGp <- function(model, nsim, seed, sIn.sm, fIn.sm, nug.sim, detail) {
+simulate.funGp <- function(model, nsim, seed, sIn.sm, fIn.sm, nugget.sm = 10^-8, detail) {
   # check validity of user inputs
   checkVal_pred_and_sim(as.list(environment()))
 
@@ -623,7 +628,7 @@ simulate.funGp <- function(model, nsim, seed, sIn.sm, fIn.sm, nug.sim, detail) {
     # make simulations based on the Gaussian Conditioning Theorem
     sims <- makeSims_SF(sMs.ts, sMs.ss, fMs.ts, fMs.ss,
                         model@kern@varHyp, model@kern@s_lsHyps, model@kern@f_lsHyps,
-                        model@kern@kerType, model@preMats$L, model@preMats$LInvY, nsim, nug.sim, detail)
+                        model@kern@kerType, model@preMats$L, model@preMats$LInvY, nsim, nugget.sm, detail)
 
   } else if (model@df > 0) { # functional-input case *******************************************
     print("I'm functional!")
@@ -639,7 +644,7 @@ simulate.funGp <- function(model, nsim, seed, sIn.sm, fIn.sm, nug.sim, detail) {
 
     # make simulations based on the Gaussian Conditioning Theorem
     sims <- makeSims_F(fMs.ts, fMs.ss, model@kern@varHyp, model@kern@f_lsHyps, model@kern@kerType,
-                       model@preMats$L, model@preMats$LInvY, nsim, nug.sim, detail)
+                       model@preMats$L, model@preMats$LInvY, nsim, nugget.sm, detail)
 
   } else { # scalar-input case *******************************************
     print("I'm scalar!")
@@ -653,7 +658,7 @@ simulate.funGp <- function(model, nsim, seed, sIn.sm, fIn.sm, nug.sim, detail) {
 
     # make simulations based on the Gaussian Conditioning Theorem
     sims <- makeSims_S(sMs.ts, sMs.ss, model@kern@varHyp, model@kern@s_lsHyps, model@kern@kerType,
-                       model@preMats$L, model@preMats$LInvY, nsim, nug.sim, detail)
+                       model@preMats$L, model@preMats$LInvY, nsim, nugget.sm, detail)
   }
 
   # if detail == 'full', confidence intervals at simulation points are provided,

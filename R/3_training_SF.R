@@ -17,18 +17,19 @@
 #' @param ls_f.known Fill!!!!!!!!!!
 #' @param n.starts Fill!!!!!!!!!!
 #' @param n.presample Fill!!!!!!!!!!
+#' @param nugget Fill!!!!!!!!!!
 #' @return The hyperparameters.
 #'
 #' @keywords internal
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
-setHypers_SF <- function(sMs, fMs, sOut, kerType, var.known, ls_s.known, ls_f.known, n.starts, n.presample){
+setHypers_SF <- function(sMs, fMs, sOut, kerType, var.known, ls_s.known, ls_f.known, n.starts, n.presample, nugget){
   # if all the length-scale coefficients are known, skip optim and compute var analytically. Else optimize
   if (all(!is.null(ls_s.known), !is.null(ls_f.known))) {
     # 1. estimation of the correlation matrix
     n.tr <- length(sOut)
-    R <- setR(ls_s.known, sMs, kerType) * setR(ls_f.known, fMs, kerType) # + diag(10^-8, nrow = n.tr, ncol = n.tr)!!!!!!!!!!!
+    R <- setR(ls_s.known, sMs, kerType) * setR(ls_f.known, fMs, kerType) + diag(nugget, nrow = n.tr, ncol = n.tr)
     U <- chol(R)
 
     # 2. estimate the a priori process variance
@@ -58,11 +59,11 @@ setHypers_SF <- function(sMs, fMs, sOut, kerType, var.known, ls_s.known, ls_f.kn
 
     # 3. set starting points
     cat("** Presampling...\n")
-    spoints <- setSPoints_SF(bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known, n.starts, n.presample)
+    spoints <- setSPoints_SF(bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known, n.starts, n.presample, nugget)
 
     # 4. Perform optimization
     cat("** Optimising...\n")
-    return(optimHypers_SF(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known))
+    return(optimHypers_SF(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known, nugget))
   }
 }
 # -------------------------------------------------------------------------------------------------------------------------------------
@@ -119,7 +120,7 @@ setBounds_SF <- function(sMs, fMs){
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
-setSPoints_SF <- function(bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known, n.starts, n.presample){
+setSPoints_SF <- function(bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known, n.starts, n.presample, nugget){
   # recover lower and upper limits
   ll <- bnds[1,]
   ul <- bnds[2,]
@@ -130,7 +131,7 @@ setSPoints_SF <- function(bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_
   allspoints <- ll + allspoints * (ul - ll)
 
   # compute fitness of each starting point
-  fitvec <- apply(allspoints, 2, negLogLik_funGp_SF, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known)
+  fitvec <- apply(allspoints, 2, negLogLik_funGp_SF, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known, nugget)
 
   # get the best n.starts points
   spoints <- allspoints[,order(fitvec)[1:n.starts], drop = F]
@@ -162,13 +163,13 @@ setSPoints_SF <- function(bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
-optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known){
+optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known, nugget){
   # if multistart is required then parallelize, else run single optimization
   if (n.starts == 1){
     optOut <- optim(par = as.numeric(spoints), fn = negLogLik_funGp_SF, method = "L-BFGS-B",
                    lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
                    sMs = sMs, fMs = fMs, sOut = sOut, kerType = kerType,
-                   varfun = varfun, ls_s.known = ls_s.known, ls_f.known = ls_f.known)
+                   varfun = varfun, ls_s.known = ls_s.known, ls_f.known = ls_f.known, nugget = nugget)
   } else {
     # if (!requireNamespace("foreach", quietly = TRUE)){
     if (!getDoParRegistered()){
@@ -177,14 +178,14 @@ optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, var
         optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_SF, method = "L-BFGS-B",
               lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
               sMs = sMs, fMs = fMs, sOut = sOut, kerType = kerType,
-              varfun = varfun, ls_s.known = ls_s.known, ls_f.known = ls_f.known)})
+              varfun = varfun, ls_s.known = ls_s.known, ls_f.known = ls_f.known, nugget = nugget)})
     } else {
       cat("Parallel backend register found. Multistart optimizations done in parallel.\n")
       optOutList <- "%dopar%"(foreach(i = 1:n.starts, .errorhandling = 'remove'), {
         optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_SF, method = "L-BFGS-B",
               lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
               sMs = sMs, fMs = fMs, sOut = sOut, kerType = kerType,
-              varfun = varfun, ls_s.known = ls_s.known, ls_f.known = ls_f.known)})
+              varfun = varfun, ls_s.known = ls_s.known, ls_f.known = ls_f.known, nugget = nugget)})
     }
 
     # check if there are usable results
@@ -213,7 +214,7 @@ optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, var
 
   # recovering relevant information for the estimation of the process a priori variance
   n.tr <- length(sOut)
-  R <- setR(thetas_s, sMs, kerType) * setR(thetas_f, fMs, kerType) # + diag(10^-8, nrow = n.tr, ncol = n.tr)
+  R <- setR(thetas_s, sMs, kerType) * setR(thetas_f, fMs, kerType) + diag(nugget, nrow = n.tr, ncol = n.tr)
   U <- chol(R)
 
   # estimation of the variance
@@ -242,7 +243,7 @@ optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, var
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
-negLogLik_funGp_SF <- function(thetas, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known){
+negLogLik_funGp_SF <- function(thetas, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known, nugget){
   # recovering length-scale hypers linked to scalar and functional inputs
   ds <- length(sMs)
   df <- length(fMs)
@@ -259,7 +260,7 @@ negLogLik_funGp_SF <- function(thetas, sMs, fMs, sOut, kerType, varfun, ls_s.kno
 
   # Estimation of the correlation matrix
   n.tr <- length(sOut)
-  R <- setR(thetas_s, sMs, kerType) * setR(thetas_f, fMs, kerType) # + diag(10^-8, nrow = n.tr, ncol = n.tr)
+  R <- setR(thetas_s, sMs, kerType) * setR(thetas_f, fMs, kerType) + diag(nugget, nrow = n.tr, ncol = n.tr)
   U <- chol(R)
 
   # Estimation of the a priori process variance

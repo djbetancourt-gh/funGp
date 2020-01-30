@@ -12,7 +12,8 @@ negLogLik_funGp_SF(
   kerType,
   varfun,
   ls_s.known,
-  ls_f.known
+  ls_f.known,
+  nugget
 )
 }
 \arguments{

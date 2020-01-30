@@ -34,6 +34,8 @@ To create a funGp object, use \link[funGp]{funGp} . See also this function for m
 
 \item{\code{kern}}{Object of class \code{"funGpKern"}. Data structures related to the kernel.}
 
+\item{\code{nugget}}{Object of class \code{"numeric"}. Fill!!!!!!!!!!}
+
 \item{\code{preMats}}{Object of class \code{"list"}. L and LInvY matrices pre-computed for prediction. L is a lower diagonal matrix such that
 \eqn{L'L} equals the training cross covariance matrix \eqn{K.tt}. On the other hand, \eqn{LInvY = L^(-1) * sOut}.}
 }}

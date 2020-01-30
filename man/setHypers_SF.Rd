@@ -13,7 +13,8 @@ setHypers_SF(
   ls_s.known,
   ls_f.known,
   n.starts,
-  n.presample
+  n.presample,
+  nugget
 )
 }
 \arguments{
@@ -36,6 +37,8 @@ between the functional observation coordinates.}
 \item{n.starts}{Fill!!!!!!!!!!}
 
 \item{n.presample}{Fill!!!!!!!!!!}
+
+\item{nugget}{Fill!!!!!!!!!!}
 }
 \value{
 The hyperparameters.
