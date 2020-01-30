@@ -9,7 +9,7 @@ funGp(
   fIn = NULL,
   sOut,
   kerType = "matern5_2",
-  f_disType = "functional",
+  f_disType = "L2_bygroup",
   f_pdims = 3,
   f_family = "PCA",
   var.hyp = NULL,

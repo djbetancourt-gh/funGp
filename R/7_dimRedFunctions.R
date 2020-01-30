@@ -53,6 +53,7 @@ proj_bsplines <- function(f, p){
 
 # PCA
 # ----------------------------------------------------------------------------------------------------------
+#' @importFrom stats cov
 proj_pca <- function(f, p){
   B <- (eigen(cov(f))$vectors)[,1:p]
   return(B)

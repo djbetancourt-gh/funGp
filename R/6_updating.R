@@ -7,7 +7,7 @@
 upd_del <- function(model, ind.dl, remake) {
   # check for validty of substituting data
   ind.dl <- check_del(as.list(environment()))
-browser()
+
   if (model@type == "hybrid") { # hybrid-input case *******************************************
     # extract inputs from original model and remove points according to deletion indices
     sIn <- model@sIn[-ind.dl,,drop = F]
@@ -22,6 +22,11 @@ browser()
                        ls_s.hyp = model@kern@s_lsHyps, ls_f.hyp = model@kern@f_lsHyps)
     } else {
       modelup <- model
+      # update projection
+      bcj <- dimReduction(fIn, model@df, model@proj@pdims, model@f_proj@family)
+      modelup@f_proj@basis <- bcj$basis
+      modelup@f_proj@coefs <- bcj$coefs
+      # update data points
       modelup@sIn <- sIn
       modelup@fIn <- fIn
       modelup@sOut <- sOut
@@ -43,6 +48,11 @@ browser()
                        f_family = model@f_proj@family, var.hyp = model@kern@varHyp, ls_f.hyp = model@kern@f_lsHyps)
     } else {
       modelup <- model
+      # update projection
+      bcj <- dimReduction(fIn, model@df, model@proj@pdims, model@f_proj@family)
+      modelup@f_proj@basis <- bcj$basis
+      modelup@f_proj@coefs <- bcj$coefs
+      # update data points
       modelup@fIn <- fIn
       modelup@sOut <- sOut
       model@n.tot <- length(sOut)
@@ -78,7 +88,7 @@ browser()
 upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake) {
   # extract generic information from the model
   sOut <- model@sOut
-browser()
+
   # identify the special case of only substituting in sOut
   if(all(is.null(sIn.sb), is.null(fIn.sb), !is.null(sOut.sb))) justOut <- T else justOut <- F
 
@@ -153,6 +163,11 @@ browser()
       }
     } else {
       modelup <- model
+      # update projection
+      bcj <- dimReduction(fIn, model@df, model@proj@pdims, model@f_proj@family)
+      modelup@f_proj@basis <- bcj$basis
+      modelup@f_proj@coefs <- bcj$coefs
+      # update data points
       modelup@sIn <- sIn
       modelup@fIn <- fIn
       modelup@sOut <- sOut
@@ -219,6 +234,11 @@ browser()
       }
     } else {
       modelup <- model
+      # update projection
+      bcj <- dimReduction(fIn, model@df, model@proj@pdims, model@f_proj@family)
+      modelup@f_proj@basis <- bcj$basis
+      modelup@f_proj@coefs <- bcj$coefs
+      # update data points
       modelup@fIn <- fIn
       modelup@sOut <- sOut
       model@n.tot <- length(sOut)
@@ -351,6 +371,11 @@ upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake) {
                        ls_s.hyp = model@kern@s_lsHyps, ls_f.hyp = model@kern@f_lsHyps)
     } else {
       modelup <- model
+      # update projection
+      bcj <- dimReduction(fIn, model@df, model@proj@pdims, model@f_proj@family)
+      modelup@f_proj@basis <- bcj$basis
+      modelup@f_proj@coefs <- bcj$coefs
+      # update data points
       modelup@sIn <- sIn
       modelup@fIn <- fIn
       modelup@sOut <- sOut
@@ -400,6 +425,11 @@ upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake) {
                        f_family = model@f_proj@family, var.hyp = model@kern@varHyp, ls_f.hyp = model@kern@f_lsHyps)
     } else {
       modelup <- model
+      # update projection
+      bcj <- dimReduction(fIn, model@df, model@proj@pdims, model@f_proj@family)
+      modelup@f_proj@basis <- bcj$basis
+      modelup@f_proj@coefs <- bcj$coefs
+      # update data points
       modelup@fIn <- fIn
       modelup@sOut <- sOut
       modelup@n.tot <- length(sOut)

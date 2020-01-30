@@ -18,6 +18,7 @@
 #' @slot varHyp Object of class \code{"numeric"}. Estimated variance parameter.
 #' @slot s_lsHyps Object of class \code{"numeric"}. Estimated length-scale parameters for scalar inputs.
 #' @slot f_lsHyps Object of class \code{"numeric"}. Estimated length-scale parameters for functional inputs.
+#' @slot f_lsOwners Object of class \code{"character"}. Fill!!!!!!!!!!
 #'
 #' @rdname kernel-class
 #'
@@ -29,7 +30,8 @@ setClass("funGpKern",
                         f_disType = "character",        # distance type. To be chosen from {"scalar", "functional"}
                         varHyp = "numeric",             # estimated variance parameter
                         s_lsHyps = "numeric",           # estimated length-scale parameters for scalar inputs
-                        f_lsHyps = "numeric"            # estimated length-scale parameters for functional inputs
+                        f_lsHyps = "numeric",           # estimated length-scale parameters for functional inputs
+                        f_lsOwners = "character"        # owner of each length scale parameter in f_lsHyps
                         ),
          validity = function(object) {T})
 # ----------------------------------------------------------------------------------------------------------

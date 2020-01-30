@@ -129,15 +129,7 @@ setSPoints_SF <- function(bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_
   allspoints <- matrix(runif(n.ls * n.presample), nrow = n.ls, ncol = n.presample)
   allspoints <- ll + allspoints * (ul - ll)
 
-  # complement the candidate points with pre-fixed ls coefficients if available
-  # if (!is.null(ls_f.known)) {
-  #   fullspoints <- rbind(allspoints, matrix(ls_f.known, nrow = length(ls_f.known), ncol = n.presample))
-  # } else if (!is.null(ls_s.known)) {
-  #   fullspoints <- rbind(matrix(ls_s.known, nrow = length(ls_s.known), ncol = n.presample), allspoints)
-  # }
-
   # compute fitness of each starting point
-  # fitvec <- apply(fullspoints, 2, negLogLik_funGp_SF, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known)
   fitvec <- apply(allspoints, 2, negLogLik_funGp_SF, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known)
 
   # get the best n.starts points

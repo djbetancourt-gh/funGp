@@ -19,6 +19,8 @@ Fill this!!!!!!!!!
 \item{\code{s_lsHyps}}{Object of class \code{"numeric"}. Estimated length-scale parameters for scalar inputs.}
 
 \item{\code{f_lsHyps}}{Object of class \code{"numeric"}. Estimated length-scale parameters for functional inputs.}
+
+\item{\code{f_lsOwners}}{Object of class \code{"character"}. Fill!!!!!!!!!!}
 }}
 
 \author{

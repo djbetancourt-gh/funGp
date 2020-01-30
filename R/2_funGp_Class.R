@@ -108,7 +108,7 @@ setClass("funGp",
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 funGp <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
-                  f_disType = "functional", f_pdims = 3, f_family = "PCA",
+                  f_disType = "L2_bygroup", f_pdims = 3, f_family = "PCA",
                   var.hyp = NULL, ls_s.hyp = NULL, ls_f.hyp = NULL,
                   n.starts = 1, n.presample = 20) {
   # extend simplified user inputs to full versions
@@ -156,10 +156,11 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
     f_J <- bcj$J
 
     # compute scalar distance matrices
-    sMs <- setScalDistance(sIn, sIn)
+    sMs <- setDistMatrix_S(sIn, sIn)
 
     # compute functional distance matrices
-    fMs <- setFunDistance(f_coefs, f_coefs, f_J)
+    fMs <- setDistMatrix_F(f_coefs, f_coefs, f_J, f_disType)
+    owners <- paste("F", getOwners(df, f_disType, sapply(f_coefs, ncol)), sep = "")
 
     # optimize hyperparameters if some is required
     if (all(!is.null(var.hyp), !is.null(ls_s.hyp), !is.null(ls_f.hyp))) {
@@ -174,9 +175,10 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
     # fill funGpKern slots specific to the functional-input case
     kern@s_lsHyps <- lsHyps[1:ds]
     kern@f_lsHyps <- lsHyps[-c(1:ds)]
+    kern@f_lsOwners <- owners
 
     # pre-commpute KttInv and KttInv.sOut matrices for prediction and add them to the model
-    model@preMats <- preMats_SF(sMs, fMs, sOut, varHyp, lsHyps[1:ds], lsHyps[(ds+1):(ds+df)], kerType)
+    model@preMats <- preMats_SF(sMs, fMs, sOut, varHyp, lsHyps[1:ds], lsHyps[-c(1:ds)], kerType)
 
     # create objects funGpProj and fill with info specific to the hybrid-input case
     f_proj <- new("funGpProj")
@@ -201,20 +203,14 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
 
     # perform projection of functional inputs
     # the projection is such that F = X * B' + e, with
-    #
-    # n: input points
-    # k: original dimension
-    # p: projection dimension
-    # F: original inputs ............. matrix of dimension nxk
-    # B: basis functions ............. matrix of dimension pxk (one basis per column)
-    # X: projection coefficients ..... matrix of dimension nxp
     bcj <- dimReduction(fIn, df, f_pdims, f_family)
     f_basis <- bcj$basis
     f_coefs <- bcj$coefs
     f_J <- bcj$J
 
     # compute functional distance matrices
-    fMs <- setFunDistance(f_coefs, f_coefs, f_J)
+    fMs <- setDistMatrix_F(f_coefs, f_coefs, f_J, f_disType)
+    owners <- paste("F", getOwners(df, f_disType, sapply(f_coefs, ncol)), sep = "")
 
     # optimize hyperparameters if some is required
     if (all(!is.null(var.hyp), !is.null(ls_f.hyp))) {
@@ -228,6 +224,7 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
 
     # fill funGpKern slots specific to the functional-input case
     kern@f_lsHyps <- lsHyps
+    kern@f_lsOwners <- owners
 
     # pre-commpute KttInv and KttInv.sOut matrices for prediction and add them to the model
     model@preMats <- preMats_F(fMs, sOut, varHyp, lsHyps, kerType)
@@ -253,7 +250,7 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
     ds <- ncol(sIn)
 
     # compute scalar distance matrices
-    sMs <- setScalDistance(sIn, sIn)
+    sMs <- setDistMatrix_S(sIn, sIn)
 
     # optimize hyperparameters if some is required
     if (all(!is.null(var.hyp), !is.null(ls_s.hyp))) {
@@ -370,8 +367,17 @@ show.funGp <- function(model) {
     }
   }
   if (model@df > 0) {
-    for (i in 1:model@df) {
-      cat(paste("\t ls(F", i, "): ", format(model@kern@f_lsHyps[i], digits = 3, nsmall = 4), "\n", sep = ""))
+    f_ls <- model@kern@f_lsHyps
+    owners <- model@kern@f_lsOwners
+    np <- min(length(f_ls),(8-model@ds))
+    for (i in 1:np) {
+      cat(paste("\t ls(", owners[i], "): ", format(f_ls[i], digits = 3, nsmall = 4), "\n", sep = ""))
+    }
+    if (np < length(f_ls)) {
+      for (i in 1:2) {
+        cat("\t        .\n")
+      }
+      cat("\n Some length-scale parameters were not printed. Consider\n checking 'model@kern@s_lsHyps' and 'model@kern@f_lsHyps'\n")
     }
   }
   cat(paste(rep("_", 58), collapse = ""))
@@ -459,12 +465,12 @@ predict.funGp <- function(model, sIn.pr, fIn.pr, detail = "light") {
     f_J <- lapply(f_basis, crossprod)
 
     # compute scalar distance matrices
-    sMs.tp <- setScalDistance(model@sIn, sIn.pr)
-    sMs.pp <- setScalDistance(sIn.pr, sIn.pr)
+    sMs.tp <- setDistMatrix_S(model@sIn, sIn.pr)
+    sMs.pp <- setDistMatrix_S(sIn.pr, sIn.pr)
 
     # compute functional distance matrices
-    fMs.tp <- setFunDistance(model@f_proj@coefs, f_coefs.pr, f_J)
-    fMs.pp <- setFunDistance(f_coefs.pr, f_coefs.pr, f_J)
+    fMs.tp <- setDistMatrix_F(model@f_proj@coefs, f_coefs.pr, f_J, model@kern@f_disType)
+    fMs.pp <- setDistMatrix_F(f_coefs.pr, f_coefs.pr, f_J, model@kern@f_disType)
 
     # make predictions based on the Gaussian Conditioning Theorem
     preds <- makePreds_SF(sMs.tp, sMs.pp, fMs.tp, fMs.pp,
@@ -480,8 +486,8 @@ predict.funGp <- function(model, sIn.pr, fIn.pr, detail = "light") {
     f_J <- lapply(f_basis, crossprod)
 
     # compute functional distance matrices
-    fMs.tp <- setFunDistance(model@f_proj@coefs, f_coefs.pr, f_J)
-    fMs.pp <- setFunDistance(f_coefs.pr, f_coefs.pr, f_J)
+    fMs.tp <- setDistMatrix_F(model@f_proj@coefs, f_coefs.pr, f_J, model@kern@f_disType)
+    fMs.pp <- setDistMatrix_F(f_coefs.pr, f_coefs.pr, f_J, model@kern@f_disType)
 
     # make predictions based on the Gaussian Conditioning Theorem
     preds <- makePreds_F(fMs.tp, fMs.pp, model@kern@varHyp, model@kern@f_lsHyps, model@kern@kerType,
@@ -494,8 +500,8 @@ predict.funGp <- function(model, sIn.pr, fIn.pr, detail = "light") {
     sIn.pr <- as.matrix(sIn.pr)
 
     # compute scalar distance matrices
-    sMs.tp <- setScalDistance(model@sIn, sIn.pr)
-    sMs.pp <- setScalDistance(sIn.pr, sIn.pr)
+    sMs.tp <- setDistMatrix_S(model@sIn, sIn.pr)
+    sMs.pp <- setDistMatrix_S(sIn.pr, sIn.pr)
 
     # make predictions based on the Gaussian Conditioning Theorem
     preds <- makePreds_S(sMs.tp, sMs.pp, model@kern@varHyp, model@kern@s_lsHyps, model@kern@kerType,
@@ -607,12 +613,12 @@ simulate.funGp <- function(model, nsim, seed, sIn.sm, fIn.sm, nug.sim, detail) {
     f_J <- lapply(f_basis, crossprod)
 
     # compute scalar distance matrices
-    sMs.ts <- setScalDistance(model@sIn, sIn.sm)
-    sMs.ss <- setScalDistance(sIn.sm, sIn.sm)
+    sMs.ts <- setDistMatrix_S(model@sIn, sIn.sm)
+    sMs.ss <- setDistMatrix_S(sIn.sm, sIn.sm)
 
     # compute functional distance matrices
-    fMs.ts <- setFunDistance(model@f_proj@coefs, f_coefs.sm, f_J)
-    fMs.ss <- setFunDistance(f_coefs.sm, f_coefs.sm, f_J)
+    fMs.ts <- setDistMatrix_F(model@f_proj@coefs, f_coefs.sm, f_J, model@kern@f_disType)
+    fMs.ss <- setDistMatrix_F(f_coefs.sm, f_coefs.sm, f_J, model@kern@f_disType)
 
     # make simulations based on the Gaussian Conditioning Theorem
     sims <- makeSims_SF(sMs.ts, sMs.ss, fMs.ts, fMs.ss,
@@ -628,8 +634,8 @@ simulate.funGp <- function(model, nsim, seed, sIn.sm, fIn.sm, nug.sim, detail) {
     f_J <- lapply(f_basis, crossprod)
 
     # compute functional distance matrices
-    fMs.ts <- setFunDistance(model@f_proj@coefs, f_coefs.sm, f_J)
-    fMs.ss <- setFunDistance(f_coefs.sm, f_coefs.sm, f_J)
+    fMs.ts <- setDistMatrix_F(model@f_proj@coefs, f_coefs.sm, f_J, model@kern@f_disType)
+    fMs.ss <- setDistMatrix_F(f_coefs.sm, f_coefs.sm, f_J, model@kern@f_disType)
 
     # make simulations based on the Gaussian Conditioning Theorem
     sims <- makeSims_F(fMs.ts, fMs.ss, model@kern@varHyp, model@kern@f_lsHyps, model@kern@kerType,
@@ -642,8 +648,8 @@ simulate.funGp <- function(model, nsim, seed, sIn.sm, fIn.sm, nug.sim, detail) {
     sIn.sm <- as.matrix(sIn.sm)
 
     # compute scalar distance matrices
-    sMs.ts <- setScalDistance(model@sIn, sIn.sm)
-    sMs.ss <- setScalDistance(sIn.sm, sIn.sm)
+    sMs.ts <- setDistMatrix_S(model@sIn, sIn.sm)
+    sMs.ss <- setDistMatrix_S(sIn.sm, sIn.sm)
 
     # make simulations based on the Gaussian Conditioning Theorem
     sims <- makeSims_S(sMs.ts, sMs.ss, model@kern@varHyp, model@kern@s_lsHyps, model@kern@kerType,

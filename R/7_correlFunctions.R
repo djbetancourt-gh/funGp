@@ -42,12 +42,11 @@ setR <- function(thetas, Ms, kerType) {
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 gaussian_cor <- function(Ms, thetas) {
-  # browser()
-  sPL2 <- matrix(0L, nrow = nrow(Ms[[1]]), ncol = ncol(Ms[[1]]))
+  Rm <- matrix(1L, nrow = nrow(Ms[[1]]), ncol = ncol(Ms[[1]]))
   for (l in 1:length(thetas)) {
-    sPL2 <- sPL2 + (as.matrix(Ms[[l]])^2)/(thetas[l]^2)
+    Rm <- Rm * exp(-0.5*(as.matrix(Ms[[l]])/thetas[l])^2)
   }
-  return(exp(-0.5*sPL2))
+  return(Rm)
 }
 # -------------------------------------------------------------------------------------------------------------------------------------
 
@@ -64,15 +63,6 @@ gaussian_cor <- function(Ms, thetas) {
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
-matern52_cor2 <- function(Ms, thetas) {
-  Rm <- matrix(0L, nrow = nrow(Ms[[1]]), ncol = ncol(Ms[[1]]))
-  for (l in 1:length(thetas)) {
-    Rm <- Rm + (as.matrix(Ms[[l]])^2)/(thetas[l]^2)
-  }
-  return((1 + sqrt(5)*sqrt(Rm) + 5*Rm/3) * exp(-sqrt(5)*sqrt(Rm)))
-}
-# -------------------------------------------------------------------------------------------------------------------------------------
-
 matern52_cor <- function(Ms, thetas) {
   Rm <- matrix(1L, nrow = nrow(Ms[[1]]), ncol = ncol(Ms[[1]]))
   for (l in 1:length(thetas)) {
@@ -95,9 +85,9 @@ matern52_cor <- function(Ms, thetas) {
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 matern32_cor <- function(Ms, thetas) {
-  Rm <- matrix(0L, nrow = nrow(Ms[[1]]), ncol = ncol(Ms[[1]]))
+  Rm <- matrix(1L, nrow = nrow(Ms[[1]]), ncol = ncol(Ms[[1]]))
   for (l in 1:length(thetas)) {
-    Rm <- Rm + (as.matrix(Ms[[l]])^2)/(thetas[l]^2)
+    Rm <- Rm * (1 + sqrt(3)*abs(as.matrix(Ms[[l]]))/thetas[l]) * exp(-sqrt(3)*abs(as.matrix(Ms[[l]])/thetas[l]))
   }
-  return((1 + sqrt(3) * sqrt(Rm)) * exp(- sqrt(3) * sqrt(Rm)))
+  return(Rm)
 }
