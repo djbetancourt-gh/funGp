@@ -71,7 +71,7 @@ setHypers_S <- function(sIn, sMs, sOut, kerType, var.known, ls_s.known, n.starts
 setBounds_S <- function(sMs){
   # define lower and upper bounds for length-scale hypers linked to scalar inputs
   mxs <- sapply(sMs, max)
-  ll_s <- 10^-10
+  ll_s <- rep(10^-10, length(sMs))
   ul_s <- 2 * mxs
 
   # grouping
@@ -107,7 +107,7 @@ setSPoints_S <- function(bnds, sMs, sOut, kerType, varfun, n.starts, n.presample
   allspoints <- ll + allspoints * (ul - ll)
 
   # compute fitness of each starting point
-  fitvec <- apply(allspoints, 2, negLogLik_funGp_S, sMs, sOut, kerType, varfun)
+  fitvec <- apply(allspoints, 2, negLogLik_funGp_S, sMs, sOut, kerType, varfun, nugget)
 
   # get the best n.starts points
   spoints <- allspoints[,order(fitvec)[1:n.starts], drop = F]

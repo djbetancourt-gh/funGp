@@ -257,8 +257,8 @@ section_1.4.d_update_subshypers <- function(){
 
 # Making updates: re-estimation of hyperparameters
 # ----------------------------------------------------------------------------------------------------------
-# building the initial model
 section_1.4.e_update_reeshypers <- function(){
+  # building the initial model
   set.seed(100)
   n.tr <- 25
   sIn <- expand.grid(x1 = seq(0,1,length = sqrt(n.tr)), x2 = seq(0,1,length = sqrt(n.tr)))
@@ -282,6 +282,89 @@ section_1.4.e_update_reeshypers <- function(){
   m1up <- update(m1, var.re = T, ls_s.re = T, ls_f.re = T)
 }
 # ----------------------------------------------------------------------------------------------------------
+
+
+# Heuristic model selection
+# ----------------------------------------------------------------------------------------------------------
+section_2_heuristic <- function(){
+  # ================ Analytic case from Betancourt et al. (2019)
+  # split the data
+  set.seed(100)
+  n.tr <- 25
+  ind.tr <- sample(1:500, n.tr)
+  sIn.tr <- sIn[ind.tr,]
+  fIn.tr <- lapply(fIn, function(M) M[ind.tr,])
+  sOut.tr <- sOut[ind.tr]
+  symbolicfunGp(sIn = sIn.tr, fIn = fIn.tr, sOut = sOut.tr)
+
+  # generating training data
+  set.seed(100)
+  n.tr <- 25
+  sIn <- setNames(data.frame(randomLHS(25,2)), c("X1", "X2"))
+  fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
+  sOut <- fgp_BB3(sIn, fIn, n.tr)
+
+  symbolicfunGp(sIn = sIn, fIn = fIn, sOut = sOut)
+
+
+  # with fnuction B1
+  set.seed(100)
+  n.tr <- 25
+  sIn <- setNames(data.frame(lhs::randomLHS(25,2)), c("X1", "X2"))
+  fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
+  sOut <- fgp_BB1(sIn, fIn, n.tr)
+
+  symbolicfunGp(sIn = sIn, fIn = fIn, sOut = sOut)
+
+
+  # with fnuction B2
+  set.seed(100)
+  n.tr <- 25
+  sIn <- setNames(data.frame(lhs::randomLHS(25,2)), c("X1", "X2"))
+  fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
+  sOut <- fgp_BB2(sIn, fIn, n.tr)
+
+  symbolicfunGp(sIn = sIn, fIn = fIn, sOut = sOut)
+
+
+  # with fnuction B3
+  set.seed(100) # set.seed(1000)  gives 0.978
+  n.tr <- 25
+  sIn <- setNames(data.frame(lhs::randomLHS(25,2)), c("X1", "X2"))
+  fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
+  sOut <- fgp_BB3(sIn, fIn, n.tr)
+
+  symbolicfunGp(sIn = sIn, fIn = fIn, sOut = sOut)
+
+
+  # with fnuction B4
+  set.seed(400) # set.seed(400) # 0.872
+  n.tr <- 25
+  sIn <- setNames(data.frame(lhs::randomLHS(25,2)), c("X1", "X2"))
+  fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
+  sOut <- fgp_BB4(sIn, fIn, n.tr)
+
+  symbolicfunGp(sIn = sIn, fIn = fIn, sOut = sOut)
+  # symbolicfunGp(sIn = sIn, fIn = fIn, sOut = sOut, q0 = .9, alp = 3, bet = 1, rho.l = .7, rho.g = .3)
+
+
+  # with fnuction B4 - testing parameters of the heuristic over a grid
+  D <- expand.grid(q0 = seq(0, 1, length.out = 5), alp = 1:3, bet = 1:3, rho.l = seq(0, 1, length.out = 5), rho.g = seq(0, 1, length.out = 5))
+
+  set.seed(400) # set.seed(400) # 0.872
+  n.tr <- 25
+  sIn <- setNames(data.frame(randomLHS(25,2)), c("X1", "X2"))
+  fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
+  sOut <- fgp_BB4(sIn, fIn, n.tr)
+
+  fs <- rep(0, nrow(D))
+  for (i in 1:nrow(D)) {
+    fitness <- symbolicfunGp(sIn = sIn, fIn = fIn, sOut = sOut,
+                             q0 = D[i,1], alp = D[i,2], bet = D[i,3], rho.l = D[i,4], rho.g = D[i,5])
+    print(paste("Configuration ", i, ":", fitness, sep = ""))
+    fs[i] <- fitness
+  }
+}
 
 #' A tester
 #'

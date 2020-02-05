@@ -11,7 +11,7 @@ funGp(
   kerType = "matern5_2",
   f_disType = "L2_bygroup",
   f_pdims = 3,
-  f_family = "PCA",
+  f_family = "B-splines",
   var.hyp = NULL,
   ls_s.hyp = NULL,
   ls_f.hyp = NULL,

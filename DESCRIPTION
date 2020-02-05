@@ -16,6 +16,7 @@ LazyData: true
 RoxygenNote: 7.0.2
 Collate: 
     '1_funGp_Doc.R'
+    '2_funGpFactory_Class.R'
     '2_funGpKern_Class.R'
     '2_funGpProj_Class.R'
     '2_funGp_Class.R'
@@ -38,4 +39,5 @@ Collate:
     '8_examplesPackage.R'
     'zzz_Paralelizacion.R'
     'zzz_auxFunctions.R'
+    'zzz_heuristic.R'
 VignetteBuilder: R.rsp

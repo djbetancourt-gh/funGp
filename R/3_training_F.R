@@ -70,7 +70,7 @@ setHypers_F <- function(fMs, sOut, kerType, var.known, ls_f.known, n.starts, n.p
 setBounds_F <- function(fMs){
   # define lower and upper bounds for length-scale hypers linked to functional inputs
   mxf <- sapply(fMs, max)
-  ll_f <- 10^-10
+  ll_f <- rep(10^-10, length(fMs))
   ul_f <- 2 * mxf
 
   # grouping

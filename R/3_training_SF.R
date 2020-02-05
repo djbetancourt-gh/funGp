@@ -86,12 +86,12 @@ setHypers_SF <- function(sMs, fMs, sOut, kerType, var.known, ls_s.known, ls_f.kn
 setBounds_SF <- function(sMs, fMs){
   # lower and upper bounds for length-scale hypers linked to scalar inputs
   mxs <- sapply(sMs, max)
-  ll_s <- 10^-10
+  ll_s <- rep(10^-10, length(sMs))
   ul_s <- 2 * mxs
 
   # lower and upper bounds for length-scale hypers linked to functional inputs
   mxf <- sapply(fMs, max)
-  ll_f <- 10^-10
+  ll_f <- rep(10^-10, length(fMs))
   ul_f <- 2 * mxf
 
   # grouping

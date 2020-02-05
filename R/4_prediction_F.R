@@ -1,5 +1,5 @@
 #' @author José Betancourt, François Bachoc and Thierry Klein
-makePreds_F <- function(fMs.tp, fMs.pp, sig2, thetas_f, kerType, L, LInvY, detail){
+makePreds_F <- function(fMs.tp, fMs.pp, sig2, thetas_f, kerType, L, LInvY, detail, nugget){
   # create empty prediction list
   preds <- list()
 
@@ -12,16 +12,18 @@ makePreds_F <- function(fMs.tp, fMs.pp, sig2, thetas_f, kerType, L, LInvY, detai
   # if user requires details, provide K.tp and K.pp
   if (detail == "full") {
     preds$K.tp <- K.tp
-    preds$K.pp <- sig2 * setR(thetas_f, fMs.pp, kerType)
+    R <- setR(thetas_f, fMs.pp, kerType)
+    preds$K.pp <- sig2 * (R + diag(nugget, nrow = nrow(R), ncol = ncol(R)))
   }
 
   return(preds)
 }
 
 #' @author José Betancourt, François Bachoc and Thierry Klein
-preMats_F <- function(fMs, sOut, sig2, thetas_f, kerType){
+preMats_F <- function(fMs, sOut, sig2, thetas_f, kerType, nugget){
   # precompute L and LInvY matrices
-  K.tt <- sig2 * setR(thetas_f, fMs, kerType)
+  R <- setR(thetas_f, fMs, kerType)
+  K.tt <- sig2 * (R + diag(nugget, nrow = nrow(R), ncol = ncol(R)))
   L <- t(chol(K.tt))
   LInvY <- backsolve(L, sOut, upper.tri = F)
 

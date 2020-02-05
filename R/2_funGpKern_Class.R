@@ -38,7 +38,7 @@ setClass("funGpKern",
 
 
 # ==========================================================================================================
-# User oriented methods. For documentation of generic methods check the extraDoc.R file
+# User oriented methods.
 # ==========================================================================================================
 
 # Method to print the kernel of a funGp model

@@ -112,7 +112,7 @@ setClass("funGp",
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 funGp <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
-                  f_disType = "L2_bygroup", f_pdims = 3, f_family = "PCA",
+                  f_disType = "L2_bygroup", f_pdims = 3, f_family = "B-splines",
                   var.hyp = NULL, ls_s.hyp = NULL, ls_f.hyp = NULL,
                   n.starts = 1, n.presample = 20, nugget = 10^-8) {
   # extend simplified user inputs to full versions
@@ -182,7 +182,7 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
     kern@f_lsOwners <- owners
 
     # pre-commpute KttInv and KttInv.sOut matrices for prediction and add them to the model
-    model@preMats <- preMats_SF(sMs, fMs, sOut, varHyp, lsHyps[1:ds], lsHyps[-c(1:ds)], kerType)
+    model@preMats <- preMats_SF(sMs, fMs, sOut, varHyp, lsHyps[1:ds], lsHyps[-c(1:ds)], kerType, nugget)
 
     # create objects funGpProj and fill with info specific to the hybrid-input case
     f_proj <- new("funGpProj")
@@ -231,7 +231,7 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
     kern@f_lsOwners <- owners
 
     # pre-commpute KttInv and KttInv.sOut matrices for prediction and add them to the model
-    model@preMats <- preMats_F(fMs, sOut, varHyp, lsHyps, kerType)
+    model@preMats <- preMats_F(fMs, sOut, varHyp, lsHyps, kerType, nugget)
 
     # create objects funGpProj and fill with info specific to the functional-input case
     f_proj <- new("funGpProj")
@@ -270,7 +270,7 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
     kern@s_lsHyps <- lsHyps
 
     # pre-commpute KttInv and KttInv.sOut matrices for prediction and add them to the model
-    model@preMats <- preMats_S(sMs, sOut, varHyp, lsHyps, kerType)
+    model@preMats <- preMats_S(sMs, sOut, varHyp, lsHyps, kerType, nugget)
 
     # fill funGp slots specific to the scalar-input case
     model@ds <- ds
@@ -480,7 +480,7 @@ predict.funGp <- function(model, sIn.pr, fIn.pr, detail = "light") {
     # make predictions based on the Gaussian Conditioning Theorem
     preds <- makePreds_SF(sMs.tp, sMs.pp, fMs.tp, fMs.pp,
                           model@kern@varHyp, model@kern@s_lsHyps, model@kern@f_lsHyps,
-                          model@kern@kerType, model@preMats$L, model@preMats$LInvY, detail)
+                          model@kern@kerType, model@preMats$L, model@preMats$LInvY, detail, nugget)
 
   } else if (model@df > 0) { # functional-input case *******************************************
     print("I'm functional!")
@@ -496,7 +496,7 @@ predict.funGp <- function(model, sIn.pr, fIn.pr, detail = "light") {
 
     # make predictions based on the Gaussian Conditioning Theorem
     preds <- makePreds_F(fMs.tp, fMs.pp, model@kern@varHyp, model@kern@f_lsHyps, model@kern@kerType,
-                         model@preMats$L, model@preMats$LInvY, detail)
+                         model@preMats$L, model@preMats$LInvY, detail, nugget)
 
   } else { # scalar-input case *******************************************
     print("I'm scalar!")
@@ -510,7 +510,7 @@ predict.funGp <- function(model, sIn.pr, fIn.pr, detail = "light") {
 
     # make predictions based on the Gaussian Conditioning Theorem
     preds <- makePreds_S(sMs.tp, sMs.pp, model@kern@varHyp, model@kern@s_lsHyps, model@kern@kerType,
-                         model@preMats$L, model@preMats$LInvY, detail)
+                         model@preMats$L, model@preMats$LInvY, detail, nugget)
   }
 
   # compute confidence intervals
@@ -906,7 +906,7 @@ setMethod("plotLOO", "funGp", function(object, xlim = NULL, ylim = NULL) {
 
 plotLOO.funGp <- function(model, xlim, ylim) {
   y_obs <- model@sOut
-  R <- tcrossprod(model@preMats$L)/model@kern@varHyp
+  R <- tcrossprod(model@preMats$L)/model@kern@varHyp + diag(model@nugget, nrow = model@n.tr, ncol = model@n.tr)
   Rinv <- solve(R)
   y_pre <- y_obs - diag(Rinv)^(-1) * Rinv %*% y_obs
   xl <- yl <- yr <- range(c(y_obs, y_pre))
