@@ -8,6 +8,7 @@ funGp_factory(
   sIn = NULL,
   fIn = NULL,
   sOut = NULL,
+  ind.vl = NULL,
   method = "ACO",
   constraints = list(),
   setup = list()

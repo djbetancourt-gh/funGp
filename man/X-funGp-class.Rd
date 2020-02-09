@@ -14,9 +14,13 @@ Fill this!!!!!!!!!
 
 \item{\code{fitness}}{Hola.}
 
-\item{\code{howCalled}}{Object of class \code{"character"}. Kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}.}
+\item{\code{structure}}{Hola.}
+
+\item{\code{factoryCall}}{Object of class \code{"character"}. Kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}.}
 
 \item{\code{method}}{Object of class \code{"character"}. Kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}.}
+
+\item{\code{stat}}{Hola.}
 
 \item{\code{details}}{Object of class \code{"character"}. Kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}.}
 

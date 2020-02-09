@@ -4,7 +4,7 @@
 
 # Method to plot a funGp model
 # ----------------------------------------------------------------------------------------------------------
-master_ACO <- function(sIn, fIn, sOut, solspace, setup) {
+master_ACO <- function(sIn, fIn, sOut, ind.vl, solspace, setup) {
   # set heuristic parameters based on defaults and user specifications
   param <- setParams_ACO(setup)
 
@@ -12,10 +12,13 @@ master_ACO <- function(sIn, fIn, sOut, solspace, setup) {
   env <- setEnvir_ACO(solspace, param)
 
   # perform exploration
-  res <- run_ACO(sIn, fIn, sOut, param, env, solspace$sp.base)
+  res <- run_ACO(sIn, fIn, sOut, ind.vl, param, env, solspace$sp.base)
 
   # correct the howCalled of best model
-  res$model@howCalled@string <- getCall_ACO(sIn, fIn, res$args)
+  res$model@howCalled@string <- getCall_ACO(res$sol.vec, sIn, fIn, res$sol.args, solspace$sp.base)
+
+  # format solution vector
+  res$sol.vec <- vec2DFrame_ACO(res$sol.vec, sIn, fIn)
 
   # fill antLog
   res$log <- getLog_ACO(sIn, fIn, res$log.vec, res$log.fitness, solspace$sp.base)
@@ -51,13 +54,13 @@ master_ACO <- function(sIn, fIn, sOut, solspace, setup) {
 # rho.g: global reinforcement coefficient: the larger it is, the more influence best ants have on each update
 # =====================================================================================================
 setParams_ACO <- function(setup) {
-  if (!is.null(setup$n.gen)) n.gen <- setup$n.gen else n.gen <- 10
+  if (!is.null(setup$n.gen)) n.gen <- setup$n.gen else n.gen <- 4
   if (!is.null(setup$n.pop)) n.pop <- setup$n.pop else n.pop <- 50
   if (!is.null(setup$tao0)) tao0 <- setup$tao0 else tao0 <- 10^-8
   if (!is.null(setup$vis.s)) vis.s <- setup$vis.s else vis.s <- .7
   if (!is.null(setup$vis.f)) vis.f <- setup$vis.f else vis.f <- .7
   if (!is.null(setup$dec.f)) dec.f <- setup$dec.f else dec.f <- .4
-  if (!is.null(setup$q0)) q0 <- setup$q0 else q0 <- .95
+  if (!is.null(setup$q0)) q0 <- setup$q0 else q0 <- 1
   if (!is.null(setup$alp)) alp <- setup$alp else alp <- 10
   if (!is.null(setup$bet)) bet <- setup$bet else bet <- 2
   if (!is.null(setup$rho.l)) rho.l <- setup$rho.l else rho.l <- 0
@@ -343,14 +346,36 @@ formatSol_ACO <- function(ant, sIn, fIn, base) {
   return(list(sIn = sIn.ac, fIn = fIn.ac, kerType = k.type.ac, f_disType = f.dist.ac, f_pdims = f.dims.ac, f_basType = f.bas.ac))
 }
 
-getCall_ACO <- function(sIn, fIn, args) {
+getActiveIn_ACO <- function(ant, sIn, fIn, base) {
   # recover input dimensions
   if (!is.null(sIn)) ds <- ncol(sIn) else ds <- 0
   if (!is.null(fIn)) df <- length(fIn) else df <- 0
 
-  # identify used scalar inputs
+  # recover base components
+  s.state <- base$s.state
+  f.state <- base$f.state
+
+  # index of active scalar inputs
+  if (ds > 0) s.active.ac <- unname(which(ant[1:ds] == 1)) else s.active.ac <- NULL
+
+  # index of active functional inputs
+  if (df > 0) f.active.ac <- unname(which(ant[grepl("State F", names(ant))] == 1)) else f.active.ac <- NULL
+
+  return(list(s.active = s.active.ac, f.active = f.active.ac))
+}
+
+getCall_ACO <- function(ant, sIn, fIn, args, base) {
+  # recover input dimensions
+  if (!is.null(sIn)) ds <- ncol(sIn) else ds <- 0
+  if (!is.null(fIn)) df <- length(fIn) else df <- 0
+
+  # identify used inputs
+  in.used <- getActiveIn_ACO(ant, sIn, fIn, base)
+
+  # set string for scalar inputs
   if (!is.null(args$sIn)) {
-    s.used <- which(apply(sIn, 2, function(v) c.vecInMat_Match(args$sIn, v)))
+    # s.used <- which(apply(sIn, 2, function(v) c.vecInMat_Match(args$sIn, v)))
+    s.used <- in.used$s.active
     if (length(s.used) == ncol(sIn)) {
       s.str <- "sIn"
     } else if (length(s.used) == 1) {
@@ -362,9 +387,10 @@ getCall_ACO <- function(sIn, fIn, args) {
     }
   }
 
-  # identify used functional inputs
+  # set string for functional inputs
   if (!is.null(args$fIn)) {
-    f.used <- which(sapply(fIn, function(M) matInList_Match(args$fIn, M)))
+    # f.used <- which(sapply(fIn, function(M) matInList_Match(args$fIn, M)))
+    f.used <- in.used$f.active
     if (length(f.used) == length(fIn)) {
       f.str <- "fIn"
     } else if (length(f.used) == 1) {
@@ -401,10 +427,10 @@ getCall_ACO <- function(sIn, fIn, args) {
   kerType.str <- paste('"', args$kerType, '"', sep = "")
 
   # merge strings to produce model call
-  if (all(ds > 0, df > 0)) {
+  if (all(!is.null(args$sIn), !is.null(args$fIn))) {
     modcall <- paste("funGp(sIn = ", s.str, ", fIn = ", f.str, ", sOut = sOut, kerType = ", kerType.str,
                      ", f_disType = ", f_disType.str, ", f_pdims = ", f_pdims.str, ", f_basType = ", f_basType.str, ")", sep = "")
-  } else if (df > 0) {
+  } else if (!is.null(args$fIn)) {
     modcall <- paste("funGp(fIn = ", f.str, ", sOut = sOut, kerType = ", kerType.str,
                      ", f_disType = ", f_disType.str, ", f_pdims = ", f_pdims.str, ", f_basType = ", f_basType.str, ")", sep = "")
   } else {
@@ -414,16 +440,64 @@ getCall_ACO <- function(sIn, fIn, args) {
   return(modcall)
 }
 
+vec2DFrame_ACO <- function(sol.vec, sIn, fIn) {
+  # recover input dimensions
+  if (!is.null(sIn)) ds <- ncol(sIn) else ds <- 0
+  if (!is.null(fIn)) df <- length(fIn) else df <- 0
+
+  names <- vals <- rep(0,length(sol.vec))
+  if (ds > 0) {
+    for (i in 1:ds) {
+      names[i] <- paste("State_X", i, sep = "")
+      # vals[i] <- c("Active", "Inactive")[sol.vec[i]]
+      vals[i] <- c("On", "Off")[sol.vec[i]]
+    }
+    piv <- ds
+  }
+
+  if (df > 0) {
+    piv <- max(0, ds)
+    for (i in 1:df) {
+      piv <- piv + 1
+      names[piv] <- paste("State_F", i, sep = "")
+      # vals[piv] <- c("Active", "Inactive")[sol.vec[piv]]
+      vals[piv] <- c("On", "Off")[sol.vec[piv]]
+
+      piv <- piv + 1
+      names[piv] <- paste("Distance_F", i, sep = "")
+      if (sol.vec[piv] < 0) vals[piv] <- "--" else vals[piv] <- c("L2_bygroup", "L2_byindex")[sol.vec[piv]]
+
+      piv <- piv + 1
+      names[piv] <- paste("Dim_F", i, sep = "")
+      if (sol.vec[piv] < 0) vals[piv] <- "-" else vals[piv] <- sol.vec[piv]
+
+      piv <- piv + 1
+      names[piv] <- paste("Prj_basis_F", i, sep = "")
+      if (sol.vec[piv] < 0) vals[piv] <- "--" else vals[piv] <- c("B-splines", "PCA")[sol.vec[piv]]
+    }
+  }
+
+  piv <- piv + 1
+  names[piv] <- "Kernel"
+  vals[piv] <- c("gauss", "matern5_2", "matern3_2")[sol.vec[piv]]
+
+  # data.frame-ize
+  vals <- data.frame(matrix(vals, nrow = 1))
+  names(vals) <- names
+
+  return(vals)
+}
+
 getLog_ACO <- function(sIn, fIn, log.vec, log.fitness, base) {
   mylog <- new("antsLog")
   args <- list()
   for (i in 1:nrow(log.vec)) {
     mc <- new("modelCall")
-    mc@string <- getCall_ACO(sIn, fIn, formatSol_ACO(log.vec[i,], sIn, fIn, base))
+    mc@string <- getCall_ACO(log.vec[i,], sIn, fIn, formatSol_ACO(log.vec[i,], sIn, fIn, base), base)
     args[[i]] <- mc
   }
   mylog@args <- args
-  mylog@sols <- data.frame(log.vec)
+  mylog@sols <- do.call("rbind", apply(log.vec, 1, function(x) vec2DFrame_ACO(x, sIn, fIn)))
   mylog@fitness <- log.fitness
   return(mylog)
 }

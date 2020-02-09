@@ -3,8 +3,10 @@
 #'
 #' @slot model Object of class \code{"character"}. Kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}.
 #' @slot fitness Hola.
-#' @slot howCalled Object of class \code{"character"}. Kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}.
+#' @slot structure Hola.
+#' @slot factoryCall Object of class \code{"character"}. Kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}.
 #' @slot method Object of class \code{"character"}. Kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}.
+#' @slot stat Hola.
 #' @slot details Object of class \code{"character"}. Kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}.
 #' @slot log Object of class \code{"character"}. Kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}.
 #'
@@ -18,8 +20,10 @@ setClass("X-funGp",
          representation(
            model = "funGp",                # kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}
            fitness = "numeric",            # model fitness
-           howCalled = "factoryCall",      # distance type. To be chosen from {"scalar", "functional"}
+           structure = "data.frame",       # model fitness
+           factoryCall = "factoryCall",    # distance type. To be chosen from {"scalar", "functional"}
            method = "character",           # search method
+           stat = "character",             # search method
            details = "list",               # search method
            log = "antsLog"                 # search method
          ),
@@ -39,7 +43,8 @@ setClass("X-funGp",
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 #' @keywords internal
-funGp_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, method = "ACO", constraints = list(), setup = list()) {
+funGp_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, ind.vl = NULL,
+                          method = "ACO", constraints = list(), setup = list()) {
   # user inputs, remove this at the end !!!!!!!!!!!!!!!!!!!!!!!!!
   s_keepActive <- c(1) # keep X1 always active
   f_keepActive <- NULL # Do not keep any functional input always active, let them free
@@ -64,10 +69,30 @@ funGp_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, method = "ACO", c
     stop("The user must provide either a scalar-input matrix, a functional-input list or both of them. None has been detected.")
   }
 
+  # prepare input and output structures based on case: 1. LOOCV; 2. HOUT
+  # if (is.null(ind.vl)) { # case 1
+  #   sIn.tr <- sIn
+  #   fIn.tr <- fIn
+  #   sOut.tr <- sOut
+  # } else { # case 2
+  # ind.vl <- as.matrix(ind.vl)
+  #   sIn.tr <- sIn
+  #   fIn.tr <- fIn
+  #   sOut.tr <- sOut
+  # }
+
+  if (!is.null(ind.vl)) {
+    ind.vl <- as.matrix(ind.vl)
+    stat <- paste("Q2hout.", (nrow(sOut) - nrow(ind.vl)), ".", nrow(ind.vl), ".", ncol(ind.vl), sep = "")
+  } else {
+    stat <- "Q2loocv"
+  }
+
+
   # optimize model structure
   switch(method,
          "ACO" = {# 1: Ant Colony Optimization
-           opt <- master_ACO(sIn, fIn, sOut, solspace, setup)
+           opt <- master_ACO(sIn, fIn, sOut, ind.vl, solspace, setup)
          },
 
          "ES" = {# 3: Exhaustive Search
@@ -77,8 +102,10 @@ funGp_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, method = "ACO", c
   X.model <- new("X-funGp")
   X.model@model <- opt$model
   X.model@fitness <- opt$b.fitness
-  X.model@howCalled@string <- gsub("^ *|(?<= ) | *$", "", paste0(deparse(match.call()), collapse = " "), perl = T)
+  X.model@structure <- opt$sol.vec
+  X.model@factoryCall@string <- gsub("^ *|(?<= ) | *$", "", paste0(deparse(match.call()), collapse = " "), perl = T)
   X.model@method <- "Ants"
+  X.model@stat <- stat
   X.model@log <- opt$log
   X.model@details <- opt$details
 
@@ -165,21 +192,58 @@ setSpace <- function(sIn, fIn, constraints) {
   return(list(sp.base = sp.base, sp.user = sp.user))
 }
 
-getFitness <- function(model, sIn.vl = NULL, fIn.vl = NULL, sOut.vl) {
-  # identify required statistic based on data
-  stat <- "Q2cv" # Q2ext
+getFitness <- function(model, sIn.vl = NULL, fIn.vl = NULL, sOut.vl = NULL, active = NULL) {
+  # identify required statistic based on the ind.vl matrix
+  if (is.null(sOut.vl)) {
+    stat <- "Q2loocv"
+    sOut <- model@sOut
+  } else {
+    stat <- "Q2hout"
+    if (length(active$s.active) > 0) sIn.pr <- sIn.vl[, active$s.active, drop = F] else sIn.pr <- NULL
+    if (length(active$f.active) > 0) fIn.pr <- fIn.vl[active$f.active] else fIn.pr <- NULL
+    if (is.matrix(fIn.pr)) fIn.pr <- list(fIn.pr)
+  }
+
+  # compute statistic
   switch(stat,
-         "Q2cv" = {# 1: leave-one-out cross-validation Q2
+         "Q2loocv" = {# 1: leave-one-out cross-validation Q2
            y.hat <- getOut_loocv(model)
            eta <- 1 - (mean((model@sOut - y.hat)^2)/mean((model@sOut - mean(model@sOut))^2))
          },
 
-         "Q2ext" = {# 3: External validation set Q2
-           # y.hat <- gaussian_cor(Ms, thetas) # correct here !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-           # eta <- 1 - (mean((sOut.vl - y.hat)^2)/mean((sOut.vl - mean(model@sOut))^2))
+         "Q2hout" = {# 3: Hold-out Q2 (external validation set)
+           y.hat <- quiet(predict(model, sIn.pr = sIn.pr, fIn.pr = fIn.pr)$mean)
+           eta <- 1 - (mean((sOut.vl - y.hat)^2)/mean((sOut.vl - mean(sOut.vl))^2))
          })
 
   return(eta)
+}
+
+splitData <- function(sIn, fIn, sOut, ind.vl) {
+  ind.all <- 1:nrow(sOut) # indices of full data
+
+  # splitting scalar inputs (if any)
+  if (!is.null(sIn)) {
+    sIn.tr <- sIn[ind.all[-ind.vl],,drop = F]
+    sIn.vl <- sIn[ind.all[ind.vl],,drop = F]
+  } else {
+    sIn.tr <- sIn.vl <- NULL
+  }
+
+  # splitting functional inputs (if any)
+  if (!is.null(fIn)) {
+    fIn.tr <- lapply(fIn, function(M) M[ind.all[-ind.vl],,drop = F])
+    fIn.vl <- lapply(fIn, function(M) M[ind.all[ind.vl],,drop = F])
+  } else {
+    fIn.tr <- fIn.vl <- NULL
+  }
+
+  # splitting the output
+  sOut.tr <- sOut[ind.all[-ind.vl],,drop = F]
+  sOut.vl <- sOut[ind.all[ind.vl],,drop = F]
+
+  return(list(sIn.tr = sIn.tr, fIn.tr = fIn.tr, sOut.tr = sOut.tr,
+              sIn.vl = sIn.vl, fIn.vl = fIn.vl, sOut.vl = sOut.vl))
 }
 
 printSpace <- function(ds, df, space) {

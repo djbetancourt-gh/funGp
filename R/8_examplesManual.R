@@ -426,11 +426,39 @@ section_xx_heuristic <- function(){
   fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
   sOut <- fgp_BB3(sIn, fIn, n.tr)
 
-  funGp_factory(sIn = sIn, fIn = fIn, sOut = sOut)
+  xm <- funGp_factory(sIn = sIn, fIn = fIn, sOut = sOut)
+  xm
 
+  # scalar vs functional vs hybrid__________________________________________________________________
   xm.s <- funGp_factory(sIn = sIn, sOut = sOut)
   xm.f <- funGp_factory(fIn = fIn, sOut = sOut)
   xm.sf <- funGp_factory(sIn = sIn, fIn = fIn, sOut = sOut)
+  ft <- c(xm.s@log@fitness, xm.f@log@fitness, xm.sf@log@fitness)
+  ids <- split(sample(seq_along(ft)), rep(1:3, c(length(xm.s@log@fitness),length(xm.f@log@fitness),length(xm.sf@log@fitness))))
+  plot(ids[[1]], xm.s@log@fitness, xlim = c(1, length(c(xm.s@log@fitness, xm.f@log@fitness, xm.sf@log@fitness))), pch = 21, bg = "red", ylim = c(0,1))
+  points(ids[[2]], xm.f@log@fitness, pch = 21, bg = "blue")
+  points(ids[[3]], xm.sf@log@fitness, pch = 21, bg = "green")
+  abline(h = xm.s@fitness, col = "red", lty = 2)
+  points(ids[[1]][which.max(xm.s@log@fitness)], max(xm.s@log@fitness), pch = 24, bg = "red")
+  points(ids[[1]][which.max(xm.s@log@fitness)], max(xm.s@log@fitness), pch = 25, bg = "red")
+  abline(h = xm.f@fitness, col = "blue", lty = 2)
+  points(ids[[2]][which.max(xm.f@log@fitness)], max(xm.f@log@fitness), pch = 24, bg = "blue")
+  points(ids[[2]][which.max(xm.f@log@fitness)], max(xm.f@log@fitness), pch = 25, bg = "blue")
+  abline(h = xm.sf@fitness, col = "green", lty = 2)
+  points(ids[[3]][which.max(xm.sf@log@fitness)], max(xm.sf@log@fitness), pch = 24, bg = "green")
+  points(ids[[3]][which.max(xm.sf@log@fitness)], max(xm.sf@log@fitness), pch = 25, bg = "green")
+
+  # validation set _________________________________________________________________________________
+  xm <- funGp_factory(sIn = sIn, fIn = fIn, sOut = sOut, ind.vl = 18:25)
+
+  # several validation sets ________________________________________________________________________
+  xm <- funGp_factory(sIn = sIn, fIn = fIn, sOut = sOut, ind.vl = sapply((0:17), function(i) (1:8) + i))
+
+
+  # several validation sets - scalar vs functional vs hybrid _______________________________________
+  xm.s <- funGp_factory(sIn = sIn, sOut = sOut, ind.vl = sapply((0:17), function(i) (1:8) + i))
+  xm.f <- funGp_factory(fIn = fIn, sOut = sOut, ind.vl = sapply((0:17), function(i) (1:8) + i))
+  xm.sf <- funGp_factory(sIn = sIn, fIn = fIn, sOut = sOut, ind.vl = sapply((0:17), function(i) (1:8) + i))
   ft <- c(xm.s@log@fitness, xm.f@log@fitness, xm.sf@log@fitness)
   ids <- split(sample(seq_along(ft)), rep(1:3, c(length(xm.s@log@fitness),length(xm.f@log@fitness),length(xm.sf@log@fitness))))
   plot(ids[[1]], xm.s@log@fitness, xlim = c(1, length(c(xm.s@log@fitness, xm.f@log@fitness, xm.sf@log@fitness))), pch = 21, bg = "red", ylim = c(0,1))

@@ -25,7 +25,8 @@ setClass("antsLog",
 #' @importFrom scales alpha
 #' @importFrom graphics axis
 #' @importFrom stats median setNames
-run_ACO <- function(sIn, fIn, sOut, param, env, base) {
+#' @importFrom utils setTxtProgressBar txtProgressBar
+run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base) {
   # recover heuristic parameters
   #___________________________________________________________________________________________
   # <---> population factors
@@ -72,7 +73,7 @@ run_ACO <- function(sIn, fIn, sOut, param, env, base) {
   for (c.gen in 1:n.gen) {
     start_time <- Sys.time()
     cat(paste("Dispatching colony", c.gen, "\n"))
-    # pb <- txtProgressBar(min = 0, max = n.pop, style = 3)
+    pb <- txtProgressBar(min = 0, max = n.pop, style = 3)
 
     # create a new colony and mark as incomplete
     ants <- matrix(nrow = n.pop, ncol = n.layers)
@@ -124,40 +125,92 @@ run_ACO <- function(sIn, fIn, sOut, param, env, base) {
 
       # check if the ant is done
       if (antup$layer == n.layers) {
-        antsPartial[antup$id] <- F
-        # setTxtProgressBar(pb, sum(!antsPartial))
+        active <- getActiveIn_ACO(antup$sol, sIn, fIn, base)
+        if ((length(active$s.active) + length(active$f.active)) > 0) {
+          # tag ant as complete
+          antsPartial[antup$id] <- F
+
+        } else {
+          # restart ant
+          ants[antup$id,] <- NA
+          antsLayers[antup$id] <- 0
+          antsLevels[antup$id] <- 1
+        }
       }
 
       # check if the colony is done
       if (all(!antsPartial)) colPartial <- F
     }
 
+    # if there are no active inputs left, restart the ant !!!!!!!!!!!!!!!!!!!!!!! complete this!!!!!!!!!!!!!!!!!!!!!!!!!
+    # if (all(is.null(args$sIn), is.null(args$fIn))) browser()
+    # getActiveIn_ACO(ants[i,], sIn, fIn, base)
+
     # compute fitness of each ant
     fitness <- rep(0, n.pop)
     for (i in 1:n.pop) {
-      # translate ant data into funGp arguments format
-      args <- formatSol_ACO(ants[i,], sIn, fIn, base)
+      if (is.null(ind.vl)) {
+        # translate ant data into funGp arguments format
+        args <- formatSol_ACO(ants[i,], sIn, fIn, base)
 
-      if (all(is.null(args$sIn), is.null(args$fIn))) browser()
+        # build the model
+        model <- quiet(funGp(sIn = args$sIn, fIn = args$fIn, sOut = sOut, kerType = args$kerType,
+                             f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType))
 
-      # build the model
-      model <- quiet(funGp(sIn = args$sIn, fIn = args$fIn, sOut = sOut, kerType = args$kerType,
-                           f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType))
+        # compute model fitness
+        fitness[i] <- max(getFitness(model),0)
+      } else {
+        n.rep <- ncol(ind.vl)# number of replicates
+        rep.fitness <- rep(0, n.rep)
+        for (r in 1:n.rep) {
+          # split data into training and validation
+          data <- splitData(sIn, fIn, sOut, ind.vl[,r]) # aca no hay que poner entradas inactivas en null
 
-      # compute model fitness #!!!!!!!!!!!!!!!!!! extend to other metrics
-      # getFitness(model, sIn.vl, fIn.vl, sOut.vl)
-      fitness[i] <- max(getFitness(model),0)
-      # print(ants[i,])
-      # print(fitness[i])
+          # translate ant data into funGp arguments format
+          args <- formatSol_ACO(ants[i,], sIn = data$sIn.tr, fIn = data$fIn.tr, base) # esto se encarga de poner en null las entradas inact
 
+          # build the model
+          model <- quiet(funGp(sIn = args$sIn, fIn = args$fIn, sOut = data$sOut.tr, kerType = args$kerType,
+                               f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType))
+
+          # identify active inputs of both types
+          active <- getActiveIn_ACO(ants[i,], sIn, fIn, base)
+
+          # compute model-replicate fitness
+          rep.fitness[r] <- max(getFitness(model, data$sIn.vl, data$fIn.vl, data$sOut.vl, active),0)
+        }
+
+        # compute average model fitness
+        fitness[i] <- mean(rep.fitness)
+      }
+
+      # # translate ant data into funGp arguments format
+      # args <- formatSol_ACO(ants[i,], sIn, fIn, base)
+      #
+      # if (all(is.null(args$sIn), is.null(args$fIn))) browser()
+      #
+      # # build the model
+      # model <- quiet(funGp(sIn = args$sIn, fIn = args$fIn, sOut = sOut, kerType = args$kerType,
+      #                      f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType))
+      #
+      # # compute model fitness #!!!!!!!!!!!!!!!!!! extend to other metrics
+      # # getFitness(model, sIn.vl, fIn.vl, sOut.vl)
+      # if (is.null(ind.vl)) {
+      #   fitness[i] <- max(getFitness(model),0)
+      # } else {
+      #   fitness[i] <- max(getFitness(model, sIn, fIn, ind.vl, getActiveIn_ACO(ants[i,], sIn, fIn, base)),0)
+      # }
+      # # print(ants[i,])
+      # # print(fitness[i])
+      #
       # save the model if it is the global best
       if (fitness[i] > b.fitness) {
         b.model <- model
         b.args <- args
       }
-      # setTxtProgressBar(pb, i)
+      setTxtProgressBar(pb, i)
     }
-    # close(pb)
+    close(pb)
 
     # extract ants and fitness for global update
     res <- getElite_ACO(fitness, n.lbest, ants, u.gbest, c.gen, b.ant, b.fitness)
@@ -222,7 +275,10 @@ run_ACO <- function(sIn, fIn, sOut, param, env, base) {
   top.fitness <- sort(top.fitness, decreasing = T)
   top.ants <- top.ants[order(top.fitness, decreasing = T),]
 
-  return(list(model = b.model, args = b.args, b.fitness = b.fitness, log.vec = top.ants, log.fitness = top.fitness, details = param))
+  ####### not sure that b.ant matches b.args
+
+  return(list(model = b.model, sol.vec = b.ant, sol.args = b.args, b.fitness = b.fitness,
+              log.vec = top.ants, log.fitness = top.fitness, details = param))
 }
 
 nextNode_ACO <- function(myant, rule, phero, visib, alp, bet, c.gen) {
