@@ -10,7 +10,7 @@ To create a funGp object, use \link[funGp]{funGp} . See also this function for m
 \section{Slots}{
 
 \describe{
-\item{\code{call}}{Object of class \code{"language"}. User call reminder.}
+\item{\code{howCalled}}{Object of class \code{"character"}. User call reminder.}
 
 \item{\code{type}}{Object of class \code{"character"}. Type of model based on inputs structure. To be chosen from {"scalar", "functional", "hybrid"}.}
 

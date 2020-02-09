@@ -12,7 +12,7 @@ Fill this!!!!!!!!!
 \describe{
 \item{\code{pdims}}{Object of class \code{"numeric"}. Projection dimension of each input.}
 
-\item{\code{family}}{Object of class \code{"character"}. To be chosen from {"PCA", "B-splines"}.}
+\item{\code{basType}}{Object of class \code{"character"}. To be chosen from {"PCA", "B-splines"}.}
 
 \item{\code{basis}}{Object of class \code{"list"}. Projection basis. For functioanl inputs, eEach element (fDims_i x fpDims_i)
 contains the basis functions used for the projection of one functional input.}

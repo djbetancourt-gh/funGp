@@ -14,7 +14,7 @@
 #' @description Fill this!!!!!!!!!
 #'
 #' @slot pdims Object of class \code{"numeric"}. Projection dimension of each input.
-#' @slot family Object of class \code{"character"}. To be chosen from {"PCA", "B-splines"}.
+#' @slot basType Object of class \code{"character"}. To be chosen from {"PCA", "B-splines"}.
 #' @slot basis Object of class \code{"list"}. Projection basis. For functioanl inputs, eEach element (fDims_i x fpDims_i)
 #'                                            contains the basis functions used for the projection of one functional input.
 #' @slot coefs Object of class \code{"list"}. Each element (n x fpDims_i) contains the coefficients
@@ -27,7 +27,7 @@
 setClass("funGpProj",
          representation(
                         pdims = "numeric",          # projection dimension of each functional input
-                        family = "character",       # family of basis functions. To be chosen from {"PCA", "B-splines"}.
+                        basType = "character",       # family of basis functions. To be chosen from {"PCA", "B-splines"}.
                         basis = "list",             # each element (fDims_i x fpDims_i) contains the basis
                                                     # functions used for the projection of one fun. input
                         coefs = "list"              # each element (n x fpDims_i) contains the coefficients

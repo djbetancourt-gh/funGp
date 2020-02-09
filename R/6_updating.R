@@ -18,12 +18,12 @@ upd_del <- function(model, ind.dl, remake) {
     if (remake) {
       modelup <- funGp(sIn = sIn, fIn = fIn, sOut = sOut, kerType = model@kern@kerType,
                        f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims,
-                       f_family = model@f_proj@family, var.hyp = model@kern@varHyp,
+                       f_basType = model@f_proj@basType, var.hyp = model@kern@varHyp,
                        ls_s.hyp = model@kern@s_lsHyps, ls_f.hyp = model@kern@f_lsHyps)
     } else {
       modelup <- model
       # update projection
-      bcj <- dimReduction(fIn, model@df, model@proj@pdims, model@f_proj@family)
+      bcj <- dimReduction(fIn, model@df, model@proj@pdims, model@f_proj@basType)
       modelup@f_proj@basis <- bcj$basis
       modelup@f_proj@coefs <- bcj$coefs
       # update data points
@@ -45,11 +45,11 @@ upd_del <- function(model, ind.dl, remake) {
     if (remake) {
       modelup <- funGp(fIn = fIn, sOut = sOut,
                        kerType = model@kern@kerType, f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims,
-                       f_family = model@f_proj@family, var.hyp = model@kern@varHyp, ls_f.hyp = model@kern@f_lsHyps)
+                       f_basType = model@f_proj@basType, var.hyp = model@kern@varHyp, ls_f.hyp = model@kern@f_lsHyps)
     } else {
       modelup <- model
       # update projection
-      bcj <- dimReduction(fIn, model@df, model@proj@pdims, model@f_proj@family)
+      bcj <- dimReduction(fIn, model@df, model@proj@pdims, model@f_proj@basType)
       modelup@f_proj@basis <- bcj$basis
       modelup@f_proj@coefs <- bcj$coefs
       # update data points
@@ -158,13 +158,13 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake) {
       } else {
         modelup <- funGp(sIn = sIn, fIn = fIn, sOut = sOut, kerType = model@kern@kerType,
                          f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims,
-                         f_family = model@f_proj@family, var.hyp = model@kern@varHyp,
+                         f_basType = model@f_proj@basType, var.hyp = model@kern@varHyp,
                          ls_s.hyp = model@kern@s_lsHyps, ls_f.hyp = model@kern@f_lsHyps)
       }
     } else {
       modelup <- model
       # update projection
-      bcj <- dimReduction(fIn, model@df, model@proj@pdims, model@f_proj@family)
+      bcj <- dimReduction(fIn, model@df, model@proj@pdims, model@f_proj@basType)
       modelup@f_proj@basis <- bcj$basis
       modelup@f_proj@coefs <- bcj$coefs
       # update data points
@@ -230,12 +230,12 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake) {
       } else {
         modelup <- funGp(fIn = fIn, sOut = sOut,
                          kerType = model@kern@kerType, f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims,
-                         f_family = model@f_proj@family, var.hyp = model@kern@varHyp, ls_f.hyp = model@kern@f_lsHyps)
+                         f_basType = model@f_proj@basType, var.hyp = model@kern@varHyp, ls_f.hyp = model@kern@f_lsHyps)
       }
     } else {
       modelup <- model
       # update projection
-      bcj <- dimReduction(fIn, model@df, model@proj@pdims, model@f_proj@family)
+      bcj <- dimReduction(fIn, model@df, model@proj@pdims, model@f_proj@basType)
       modelup@f_proj@basis <- bcj$basis
       modelup@f_proj@coefs <- bcj$coefs
       # update data points
@@ -367,12 +367,12 @@ upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake) {
     if (remake) {
       modelup <- funGp(sIn = sIn, fIn = fIn, sOut = sOut, kerType = model@kern@kerType,
                        f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims,
-                       f_family = model@f_proj@family, var.hyp = model@kern@varHyp,
+                       f_basType = model@f_proj@basType, var.hyp = model@kern@varHyp,
                        ls_s.hyp = model@kern@s_lsHyps, ls_f.hyp = model@kern@f_lsHyps)
     } else {
       modelup <- model
       # update projection
-      bcj <- dimReduction(fIn, model@df, model@proj@pdims, model@f_proj@family)
+      bcj <- dimReduction(fIn, model@df, model@proj@pdims, model@f_proj@basType)
       modelup@f_proj@basis <- bcj$basis
       modelup@f_proj@coefs <- bcj$coefs
       # update data points
@@ -422,11 +422,11 @@ upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake) {
     if (remake) {
       modelup <- funGp(fIn = fIn, sOut = sOut,
                        kerType = model@kern@kerType, f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims,
-                       f_family = model@f_proj@family, var.hyp = model@kern@varHyp, ls_f.hyp = model@kern@f_lsHyps)
+                       f_basType = model@f_proj@basType, var.hyp = model@kern@varHyp, ls_f.hyp = model@kern@f_lsHyps)
     } else {
       modelup <- model
       # update projection
-      bcj <- dimReduction(fIn, model@df, model@proj@pdims, model@f_proj@family)
+      bcj <- dimReduction(fIn, model@df, model@proj@pdims, model@f_proj@basType)
       modelup@f_proj@basis <- bcj$basis
       modelup@f_proj@coefs <- bcj$coefs
       # update data points
@@ -518,15 +518,15 @@ upd_subHypers <- function(model, var.sb, ls_s.sb, ls_f.sb) {
     # the model is re-made if this is the last one in the sequence of requested tasks
     if (all(!is.null(ls_f.sb), is.null(ls_s.sb))) {
       modelup <- funGp(sIn = model@sIn, fIn = model@fIn, sOut = model@sOut, kerType = model@kern@kerType,
-                       f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims, f_family = model@f_proj@family,
+                       f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims, f_basType = model@f_proj@basType,
                        var.hyp = var.sb, ls_s.hyp = model@kern@s_lsHyps, ls_f.hyp = ls_f.sb)
     } else if(all(!is.null(ls_s.sb), is.null(ls_f.sb))) {
       modelup <- funGp(sIn = model@sIn, fIn = model@fIn, sOut = model@sOut, kerType = model@kern@kerType,
-                       f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims, f_family = model@f_proj@family,
+                       f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims, f_basType = model@f_proj@basType,
                        var.hyp = var.sb, ls_s.hyp = ls_s.sb, ls_f.hyp = model@kern@f_lsHyps)
     } else {
       modelup <- funGp(sIn = model@sIn, fIn = model@fIn, sOut = model@sOut, kerType = model@kern@kerType,
-                       f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims, f_family = model@f_proj@family,
+                       f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims, f_basType = model@f_proj@basType,
                        var.hyp = var.sb, ls_s.hyp = ls_s.sb, ls_f.hyp = ls_f.sb)
     }
 
@@ -534,7 +534,7 @@ upd_subHypers <- function(model, var.sb, ls_s.sb, ls_f.sb) {
     # the model is re-made if this is the last one in the sequence of requested tasks
     modelup <- funGp(fIn = model@fIn, sOut = model@sOut, kerType = model@kern@kerType,
                      f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims,
-                     f_family = model@f_proj@family, var.hyp = var.sb, ls_f.hyp = ls_f.sb)
+                     f_basType = model@f_proj@basType, var.hyp = var.sb, ls_f.hyp = ls_f.sb)
 
   } else { # scalar-input case *******************************************
     # the model is re-made if this is the last one in the sequence of requested tasks
@@ -560,7 +560,7 @@ upd_reeHypers <- function(model, var.re, ls_s.re, ls_f.re) {
 
     # the model is always re-made
     modelup <- funGp(sIn = model@sIn, fIn = model@fIn, sOut = model@sOut, kerType = model@kern@kerType,
-                     f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims, f_family = model@f_proj@family,
+                     f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims, f_basType = model@f_proj@basType,
                      var.hyp = var.up, ls_s.hyp = ls_s.up, ls_f.hyp = ls_f.up)
 
   } else if (model@type == "functional") { # functional-input case *******************************************
@@ -568,7 +568,7 @@ upd_reeHypers <- function(model, var.re, ls_s.re, ls_f.re) {
 
     # the model is always re-made
     modelup <- funGp(fIn = model@fIn, sOut = model@sOut, kerType = model@kern@kerType,
-                     f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims, f_family = model@f_proj@family,
+                     f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims, f_basType = model@f_proj@basType,
                      var.hyp = var.up, ls_s.hyp = ls_s.up, ls_f.hyp = ls_f.up)
 
   } else { # scalar-input case *******************************************

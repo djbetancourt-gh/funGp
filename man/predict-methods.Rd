@@ -7,7 +7,14 @@
 \usage{
 predict(object, ...)
 
-\S4method{predict}{funGp}(object, sIn.pr = NULL, fIn.pr = NULL, detail = "light", ...)
+\S4method{predict}{funGp}(
+  object,
+  sIn.pr = NULL,
+  fIn.pr = NULL,
+  nugget = 10^-8,
+  detail = "light",
+  ...
+)
 }
 \arguments{
 \item{object}{An object to predict from.}
@@ -17,6 +24,8 @@ predict(object, ...)
 \item{sIn.pr}{fill!!}
 
 \item{fIn.pr}{fill!!}
+
+\item{nugget}{fill!!}
 
 \item{detail}{fill!!}
 }

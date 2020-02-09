@@ -11,7 +11,7 @@ funGp(
   kerType = "matern5_2",
   f_disType = "L2_bygroup",
   f_pdims = 3,
-  f_family = "B-splines",
+  f_basType = "B-splines",
   var.hyp = NULL,
   ls_s.hyp = NULL,
   ls_f.hyp = NULL,
@@ -39,7 +39,7 @@ within the covariance function. To be chosen between "scalar" and "functional". 
 
 \item{f_pdims}{an optional array with the projection dimension for each functional input.}
 
-\item{f_family}{fill!!!!!!}
+\item{f_basType}{fill!!!!!!}
 
 \item{var.hyp}{fill!!!!!!}
 

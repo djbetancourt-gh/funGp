@@ -285,17 +285,34 @@ section_1.4.e_update_reeshypers <- function(){
 
 
 # Heuristic model selection
+#' @importFrom lhs randomLHS
 # ----------------------------------------------------------------------------------------------------------
 section_2_heuristic <- function(){
+  # ================ Cleaning the heuristic at zzz_PreetyfyingFactory
+  set.seed(100)
+  n.tr <- 25
+  sIn <- setNames(data.frame(lhs::randomLHS(25,2)), c("X1", "X2"))
+  fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
+  sOut <- fgp_BB3(sIn, fIn, n.tr)
+
+  funGp_factory(sIn = sIn, sOut = sOut)
+  funGp_factory(fIn = fIn, sOut = sOut)
+  funGp_factory(sIn = sIn, fIn = fIn, sOut = sOut)
+
+
+
+
+
+
   # ================ Analytic case from Betancourt et al. (2019)
   # split the data
   set.seed(100)
-  n.tr <- 25
+  n.tr <- 12
   ind.tr <- sample(1:500, n.tr)
   sIn.tr <- sIn[ind.tr,]
   fIn.tr <- lapply(fIn, function(M) M[ind.tr,])
   sOut.tr <- sOut[ind.tr]
-  symbolicfunGp(sIn = sIn.tr, fIn = fIn.tr, sOut = sOut.tr)
+  funGp_factory(sIn = sIn.tr, fIn = fIn.tr, sOut = sOut.tr)
 
   # generating training data
   set.seed(100)
@@ -304,48 +321,48 @@ section_2_heuristic <- function(){
   fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
   sOut <- fgp_BB3(sIn, fIn, n.tr)
 
-  symbolicfunGp(sIn = sIn, fIn = fIn, sOut = sOut)
+  funGp_factory(sIn = sIn, fIn = fIn, sOut = sOut)
 
 
   # with fnuction B1
   set.seed(100)
   n.tr <- 25
-  sIn <- setNames(data.frame(lhs::randomLHS(25,2)), c("X1", "X2"))
+  sIn <- setNames(data.frame(randomLHS(25,2)), c("X1", "X2"))
   fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
   sOut <- fgp_BB1(sIn, fIn, n.tr)
 
-  symbolicfunGp(sIn = sIn, fIn = fIn, sOut = sOut)
+  funGp_factory(sIn = sIn, fIn = fIn, sOut = sOut)
 
 
   # with fnuction B2
   set.seed(100)
   n.tr <- 25
-  sIn <- setNames(data.frame(lhs::randomLHS(25,2)), c("X1", "X2"))
+  sIn <- setNames(data.frame(randomLHS(25,2)), c("X1", "X2"))
   fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
   sOut <- fgp_BB2(sIn, fIn, n.tr)
 
-  symbolicfunGp(sIn = sIn, fIn = fIn, sOut = sOut)
+  funGp_factory(sIn = sIn, fIn = fIn, sOut = sOut)
 
 
   # with fnuction B3
   set.seed(100) # set.seed(1000)  gives 0.978
   n.tr <- 25
-  sIn <- setNames(data.frame(lhs::randomLHS(25,2)), c("X1", "X2"))
+  sIn <- setNames(data.frame(randomLHS(25,2)), c("X1", "X2"))
   fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
   sOut <- fgp_BB3(sIn, fIn, n.tr)
 
-  symbolicfunGp(sIn = sIn, fIn = fIn, sOut = sOut)
+  funGp_factory(sIn = sIn, fIn = fIn, sOut = sOut)
 
 
   # with fnuction B4
   set.seed(400) # set.seed(400) # 0.872
   n.tr <- 25
-  sIn <- setNames(data.frame(lhs::randomLHS(25,2)), c("X1", "X2"))
+  sIn <- setNames(data.frame(randomLHS(25,2)), c("X1", "X2"))
   fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
   sOut <- fgp_BB4(sIn, fIn, n.tr)
 
-  symbolicfunGp(sIn = sIn, fIn = fIn, sOut = sOut)
-  # symbolicfunGp(sIn = sIn, fIn = fIn, sOut = sOut, q0 = .9, alp = 3, bet = 1, rho.l = .7, rho.g = .3)
+  funGp_factory(sIn = sIn, fIn = fIn, sOut = sOut)
+  # funGp_factory(sIn = sIn, fIn = fIn, sOut = sOut, q0 = .9, alp = 3, bet = 1, rho.l = .7, rho.g = .3)
 
 
   # with fnuction B4 - testing parameters of the heuristic over a grid
@@ -359,12 +376,13 @@ section_2_heuristic <- function(){
 
   fs <- rep(0, nrow(D))
   for (i in 1:nrow(D)) {
-    fitness <- symbolicfunGp(sIn = sIn, fIn = fIn, sOut = sOut,
-                             q0 = D[i,1], alp = D[i,2], bet = D[i,3], rho.l = D[i,4], rho.g = D[i,5])
-    print(paste("Configuration ", i, ":", fitness, sep = ""))
-    fs[i] <- fitness
+    # fitness <- funGp_factory(sIn = sIn, fIn = fIn, sOut = sOut,
+    #                          q0 = D[i,1], alp = D[i,2], bet = D[i,3], rho.l = D[i,4], rho.g = D[i,5])
+    # print(paste("Configuration ", i, ":", fitness, sep = ""))
+    # fs[i] <- fitness
   }
 }
+
 
 #' A tester
 #'
@@ -393,4 +411,38 @@ examplesManual <- function(){
   mfup <- update(mf, ind.dl = ind.dl)
   msfup <- update(msf, ind.dl = ind.dl)
   # =========================================
+}
+
+
+
+# Heuristic model selection
+# ----------------------------------------------------------------------------------------------------------
+#' @importFrom lhs randomLHS
+section_xx_heuristic <- function(){
+  # ================ Cleaning the heuristic at yyy
+  set.seed(100)
+  n.tr <- 25
+  sIn <- setNames(data.frame(randomLHS(25,2)), c("X1", "X2"))
+  fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
+  sOut <- fgp_BB3(sIn, fIn, n.tr)
+
+  funGp_factory(sIn = sIn, fIn = fIn, sOut = sOut)
+
+  xm.s <- funGp_factory(sIn = sIn, sOut = sOut)
+  xm.f <- funGp_factory(fIn = fIn, sOut = sOut)
+  xm.sf <- funGp_factory(sIn = sIn, fIn = fIn, sOut = sOut)
+  ft <- c(xm.s@log@fitness, xm.f@log@fitness, xm.sf@log@fitness)
+  ids <- split(sample(seq_along(ft)), rep(1:3, c(length(xm.s@log@fitness),length(xm.f@log@fitness),length(xm.sf@log@fitness))))
+  plot(ids[[1]], xm.s@log@fitness, xlim = c(1, length(c(xm.s@log@fitness, xm.f@log@fitness, xm.sf@log@fitness))), pch = 21, bg = "red", ylim = c(0,1))
+  points(ids[[2]], xm.f@log@fitness, pch = 21, bg = "blue")
+  points(ids[[3]], xm.sf@log@fitness, pch = 21, bg = "green")
+  abline(h = xm.s@fitness, col = "red", lty = 2)
+  points(ids[[1]][which.max(xm.s@log@fitness)], max(xm.s@log@fitness), pch = 24, bg = "red")
+  points(ids[[1]][which.max(xm.s@log@fitness)], max(xm.s@log@fitness), pch = 25, bg = "red")
+  abline(h = xm.f@fitness, col = "blue", lty = 2)
+  points(ids[[2]][which.max(xm.f@log@fitness)], max(xm.f@log@fitness), pch = 24, bg = "blue")
+  points(ids[[2]][which.max(xm.f@log@fitness)], max(xm.f@log@fitness), pch = 25, bg = "blue")
+  abline(h = xm.sf@fitness, col = "green", lty = 2)
+  points(ids[[3]][which.max(xm.sf@log@fitness)], max(xm.sf@log@fitness), pch = 24, bg = "green")
+  points(ids[[3]][which.max(xm.sf@log@fitness)], max(xm.sf@log@fitness), pch = 25, bg = "green")
 }

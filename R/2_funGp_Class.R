@@ -7,7 +7,8 @@
 #' @title Class: functional input Gaussian process model
 #' @description To create a funGp object, use \link[funGp]{funGp} . See also this function for mode details.
 #'
-#' @slot call Object of class \code{"language"}. User call reminder.
+# @slot call Object of class \code{"language"}. User call reminder.
+#' @slot howCalled Object of class \code{"character"}. User call reminder.
 #' @slot type Object of class \code{"character"}. Type of model based on inputs structure. To be chosen from {"scalar", "functional", "hybrid"}.
 #' @slot ds Object of class \code{"numeric"}. Number of scalar inputs.
 #' @slot df Object of class \code{"numeric"}. Number of functional inputs.
@@ -26,12 +27,14 @@
 #' @rdname funGp-class
 #' @include 2_funGpProj_Class.R
 #' @include 2_funGpKern_Class.R
+#' @include 8_outilsCode.R
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 setClass("funGp",
-         representation(
-           call = "language",          # user call reminder
+         slots = c(
+           # call = "language",        # user call reminder
+           howCalled = "modelCall",      # reminder of how the function was called
            type = "character",         # Type of model. To be chosen from {"scalar", "functional", "hybrid"}.
            ds = "numeric",             # number of scalar inputs
            df = "numeric",             # number of functional inputs
@@ -73,7 +76,7 @@ setClass("funGp",
 #' @param f_disType an optional character specifying the distance function to use for the functional inputs
 #' within the covariance function. To be chosen between "scalar" and "functional". Default is "functional".
 #' @param f_pdims an optional array with the projection dimension for each functional input.
-#' @param f_family fill!!!!!!
+#' @param f_basType fill!!!!!!
 #' @param var.hyp fill!!!!!!
 #' @param ls_s.hyp fill!!!!!!
 #' @param ls_f.hyp fill!!!!!!
@@ -112,14 +115,15 @@ setClass("funGp",
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 funGp <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
-                  f_disType = "L2_bygroup", f_pdims = 3, f_family = "B-splines",
+                  f_disType = "L2_bygroup", f_pdims = 3, f_basType = "B-splines",
                   var.hyp = NULL, ls_s.hyp = NULL, ls_f.hyp = NULL,
                   n.starts = 1, n.presample = 20, nugget = 10^-8) {
   # extend simplified user inputs to full versions
   if (!is.null(fIn)) {
+    if (is.matrix(fIn)) fIn <- list(fIn)
     if (length(f_disType) == 1) f_disType <- rep(f_disType, length(fIn))
     if (length(f_pdims) == 1) f_pdims <- rep(f_pdims, length(fIn))
-    if (length(f_family) == 1) f_family <- rep(f_family, length(fIn))
+    if (length(f_basType) == 1) f_basType <- rep(f_basType, length(fIn))
   }
 
   # check validity of user inputs
@@ -154,7 +158,7 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
     # F: original inputs ............. matrix of dimension nxk
     # B: basis functions ............. matrix of dimension pxk (one basis per column)
     # X: projection coefficients ..... matrix of dimension nxp
-    bcj <- dimReduction(fIn, df, f_pdims, f_family)
+    bcj <- dimReduction(fIn, df, f_pdims, f_basType)
     f_basis <- bcj$basis
     f_coefs <- bcj$coefs
     f_J <- bcj$J
@@ -187,7 +191,7 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
     # create objects funGpProj and fill with info specific to the hybrid-input case
     f_proj <- new("funGpProj")
     f_proj@pdims <- f_pdims
-    f_proj@family <- f_family
+    f_proj@basType <- f_basType
     f_proj@basis <- f_basis
     f_proj@coefs <- f_coefs
 
@@ -207,7 +211,7 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
 
     # perform projection of functional inputs
     # the projection is such that F = X * B' + e, with
-    bcj <- dimReduction(fIn, df, f_pdims, f_family)
+    bcj <- dimReduction(fIn, df, f_pdims, f_basType)
     f_basis <- bcj$basis
     f_coefs <- bcj$coefs
     f_J <- bcj$J
@@ -236,7 +240,7 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
     # create objects funGpProj and fill with info specific to the functional-input case
     f_proj <- new("funGpProj")
     f_proj@pdims <- f_pdims
-    f_proj@family <- f_family
+    f_proj@basType <- f_basType
     f_proj@basis <- f_basis
     f_proj@coefs <- f_coefs
 
@@ -288,7 +292,8 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
   kern@varHyp <- varHyp
 
   # fill general funGpModel slots
-  model@call <- match.call()
+  # model@call <- match.call()
+  model@howCalled@string <- gsub("^ *|(?<= ) | *$", "", paste0(deparse(match.call()), collapse = " "), perl = T)
   model@sOut <- sOut
   model@n.tot <- n.tr
   model@n.tr <- n.tr
@@ -351,8 +356,8 @@ show.funGp <- function(model) {
   if (model@df > 0) {
     # browser()
     np <- min(model@df, 8)
-    G <- cbind(paste("F", 1:np, sep = ""), model@f_dims, model@f_proj@pdims, model@f_proj@family, model@kern@f_disType)
-    colnames(G) <- c("Input", "Orig. dim", "Proj. dim", "Family", "Distance")
+    G <- cbind(paste("F", 1:np, sep = ""), model@f_dims, model@f_proj@pdims, model@f_proj@basType, model@kern@f_disType)
+    colnames(G) <- c("Input", "Orig. dim", "Proj. dim", "Basis", "Distance")
     if (np < model@df) {
       G <- rbind(G, rep("...", 5))
     }
@@ -397,6 +402,7 @@ show.funGp <- function(model) {
 #' @param object An object to predict from.
 #' @param sIn.pr fill!!
 #' @param fIn.pr fill!!
+#' @param nugget fill!!
 #' @param detail fill!!
 #' @param ... Further arguments for methods.
 #'
@@ -450,11 +456,11 @@ setGeneric(name = "predict", def = function(object, ...) standardGeneric("predic
 #' @rdname predict-methods
 #' @aliases predict,funGp-method
 setMethod("predict", "funGp",
-          function(object, sIn.pr = NULL, fIn.pr = NULL, detail = "light", ...){
-            predict.funGp(model = object, sIn.pr = sIn.pr, fIn.pr = fIn.pr, detail = detail)
+          function(object, sIn.pr = NULL, fIn.pr = NULL, nugget = 10^-8, detail = "light", ...){
+            predict.funGp(model = object, sIn.pr = sIn.pr, fIn.pr = fIn.pr, nugget = nugget, detail = detail)
           })
 
-predict.funGp <- function(model, sIn.pr, fIn.pr, detail = "light") {
+predict.funGp <- function(model, sIn.pr, fIn.pr, nugget, detail = "light") {
   # check validity of user inputs
   checkVal_pred_and_sim(as.list(environment()))
 
