@@ -39,12 +39,16 @@ setClass("X-funGp",
 #' @param sOut fill
 #' @param constraints fill
 #' @param setup fill
+#' @param nugget Fill!!!!!!!!!!
+#' @param n.starts Fill!!!!!!!!!!
+#' @param n.presample Fill!!!!!!!!!!
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 #' @keywords internal
 funGp_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, ind.vl = NULL,
-                          method = "ACO", constraints = list(), setup = list()) {
+                          method = "ACO", constraints = list(), setup = list(),
+                          nugget = 1e-8, n.starts = 1, n.presample = 20) {
   # user inputs, remove this at the end !!!!!!!!!!!!!!!!!!!!!!!!!
   s_keepActive <- c(1) # keep X1 always active
   f_keepActive <- NULL # Do not keep any functional input always active, let them free
@@ -55,6 +59,9 @@ funGp_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, ind.vl = NULL,
   kerTypes <- c("matern5_2", "matern3_2") # test only matern kernels
   constraints <- list(s_keepActive = s_keepActive, f_keepActive = f_keepActive, f_fixDims = f_fixDims, f_maxDims = f_maxDims,
                       f_disTypes = f_disTypes, f_basTypes = f_basTypes, kerTypes = kerTypes)
+
+  # extra arguments for model call
+  extargs <- list(nugget = nugget, n.starts = n.starts, n.presample = n.presample)
 
   # define solution space based on user inputs
   solspace <- setSpace(sIn, fIn, constraints)
@@ -92,7 +99,7 @@ funGp_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, ind.vl = NULL,
   # optimize model structure
   switch(method,
          "ACO" = {# 1: Ant Colony Optimization
-           opt <- master_ACO(sIn, fIn, sOut, ind.vl, solspace, setup)
+           opt <- master_ACO(sIn, fIn, sOut, ind.vl, solspace, setup, extargs)
          },
 
          "ES" = {# 3: Exhaustive Search

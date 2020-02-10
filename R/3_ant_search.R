@@ -26,7 +26,7 @@ setClass("antsLog",
 #' @importFrom graphics axis
 #' @importFrom stats median setNames
 #' @importFrom utils setTxtProgressBar txtProgressBar
-run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base) {
+run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs) {
   # recover heuristic parameters
   #___________________________________________________________________________________________
   # <---> population factors
@@ -155,7 +155,8 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base) {
 
         # build the model
         model <- quiet(funGp(sIn = args$sIn, fIn = args$fIn, sOut = sOut, kerType = args$kerType,
-                             f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType))
+                             f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType,
+                             nugget = extargs$nugget, n.starts = extargs$n.starts, n.presample = extargs$n.presample))
 
         # compute model fitness
         fitness[i] <- max(getFitness(model),0)
@@ -171,7 +172,8 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base) {
 
           # build the model
           model <- quiet(funGp(sIn = args$sIn, fIn = args$fIn, sOut = data$sOut.tr, kerType = args$kerType,
-                               f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType))
+                               f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType,
+                               nugget = extargs$nugget, n.starts = extargs$n.starts, n.presample = extargs$n.presample))
 
           # identify active inputs of both types
           active <- getActiveIn_ACO(ants[i,], sIn, fIn, base)

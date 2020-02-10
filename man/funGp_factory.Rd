@@ -11,7 +11,10 @@ funGp_factory(
   ind.vl = NULL,
   method = "ACO",
   constraints = list(),
-  setup = list()
+  setup = list(),
+  nugget = 1e-08,
+  n.starts = 1,
+  n.presample = 20
 )
 }
 \arguments{
@@ -24,6 +27,12 @@ funGp_factory(
 \item{constraints}{fill}
 
 \item{setup}{fill}
+
+\item{nugget}{Fill!!!!!!!!!!}
+
+\item{n.starts}{Fill!!!!!!!!!!}
+
+\item{n.presample}{Fill!!!!!!!!!!}
 }
 \description{
 Fill. This.

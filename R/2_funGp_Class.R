@@ -80,9 +80,9 @@ setClass("funGp",
 #' @param var.hyp fill!!!!!!
 #' @param ls_s.hyp fill!!!!!!
 #' @param ls_f.hyp fill!!!!!!
+#' @param nugget Fill!!!!!!!!!!
 #' @param n.starts Fill!!!!!!!!!!
 #' @param n.presample Fill!!!!!!!!!!
-#' @param nugget Fill!!!!!!!!!!
 #'
 #' @importFrom methods new
 #' @importFrom stats optim
@@ -116,8 +116,8 @@ setClass("funGp",
 #' @export
 funGp <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
                   f_disType = "L2_bygroup", f_pdims = 3, f_basType = "B-splines",
-                  var.hyp = NULL, ls_s.hyp = NULL, ls_f.hyp = NULL,
-                  n.starts = 1, n.presample = 20, nugget = 10^-8) {
+                  var.hyp = NULL, ls_s.hyp = NULL, ls_f.hyp = NULL, nugget = 1e-8,
+                  n.starts = 1, n.presample = 20) {
   # extend simplified user inputs to full versions
   if (!is.null(fIn)) {
     if (is.matrix(fIn)) fIn <- list(fIn)

@@ -4,7 +4,7 @@
 
 # Method to plot a funGp model
 # ----------------------------------------------------------------------------------------------------------
-master_ACO <- function(sIn, fIn, sOut, ind.vl, solspace, setup) {
+master_ACO <- function(sIn, fIn, sOut, ind.vl, solspace, setup, extargs) {
   # set heuristic parameters based on defaults and user specifications
   param <- setParams_ACO(setup)
 
@@ -12,16 +12,16 @@ master_ACO <- function(sIn, fIn, sOut, ind.vl, solspace, setup) {
   env <- setEnvir_ACO(solspace, param)
 
   # perform exploration
-  res <- run_ACO(sIn, fIn, sOut, ind.vl, param, env, solspace$sp.base)
+  res <- run_ACO(sIn, fIn, sOut, ind.vl, param, env, solspace$sp.base, extargs)
 
   # correct the howCalled of best model
-  res$model@howCalled@string <- getCall_ACO(res$sol.vec, sIn, fIn, res$sol.args, solspace$sp.base)
+  res$model@howCalled@string <- getCall_ACO(res$sol.vec, sIn, fIn, res$sol.args, solspace$sp.base, extargs)
 
   # format solution vector
   res$sol.vec <- vec2DFrame_ACO(res$sol.vec, sIn, fIn)
 
   # fill antLog
-  res$log <- getLog_ACO(sIn, fIn, res$log.vec, res$log.fitness, solspace$sp.base)
+  res$log <- getLog_ACO(sIn, fIn, res$log.vec, res$log.fitness, solspace$sp.base, extargs)
 
   return(res)
 }
@@ -364,7 +364,7 @@ getActiveIn_ACO <- function(ant, sIn, fIn, base) {
   return(list(s.active = s.active.ac, f.active = f.active.ac))
 }
 
-getCall_ACO <- function(ant, sIn, fIn, args, base) {
+getCall_ACO <- function(ant, sIn, fIn, args, base, extargs) {
   # recover input dimensions
   if (!is.null(sIn)) ds <- ncol(sIn) else ds <- 0
   if (!is.null(fIn)) df <- length(fIn) else df <- 0
@@ -377,14 +377,16 @@ getCall_ACO <- function(ant, sIn, fIn, args, base) {
     # s.used <- which(apply(sIn, 2, function(v) c.vecInMat_Match(args$sIn, v)))
     s.used <- in.used$s.active
     if (length(s.used) == ncol(sIn)) {
-      s.str <- "sIn"
+      s.str <- "sIn = sIn"
     } else if (length(s.used) == 1) {
-      s.str <- paste("sIn[,", s.used, "]", sep = "")
+      s.str <- paste("sIn = sIn[,", s.used, "]", sep = "")
     } else if (all(diff(s.used) == 1)) {
-      s.str <- paste("sIn[,", paste(range(s.used), collapse = ":"), "]", sep = "")
+      s.str <- paste("sIn = sIn[,", paste(range(s.used), collapse = ":"), "]", sep = "")
     } else {
-      s.str <- paste("sIn[,c(", paste(s.used, collapse = ","), ")]", sep = "")
+      s.str <- paste("sIn = sIn[,c(", paste(s.used, collapse = ","), ")]", sep = "")
     }
+  } else {
+    s.str <- NULL
   }
 
   # set string for functional inputs
@@ -392,50 +394,55 @@ getCall_ACO <- function(ant, sIn, fIn, args, base) {
     # f.used <- which(sapply(fIn, function(M) matInList_Match(args$fIn, M)))
     f.used <- in.used$f.active
     if (length(f.used) == length(fIn)) {
-      f.str <- "fIn"
+      f.str <- "fIn = fIn"
     } else if (length(f.used) == 1) {
-      f.str <- paste("fIn[[", f.used, "]]", sep = "")
+      f.str <- paste("fIn = fIn[[", f.used, "]]", sep = "")
     } else if (all(diff(f.used) == 1)) {
-      f.str <- paste("fIn[[", paste(range(f.used), collapse = ":"), "]]", sep = "")
+      f.str <- paste("fIn = fIn[[", paste(range(f.used), collapse = ":"), "]]", sep = "")
     } else {
-      f.str <- paste("fIn[[c(", paste(f.used, collapse = ","), ")]]", sep = "")
+      f.str <- paste("fIn = fIn[[c(", paste(f.used, collapse = ","), ")]]", sep = "")
     }
 
     # prepare f_distype string
     if (length(args$f_disType) == 1) {
-      f_disType.str <- paste('"', args$f_disType, '"', sep = "")
+      f_disType.str <- paste('f_distype = "', args$f_disType, '"', sep = "")
     } else {
-      f_disType.str <- paste('c("', paste(args$f_disType, collapse = '", "'), '")', sep = "")
+      f_disType.str <- paste('f_distype = c("', paste(args$f_disType, collapse = '", "'), '")', sep = "")
     }
 
     # prepare f_pdims string
     if (length(args$f_pdims) == 1) {
-      f_pdims.str <- args$f_pdims
+      f_pdims.str <- paste("f_pdims = ", args$f_pdims, sep = "")
     } else {
-      f_pdims.str <- paste('c(', paste(args$f_pdims, collapse = ', '), ')', sep = "")
+      f_pdims.str <- paste('f_pdims = c(', paste(args$f_pdims, collapse = ', '), ')', sep = "")
     }
 
     # prepare f_basType string
     if (length(args$f_basType) == 1) {
-      f_basType.str <- paste('"', args$f_basType, '"', sep = "")
+      f_basType.str <- paste('f_basType = "', args$f_basType, '"', sep = "")
     } else {
-      f_basType.str <- paste('c("', paste(args$f_basType, collapse = '", "'), '")', sep = "")
+      f_basType.str <- paste('f_basType = c("', paste(args$f_basType, collapse = '", "'), '")', sep = "")
     }
+  } else {
+    f.str <- f_disType.str <- f_pdims.str <- f_basType.str <- NULL
   }
 
   # prepare kerType string
-  kerType.str <- paste('"', args$kerType, '"', sep = "")
+  kerType.str <- paste('kerType = "', args$kerType, '"', sep = "")
+
+  # set strings for extra arguments: nugget, n.starts, n.presample
+  defargs <- formals(funGp)
+  if (extargs$nugget != defargs$nugget) nugg.str <- paste("nugget = ", extargs$nugget, sep = "") else nugg.str <- NULL
+  if (extargs$n.starts != defargs$n.starts) n.starts.str <- paste("n.starts = ", extargs$n.starts, sep = "") else n.starts.str <- NULL
+  if (extargs$n.presample != defargs$n.presample) {
+    n.presample.str <- paste("n.presample = ", extargs$n.presample, sep = "")
+  } else {
+    n.presample.str <- NULL
+  }
 
   # merge strings to produce model call
-  if (all(!is.null(args$sIn), !is.null(args$fIn))) {
-    modcall <- paste("funGp(sIn = ", s.str, ", fIn = ", f.str, ", sOut = sOut, kerType = ", kerType.str,
-                     ", f_disType = ", f_disType.str, ", f_pdims = ", f_pdims.str, ", f_basType = ", f_basType.str, ")", sep = "")
-  } else if (!is.null(args$fIn)) {
-    modcall <- paste("funGp(fIn = ", f.str, ", sOut = sOut, kerType = ", kerType.str,
-                     ", f_disType = ", f_disType.str, ", f_pdims = ", f_pdims.str, ", f_basType = ", f_basType.str, ")", sep = "")
-  } else {
-    modcall <- paste("funGp(sIn = ", s.str, ", sOut = sOut, kerType = ", kerType.str, ")", sep = "")
-  }
+  full.str <- c(s.str, f.str, f_disType.str, f_pdims.str, f_basType.str, kerType.str, nugg.str, n.starts.str, n.presample.str)
+  modcall <- paste("funGp(", paste(full.str, collapse = ", "), ")", sep = "")
 
   return(modcall)
 }
@@ -488,12 +495,12 @@ vec2DFrame_ACO <- function(sol.vec, sIn, fIn) {
   return(vals)
 }
 
-getLog_ACO <- function(sIn, fIn, log.vec, log.fitness, base) {
+getLog_ACO <- function(sIn, fIn, log.vec, log.fitness, base, extargs) {
   mylog <- new("antsLog")
   args <- list()
   for (i in 1:nrow(log.vec)) {
     mc <- new("modelCall")
-    mc@string <- getCall_ACO(log.vec[i,], sIn, fIn, formatSol_ACO(log.vec[i,], sIn, fIn, base), base)
+    mc@string <- getCall_ACO(log.vec[i,], sIn, fIn, formatSol_ACO(log.vec[i,], sIn, fIn, base), base, extargs)
     args[[i]] <- mc
   }
   mylog@args <- args

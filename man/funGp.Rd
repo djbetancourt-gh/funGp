@@ -15,9 +15,9 @@ funGp(
   var.hyp = NULL,
   ls_s.hyp = NULL,
   ls_f.hyp = NULL,
+  nugget = 1e-08,
   n.starts = 1,
-  n.presample = 20,
-  nugget = 10^-8
+  n.presample = 20
 )
 }
 \arguments{
@@ -47,11 +47,11 @@ within the covariance function. To be chosen between "scalar" and "functional". 
 
 \item{ls_f.hyp}{fill!!!!!!}
 
+\item{nugget}{Fill!!!!!!!!!!}
+
 \item{n.starts}{Fill!!!!!!!!!!}
 
 \item{n.presample}{Fill!!!!!!!!!!}
-
-\item{nugget}{Fill!!!!!!!!!!}
 }
 \description{
 Creates a Gaussian process model based on the nature of the inputs which could be scalar,
