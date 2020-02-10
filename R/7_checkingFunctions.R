@@ -19,6 +19,13 @@ checkVal_funGp <- function(env){
       }
     }
 
+    # identifiabilty
+    ind.dup <- check_duplicates_SF(env$sIn, env$fIn, env$sIn, env$fIn)
+    if (length(ind.dup) > 0) {
+      stop(paste("There are duplicated input points.\nDuplicates' indices: ", paste(ind.dup, collapse = ", "),
+                 "\nPlease check your data.", sep = ""))
+    }
+
   } else if(!is.null(env$fIn)) { # functional-input case ***************************************
     # check validity and consistency of user inputs
     if (length(unique(c(as.numeric(sapply(env$fIn, nrow)), length(env$sOut)))) > 1) {
@@ -43,6 +50,31 @@ checkVal_funGp <- function(env){
     if (nrow(env$sIn) != length(env$sOut)) {
       stop("Inconsistent number of points. Please check that sIn and sOut have the same number of rows.")
     }
+  }
+
+  # validity of the nugget
+  if (!is.numeric(env$nugget)) {
+    stop("The nugget should be numeric.")
+  } else if (env$nugget < 0) {
+    stop("The nugget should be a nonnegative number.")
+  }
+
+  # validity of n.starts
+  if (!is.numeric(env$n.starts)) {
+    stop("The argument n.starts should be numeric.")
+  } else if (!check.int(env$n.starts)) {
+    stop("The argument n.starts should be an integer value.")
+  } else if (env$n.starts <= 0) {
+    stop("The argument n.starts should be a positive integer.")
+  }
+
+  # validity of n.presample
+  if (!is.numeric(env$n.presample)) {
+    stop("The argument n.presample should be numeric.")
+  } else if (!check.int(env$n.presample)) {
+    stop("The argument n.presample should be an integer value.")
+  } else if (env$n.presample <= 0) {
+    stop("The argument n.presample should be a positive integer.")
   }
 }
 # ----------------------------------------------------------------------------------------------------------

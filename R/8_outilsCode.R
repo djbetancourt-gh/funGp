@@ -2,6 +2,10 @@ sample.vec <- function(x, ...){
   x[sample(length(x), ...)]
 }
 
+check.int <- function(x){
+  x%%1 == 0
+}
+
 c.vecInMat_Match <- function(M, v) {
   out <- sapply(M, function(x, v) isTRUE(all.equal(x, v)), v)
   any(out)

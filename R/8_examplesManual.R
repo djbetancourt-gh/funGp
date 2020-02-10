@@ -473,4 +473,14 @@ section_xx_heuristic <- function(){
   abline(h = xm.sf@fitness, col = "green", lty = 2)
   points(ids[[3]][which.max(xm.sf@log@fitness)], max(xm.sf@log@fitness), pch = 24, bg = "green")
   points(ids[[3]][which.max(xm.sf@log@fitness)], max(xm.sf@log@fitness), pch = 25, bg = "green")
+
+
+  # utility of nugget
+  set.seed(100)
+  n.tr <- 25
+  sIn <- setNames(data.frame(randomLHS(25,2)), c("X1", "X2"))
+  fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
+  sOut <- fgp_BB3(sIn, fIn, n.tr)
+
+  xm <- funGp_factory(sIn = sIn, fIn = fIn, sOut = sOut, ind.vl = 18:25, nugget = 0)
 }
