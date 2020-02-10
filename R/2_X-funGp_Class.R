@@ -5,6 +5,8 @@
 #' @slot fitness Hola.
 #' @slot structure Hola.
 #' @slot factoryCall Object of class \code{"character"}. Kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}.
+#' @slot n.solspace Hola.
+#' @slot n.explored Hola.
 #' @slot method Object of class \code{"character"}. Kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}.
 #' @slot stat Hola.
 #' @slot details Object of class \code{"character"}. Kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}.
@@ -22,6 +24,8 @@ setClass("X-funGp",
            fitness = "numeric",            # model fitness
            structure = "data.frame",       # model fitness
            factoryCall = "factoryCall",    # distance type. To be chosen from {"scalar", "functional"}
+           n.solspace = "numeric",         # search method
+           n.explored = "numeric",         # search method
            method = "character",           # search method
            stat = "character",             # search method
            details = "list",               # search method
@@ -76,18 +80,6 @@ funGp_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, ind.vl = NULL,
     stop("The user must provide either a scalar-input matrix, a functional-input list or both of them. None has been detected.")
   }
 
-  # prepare input and output structures based on case: 1. LOOCV; 2. HOUT
-  # if (is.null(ind.vl)) { # case 1
-  #   sIn.tr <- sIn
-  #   fIn.tr <- fIn
-  #   sOut.tr <- sOut
-  # } else { # case 2
-  # ind.vl <- as.matrix(ind.vl)
-  #   sIn.tr <- sIn
-  #   fIn.tr <- fIn
-  #   sOut.tr <- sOut
-  # }
-
   if (!is.null(ind.vl)) {
     ind.vl <- as.matrix(ind.vl)
     stat <- paste("Q2hout.", (nrow(sOut) - nrow(ind.vl)), ".", nrow(ind.vl), ".", ncol(ind.vl), sep = "")
@@ -111,6 +103,8 @@ funGp_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, ind.vl = NULL,
   X.model@fitness <- opt$b.fitness
   X.model@structure <- opt$sol.vec
   X.model@factoryCall@string <- gsub("^ *|(?<= ) | *$", "", paste0(deparse(match.call()), collapse = " "), perl = T)
+  X.model@n.solspace <- getSpacesize(solspace$sp.user)
+  X.model@n.explored <- nrow(opt$log@sols)
   X.model@method <- "Ants"
   X.model@stat <- stat
   X.model@log <- opt$log
@@ -253,13 +247,51 @@ splitData <- function(sIn, fIn, sOut, ind.vl) {
               sIn.vl = sIn.vl, fIn.vl = fIn.vl, sOut.vl = sOut.vl))
 }
 
+getSpacesize <- function(space) {
+  # recover components
+  s.state <- space$s.state
+  f.state <- space$f.state
+  f.dist <- space$f.dist
+  f.dims <- space$f.dims
+  f.bas <- space$f.bas
+  k.type <- space$k.type
+
+  # count 2 levels for each free scalar input
+  n.s <- 2 * sum(s.state == 0)
+
+  # count for functional inputs
+  n.fs <- rep(1, space$df)
+  for (i in 1:space$df) {
+    # count the number of distance types
+    n.fs[i] <- n.fs[i] * length(f.dist[[i]])
+
+    # count the number of dimensions
+    n.fs[i] <- n.fs[i] * length(f.dims[[i]])
+
+    # count the number of bases
+    n.fs[i] <- n.fs[i] * length(f.bas[[i]])
+
+    # if the input is free, add an extra level for the function inactive
+    if (f.state[i] == 0) n.fs[i] <- n.fs[i] + 1
+  }
+  n.f <- prod(n.fs)
+
+  # count the number of kernel functions
+  n.k <- length(k.type)
+
+  # totalize and subtract 1 if all scalar and functional inputs are free
+  n.solspace <- n.s * n.f * n.k - 1 * (sum(s.state, f.state) == 0)
+
+  return(n.solspace)
+}
+
 printSpace <- function(ds, df, space) {
   # recover components
   s.state <- space$s.state
   f.state <- space$f.state
-  f.dims <- space$f.dims
   f.dist <- space$f.dist
-  f.fam <- space$f.fam
+  f.dims <- space$f.dims
+  f.bas <- space$f.bas
   k.type <- space$k.type
 
   # initialize vectors of free factors and values
@@ -290,6 +322,17 @@ printSpace <- function(ds, df, space) {
     }
   }
 
+  # check distances for functions
+  for (i in 1:df) {
+    if (length(f.dist[[i]]) > 1) {
+      free.fact <- c(free.fact, paste("Dist. for F", i, sep = ""))
+      free.values <- c(free.values, paste(f.dist[[i]], collapse = ", "))
+    } else {
+      fixe.fact <- c(fixe.fact, paste("Dist. for F", i, sep = ""))
+      fixe.values <- c(fixe.values, f.dist[[i]])
+    }
+  }
+
   # check potential dimensions of functional inputs
   for (i in 1:df) {
     if (length(f.dims[[i]]) > 1) {
@@ -305,25 +348,14 @@ printSpace <- function(ds, df, space) {
     }
   }
 
-  # check distances for functions
-  for (i in 1:df) {
-    if (length(f.dist[[i]]) > 1) {
-      free.fact <- c(free.fact, paste("Dist. for F", i, sep = ""))
-      free.values <- c(free.values, paste(f.dist[[i]], collapse = ", "))
-    } else {
-      fixe.fact <- c(fixe.fact, paste("Dist. for F", i, sep = ""))
-      fixe.values <- c(fixe.values, f.dist[[i]])
-    }
-  }
-
   # check basis family for functions
   for (i in 1:df) {
-    if (length(f.fam[[i]]) > 1) {
+    if (length(f.bas[[i]]) > 1) {
       free.fact <- c(free.fact, paste("Basis. for F", i, sep = ""))
-      free.values <- c(free.values, paste(f.fam[[i]], collapse = ", "))
+      free.values <- c(free.values, paste(f.bas[[i]], collapse = ", "))
     } else {
       fixe.fact <- c(fixe.fact, paste("Basis. for F", i, sep = ""))
-      fixe.values <- c(fixe.values, f.fam[[i]])
+      fixe.values <- c(fixe.values, f.bas[[i]])
     }
   }
 
