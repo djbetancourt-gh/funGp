@@ -26,7 +26,7 @@ setClass("antsLog",
 #' @importFrom graphics axis
 #' @importFrom stats median setNames
 #' @importFrom utils setTxtProgressBar txtProgressBar
-run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs) {
+run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs, start.time, time.lim) {
   # recover heuristic parameters
   #___________________________________________________________________________________________
   # <---> population factors
@@ -58,6 +58,7 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs) {
   #___________________________________________________________________________________________
   # <---> required controllers
   n.layers <- length(phero) # number of layers in the network/factors in the experiment (some may be fixed constant)
+  timestop <- F
 
   # <---> for statistics
   evol.fitness <- rep(0, n.gen) # fitness of best ant of each colony
@@ -172,7 +173,7 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs) {
           {
             model <- quiet(funGp(sIn = args$sIn, fIn = args$fIn, sOut = sOut, kerType = args$kerType,
                                  f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType,
-                                 nugget = -10, n.starts = extargs$n.starts, n.presample = extargs$n.presample))
+                                 nugget = extargs$nugget, n.starts = extargs$n.starts, n.presample = extargs$n.presample))
 
           },
           error = function(e) e
@@ -180,7 +181,8 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs) {
 
         # if the model was succesfully built, compute model fitness
         if (!inherits(poterr, "error")) {
-          fitness[i] <- max(getFitness(model),0)
+          # fitness[i] <- max(getFitness(model),0)
+          fitness[i] <- getFitness(model)
 
           # save the model if it is the global best
           if (fitness[i] > b.fitness) {
@@ -231,7 +233,8 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs) {
 
           # if the model was succesfully built, compute model fitness
           if (!inherits(poterr, "error")) {
-            rep.fitness[r] <- max(getFitness(model, data$sIn.vl, data$fIn.vl, data$sOut.vl, active),0)
+            # rep.fitness[r] <- max(getFitness(model, data$sIn.vl, data$fIn.vl, data$sOut.vl, active),0)
+            rep.fitness[r] <- getFitness(model, data$sIn.vl, data$fIn.vl, data$sOut.vl, active)
           } else {
             rep.fitness[r] <- NA
           }
@@ -276,45 +279,98 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs) {
       #   b.args <- args
       # }
       setTxtProgressBar(pb, i)
+      if (!is.null(time.lim)) {
+        t <- difftime(Sys.time(), start.time, units = 'secs')
+        if (t >= time.lim) {
+          if (i < n.pop) {
+            fitness[(i+1):n.pop] <- NA
+          }
+          cat(paste("\n\n** Time limit reached, exploration stopped after", format(as.numeric(t), digits = 3, nsmall = 2), "seconds."))
+          timestop <- T
+          stoppiv <- i
+          break
+        }
+      }
     }
     close(pb)
-    # browser()
-    # remove crashes from ants and save them in crashes
-    if (all(is.na(fitness))) { # if all ants crashed
-      stop(paste("Something is not working well, all models of this colony crashed (", n.pop, " models).\n",
-                 "  Please check your data, your call to funGp_factory and ultimately consider using a larger nugget.", sep = ""))
-    } else if (length(which(is.na(fitness))) > 0) {
-      ids.ok <- which(!is.na(fitness))
-      crashes[[c.gen]] <- ants[-ids.ok,]
-      fitness <- fitness[ids.ok]
-      ants <- ants[ids.ok,]
-    } else{
-      ids.ok <- which(!is.na(fitness))
-      fitness <- fitness[ids.ok]
-      ants <- ants[ids.ok,]
+
+    if (!timestop) {
+      # remove crashes from ants and save them in crashes
+      if (all(is.na(fitness))) { # if all ants crashed
+        stop(paste("Something is not working well, all models of this colony crashed (", n.pop, " models).\n",
+                   "  Please check your data, your call to funGp_factory and ultimately consider using a larger nugget.", sep = ""))
+      } else if (length(which(is.na(fitness))) > 0) {
+        ids.ok <- which(!is.na(fitness))
+        crashes[[c.gen]] <- ants[-ids.ok,]
+        fitness <- fitness[ids.ok]
+        ants <- ants[ids.ok,]
+      } else {
+        ids.ok <- which(!is.na(fitness))
+        fitness <- fitness[ids.ok]
+        ants <- ants[ids.ok,]
+      }
+
+      # extract ants and fitness for global update
+      res <- getElite_ACO(fitness, n.gbest, ants, u.gbest, c.gen, b.ant, b.fitness)
+
+      # perform global pheromone update
+      # print("----------------< Global update")
+      phero <- globalUpd_ACO(res$ants.up, res$fitness.up, phero, rho.g)
+
+      # save best ant
+      if (fitness[res$b.ind[1]] > b.fitness) {
+        b.ant <- ants[res$b.ind[1],]
+        b.fitness <- fitness[res$b.ind[1]]
+      }
+      # print(b.ant)
+
+      # save data for statistics
+      evol.fitness[c.gen] <- b.fitness
+      all.ants[[c.gen]] <- ants
+      all.fitness[[c.gen]] <- fitness
+
+    } else {
+      # browser()
+      # remove crashes from ants and save them in crashes
+      if (any(!is.na(fitness))) { # if there at least one usable ant
+        if (length(which(is.na(fitness))) > 0) {
+          ids.ok <- which(!is.na(fitness))
+          ids.cr <- which(is.na(fitness[1:stoppiv]))
+          if (length(ids.cr) > 0) {
+            crashes[[c.gen]] <- ants[ids.cr,]
+          }
+          fitness <- fitness[ids.ok]
+          ants <- ants[ids.ok,]
+        } else {
+          ids.ok <- which(!is.na(fitness))
+          fitness <- fitness[ids.ok]
+          ants <- ants[ids.ok,]
+        }
+
+        # extract ants and fitness for selection of best ant
+        res <- getElite_ACO(fitness, n.gbest, ants, u.gbest, c.gen, b.ant, b.fitness)
+
+        # save best ant
+        if (fitness[res$b.ind[1]] > b.fitness) {
+          b.ant <- ants[res$b.ind[1],]
+          b.fitness <- fitness[res$b.ind[1]]
+        }
+        # print(b.ant)
+
+        # save data for statistics
+        evol.fitness[c.gen] <- b.fitness
+        all.ants[[c.gen]] <- ants
+        all.fitness[[c.gen]] <- fitness
+      }
+      break
     }
 
-    # extract ants and fitness for global update
-    res <- getElite_ACO(fitness, n.gbest, ants, u.gbest, c.gen, b.ant, b.fitness)
-
-    # perform global pheromone update
-    # print("----------------< Global update")
-    phero <- globalUpd_ACO(res$ants.up, res$fitness.up, phero, rho.g)
-
-    # save best ant
-    if (fitness[res$b.ind[1]] > b.fitness) {
-      b.ant <- ants[res$b.ind[1],]
-      b.fitness <- fitness[res$b.ind[1]]
-    }
-    # print(b.ant)
-
+    # if (!timestop) {
     print(Sys.time() - start_time)
     cat("\n")
+    # }
 
-    # save data for statistics
-    evol.fitness[c.gen] <- b.fitness
-    all.ants[[c.gen]] <- ants
-    all.fitness[[c.gen]] <- fitness
+
     # plot current best model
     # b.plot <- function(b.ant, b.fitness) {
     #   print(b.fitness)
@@ -329,22 +385,29 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs) {
     # }
   }
 
-  plot(1, type = "n", xlab = "Colony", ylab = "Fitness", xlim = c(1, (n.gen + .3)), ylim = c(0, 1), xaxt = "n")
-  axis(1, 1:n.gen)
-  for (i in 1:n.gen) {
-    # points(rep(i, n.pop), all.fitness[,i], pch = 21, bg = alpha("red", .4), col = alpha("red", .4))
-    # points(i, median(all.fitness[,i]), pch = 21, bg = "blue", col = alpha("blue", .4))
+  # plot(1, type = "n", xlab = "Colony", ylab = "Fitness", xlim = c(1, (n.gen + .3)), ylim = c(0, 1), xaxt = "n")
+  # axis(1, 1:n.gen)
+  # for (i in 1:n.gen) {
+  #   # points(rep(i, n.pop), all.fitness[,i], pch = 21, bg = alpha("red", .4), col = alpha("red", .4))
+  #   # points(i, median(all.fitness[,i]), pch = 21, bg = "blue", col = alpha("blue", .4))
+  #   points(rep(i, length(all.fitness[[i]])), all.fitness[[i]], pch = 21, bg = alpha("red", .4), col = alpha("red", .4))
+  #   points(i, median(all.fitness[[i]]), pch = 21, bg = "blue", col = alpha("blue", .4))
+  #   # legend(x = (i + .2), y = (evol.fitness[i] - .05), legend = format(evol.fitness[i], digits = 2, nsmall = 3), cex = 1,
+  #   #        xjust = 0.5,      # 0.5 means center adjusted
+  #   #        yjust = 0.5,      # 0.5 means center adjusted
+  #   #        x.intersp = -0.5, # adjust character interspacing as you like to effect box width
+  #   #        y.intersp = 0.1,  # adjust character interspacing to effect box height
+  #   #        adj = c(0, 0.5))
+  # }
+  # lines(evol.fitness, lty = 2, col = "blue")
+  # points(evol.fitness, pch = 21, bg = alpha("blue", 0), col = "black")
+
+  plot(1, type = "n", xlab = "Colony", ylab = "Fitness", xlim = c(1, (c.gen + .3)), ylim = c(0, 1), xaxt = "n")
+  axis(1, 1:c.gen)
+  for (i in 1:c.gen) {
     points(rep(i, length(all.fitness[[i]])), all.fitness[[i]], pch = 21, bg = alpha("red", .4), col = alpha("red", .4))
     points(i, median(all.fitness[[i]]), pch = 21, bg = "blue", col = alpha("blue", .4))
-    # legend(x = (i + .2), y = (evol.fitness[i] - .05), legend = format(evol.fitness[i], digits = 2, nsmall = 3), cex = 1,
-    #        xjust = 0.5,      # 0.5 means center adjusted
-    #        yjust = 0.5,      # 0.5 means center adjusted
-    #        x.intersp = -0.5, # adjust character interspacing as you like to effect box width
-    #        y.intersp = 0.1,  # adjust character interspacing to effect box height
-    #        adj = c(0, 0.5))
   }
-  # lines(evol.fitness, lty = 2, col = "blue")
-  points(evol.fitness, pch = 21, bg = alpha("blue", 0), col = "black")
 
   cat("\nAnts are done ;)")
 
@@ -452,6 +515,7 @@ getElite_ACO <- function(fitness, n.gbest, ants, u.gbest, c.gen, b.ant, b.fitnes
   }
 
   # group best ants and their fitness
+  if (!is.matrix(ants)) ants <- matrix(ants, ncol = length(ants))
   ants.up <- ants[u.ind,,drop = F]
   fitness.up <- fitness[u.ind]
 

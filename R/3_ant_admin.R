@@ -4,7 +4,7 @@
 
 # Method to plot a funGp model
 # ----------------------------------------------------------------------------------------------------------
-master_ACO <- function(sIn, fIn, sOut, ind.vl, solspace, setup, extargs) {
+master_ACO <- function(sIn, fIn, sOut, ind.vl, solspace, setup, extargs, start.time, time.lim) {
   # set heuristic parameters based on defaults and user specifications
   param <- setParams_ACO(setup)
 
@@ -12,7 +12,7 @@ master_ACO <- function(sIn, fIn, sOut, ind.vl, solspace, setup, extargs) {
   env <- setEnvir_ACO(solspace, param)
 
   # perform exploration
-  res <- run_ACO(sIn, fIn, sOut, ind.vl, param, env, solspace$sp.base, extargs)
+  res <- run_ACO(sIn, fIn, sOut, ind.vl, param, env, solspace$sp.base, extargs, start.time, time.lim)
 
   # correct the howCalled of best model
   res$model@howCalled@string <- getCall_ACO(res$sol.vec, sIn, fIn, res$sol.args, solspace$sp.base, extargs)
@@ -73,7 +73,7 @@ setParams_ACO <- function(setup) {
   if (!is.null(setup$rho.l)) rho.l <- setup$rho.l else rho.l <- 0
   if (!is.null(setup$dt.l)) dt.l <- setup$dt.l else dt.l <- tao0
   if (!is.null(setup$u.gbest)) u.gbest <- setup$u.gbest else u.gbest <- F
-  if (!is.null(setup$n.gbest)) n.gbest <- setup$n.gbest else n.gbest <- 50
+  if (!is.null(setup$n.gbest)) n.gbest <- setup$n.gbest else n.gbest <- 1
   if (!is.null(setup$rho.g)) rho.g <- setup$rho.g else rho.g <- 1
 
   params <- list(n.gen = n.gen, n.pop = n.pop, tao0 = tao0, vis.s = vis.s, vis.f = vis.f,

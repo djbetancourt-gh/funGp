@@ -484,17 +484,15 @@ section_xx_heuristic <- function(){
 
   xm <- funGp_factory(sIn = sIn, fIn = fIn, sOut = sOut, ind.vl = 18:25, nugget = 0)
 
-  DF1 <- data.frame(Teacher = c(0123, 0145, 0163, 0175, 0123, 0194, 0123, 0145),
-                    Student = c(1, 1, 1, 2, 2, 2, 3, 3),
-                    Age = c(7, 7, 7, 8, 8, 8, 7, 7))
-  DF2 <- data.frame(c(0123, 0145, 0163, 0175, 0183, 0194, 0120),
-                    c(1, 5, 4, 6, 3, 2, 3),
-                    c(1, 7, 7, 8, 8, 8, 7),
-                    c(1, 3, 1, 1, 1, 1, 4))
-  names(DF2) <- c("Teacher", "Age 7", "Age 8", "Age 9")
-
-  AS <- apply(DF1[,c("Teacher", "Age")], 1, function(x) {
-    DF2[which(DF2$Teacher == x[1]), which(grepl(x[2], names(DF2)))]
-    })
-  DF1["AgeStereotype"] <- AS
+  # # testing timer
+  xm <- funGp_factory(sIn = sIn, fIn = fIn, sOut = sOut, ind.vl = sapply((0:17), function(i) (1:8) + i), time.lim = 10)
+  # start.time <- Sys.time()
+  # for (i in 1:10^8) {
+  #   print(i)
+  #   t <- difftime(Sys.time(), start.time, units = 'secs')
+  #   if (t >= 4) {
+  #     print(paste("It's time to stop:", t))
+  #     break
+  #   }
+  # }
 }

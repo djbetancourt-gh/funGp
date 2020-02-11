@@ -12,6 +12,7 @@ funGp_factory(
   method = "ACO",
   constraints = list(),
   setup = list(),
+  time.lim = NULL,
   nugget = 1e-08,
   n.starts = 1,
   n.presample = 20
@@ -27,6 +28,8 @@ funGp_factory(
 \item{constraints}{fill}
 
 \item{setup}{fill}
+
+\item{time.lim}{fill}
 
 \item{nugget}{Fill!!!!!!!!!!}
 
