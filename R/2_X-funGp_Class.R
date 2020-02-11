@@ -10,7 +10,8 @@
 #' @slot method Object of class \code{"character"}. Kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}.
 #' @slot stat Hola.
 #' @slot details Object of class \code{"character"}. Kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}.
-#' @slot log Object of class \code{"character"}. Kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}.
+#' @slot log.success Object of class \code{"character"}. Kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}.
+#' @slot log.crashes Object of class \code{"character"}. Kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}.
 #'
 #' @include 2_funGp_Class.R
 #' @include 3_ant_search.R
@@ -29,7 +30,8 @@ setClass("X-funGp",
            method = "character",           # search method
            stat = "character",             # search method
            details = "list",               # search method
-           log = "antsLog"                 # search method
+           log.success = "antsLog",        # search method
+           log.crashes = "antsLog"         # search method
          ),
          validity = function(object) {T})
 
@@ -104,10 +106,11 @@ funGp_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, ind.vl = NULL,
   X.model@structure <- opt$sol.vec
   X.model@factoryCall@string <- gsub("^ *|(?<= ) | *$", "", paste0(deparse(match.call()), collapse = " "), perl = T)
   X.model@n.solspace <- getSpacesize(solspace$sp.user)
-  X.model@n.explored <- nrow(opt$log@sols)
+  X.model@n.explored <- nrow(opt$log.suc@sols)
   X.model@method <- "Ants"
   X.model@stat <- stat
-  X.model@log <- opt$log
+  X.model@log.success <- opt$log.suc
+  X.model@log.crashes <- opt$log.cra
   X.model@details <- opt$details
 
   return(X.model)

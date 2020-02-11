@@ -44,7 +44,7 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs) {
 
   # <---> global pheromone update
   u.gbest <- param$u.gbest
-  n.lbest <- param$n.lbest
+  n.gbest <- param$n.gbest
   rho.g <- param$rho.g
   #___________________________________________________________________________________________
 
@@ -62,7 +62,9 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs) {
   # <---> for statistics
   evol.fitness <- rep(0, n.gen) # fitness of best ant of each colony
   all.ants <- list() # log of all explored ants
-  all.fitness <- matrix(nrow = n.pop, ncol = n.gen) # fitness of all explored ants
+  # all.fitness <- matrix(nrow = n.pop, ncol = n.gen) # fitness of all explored ants
+  all.fitness <- list() # fitness of all explored ants
+  crashes <- list()
 
   # <---> best solution and its fitness
   b.ant <- "just use the mean" # initialize best ant
@@ -150,16 +152,45 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs) {
     fitness <- rep(0, n.pop)
     for (i in 1:n.pop) {
       if (is.null(ind.vl)) {
+        # # translate ant data into funGp arguments format
+        # args <- formatSol_ACO(ants[i,], sIn, fIn, base)
+        #
+        # # build the model
+        # model <- quiet(funGp(sIn = args$sIn, fIn = args$fIn, sOut = sOut, kerType = args$kerType,
+        #                      f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType,
+        #                      nugget = extargs$nugget, n.starts = extargs$n.starts, n.presample = extargs$n.presample))
+        #
+        # # compute model fitness
+        # fitness[i] <- max(getFitness(model),0)
+
+
         # translate ant data into funGp arguments format
         args <- formatSol_ACO(ants[i,], sIn, fIn, base)
 
-        # build the model
-        model <- quiet(funGp(sIn = args$sIn, fIn = args$fIn, sOut = sOut, kerType = args$kerType,
-                             f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType,
-                             nugget = extargs$nugget, n.starts = extargs$n.starts, n.presample = extargs$n.presample))
+        # attempt to build the model
+        poterr <- tryCatch(
+          {
+            model <- quiet(funGp(sIn = args$sIn, fIn = args$fIn, sOut = sOut, kerType = args$kerType,
+                                 f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType,
+                                 nugget = -10, n.starts = extargs$n.starts, n.presample = extargs$n.presample))
 
-        # compute model fitness
-        fitness[i] <- max(getFitness(model),0)
+          },
+          error = function(e) e
+        )
+
+        # if the model was succesfully built, compute model fitness
+        if (!inherits(poterr, "error")) {
+          fitness[i] <- max(getFitness(model),0)
+
+          # save the model if it is the global best
+          if (fitness[i] > b.fitness) {
+            b.model <- model
+            b.args <- args
+          }
+        } else {
+          fitness[i] <- NA
+        }
+
       } else {
         n.rep <- ncol(ind.vl)# number of replicates
         rep.fitness <- rep(0, n.rep)
@@ -171,19 +202,53 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs) {
           args <- formatSol_ACO(ants[i,], sIn = data$sIn.tr, fIn = data$fIn.tr, base) # esto se encarga de poner en null las entradas inact
 
           # build the model
-          model <- quiet(funGp(sIn = args$sIn, fIn = args$fIn, sOut = data$sOut.tr, kerType = args$kerType,
-                               f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType,
-                               nugget = extargs$nugget, n.starts = extargs$n.starts, n.presample = extargs$n.presample))
+          # model <- quiet(funGp(sIn = args$sIn, fIn = args$fIn, sOut = data$sOut.tr, kerType = args$kerType,
+          #                      f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType,
+          #                      nugget = extargs$nugget, n.starts = extargs$n.starts, n.presample = extargs$n.presample))
+
+          # attempt to build the model
+          poterr <- tryCatch(
+            {
+              # if (i == 2) {
+              #   model <- quiet(funGp(sIn = args$sIn, fIn = args$fIn, sOut = data$sOut.tr, kerType = args$kerType,
+              #                        f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType,
+              #                        nugget = -10, n.starts = extargs$n.starts, n.presample = extargs$n.presample))
+              # } else {
+                model <- quiet(funGp(sIn = args$sIn, fIn = args$fIn, sOut = data$sOut.tr, kerType = args$kerType,
+                                     f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType,
+                                     nugget = extargs$nugget, n.starts = extargs$n.starts, n.presample = extargs$n.presample))
+              # }
+
+            },
+            error = function(e) e # {browser(); e}
+          )
 
           # identify active inputs of both types
           active <- getActiveIn_ACO(ants[i,], sIn, fIn, base)
 
-          # compute model-replicate fitness
-          rep.fitness[r] <- max(getFitness(model, data$sIn.vl, data$fIn.vl, data$sOut.vl, active),0)
+          # # compute model-replicate fitness
+          # rep.fitness[r] <- max(getFitness(model, data$sIn.vl, data$fIn.vl, data$sOut.vl, active),0)
+
+          # if the model was succesfully built, compute model fitness
+          if (!inherits(poterr, "error")) {
+            rep.fitness[r] <- max(getFitness(model, data$sIn.vl, data$fIn.vl, data$sOut.vl, active),0)
+          } else {
+            rep.fitness[r] <- NA
+          }
         }
 
-        # compute average model fitness
-        fitness[i] <- mean(rep.fitness)
+        # remove crashes and compute average model fitness
+        if (any(!is.na(rep.fitness))) {
+          fitness[i] <- mean(rep.fitness[!is.na(rep.fitness)])
+
+          # save the model if it is the global best
+          if (fitness[i] > b.fitness) {
+            b.model <- model
+            b.args <- args
+          }
+        } else {
+          fitness[i] <- NA
+        }
       }
 
       # # translate ant data into funGp arguments format
@@ -205,17 +270,32 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs) {
       # # print(ants[i,])
       # # print(fitness[i])
       #
-      # save the model if it is the global best
-      if (fitness[i] > b.fitness) {
-        b.model <- model
-        b.args <- args
-      }
+      # # save the model if it is the global best
+      # if (fitness[i] > b.fitness) {
+      #   b.model <- model
+      #   b.args <- args
+      # }
       setTxtProgressBar(pb, i)
     }
     close(pb)
+    # browser()
+    # remove crashes from ants and save them in crashes
+    if (all(is.na(fitness))) { # if all ants crashed
+      stop(paste("Something is not working well, all models of this colony crashed (", n.pop, " models).\n",
+                 "  Please check your data, your call to funGp_factory and ultimately consider using a larger nugget.", sep = ""))
+    } else if (length(which(is.na(fitness))) > 0) {
+      ids.ok <- which(!is.na(fitness))
+      crashes[[c.gen]] <- ants[-ids.ok,]
+      fitness <- fitness[ids.ok]
+      ants <- ants[ids.ok,]
+    } else{
+      ids.ok <- which(!is.na(fitness))
+      fitness <- fitness[ids.ok]
+      ants <- ants[ids.ok,]
+    }
 
     # extract ants and fitness for global update
-    res <- getElite_ACO(fitness, n.lbest, ants, u.gbest, c.gen, b.ant, b.fitness)
+    res <- getElite_ACO(fitness, n.gbest, ants, u.gbest, c.gen, b.ant, b.fitness)
 
     # perform global pheromone update
     # print("----------------< Global update")
@@ -234,7 +314,7 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs) {
     # save data for statistics
     evol.fitness[c.gen] <- b.fitness
     all.ants[[c.gen]] <- ants
-    all.fitness[,c.gen] <- fitness
+    all.fitness[[c.gen]] <- fitness
     # plot current best model
     # b.plot <- function(b.ant, b.fitness) {
     #   print(b.fitness)
@@ -252,8 +332,10 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs) {
   plot(1, type = "n", xlab = "Colony", ylab = "Fitness", xlim = c(1, (n.gen + .3)), ylim = c(0, 1), xaxt = "n")
   axis(1, 1:n.gen)
   for (i in 1:n.gen) {
-    points(rep(i, n.pop), all.fitness[,i], pch = 21, bg = alpha("red", .4), col = alpha("red", .4))
-    points(i, median(all.fitness[,i]), pch = 21, bg = "blue", col = alpha("blue", .4))
+    # points(rep(i, n.pop), all.fitness[,i], pch = 21, bg = alpha("red", .4), col = alpha("red", .4))
+    # points(i, median(all.fitness[,i]), pch = 21, bg = "blue", col = alpha("blue", .4))
+    points(rep(i, length(all.fitness[[i]])), all.fitness[[i]], pch = 21, bg = alpha("red", .4), col = alpha("red", .4))
+    points(i, median(all.fitness[[i]]), pch = 21, bg = "blue", col = alpha("blue", .4))
     # legend(x = (i + .2), y = (evol.fitness[i] - .05), legend = format(evol.fitness[i], digits = 2, nsmall = 3), cex = 1,
     #        xjust = 0.5,      # 0.5 means center adjusted
     #        yjust = 0.5,      # 0.5 means center adjusted
@@ -266,10 +348,11 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs) {
 
   cat("\nAnts are done ;)")
 
-  # merge all ants
+  # merge all successful ants
   all.ants <- do.call(rbind, all.ants)
 
   # identify duplicates (if any) and keep only the best
+  all.fitness <- unlist(all.fitness)
   ord.fitness <- sort(all.fitness, decreasing = T)
   ord.ants <- all.ants[order(all.fitness, decreasing = T),]
   top.fitness <- ord.fitness[!duplicated(ord.ants)]
@@ -277,10 +360,14 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs) {
   top.fitness <- sort(top.fitness, decreasing = T)
   top.ants <- top.ants[order(top.fitness, decreasing = T),]
 
-  ####### not sure that b.ant matches b.args
+  # remove duplicates in crashed ants
+  if (length(crashes) > 0) {
+    crashes <- do.call(rbind, crashes)
+    crashes <- crashes[!duplicated(crashes), ]
+  }
 
   return(list(model = b.model, sol.vec = b.ant, sol.args = b.args, b.fitness = b.fitness,
-              log.vec = top.ants, log.fitness = top.fitness, details = param))
+              log.suc = top.ants, log.fitness = top.fitness, log.cra = crashes, details = param))
 }
 
 nextNode_ACO <- function(myant, rule, phero, visib, alp, bet, c.gen) {
@@ -352,13 +439,13 @@ localUpd_ACO <- function(phero, myant, antup, rho.l, dt.l) {
   return(phero)
 }
 
-getElite_ACO <- function(fitness, n.lbest, ants, u.gbest, c.gen, b.ant, b.fitness){
+getElite_ACO <- function(fitness, n.gbest, ants, u.gbest, c.gen, b.ant, b.fitness){
   # browser()
-  # identify best n.lbest ants
-  b.ind <- order(fitness, decreasing = T)[1:n.lbest]
+  # identify best n.gbest ants
+  b.ind <- order(fitness, decreasing = T)[1:min(n.gbest, length(fitness))]
 
   # remove duplicates if there is any
-  if (n.lbest > 1) {
+  if (n.gbest > 1) {
     u.ind <- b.ind[!duplicated(ants[b.ind,])] # unique best ants
   } else {
     u.ind <- b.ind

@@ -20,8 +20,15 @@ master_ACO <- function(sIn, fIn, sOut, ind.vl, solspace, setup, extargs) {
   # format solution vector
   res$sol.vec <- vec2DFrame_ACO(res$sol.vec, sIn, fIn)
 
-  # fill antLog
-  res$log <- getLog_ACO(sIn, fIn, res$log.vec, res$log.fitness, solspace$sp.base, extargs)
+  # fill antLog for successfull ants
+  res$log.suc <- getLog_ACO(sIn, fIn, res$log.suc, res$log.fitness, solspace$sp.base, extargs)
+
+  # fill antLog for crashed ants if any
+  if(length(res$log.cra) > 0) {
+    res$log.cra <- getLog_ACO(sIn, fIn, res$log.cra, numeric(), solspace$sp.base, extargs)
+  } else {
+    res$log.cra <- new("antsLog")
+  }
 
   return(res)
 }
@@ -50,7 +57,7 @@ master_ACO <- function(sIn, fIn, sOut, ind.vl, solspace, setup, extargs) {
 #
 # <---> global pheromone update
 # u.gbest: should the global best ant be used for the global update?
-# n.lbest: number of best ants to be used for the global pheromone update
+# n.gbest: number of best ants to be used for the global pheromone update
 # rho.g: global reinforcement coefficient: the larger it is, the more influence best ants have on each update
 # =====================================================================================================
 setParams_ACO <- function(setup) {
@@ -66,12 +73,12 @@ setParams_ACO <- function(setup) {
   if (!is.null(setup$rho.l)) rho.l <- setup$rho.l else rho.l <- 0
   if (!is.null(setup$dt.l)) dt.l <- setup$dt.l else dt.l <- tao0
   if (!is.null(setup$u.gbest)) u.gbest <- setup$u.gbest else u.gbest <- F
-  if (!is.null(setup$n.lbest)) n.lbest <- setup$n.lbest else n.lbest <- 1
+  if (!is.null(setup$n.gbest)) n.gbest <- setup$n.gbest else n.gbest <- 50
   if (!is.null(setup$rho.g)) rho.g <- setup$rho.g else rho.g <- 1
 
   params <- list(n.gen = n.gen, n.pop = n.pop, tao0 = tao0, vis.s = vis.s, vis.f = vis.f,
                  dec.f = dec.f, q0 = q0, alp = alp, bet = bet, rho.l = rho.l, dt.l = dt.l,
-                 u.gbest = u.gbest, n.lbest = n.lbest, rho.g = rho.g)
+                 u.gbest = u.gbest, n.gbest = n.gbest, rho.g = rho.g)
 
   return(params)
 }
@@ -406,23 +413,30 @@ getCall_ACO <- function(ant, sIn, fIn, args, base, extargs) {
     # prepare f_distype string
     if (length(args$f_disType) == 1) {
       f_disType.str <- paste('f_distype = "', args$f_disType, '"', sep = "")
-    } else {
+    } else if (length(unique(args$f_disType)) > 1) {
       f_disType.str <- paste('f_distype = c("', paste(args$f_disType, collapse = '", "'), '")', sep = "")
+    } else {
+      f_disType.str <- paste('f_distype = "', args$f_disType[1], '"', sep = "")
     }
 
     # prepare f_pdims string
     if (length(args$f_pdims) == 1) {
       f_pdims.str <- paste("f_pdims = ", args$f_pdims, sep = "")
-    } else {
+    } else if (length(unique(args$f_pdims)) > 1) {
       f_pdims.str <- paste('f_pdims = c(', paste(args$f_pdims, collapse = ', '), ')', sep = "")
+    } else {
+      f_pdims.str <- paste("f_pdims = ", args$f_pdims[1], sep = "")
     }
 
     # prepare f_basType string
     if (length(args$f_basType) == 1) {
       f_basType.str <- paste('f_basType = "', args$f_basType, '"', sep = "")
-    } else {
+    } else if (length(unique(args$f_basType)) > 1) {
       f_basType.str <- paste('f_basType = c("', paste(args$f_basType, collapse = '", "'), '")', sep = "")
+    } else {
+      f_basType.str <- paste('f_basType = "', args$f_basType[1], '"', sep = "")
     }
+
   } else {
     f.str <- f_disType.str <- f_pdims.str <- f_basType.str <- NULL
   }

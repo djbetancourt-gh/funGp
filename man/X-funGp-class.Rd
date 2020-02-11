@@ -28,7 +28,9 @@ Fill this!!!!!!!!!
 
 \item{\code{details}}{Object of class \code{"character"}. Kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}.}
 
-\item{\code{log}}{Object of class \code{"character"}. Kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}.}
+\item{\code{log.success}}{Object of class \code{"character"}. Kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}.}
+
+\item{\code{log.crashes}}{Object of class \code{"character"}. Kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}.}
 }}
 
 \author{
