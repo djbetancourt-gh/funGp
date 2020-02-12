@@ -67,7 +67,7 @@ setParams_ACO <- function(setup) {
   if (!is.null(setup$vis.s)) vis.s <- setup$vis.s else vis.s <- .7
   if (!is.null(setup$vis.f)) vis.f <- setup$vis.f else vis.f <- .7
   if (!is.null(setup$dec.f)) dec.f <- setup$dec.f else dec.f <- .4
-  if (!is.null(setup$q0)) q0 <- setup$q0 else q0 <- 1
+  if (!is.null(setup$q0)) q0 <- setup$q0 else q0 <- .9
   if (!is.null(setup$alp)) alp <- setup$alp else alp <- 10
   if (!is.null(setup$bet)) bet <- setup$bet else bet <- 2
   if (!is.null(setup$rho.l)) rho.l <- setup$rho.l else rho.l <- 0

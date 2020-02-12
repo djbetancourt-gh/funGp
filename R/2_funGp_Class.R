@@ -292,7 +292,7 @@ funGp <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
   kern@varHyp <- varHyp
 
   # fill general funGpModel slots
-  # model@call <- match.call()
+  # model@howCalled <- match.call()
   model@howCalled@string <- gsub("^ *|(?<= ) | *$", "", paste0(deparse(match.call()), collapse = " "), perl = T)
   model@sOut <- sOut
   model@n.tot <- n.tr
@@ -371,24 +371,52 @@ show.funGp <- function(model) {
   cat("* Hyperparameters:\n")
   cat(paste("  -> variance: ", format(model@kern@varHyp, digits = 3, nsmall = 4), "\n", sep = ""))
   cat("  -> length-scale:\n")
-  if (model@ds > 0) {
-    for (i in 1:model@ds) {
-      cat(paste("\t ls(X", i, "): ", format(model@kern@s_lsHyps[i], digits = 3, nsmall = 4), "\n", sep = ""))
+  max.pr <- 8
+  if (model@type == "hybrid") {
+    # prepare lenght-scale parameters for printing (allows to print a maximum of 8 length-scale parameters)
+    a <- paste("X", 1:model@ds, sep = "")
+    b <- model@kern@f_lsOwners
+    all.owners <- c(a, b)[order(c(seq_along(a)*2 - 1, seq_along(b)*2))]
+    a <- model@kern@s_lsHyps
+    b <- model@kern@f_lsHyps
+    all.ls <- c(a, b)[order(c(seq_along(a)*2 - 1, seq_along(b)*2))]
+    top.owners <- all.owners[1:min(max.pr,length(all.owners))]
+    top.ls <- all.ls[1:min(max.pr,length(all.owners))]
+    ids.s <- grepl("X", top.owners)
+    ids.f <- grepl("F", top.owners)
+    s.ls <- top.ls[ids.s]
+    s.owners <- top.owners[ids.s]
+    f.ls <- top.ls[ids.f]
+    f.owners <- top.owners[ids.f]
+
+    for (i in 1:length(s.ls)) {
+      cat(paste("\t ls(", s.owners[i], "): ", format(s.ls[i], digits = 3, nsmall = 4), "\n", sep = ""))
     }
-  }
-  if (model@df > 0) {
-    f_ls <- model@kern@f_lsHyps
-    owners <- model@kern@f_lsOwners
-    np <- min(length(f_ls),(8-model@ds))
-    for (i in 1:np) {
-      cat(paste("\t ls(", owners[i], "): ", format(f_ls[i], digits = 3, nsmall = 4), "\n", sep = ""))
+    for (i in 1:length(f.ls)) {
+      cat(paste("\t ls(", f.owners[i], "): ", format(f.ls[i], digits = 3, nsmall = 4), "\n", sep = ""))
     }
-    if (np < length(f_ls)) {
-      for (i in 1:2) {
-        cat("\t        .\n")
-      }
+    if (length(all.ls) > max.pr)
       cat("\n Some length-scale parameters were not printed. Consider\n checking 'model@kern@s_lsHyps' and 'model@kern@f_lsHyps'\n")
+
+  } else if (model@type == "functional") {
+    ids.f <- 1:min(max.pr,length(model@kern@f_lsHyps))
+    f.ls <- model@kern@f_lsHyps[ids.f]
+    f.owners <- model@kern@f_lsOwners[ids.f]
+    for (i in 1:length(f.ls)) {
+      cat(paste("\t ls(", f.owners[i], "): ", format(f.ls[i], digits = 3, nsmall = 4), "\n", sep = ""))
     }
+    if (length(f.ls) > max.pr)
+      cat("\n Some length-scale parameters were not printed. Consider\n checking 'model@kern@f_lsHyps'\n")
+
+  } else {
+    ids.s <- 1:min(max.pr,length(model@kern@s_lsHyps))
+    s.ls <- model@kern@s_lsHyps[ids.s]
+    s.owners <- paste("X", 1:model@ds, sep = "")
+    for (i in 1:length(s.ls)) {
+      cat(paste("\t ls(", s.owners[i], "): ", format(s.ls[i], digits = 3, nsmall = 4), "\n", sep = ""))
+    }
+    if (length(s.ls) > max.pr)
+      cat("\n Some length-scale parameters were not printed. Consider\n checking 'model@kern@s_lsHyps'\n")
   }
   cat(paste(rep("_", 58), collapse = ""))
 }
@@ -807,7 +835,7 @@ update.funGp <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb
   cptasks <- c()
   if (delInOut & !(1 %in% dptasks)) {
     modelup <- upd_del(model = modelup, ind.dl = ind.dl, remake = all(!newInOut, !subHypers, remake = !reeHypers))
-    modelup@call <- model@call
+    modelup@howCalled <- model@howCalled
     modelup@n.tr <- model@n.tr
     cptasks <- c(cptasks, 1)
   }
@@ -815,19 +843,19 @@ update.funGp <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb
     modelup <- upd_subData(model = modelup, sIn.sb = sIn.sb, fIn.sb = fIn.sb,
                            sOut.sb = tryCatch(as.matrix(sOut.sb), error = function(e) sOut.sb), ind.sb = ind.sb,
                            remake = all(!newInOut, !subHypers, !reeHypers))
-    modelup@call <- model@call
+    modelup@howCalled <- model@howCalled
     cptasks <- c(cptasks, 2)
   }
   if (newInOut) {
     modelup <- upd_add(model = modelup, sIn.nw = sIn.nw, fIn.nw = fIn.nw, sOut.nw = as.matrix(sOut.nw),
                        remake = all(!subHypers, !reeHypers))
-    modelup@call <- model@call
+    modelup@howCalled <- model@howCalled
     modelup@n.tr <- model@n.tr
     cptasks <- c(cptasks, 3)
   }
   if (subHypers & any(!(c(4,5,6) %in% dptasks))) {
     modelup <- upd_subHypers(model = modelup, var.sb = var.sb, ls_s.sb = ls_s.sb, ls_f.sb = ls_f.sb)
-    modelup@call <- model@call
+    modelup@howCalled <- model@howCalled
     modelup@n.tr <- model@n.tr
     if (!is.null(var.sb) & !(4 %in% dptasks)) cptasks <- c(cptasks, 4)
     if (!is.null(ls_s.sb) & !(5 %in% dptasks)) cptasks <- c(cptasks, 5)
@@ -835,7 +863,7 @@ update.funGp <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb
   }
   if (reeHypers & any(!(c(7,8,9) %in% dptasks))) {
     modelup <- upd_reeHypers(model = modelup, var.re = var.re, ls_s.re = ls_s.re, ls_f.re = ls_f.re)
-    modelup@call <- model@call
+    modelup@howCalled <- model@howCalled
     if (isTRUE(var.re) & !(7 %in% dptasks)) cptasks <- c(cptasks, 7)
     if (isTRUE(ls_s.re) & !(8 %in% dptasks)) cptasks <- c(cptasks, 8)
     if (isTRUE(ls_f.re) & !(9 %in% dptasks)) cptasks <- c(cptasks, 9)
@@ -889,164 +917,164 @@ update.funGp <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb
 
 # Method to plot a funGp model
 # ----------------------------------------------------------------------------------------------------------
-#' @name plotLOO
-#' @description This is my description
-#' @rdname plotLOO-methods
-#' @importFrom graphics lines plot
-#' @param object An object to predict from.
-#' @param ... fill
-#'
-#' @author José Betancourt, François Bachoc and Thierry Klein
-#' @exportMethod plotLOO
-if(!isGeneric("plotLOO")) {setGeneric("plotLOO", function(object, ...) standardGeneric("plotLOO"))}
+# @name plotLOO
+# @description This is my description
+# @rdname plotLOO-methods
+# @importFrom graphics lines plot
+# @param object An object to predict from.
+# @param ... fill
+#
+# @author José Betancourt, François Bachoc and Thierry Klein
+# @exportMethod plotLOO
+# if(!isGeneric("plotLOO")) {setGeneric("plotLOO", function(object, ...) standardGeneric("plotLOO"))}
 
-#' @title Prediction Method for the apk Class
-#' @name plotLOO
-#' @rdname plotLOO-methods
-#' @aliases plotLOO,funGp-method
-#' @param xlim something
-#' @param ylim something
-setMethod("plotLOO", "funGp", function(object, xlim = NULL, ylim = NULL) {
-  plotLOO.funGp(model = object, xlim = xlim, ylim = ylim)
-  })
-
-plotLOO.funGp <- function(model, xlim, ylim) {
-  y_obs <- model@sOut
-  R <- tcrossprod(model@preMats$L)/model@kern@varHyp + diag(model@nugget, nrow = model@n.tr, ncol = model@n.tr)
-  Rinv <- solve(R)
-  y_pre <- y_obs - diag(Rinv)^(-1) * Rinv %*% y_obs
-  xl <- yl <- yr <- range(c(y_obs, y_pre))
-  if (!is.null(xlim)) xl <- xlim
-  if (!is.null(ylim)) yl <- ylim
-  plot(y_obs, y_pre, xlim = xl, ylim = yl, pch = 21, col = "red", bg = "red",
-       main = "Model diagnostic by leave-one-out cross-valitation", xlab = "Observed", ylab = "Predicted")
-  lines(yr, yr, col = "blue")
-}
+# @title Prediction Method for the apk Class
+# @name plotLOO
+# @rdname plotLOO-methods
+# @aliases plotLOO,funGp-method
+# @param xlim something
+# @param ylim something
+# setMethod("plotLOO", "funGp", function(object, xlim = NULL, ylim = NULL) {
+#   plotLOO.funGp(model = object, xlim = xlim, ylim = ylim)
+#   })
+#
+# plotLOO.funGp <- function(model, xlim, ylim) {
+#   y_obs <- model@sOut
+#   R <- tcrossprod(model@preMats$L)/model@kern@varHyp + diag(model@nugget, nrow = model@n.tr, ncol = model@n.tr)
+#   Rinv <- solve(R)
+#   y_pre <- y_obs - diag(Rinv)^(-1) * Rinv %*% y_obs
+#   xl <- yl <- yr <- range(c(y_obs, y_pre))
+#   if (!is.null(xlim)) xl <- xlim
+#   if (!is.null(ylim)) yl <- ylim
+#   plot(y_obs, y_pre, xlim = xl, ylim = yl, pch = 21, col = "red", bg = "red",
+#        main = "Model diagnostic by leave-one-out cross-valitation", xlab = "Observed", ylab = "Predicted")
+#   lines(yr, yr, col = "blue")
+# }
 # ----------------------------------------------------------------------------------------------------------
 
 
 # Method to plot predictions of a funGp model
 # ----------------------------------------------------------------------------------------------------------
-#' @name plotPreds
-#' @description This is my description
-#' @rdname plotPreds-methods
-#' @importFrom graphics lines plot polygon layout legend par
-#' @param object An object to predict from.
-#' @param ... Further arguments for methods.
-#'
-#' @author José Betancourt, François Bachoc and Thierry Klein
-#' @exportMethod plotPreds
-if(!isGeneric("plotPreds")) {setGeneric("plotPreds", function(object, ...) standardGeneric("plotPreds"))}
+# @name plotPreds
+# @description This is my description
+# @rdname plotPreds-methods
+# @importFrom graphics lines plot polygon layout legend par
+# @param object An object to predict from.
+# @param ... Further arguments for methods.
+#
+# @author José Betancourt, François Bachoc and Thierry Klein
+# @exportMethod plotPreds
+# if(!isGeneric("plotPreds")) {setGeneric("plotPreds", function(object, ...) standardGeneric("plotPreds"))}
 
-#' @title Prediction Method for the apk Class
-#' @name plotPreds
-#' @rdname plotPreds-methods
-#' @aliases plotPreds,funGp-method
-#' @param preds something
-#' @param sOut.pr also
-#' @param xlim_c also
-#' @param ylim_c also
-#' @param justCal also
-#' @param justLin also
-setMethod("plotPreds", "funGp",
-          function(object, preds, sOut.pr = NULL, xlim_c = NULL, ylim_c = NULL, justCal = F, justLin = F, ...) {
-            plotPreds.funGp(preds = preds, sOut.pr = sOut.pr, xlim_c = xlim_c, ylim_c = ylim_c,
-                            justCal = justCal, justLin = justLin)
-          })
-
-plotPreds.funGp <- function(preds, sOut.pr, xlim_c, ylim_c, justCal, justLin) { # add the usage of user specified limits!!!!!!!!!!!!
-  if (all(!is.null(sOut.pr), !justCal, !justLin)) {
-    layout(matrix(2:1, nrow = 2))
-    par(mar = c(4.1, 4.1, 2.5, 2.1))
-  }
-
-  if (!justCal) {
-    # sorted mean and 95% limits and true curve
-    y <- sort(preds$mean)
-    n.pr <- length(y)
-    ll <- (preds$lower95)[order(preds$mean)]
-    ul <- (preds$upper95)[order(preds$mean)]
-
-    plot(1, type = "n", xlim = c(1, n.pr), ylim = range(y), main = "Sorted predictions", xlab = "Index", ylab = "Predicted")
-    x <- 1:n.pr
-    polygon(c(x, rev(x)), c(ul, rev(ll)), col = "grey85", border = NA)
-    lines(y, col = "red")
-    lines(ll, col = "blue")
-    lines(ul, col = "blue")
-  }
-
-  if (!is.null(sOut.pr)) {
-    if (!justCal) {
-    # complement for sorted output plot
-    lines(sOut.pr[order(preds$mean)], col = "black")
-    legend("topleft", legend = c("True", "Pred. mean", "95% CIs"), col = c("black", "red", "blue"), lty = 1, cex = 0.8)
-    }
-
-    if (!justLin) {
-      # calibration plot
-      y_obs <- sOut.pr
-      y_pre <- preds$mean
-      xl <- yl <- yr <- range(c(y_obs, y_pre))
-      if (!is.null(xlim_c)) xl <- xlim_c
-      if (!is.null(ylim_c)) yl <- ylim_c
-      plot(y_obs, y_pre, xlim = xl, ylim = yl, pch = 21, col = "red", bg = "red",
-           main = "Model predictions at new input points", xlab = "Observed", ylab = "Predicted")
-      lines(y_obs, y_obs, col = "blue")
-    }
-  } else {
-    # complement for sorted output plot
-    lines(sOut.pr[order(preds$mean)], col = "black")
-    legend("topleft", legend = c("Pred. mean", "95% CIs"), col = c("black", "red", "blue"), lty = 1, cex = 0.8)
-  }
-
-  # reset plotting default setup
-  par(mar = c(5.1, 4.1, 4.1, 2.1), mfrow = c(1,1))
-}
+# @title Prediction Method for the apk Class
+# @name plotPreds
+# @rdname plotPreds-methods
+# @aliases plotPreds,funGp-method
+# @param preds something
+# @param sOut.pr also
+# @param xlim_c also
+# @param ylim_c also
+# @param justCal also
+# @param justLin also
+# setMethod("plotPreds", "funGp",
+#           function(object, preds, sOut.pr = NULL, xlim_c = NULL, ylim_c = NULL, justCal = F, justLin = F, ...) {
+#             plotPreds.funGp(preds = preds, sOut.pr = sOut.pr, xlim_c = xlim_c, ylim_c = ylim_c,
+#                             justCal = justCal, justLin = justLin)
+#           })
+#
+# plotPreds.funGp <- function(preds, sOut.pr, xlim_c, ylim_c, justCal, justLin) { # add the usage of user specified limits!!!!!!!!!!!!
+#   if (all(!is.null(sOut.pr), !justCal, !justLin)) {
+#     layout(matrix(2:1, nrow = 2))
+#     par(mar = c(4.1, 4.1, 2.5, 2.1))
+#   }
+#
+#   if (!justCal) {
+#     # sorted mean and 95% limits and true curve
+#     y <- sort(preds$mean)
+#     n.pr <- length(y)
+#     ll <- (preds$lower95)[order(preds$mean)]
+#     ul <- (preds$upper95)[order(preds$mean)]
+#
+#     plot(1, type = "n", xlim = c(1, n.pr), ylim = range(y), main = "Sorted predictions", xlab = "Index", ylab = "Predicted")
+#     x <- 1:n.pr
+#     polygon(c(x, rev(x)), c(ul, rev(ll)), col = "grey85", border = NA)
+#     lines(y, col = "red")
+#     lines(ll, col = "blue")
+#     lines(ul, col = "blue")
+#   }
+#
+#   if (!is.null(sOut.pr)) {
+#     if (!justCal) {
+#     # complement for sorted output plot
+#     lines(sOut.pr[order(preds$mean)], col = "black")
+#     legend("topleft", legend = c("True", "Pred. mean", "95% CIs"), col = c("black", "red", "blue"), lty = 1, cex = 0.8)
+#     }
+#
+#     if (!justLin) {
+#       # calibration plot
+#       y_obs <- sOut.pr
+#       y_pre <- preds$mean
+#       xl <- yl <- yr <- range(c(y_obs, y_pre))
+#       if (!is.null(xlim_c)) xl <- xlim_c
+#       if (!is.null(ylim_c)) yl <- ylim_c
+#       plot(y_obs, y_pre, xlim = xl, ylim = yl, pch = 21, col = "red", bg = "red",
+#            main = "Model predictions at new input points", xlab = "Observed", ylab = "Predicted")
+#       lines(y_obs, y_obs, col = "blue")
+#     }
+#   } else {
+#     # complement for sorted output plot
+#     lines(sOut.pr[order(preds$mean)], col = "black")
+#     legend("topleft", legend = c("Pred. mean", "95% CIs"), col = c("black", "red", "blue"), lty = 1, cex = 0.8)
+#   }
+#
+#   # reset plotting default setup
+#   par(mar = c(5.1, 4.1, 4.1, 2.1), mfrow = c(1,1))
+# }
 # ----------------------------------------------------------------------------------------------------------
 
 
 # Method to plot simulations of a funGp model
 # ----------------------------------------------------------------------------------------------------------
-#' @name plotSims
-#' @description This is my description
-#' @rdname plotSims-methods
-#' @param object An object to predict from.
-#' @param ... Further arguments for methods.
-#'
-#' @importFrom graphics matplot
-#' @author José Betancourt, François Bachoc and Thierry Klein
-#' @exportMethod plotSims
-if(!isGeneric("plotSims")) {setGeneric("plotSims", function(object, ...) standardGeneric("plotSims"))}
+# @name plotSims
+# @description This is my description
+# @rdname plotSims-methods
+# @param object An object to predict from.
+# @param ... Further arguments for methods.
+#
+# @importFrom graphics matplot
+# @author José Betancourt, François Bachoc and Thierry Klein
+# @exportMethod plotSims
+# if(!isGeneric("plotSims")) {setGeneric("plotSims", function(object, ...) standardGeneric("plotSims"))}
 
-#' @title Fill Method for the apk Class
-#' @name plotSims
-#' @rdname plotSims-methods
-#' @aliases plotSims,funGp-method
-#' @param sims something
-#' @param detail fill!!!!
-setMethod("plotSims", "funGp",
-          function(object, sims = sims, detail = "full", ...) {
-            plotSims.funGp(sims = sims, detail = detail)
-          })
-
-plotSims.funGp <- function(sims, detail) {
-  if (!is.list(sims)) {
-    matplot(t(sims), type = "l", lty = 1, col = "palegreen4",
-            main = "Simulations from a funGp model", xlab = "Sim. index", ylab = "Output")
-  } else {
-    if (detail == "light") {
-      matplot(t(sims$obs), type = "l", lty = 1, col = "palegreen4",
-              main = "Simulations from a funGp model", xlab = "Sim. index", ylab = "Output")
-    } else {
-      matplot(t(sims$obs), type = "l", lty = 1, col = "grey",
-              main = "Simulations from a funGp model", xlab = "Sim. index", ylab = "Output")
-      lines(sims$mean, col = "red")
-      lines(sims$lower95, col = "blue")
-      lines(sims$upper95, col = "blue")
-      legend("topleft", legend = c("Sims", "Mean", "95% CIs"), col = c("grey50", "red", "blue"), lty = 1, cex = 0.8)
-    }
-  }
-}
+# @title Fill Method for the apk Class
+# @name plotSims
+# @rdname plotSims-methods
+# @aliases plotSims,funGp-method
+# @param sims something
+# @param detail fill!!!!
+# setMethod("plotSims", "funGp",
+#           function(object, sims = sims, detail = "full", ...) {
+#             plotSims.funGp(sims = sims, detail = detail)
+#           })
+#
+# plotSims.funGp <- function(sims, detail) {
+#   if (!is.list(sims)) {
+#     matplot(t(sims), type = "l", lty = 1, col = "palegreen4",
+#             main = "Simulations from a funGp model", xlab = "Sim. index", ylab = "Output")
+#   } else {
+#     if (detail == "light") {
+#       matplot(t(sims$obs), type = "l", lty = 1, col = "palegreen4",
+#               main = "Simulations from a funGp model", xlab = "Sim. index", ylab = "Output")
+#     } else {
+#       matplot(t(sims$obs), type = "l", lty = 1, col = "grey",
+#               main = "Simulations from a funGp model", xlab = "Sim. index", ylab = "Output")
+#       lines(sims$mean, col = "red")
+#       lines(sims$lower95, col = "blue")
+#       lines(sims$upper95, col = "blue")
+#       legend("topleft", legend = c("Sims", "Mean", "95% CIs"), col = c("grey50", "red", "blue"), lty = 1, cex = 0.8)
+#     }
+#   }
+# }
 # ----------------------------------------------------------------------------------------------------------
 
 

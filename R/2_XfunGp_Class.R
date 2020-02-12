@@ -19,7 +19,7 @@
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
-setClass("X-funGp",
+setClass("XfunGp",
          representation(
            model = "funGp",                # kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}
            fitness = "numeric",            # model fitness
@@ -90,7 +90,7 @@ funGp_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, ind.vl = NULL,
 
   if (!is.null(ind.vl)) {
     ind.vl <- as.matrix(ind.vl)
-    stat <- paste("Q2hout.", (nrow(sOut) - nrow(ind.vl)), ".", nrow(ind.vl), ".", ncol(ind.vl), sep = "")
+    stat <- paste("Q2hout (", (nrow(sOut) - nrow(ind.vl)), ".", nrow(ind.vl), ".", ncol(ind.vl), ")", sep = "")
   } else {
     stat <- "Q2loocv"
   }
@@ -106,7 +106,7 @@ funGp_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, ind.vl = NULL,
            # opt <- matern32_cor(Ms, thetas)
          })
 
-  X.model <- new("X-funGp")
+  X.model <- new("XfunGp")
   X.model@model <- opt$model
   X.model@fitness <- opt$b.fitness
   X.model@structure <- opt$sol.vec
@@ -117,7 +117,7 @@ funGp_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, ind.vl = NULL,
   X.model@stat <- stat
   X.model@log.success <- opt$log.suc
   X.model@log.crashes <- opt$log.cra
-  X.model@details <- opt$details
+  X.model@details <- opt$all.details
 
   return(X.model)
 }
@@ -209,8 +209,13 @@ getFitness <- function(model, sIn.vl = NULL, fIn.vl = NULL, sOut.vl = NULL, acti
     sOut <- model@sOut
   } else {
     stat <- "Q2hout"
-    if (length(active$s.active) > 0) sIn.pr <- sIn.vl[, active$s.active, drop = F] else sIn.pr <- NULL
-    if (length(active$f.active) > 0) fIn.pr <- fIn.vl[active$f.active] else fIn.pr <- NULL
+    if (!is.null(active)) {
+      if (length(active$s.active) > 0) sIn.pr <- sIn.vl[, active$s.active, drop = F] else sIn.pr <- NULL
+      if (length(active$f.active) > 0) fIn.pr <- fIn.vl[active$f.active] else fIn.pr <- NULL
+    } else {
+      sIn.pr <- sIn.vl
+      fIn.pr <- fIn.vl
+    }
     if (is.matrix(fIn.pr)) fIn.pr <- list(fIn.pr)
   }
 

@@ -21,6 +21,28 @@ section_1.1_create <- function(){
 }
 # ----------------------------------------------------------------------------------------------------------
 
+plot_Branin <- function(){
+  # building the model
+  set.seed(100)
+  n.tr <- 49
+  sIn <- expand.grid(x1 = seq(0,1,length = sqrt(n.tr)), x2 = seq(0,1,length = sqrt(n.tr)))
+  sOut <- 3 # apply(sIn, 1, DiceKriging::branin)
+  m1 <- funGp(sIn = sIn, sOut = sOut)
+
+  # generating input data for prediction
+  n.pr <- 200
+  sIn.pr <- expand.grid(x1 = seq(0,1,length = sqrt(n.pr)), x2 = seq(0,1,length = sqrt(n.pr)))
+
+  # making predictions
+  m1.preds <- predict(m1, sIn.pr = sIn.pr)
+
+  plotPreds(m1, m1.preds)
+
+  sOut.pr <- 3 # apply(sIn.pr, 1, DiceKriging::branin)
+  plotPreds(m1, m1.preds, sOut.pr)
+}
+
+
 
 # Making predictions
 # ----------------------------------------------------------------------------------------------------------
@@ -47,6 +69,18 @@ section_1.2_predict <- function(){
 
   # plotting predictions
   plotPreds(m1, preds = m1.preds)
+
+  #### check this
+  plotPreds(m1, preds = m1.preds, legends = F,
+            lin.gpars = list(line.pr = "green", line.ci = "orange", line.true = "magenta"),
+            cal.gpars = list(pt.bg = "cyan", line = "black"))
+  plotPreds(m1, preds = m1.preds, sOut.pr, legends = F,
+            lin.gpars = list(line.pr = "green", line.ci = "orange", line.true = "magenta"),
+            cal.gpars = list(pt.bg = "cyan", line = "black"))
+  plotPreds(m1, preds = m1.preds, sOut.pr, legends = F, calib = F,
+            lin.gpars = list(line.pr = "green", line.ci = "orange", line.true = "magenta"),
+            cal.gpars = list(pt.bg = "cyan", line = "black"))
+  ###############
 
   # It is also possible to compare against true output values
   sOut.pr <- fgp_BB3(sIn.pr, fIn.pr, n.pr)

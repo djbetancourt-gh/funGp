@@ -415,9 +415,9 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs, start.tim
   all.ants <- do.call(rbind, all.ants)
 
   # identify duplicates (if any) and keep only the best
-  all.fitness <- unlist(all.fitness)
-  ord.fitness <- sort(all.fitness, decreasing = T)
-  ord.ants <- all.ants[order(all.fitness, decreasing = T),]
+  all.fitness.v <- unlist(all.fitness)
+  ord.fitness <- sort(all.fitness.v, decreasing = T)
+  ord.ants <- all.ants[order(all.fitness.v, decreasing = T),]
   top.fitness <- ord.fitness[!duplicated(ord.ants)]
   top.ants <- ord.ants[!duplicated(ord.ants),]
   top.fitness <- sort(top.fitness, decreasing = T)
@@ -430,7 +430,8 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs, start.tim
   }
 
   return(list(model = b.model, sol.vec = b.ant, sol.args = b.args, b.fitness = b.fitness,
-              log.suc = top.ants, log.fitness = top.fitness, log.cra = crashes, details = param))
+              log.suc = top.ants, log.fitness = top.fitness, log.cra = crashes,
+              all.details = list(param = param, evolution = all.fitness)))
 }
 
 nextNode_ACO <- function(myant, rule, phero, visib, alp, bet, c.gen) {
