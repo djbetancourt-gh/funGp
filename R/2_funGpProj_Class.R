@@ -59,22 +59,20 @@ if(!isGeneric("show")) {setGeneric(name = "show", def = function(object) standar
 setMethod("show", "funGpProj", function(object) show.funGpProj(object))
 
 show.funGpProj <- function(object) {
-  if (length(object@doProj) == 1) {
-    if (object@doProj) {
-      cat(paste("* Do projection: ", object@doProj, "\n", sep = ""))
-      if (object@doProj) {
-        cat("  -> Proj. dimension:\n")
-        for (i in 1:length(object@fpDims)) {
-          if (object@fpDims[i] > 0) {
-            cat(paste("\t F", i, ": ", object@fpDims[i], "\n", sep = ""))
-          } else {
-            cat(paste("\t F", i, ": not required\n", sep = ""))
-          }
-        }
-      }
-    } else {
-      cat(paste("* Do projection: ", object@doProj, ". Projection was not required for this model.", sep = ""))
+  if (length(object@pdims) > 0) {
+    mainTxt <- "Projection structure"
+    cat(paste("\n", mainTxt, paste(rep("_", 25), collapse = ""), sep = ""))
+
+    df <- length(object@basis)
+    np <- min(df, 8)
+    G <- cbind(paste("F", 1:np, sep = ""), lapply(object@basis, nrow), object@pdims, object@basType)
+    colnames(G) <- c("Input", "Orig. dim", "Proj. dim", "Basis")
+    if (np < df) {
+      G <- rbind(G, rep("...", 4))
     }
+    print(kable(G, align = 'c', row.names = F))
+    cat(paste(rep("_", 45), collapse = ""))
+
   } else {
     cat(paste("The funGp model linked to this kernel does not have functional inputs.",
            "Projection structures are not defined for it.", sep = " "))

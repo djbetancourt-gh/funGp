@@ -349,7 +349,11 @@ setMethod("show", "funGp", function(object) show.funGp(model = object))
 
 show.funGp <- function(model) {
   mainTxt <- "Gaussian Process Model"
-  cat(paste("\n", mainTxt, paste(rep("_", 36), collapse = ""), sep = ""))
+  if (model@df > 0) {
+    cat(paste("\n", mainTxt, paste(rep("_", 36), collapse = ""), sep = ""))
+  } else {
+    cat(paste("\n", mainTxt, paste(rep("_", 2), collapse = ""), sep = ""))
+  }
 
   cat(paste("\n\n* Scalar inputs: ", model@ds, "\n", sep = ""))
   cat(paste("* Functional inputs: ", model@df, "", sep = ""))
@@ -418,7 +422,11 @@ show.funGp <- function(model) {
     if (length(s.ls) > max.pr)
       cat("\n Some length-scale parameters were not printed. Consider\n checking 'model@kern@s_lsHyps'\n")
   }
-  cat(paste(rep("_", 58), collapse = ""))
+  if (model@df > 0) {
+    cat(paste(rep("_", 58), collapse = ""))
+  } else {
+    cat(paste(rep("_", 24), collapse = ""))
+  }
 }
 # ----------------------------------------------------------------------------------------------------------
 

@@ -60,13 +60,16 @@ if(!isGeneric("show")) {setGeneric(name = "show", def = function(object) standar
 setMethod("show", "funGpKern", function(object) show.funGpKern(kernel = object))
 
 show.funGpKern <- function(kernel) {
+  ds <- length(kernel@s_lsHyps)
+  df <- length(unique(kernel@f_lsOwners))
+
   mainTxt <- "Kernel structure"
-  cat(paste("\n", mainTxt, paste(rep("_", 9), collapse = ""), sep = ""))
+  cat(paste("\n", mainTxt, paste(rep("_", 13), collapse = ""), sep = ""))
 
   cat(paste("\n\n* Kernel type: ", kernel@kerType, "\n", sep = ""))
-  cat("* Scalar distance: scalar\n")
+  if (ds > 0)
+    cat("* Scalar distance: L2_byindex\n")
 
-  df <- length(kernel@f_lsHyps)
   if (df > 0) {
     cat("* Functional distance:")
     np <- min(df, 8)
@@ -81,17 +84,53 @@ show.funGpKern <- function(kernel) {
   cat("\n* Hyperparameters:\n")
   cat(paste("  -> variance: ", format(kernel@varHyp, digits = 3, nsmall = 4), "\n", sep = ""))
   cat("  -> length-scale:\n")
-  ds <- length(kernel@s_lsHyps)
-  if (ds > 0) {
-    for (i in 1:ds) {
-      cat(paste("\t ls(X", i, "): ", format(kernel@s_lsHyps[i], digits = 3, nsmall = 4), "\n", sep = ""))
+  max.pr <- 8
+  if (ds*df > 0) {
+    # prepare lenght-scale parameters for printing (allows to print a maximum of 8 length-scale parameters)
+    a <- paste("X", 1:ds, sep = "")
+    b <- kernel@f_lsOwners
+    all.owners <- c(a, b)[order(c(seq_along(a)*2 - 1, seq_along(b)*2))]
+    a <- kernel@s_lsHyps
+    b <- kernel@f_lsHyps
+    all.ls <- c(a, b)[order(c(seq_along(a)*2 - 1, seq_along(b)*2))]
+    top.owners <- all.owners[1:min(max.pr,length(all.owners))]
+    top.ls <- all.ls[1:min(max.pr,length(all.owners))]
+    ids.s <- grepl("X", top.owners)
+    ids.f <- grepl("F", top.owners)
+    s.ls <- top.ls[ids.s]
+    s.owners <- top.owners[ids.s]
+    f.ls <- top.ls[ids.f]
+    f.owners <- top.owners[ids.f]
+
+    for (i in 1:length(s.ls)) {
+      cat(paste("\t ls(", s.owners[i], "): ", format(s.ls[i], digits = 3, nsmall = 4), "\n", sep = ""))
     }
-  }
-  if (df > 0) {
-    for (i in 1:df) {
-      cat(paste("\t ls(F", i, "): ", format(kernel@f_lsHyps[i], digits = 3, nsmall = 4), "\n", sep = ""))
+    for (i in 1:length(f.ls)) {
+      cat(paste("\t ls(", f.owners[i], "): ", format(f.ls[i], digits = 3, nsmall = 4), "\n", sep = ""))
     }
+    if (length(all.ls) > max.pr)
+      cat("\n Some length-scale parameters were not printed. Consider\n checking 'model@kern@s_lsHyps' and 'model@kern@f_lsHyps'\n")
+
+  } else if (df > 0) {
+    ids.f <- 1:min(max.pr,length(kernel@f_lsHyps))
+    f.ls <- kernel@f_lsHyps[ids.f]
+    f.owners <- kernel@f_lsOwners[ids.f]
+    for (i in 1:length(f.ls)) {
+      cat(paste("\t ls(", f.owners[i], "): ", format(f.ls[i], digits = 3, nsmall = 4), "\n", sep = ""))
+    }
+    if (length(f.ls) > max.pr)
+      cat("\n Some length-scale parameters were not printed. Consider\n checking 'model@kern@f_lsHyps'\n")
+
+  } else {
+    ids.s <- 1:min(max.pr,length(kernel@s_lsHyps))
+    s.ls <- kernel@s_lsHyps[ids.s]
+    s.owners <- paste("X", 1:ds, sep = "")
+    for (i in 1:length(s.ls)) {
+      cat(paste("\t ls(", s.owners[i], "): ", format(s.ls[i], digits = 3, nsmall = 4), "\n", sep = ""))
+    }
+    if (length(s.ls) > max.pr)
+      cat("\n Some length-scale parameters were not printed. Consider\n checking 'model@kern@s_lsHyps'\n")
   }
-  cat(paste(rep("_", 25), collapse = ""))
+  cat(paste(rep("_", 29), collapse = ""))
 }
 # ----------------------------------------------------------------------------------------------------------
