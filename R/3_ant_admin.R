@@ -4,7 +4,7 @@
 
 # Method to plot a funGp model
 # ----------------------------------------------------------------------------------------------------------
-master_ACO <- function(sIn, fIn, sOut, ind.vl, solspace, setup, extargs, start.time, time.lim) {
+master_ACO <- function(sIn, fIn, sOut, ind.vl, solspace, setup, extargs, start.time, time.lim, quietly) {
   # set heuristic parameters based on defaults and user specifications
   param <- setParams_ACO(setup)
 
@@ -12,7 +12,7 @@ master_ACO <- function(sIn, fIn, sOut, ind.vl, solspace, setup, extargs, start.t
   env <- setEnvir_ACO(solspace, param)
 
   # perform exploration
-  res <- run_ACO(sIn, fIn, sOut, ind.vl, param, env, solspace$sp.base, extargs, start.time, time.lim)
+  res <- run_ACO(sIn, fIn, sOut, ind.vl, param, env, solspace$sp.base, extargs, start.time, time.lim, quietly)
 
   # correct the howCalled of best model
   res$model@howCalled@string <- getCall_ACO(res$sol.vec, sIn, fIn, res$sol.args, solspace$sp.base, extargs)
@@ -61,20 +61,20 @@ master_ACO <- function(sIn, fIn, sOut, ind.vl, solspace, setup, extargs, start.t
 # rho.g: global reinforcement coefficient: the larger it is, the more influence best ants have on each update
 # =====================================================================================================
 setParams_ACO <- function(setup) {
-  if (!is.null(setup$n.gen)) n.gen <- setup$n.gen else n.gen <- 4
-  if (!is.null(setup$n.pop)) n.pop <- setup$n.pop else n.pop <- 50
+  if (!is.null(setup$n.gen)) n.gen <- setup$n.gen else n.gen <- 5
+  if (!is.null(setup$n.pop)) n.pop <- setup$n.pop else n.pop <- 10
   if (!is.null(setup$tao0)) tao0 <- setup$tao0 else tao0 <- 10^-8
   if (!is.null(setup$vis.s)) vis.s <- setup$vis.s else vis.s <- .7
   if (!is.null(setup$vis.f)) vis.f <- setup$vis.f else vis.f <- .7
   if (!is.null(setup$dec.f)) dec.f <- setup$dec.f else dec.f <- .4
   if (!is.null(setup$q0)) q0 <- setup$q0 else q0 <- .9
-  if (!is.null(setup$alp)) alp <- setup$alp else alp <- 10
+  if (!is.null(setup$alp)) alp <- setup$alp else alp <- 1
   if (!is.null(setup$bet)) bet <- setup$bet else bet <- 2
-  if (!is.null(setup$rho.l)) rho.l <- setup$rho.l else rho.l <- 0
+  if (!is.null(setup$rho.l)) rho.l <- setup$rho.l else rho.l <- .1
   if (!is.null(setup$dt.l)) dt.l <- setup$dt.l else dt.l <- tao0
   if (!is.null(setup$u.gbest)) u.gbest <- setup$u.gbest else u.gbest <- F
   if (!is.null(setup$n.gbest)) n.gbest <- setup$n.gbest else n.gbest <- 1
-  if (!is.null(setup$rho.g)) rho.g <- setup$rho.g else rho.g <- 1
+  if (!is.null(setup$rho.g)) rho.g <- setup$rho.g else rho.g <- .1
 
   params <- list(n.gen = n.gen, n.pop = n.pop, tao0 = tao0, vis.s = vis.s, vis.f = vis.f,
                  dec.f = dec.f, q0 = q0, alp = alp, bet = bet, rho.l = rho.l, dt.l = dt.l,
@@ -410,13 +410,13 @@ getCall_ACO <- function(ant, sIn, fIn, args, base, extargs) {
       f.str <- paste("fIn = fIn[[c(", paste(f.used, collapse = ","), ")]]", sep = "")
     }
 
-    # prepare f_distype string
+    # prepare f_disType string
     if (length(args$f_disType) == 1) {
-      f_disType.str <- paste('f_distype = "', args$f_disType, '"', sep = "")
+      f_disType.str <- paste('f_disType = "', args$f_disType, '"', sep = "")
     } else if (length(unique(args$f_disType)) > 1) {
-      f_disType.str <- paste('f_distype = c("', paste(args$f_disType, collapse = '", "'), '")', sep = "")
+      f_disType.str <- paste('f_disType = c("', paste(args$f_disType, collapse = '", "'), '")', sep = "")
     } else {
-      f_disType.str <- paste('f_distype = "', args$f_disType[1], '"', sep = "")
+      f_disType.str <- paste('f_disType = "', args$f_disType[1], '"', sep = "")
     }
 
     # prepare f_pdims string

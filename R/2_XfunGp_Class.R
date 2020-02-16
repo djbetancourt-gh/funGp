@@ -23,12 +23,12 @@ setClass("XfunGp",
          representation(
            model = "funGp",                # kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}
            fitness = "numeric",            # model fitness
+           stat = "character",             # search method
            structure = "data.frame",       # model fitness
            factoryCall = "factoryCall",    # distance type. To be chosen from {"scalar", "functional"}
            n.solspace = "numeric",         # search method
            n.explored = "numeric",         # search method
            method = "character",           # search method
-           stat = "character",             # search method
            details = "list",               # search method
            log.success = "antsLog",        # search method
            log.crashes = "antsLog"         # search method
@@ -55,15 +55,23 @@ setClass("XfunGp",
 #' @keywords internal
 funGp_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, ind.vl = NULL,
                           method = "ACO", constraints = list(), setup = list(), time.lim = NULL,
-                          nugget = 1e-8, n.starts = 1, n.presample = 20) {
+                          nugget = 1e-8, n.starts = 1, n.presample = 20, quietly = TRUE) {
   # user inputs, remove this at the end !!!!!!!!!!!!!!!!!!!!!!!!!
-  s_keepActive <- c(1) # keep X1 always active
-  f_keepActive <- NULL # Do not keep any functional input always active, let them free
-  f_fixDims <- matrix(c(2,4), ncol = 1) # set dimension of F2 at 4
-  f_maxDims <- matrix(c(1,5), ncol = 1) # set max dimension of F1 at 5
-  f_disTypes <- list("2" = c("L2_byindex")) # only test L2_index distance for F2
-  f_basTypes <- list("1" = c("B-splines")) # only B-splines projection for F1
-  kerTypes <- c("matern5_2", "matern3_2") # test only matern kernels
+  # s_keepActive <- c(1) # keep X1 always active
+  # f_keepActive <- NULL # Do not keep any functional input always active, let them free
+  # f_fixDims <- matrix(c(2,4), ncol = 1) # set dimension of F2 at 4
+  # f_maxDims <- matrix(c(1,5), ncol = 1) # set max dimension of F1 at 5
+  # f_disTypes <- list("2" = c("L2_byindex")) # only test L2_index distance for F2
+  # f_basTypes <- list("1" = c("B-splines")) # only B-splines projection for F1
+  # kerTypes <- c("matern5_2", "matern3_2") # test only matern kernels
+
+  s_keepActive <- NULL
+  f_keepActive <- NULL
+  f_fixDims <- NULL
+  f_maxDims <- NULL
+  f_disTypes <- NULL
+  f_basTypes <- NULL
+  kerTypes <- NULL
   constraints <- list(s_keepActive = s_keepActive, f_keepActive = f_keepActive, f_fixDims = f_fixDims, f_maxDims = f_maxDims,
                       f_disTypes = f_disTypes, f_basTypes = f_basTypes, kerTypes = kerTypes)
 
@@ -99,7 +107,7 @@ funGp_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, ind.vl = NULL,
   # optimize model structure
   switch(method,
          "ACO" = {# 1: Ant Colony Optimization
-           opt <- master_ACO(sIn, fIn, sOut, ind.vl, solspace, setup, extargs, start.time, time.lim)
+           opt <- master_ACO(sIn, fIn, sOut, ind.vl, solspace, setup, extargs, start.time, time.lim, quietly)
          },
 
          "ES" = {# 3: Exhaustive Search
@@ -148,7 +156,7 @@ setSpace <- function(sIn, fIn, constraints) {
   f.dims <- lapply(sapply(fIn, ncol), function(k) 0:k)
   f.dist <- rep(list(c("L2_bygroup", "L2_byindex")), df)
   f.bas <- rep(list(c("B-splines", "PCA")), df)
-  k.type <- c("gaussian", "matern5_2", "matern3_2")
+  k.type <- c("gauss", "matern5_2", "matern3_2")
   sp.base <- list(s.state = s.state, f.state = f.state, f.dims = f.dims, f.dist = f.dist, f.bas = f.bas, k.type = k.type)
 
   # modify the solution space if the user has specified any constraint

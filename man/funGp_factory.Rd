@@ -15,7 +15,8 @@ funGp_factory(
   time.lim = NULL,
   nugget = 1e-08,
   n.starts = 1,
-  n.presample = 20
+  n.presample = 20,
+  quietly = TRUE
 )
 }
 \arguments{

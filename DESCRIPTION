@@ -42,6 +42,7 @@ Collate:
     '8_examplesManual.R'
     '8_examplesPackage.R'
     '8_outilsStats.R'
+    'zzz_Biannual.R'
     'zzz_Paralelizacion.R'
     'zzz_RemoveAtEnd.R'
 VignetteBuilder: R.rsp

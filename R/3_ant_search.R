@@ -26,7 +26,7 @@ setClass("antsLog",
 #' @importFrom graphics axis
 #' @importFrom stats median setNames
 #' @importFrom utils setTxtProgressBar txtProgressBar
-run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs, start.time, time.lim) {
+run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs, start.time, time.lim, quietly) {
   # recover heuristic parameters
   #___________________________________________________________________________________________
   # <---> population factors
@@ -171,9 +171,17 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs, start.tim
         # attempt to build the model
         poterr <- tryCatch(
           {
-            model <- quiet(funGp(sIn = args$sIn, fIn = args$fIn, sOut = sOut, kerType = args$kerType,
-                                 f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType,
-                                 nugget = extargs$nugget, n.starts = extargs$n.starts, n.presample = extargs$n.presample))
+            if (quietly) {
+              model <- quiet(funGp(sIn = args$sIn, fIn = args$fIn, sOut = sOut, kerType = args$kerType,
+                                   f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType,
+                                   nugget = extargs$nugget, n.starts = extargs$n.starts, n.presample = extargs$n.presample))
+            } else {
+              cat("\n")
+              model <- funGp(sIn = args$sIn, fIn = args$fIn, sOut = sOut, kerType = args$kerType,
+                             f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType,
+                             nugget = extargs$nugget, n.starts = extargs$n.starts, n.presample = extargs$n.presample)
+            }
+
 
           },
           error = function(e) e
@@ -216,9 +224,17 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs, start.tim
               #                        f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType,
               #                        nugget = -10, n.starts = extargs$n.starts, n.presample = extargs$n.presample))
               # } else {
+              if (quietly) {
                 model <- quiet(funGp(sIn = args$sIn, fIn = args$fIn, sOut = data$sOut.tr, kerType = args$kerType,
                                      f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType,
                                      nugget = extargs$nugget, n.starts = extargs$n.starts, n.presample = extargs$n.presample))
+              } else {
+                cat("\n")
+                model <- funGp(sIn = args$sIn, fIn = args$fIn, sOut = data$sOut.tr, kerType = args$kerType,
+                               f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType,
+                               nugget = extargs$nugget, n.starts = extargs$n.starts, n.presample = extargs$n.presample)
+              }
+
               # }
 
             },
