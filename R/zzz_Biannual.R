@@ -21,6 +21,5 @@ ysurfmax <- function(){
   xm <- funGp_factory(sIn = sIn.cv, fIn = fIn.cv, sOut = sOut.cv, setup = list(n.pop = 10), quietly = F)
   plotX(xm)
   plotEvol(xm)
-  # hola
 }
 # ----------------------------------------------------------------------------------------------------------
