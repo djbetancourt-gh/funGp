@@ -1,60 +1,26 @@
-# Project Title
+# funGp
 
-One Paragraph of project description goes here
+Construction and smart selection of Gaussian process models with emphasis on treatment of functional inputs.
 
-## Getting Started
+## Description
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+XX
 
-### Prerequisites
+## Note
 
-What things you need to install the software and how to install them
+funG pwas first developed in the frame of the RISCOPE research project, funded by the French Agence Nationale de la Recherche (ANR) for the period 2017-2021 (ANR project No. 16CE04-0011, [RISCOPE.fr](https://perso.math.univ-toulouse.fr/riscope/)), and certified by SAFE Cluster.
+
+## Main functionalities
+
+Fill this
+
+## Installing
+
+Fill this.XX
 
 ```
 Give examples
 ```
-
-### Installing
-
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
 
 ## Built With
 
@@ -62,26 +28,21 @@ Add additional notes about how to deploy this on a live system
 * [Maven](https://maven.apache.org/) - Dependency Management
 * [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
 
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+* **José Betancourt** (maintainer) - [jbetanco@math.univ-toulouse.fr](jbetanco@math.univ-toulouse.fr)
+* **François Bachoc**
+* **Thierry Klein**
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+## Contributors
+
+* **Déborah Idier**
+* **Jérémy Rohmer**
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the GPL-3 License
 
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* We are grateful to Yves Deville from Alpestat for his advice on the documentation of R packages.
