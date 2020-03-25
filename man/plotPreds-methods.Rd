@@ -2,28 +2,99 @@
 % Please edit documentation in R/7_plottingFunctions.R
 \name{plotPreds}
 \alias{plotPreds}
-\alias{plotPreds,funGp-method}
-\title{Prediction Method for the apk Class}
+\alias{plotPreds,fgpm-method}
+\title{Plot for predictions of a funGp model}
 \usage{
-\S4method{plotPreds}{funGp}(model, preds, sOut.pr = NULL, calib = T, legends = T, stat = T, ...)
+\S4method{plotPreds}{fgpm}(model, preds, sOut.pr = NULL, calib = TRUE, sortp = TRUE, ...)
 }
 \arguments{
-\item{model}{fill}
+\item{model}{a \linkS4class{fgpm} object for which the plot is to be made.}
 
-\item{preds}{fill}
+\item{preds}{a list containing the predictions and confidence bands. In funGp, this argument is just the
+data structure delivered by the \link[funGp]{predict} method.}
 
-\item{sOut.pr}{also}
+\item{sOut.pr}{an optional vector (or 1-column matrix) containing the true values of the scalar output at
+the prediction points. If provided, the method will diplay two figures: (i) a calibration plot with
+true vs predicted output values, and (ii) a plot including the true and predicted output along with the
+confidence bands, sorted according to the increasing order of the true output. If not provided, only
+the second plot will be made, and the predictions will be arranged according to the increasing order of
+the predicted output.}
 
-\item{calib}{also}
+\item{calib}{an optional boolean indicating if the calibration plot should be displayed. Ignored if sOut.pr
+is not provided. Default is TRUE.}
 
-\item{legends}{also}
+\item{sortp}{an optional boolean indicating if the plot of sorted output should be displayed. Default is
+TRUE.}
 
-\item{stat}{also}
-
-\item{...}{Further arguments for methods.}
+\item{...}{additional arguments affecting the display. Since this method allows to generate two plots from
+a single function call, the extra arguments for each plot should be included in a list. For the
+calibration plot, the list should be called \emph{calib.gpars}. For the plot of the output in increasing
+order, the list should be called \emph{sortp.gpars}. The following typical graphics parameters are valid
+entries of both lists: \emph{xlim}, \emph{ylim}, \emph{xlab}, \emph{ylab}, \emph{main}. The boolean
+argument \emph{legends} can also be included in any of the two lists in order to control the display of
+legends in the corresponding plot.}
 }
 \description{
-This is my description
+This method displays the predicted output values delivered by a funGp Gaussian process model.
+}
+\examples{
+# plotting predictions without the true output values______________________________________
+# building the model
+set.seed(100)
+n.tr <- 25
+sIn <- expand.grid(x1 = seq(0,1,length = sqrt(n.tr)), x2 = seq(0,1,length = sqrt(n.tr)))
+fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
+sOut <- fgp_BB3(sIn, fIn, n.tr)
+m1 <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut)
+
+# making predictions
+n.pr <- 100
+sIn.pr <- as.matrix(expand.grid(x1 = seq(0,1,length = sqrt(n.pr)),
+                                x2 = seq(0,1,length = sqrt(n.pr))))
+fIn.pr <- list(f1 = matrix(runif(n.pr*10), ncol = 10), matrix(runif(n.pr*22), ncol = 22))
+m1.preds <- predict(m1, sIn.pr = sIn.pr, fIn.pr = fIn.pr)
+
+# plotting predictions
+plotPreds(m1, preds = m1.preds)
+
+
+# plotting predictions and true output values______________________________________________
+# building the model
+set.seed(100)
+n.tr <- 25
+sIn <- expand.grid(x1 = seq(0,1,length = sqrt(n.tr)), x2 = seq(0,1,length = sqrt(n.tr)))
+fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
+sOut <- fgp_BB3(sIn, fIn, n.tr)
+m1 <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut)
+
+# making predictions
+n.pr <- 100
+sIn.pr <- as.matrix(expand.grid(x1 = seq(0,1,length = sqrt(n.pr)),
+                                x2 = seq(0,1,length = sqrt(n.pr))))
+fIn.pr <- list(f1 = matrix(runif(n.pr*10), ncol = 10), matrix(runif(n.pr*22), ncol = 22))
+m1.preds <- predict(m1, sIn.pr = sIn.pr, fIn.pr = fIn.pr)
+
+# generating output data for validation
+sOut.pr <- fgp_BB3(sIn.pr, fIn.pr, n.pr)
+
+# plotting predictions
+plotPreds(m1, m1.preds, sOut.pr)
+
+# only calibration plot
+plotPreds(m1, m1.preds, sOut.pr, sortp = FALSE)
+
+# only sorted output plot
+plotPreds(m1, m1.preds, sOut.pr, calib = FALSE)
+
+}
+\seealso{
+\strong{*} \link[funGp]{fgpm} for the construction of funGp models;
+
+\strong{*} \link[funGp]{plotLOO} for model diagnostic plots;
+
+\strong{*} \link[funGp]{simulate} for simulations based on a funGp model;
+
+\strong{*} \link[funGp]{plotSims} for simulation plots.
 }
 \author{
 José Betancourt, François Bachoc and Thierry Klein

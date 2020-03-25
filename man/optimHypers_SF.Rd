@@ -15,7 +15,8 @@ optimHypers_SF(
   varfun,
   ls_s.known,
   ls_f.known,
-  nugget
+  nugget,
+  par.clust
 )
 }
 \arguments{

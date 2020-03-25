@@ -16,7 +16,7 @@ upd_del <- function(model, ind.dl, remake) {
 
     # the model is re-made if this is the last one in the sequence of requested tasks
     if (remake) {
-      modelup <- funGp(sIn = sIn, fIn = fIn, sOut = sOut, kerType = model@kern@kerType,
+      modelup <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut, kerType = model@kern@kerType,
                        f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims,
                        f_basType = model@f_proj@basType, var.hyp = model@kern@varHyp,
                        ls_s.hyp = model@kern@s_lsHyps, ls_f.hyp = model@kern@f_lsHyps)
@@ -43,7 +43,7 @@ upd_del <- function(model, ind.dl, remake) {
 
     # the model is re-made if this is the last one in the sequence of requested tasks
     if (remake) {
-      modelup <- funGp(fIn = fIn, sOut = sOut,
+      modelup <- fgpm(fIn = fIn, sOut = sOut,
                        kerType = model@kern@kerType, f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims,
                        f_basType = model@f_proj@basType, var.hyp = model@kern@varHyp, ls_f.hyp = model@kern@f_lsHyps)
     } else {
@@ -66,9 +66,9 @@ upd_del <- function(model, ind.dl, remake) {
     sIn <- sIn[-ind.dl,,drop = F]
     sOut <- sOut[-ind.dl,,drop = F]
 
-    # request new model to refunGp if requested
+    # request new model to fgpm if indicated
     if (remake) {
-      modelup <- funGp(sIn = sIn, sOut = sOut, kerType = model@kern@kerType,
+      modelup <- fgpm(sIn = sIn, sOut = sOut, kerType = model@kern@kerType,
                        var.hyp = model@kern@varHyp, ls_s.hyp = model@kern@s_lsHyps)
     } else {
       modelup <- model
@@ -156,7 +156,7 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake) {
         modelup@sOut <- sOut
         model@n.tot <- length(sOut)
       } else {
-        modelup <- funGp(sIn = sIn, fIn = fIn, sOut = sOut, kerType = model@kern@kerType,
+        modelup <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut, kerType = model@kern@kerType,
                          f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims,
                          f_basType = model@f_proj@basType, var.hyp = model@kern@varHyp,
                          ls_s.hyp = model@kern@s_lsHyps, ls_f.hyp = model@kern@f_lsHyps)
@@ -228,7 +228,7 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake) {
         modelup@sOut <- sOut
         model@n.tot <- length(sOut)
       } else {
-        modelup <- funGp(fIn = fIn, sOut = sOut,
+        modelup <- fgpm(fIn = fIn, sOut = sOut,
                          kerType = model@kern@kerType, f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims,
                          f_basType = model@f_proj@basType, var.hyp = model@kern@varHyp, ls_f.hyp = model@kern@f_lsHyps)
       }
@@ -298,7 +298,7 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake) {
         modelup@sOut <- sOut
         model@n.tot <- length(sOut)
       } else {
-        modelup <- funGp(sIn = sIn, sOut = sOut, kerType = model@kern@kerType,
+        modelup <- fgpm(sIn = sIn, sOut = sOut, kerType = model@kern@kerType,
                          var.hyp = model@kern@varHyp, ls_s.hyp = model@kern@s_lsHyps)
       }
     } else {
@@ -365,7 +365,7 @@ upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake) {
 
     # the model is re-made if this is the last one in the sequence of requested tasks
     if (remake) {
-      modelup <- funGp(sIn = sIn, fIn = fIn, sOut = sOut, kerType = model@kern@kerType,
+      modelup <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut, kerType = model@kern@kerType,
                        f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims,
                        f_basType = model@f_proj@basType, var.hyp = model@kern@varHyp,
                        ls_s.hyp = model@kern@s_lsHyps, ls_f.hyp = model@kern@f_lsHyps)
@@ -420,7 +420,7 @@ upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake) {
 
     # the model is re-made if this is the last one in the sequence of requested tasks
     if (remake) {
-      modelup <- funGp(fIn = fIn, sOut = sOut,
+      modelup <- fgpm(fIn = fIn, sOut = sOut,
                        kerType = model@kern@kerType, f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims,
                        f_basType = model@f_proj@basType, var.hyp = model@kern@varHyp, ls_f.hyp = model@kern@f_lsHyps)
     } else {
@@ -473,7 +473,7 @@ upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake) {
 
     # the model is re-made if this is the last one in the sequence of requested tasks
     if (remake) {
-      modelup <- funGp(sIn = sIn, sOut = sOut, kerType = model@kern@kerType,
+      modelup <- fgpm(sIn = sIn, sOut = sOut, kerType = model@kern@kerType,
                        var.hyp = model@kern@varHyp, ls_s.hyp = model@kern@s_lsHyps)
     } else {
       modelup <- model
@@ -497,7 +497,7 @@ upd_subHypers <- function(model, var.sb, ls_s.sb, ls_f.sb) {
   # var is always necessary, so if no specified, get it from original model
   if (is.null(var.sb)) var.sb <- model@kern@varHyp
 
-  # if only var needs to be substituted, no need to call funGp
+  # if only var needs to be substituted, no need to call fgpm
   if (all(is.null(ls_s.sb), is.null(ls_f.sb))) {
     # duplicate the original model to build the updated one
     modelup <- model
@@ -517,28 +517,28 @@ upd_subHypers <- function(model, var.sb, ls_s.sb, ls_f.sb) {
   } else if (model@type == "hybrid") { # Hybrid-input case *******************************************
     # the model is re-made if this is the last one in the sequence of requested tasks
     if (all(!is.null(ls_f.sb), is.null(ls_s.sb))) {
-      modelup <- funGp(sIn = model@sIn, fIn = model@fIn, sOut = model@sOut, kerType = model@kern@kerType,
+      modelup <- fgpm(sIn = model@sIn, fIn = model@fIn, sOut = model@sOut, kerType = model@kern@kerType,
                        f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims, f_basType = model@f_proj@basType,
                        var.hyp = var.sb, ls_s.hyp = model@kern@s_lsHyps, ls_f.hyp = ls_f.sb)
     } else if(all(!is.null(ls_s.sb), is.null(ls_f.sb))) {
-      modelup <- funGp(sIn = model@sIn, fIn = model@fIn, sOut = model@sOut, kerType = model@kern@kerType,
+      modelup <- fgpm(sIn = model@sIn, fIn = model@fIn, sOut = model@sOut, kerType = model@kern@kerType,
                        f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims, f_basType = model@f_proj@basType,
                        var.hyp = var.sb, ls_s.hyp = ls_s.sb, ls_f.hyp = model@kern@f_lsHyps)
     } else {
-      modelup <- funGp(sIn = model@sIn, fIn = model@fIn, sOut = model@sOut, kerType = model@kern@kerType,
+      modelup <- fgpm(sIn = model@sIn, fIn = model@fIn, sOut = model@sOut, kerType = model@kern@kerType,
                        f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims, f_basType = model@f_proj@basType,
                        var.hyp = var.sb, ls_s.hyp = ls_s.sb, ls_f.hyp = ls_f.sb)
     }
 
   } else if (model@type == "functional") { # functional-input case *******************************************
     # the model is re-made if this is the last one in the sequence of requested tasks
-    modelup <- funGp(fIn = model@fIn, sOut = model@sOut, kerType = model@kern@kerType,
+    modelup <- fgpm(fIn = model@fIn, sOut = model@sOut, kerType = model@kern@kerType,
                      f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims,
                      f_basType = model@f_proj@basType, var.hyp = var.sb, ls_f.hyp = ls_f.sb)
 
   } else { # scalar-input case *******************************************
     # the model is re-made if this is the last one in the sequence of requested tasks
-    modelup <- funGp(sIn = model@sIn, sOut = model@sOut, kerType = model@kern@kerType,
+    modelup <- fgpm(sIn = model@sIn, sOut = model@sOut, kerType = model@kern@kerType,
                      var.hyp = var.sb, ls_s.hyp = ls_s.sb)
 
   }
@@ -559,7 +559,7 @@ upd_reeHypers <- function(model, var.re, ls_s.re, ls_f.re) {
     if (!isTRUE(ls_f.re)) ls_f.up <- model@kern@f_lsHyps else ls_f.up <- NULL
 
     # the model is always re-made
-    modelup <- funGp(sIn = model@sIn, fIn = model@fIn, sOut = model@sOut, kerType = model@kern@kerType,
+    modelup <- fgpm(sIn = model@sIn, fIn = model@fIn, sOut = model@sOut, kerType = model@kern@kerType,
                      f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims, f_basType = model@f_proj@basType,
                      var.hyp = var.up, ls_s.hyp = ls_s.up, ls_f.hyp = ls_f.up)
 
@@ -567,7 +567,7 @@ upd_reeHypers <- function(model, var.re, ls_s.re, ls_f.re) {
     if (!isTRUE(ls_f.re)) ls_f.up <- model@kern@f_lsHyps else ls_f.up <- NULL
 
     # the model is always re-made
-    modelup <- funGp(fIn = model@fIn, sOut = model@sOut, kerType = model@kern@kerType,
+    modelup <- fgpm(fIn = model@fIn, sOut = model@sOut, kerType = model@kern@kerType,
                      f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims, f_basType = model@f_proj@basType,
                      var.hyp = var.up, ls_s.hyp = ls_s.up, ls_f.hyp = ls_f.up)
 
@@ -575,7 +575,7 @@ upd_reeHypers <- function(model, var.re, ls_s.re, ls_f.re) {
     if (!isTRUE(ls_s.re)) ls_s.up <- model@kern@s_lsHyps else ls_s.up <- NULL
 
     # the model is always re-made
-    modelup <- funGp(sIn = model@sIn, sOut = model@sOut, kerType = model@kern@kerType,
+    modelup <- fgpm(sIn = model@sIn, sOut = model@sOut, kerType = model@kern@kerType,
                      var.hyp = var.up, ls_s.hyp = ls_s.up, ls_f.hyp = ls_f.up)
 
   }

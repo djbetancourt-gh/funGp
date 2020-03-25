@@ -13,7 +13,8 @@ setHypers_S(
   ls_s.known,
   n.starts,
   n.presample,
-  nugget
+  nugget,
+  par.clust
 )
 }
 \arguments{

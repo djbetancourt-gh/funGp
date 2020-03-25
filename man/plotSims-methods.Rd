@@ -2,24 +2,84 @@
 % Please edit documentation in R/7_plottingFunctions.R
 \name{plotSims}
 \alias{plotSims}
-\alias{plotSims,funGp-method}
-\title{Prediction Method for the apk Class}
+\alias{plotSims,fgpm-method}
+\title{Plot for simulations from a funGp model}
 \usage{
-\S4method{plotSims}{funGp}(model, sims, detail = "full", legends = T, ...)
+\S4method{plotSims}{fgpm}(model, sims, detail = "full", ...)
 }
 \arguments{
-\item{model}{An object to predict from.}
+\item{model}{a \linkS4class{fgpm} object for which the plot is to be made.}
 
-\item{sims}{An object to predict from.}
+\item{sims}{a list containing the simulated output values. In funGp, this argument is just the data
+structure delivered by the \link[funGp]{simulate} method.}
 
-\item{detail}{fill!!!!}
+\item{detail}{an optional character string spcifying the data elements that should be included in the plot,
+to be chosen between "light" and "full". A \emph{light} plot will include only include the simulated
+values, while a a \emph{full} plot will also include the predicted mean and confidence bands at the
+simulation points. This argument will only be used if full simulations (including the mean and confidence
+bands) are provided, otherwise it will be dropped. See \link[funGp]{simulate} for more details on the
+generation of light and full simulations.}
 
-\item{legends}{fill!!!!}
-
-\item{...}{Further arguments for methods.}
+\item{...}{additional arguments affecting the display. The following typical graphics parameters are valid
+entries: \emph{xlim}, \emph{ylim}, \emph{xlab}, \emph{ylab}, \emph{main}. The boolean argument
+\emph{legends} can also be included in any of the two lists in order to control the display of legends
+in the corresponding plot.}
 }
 \description{
-This is my description
+This method displays the simulated output values delivered by a funGp Gaussian process model.
+}
+\examples{
+# plotting light simulations_______________________________________________________________
+# building the model
+set.seed(100)
+n.tr <- 25
+sIn <- expand.grid(x1 = seq(0,1,length = sqrt(n.tr)), x2 = seq(0,1,length = sqrt(n.tr)))
+fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
+sOut <- fgp_BB3(sIn, fIn, n.tr)
+m1 <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut)
+
+# making light simulations
+n.sm <- 100
+sIn.sm <- as.matrix(expand.grid(x1 = seq(0,1,length = sqrt(n.sm)),
+                                x2 = seq(0,1,length = sqrt(n.sm))))
+fIn.sm <- list(f1 = matrix(runif(n.sm*10), ncol = 10), matrix(runif(n.sm*22), ncol = 22))
+m1.sims <- simulate(m1, nsim = 10, sIn.sm = sIn.sm, fIn.sm = fIn.sm)
+
+# plotting light simulations
+plotSims(m1, m1.sims)
+
+
+# plotting full simulations________________________________________________________________
+# building the model
+set.seed(100)
+n.tr <- 25
+sIn <- expand.grid(x1 = seq(0,1,length = sqrt(n.tr)), x2 = seq(0,1,length = sqrt(n.tr)))
+fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
+sOut <- fgp_BB3(sIn, fIn, n.tr)
+m1 <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut)
+
+# making full simulations
+n.sm <- 100
+sIn.sm <- as.matrix(expand.grid(x1 = seq(0,1,length = sqrt(n.sm)),
+                                x2 = seq(0,1,length = sqrt(n.sm))))
+fIn.sm <- list(f1 = matrix(runif(n.sm*10), ncol = 10), matrix(runif(n.sm*22), ncol = 22))
+m1.sims <- simulate(m1, nsim = 10, sIn.sm = sIn.sm, fIn.sm = fIn.sm, detail = "full")
+
+# plotting full simulations in full mode
+plotSims(m1, m1.sims)
+
+# plotting full simulations in light mode
+plotSims(m1, m1.sims, detail = "light")
+
+}
+\seealso{
+\strong{*} \link[funGp]{fgpm} for the construction of funGp models;
+
+\strong{*} \link[funGp]{plotLOO} for model diagnostic plots;
+
+\strong{*} \link[funGp]{predict} for predictions based on a funGp model;
+
+\strong{*} \link[funGp]{plotPreds} for prediction plots.
 }
 \author{
 José Betancourt, François Bachoc and Thierry Klein

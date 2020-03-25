@@ -4,7 +4,8 @@
 
 # funGp validator
 # ----------------------------------------------------------------------------------------------------------
-checkVal_funGp <- function(env){
+checkVal_fgpm <- function(env){
+  # browser()
   if (all(!is.null(env$sIn), !is.null(env$fIn))) { # Hybrid-input case *******************************************
     # consistency in number of points
     if (length(unique(c(nrow(env$sIn), as.numeric(sapply(env$fIn, nrow)), length(env$sOut)))) > 1) {
@@ -19,11 +20,26 @@ checkVal_funGp <- function(env){
       }
     }
 
-    # identifiabilty
-    ind.dup <- check_duplicates_SF(env$sIn, env$fIn, env$sIn, env$fIn)
-    if (length(ind.dup) > 0) {
-      stop(paste("There are duplicated input points.\nDuplicates' indices: ", paste(ind.dup, collapse = ", "),
-                 "\nPlease check your data.", sep = ""))
+    # consistency between length of ls_s.hyp and the number of scalar inputs
+    if (!is.null(env$ls_s.hyp)) {
+      if (length(env$ls_s.hyp) != ncol(env$sIn)) {
+        stop(paste("Inconsistent number of length-scale parameters. Please check that the vector ls_s.hyp has as many elements as the number\n  ",
+                   "of columns in sIn., or leave this argument empty and the scalar length-scale parameters will be estimated from the data."))
+      }
+    }
+
+    # consistency between length of ls_f.hyp and the sum of effective dimensions
+    if (!is.null(env$ls_f.hyp)) {
+      od <- sapply(env$fIn, ncol) # original dimensions
+      pd <- env$f_pdims # coded projection dimensions (including zeros)
+      zrs <- which(pd == 0)
+      pd[zrs] <- od[zrs] # effective projection dimensions (zeros replaced by original dimension)
+      sumdims <- sum(sapply(seq_along(pd), function(i) if(env$f_disType[i] == "L2_bygroup") return(1) else return(pd[i])))
+      if (length(env$ls_f.hyp) != sumdims) {
+        stop(paste("Inconsistent number of length-scale parameters. Please check that the vector ls_f.hyp has as many elements as effective",
+                   "dimensions.\n  Consider checking ?fgpm for details. Yoy can also leave this argument empty and the functional length-scale",
+                   "parameters will be\n  estimated from the data."))
+      }
     }
 
   } else if(!is.null(env$fIn)) { # functional-input case ***************************************
@@ -45,10 +61,31 @@ checkVal_funGp <- function(env){
       }
     }
 
+    # consistency between length of ls_f.hyp and the sum of effective dimensions
+    if (!is.null(env$ls_f.hyp)) {
+      od <- sapply(env$fIn, ncol) # original dimensions
+      pd <- env$f_pdims # coded projection dimensions (including zeros)
+      zrs <- which(pd == 0)
+      pd[zrs] <- od[zrs] # effective projection dimensions (zeros replaced by original dimension)
+      sumdims <- sum(sapply(seq_along(pd), function(i) if(env$f_disType[i] == "L2_bygroup") return(1) else return(pd[i])))
+      if (length(env$ls_f.hyp) != sumdims) {
+        stop(paste("Inconsistent number of length-scale parameters. Please check that the vector ls_f.hyp has as many elements as effective",
+                   "dimensions.\n  Consider checking ?fgpm for details. Yoy can also leave this argument empty and the functional length-scale",
+                   "parameters will be\n  estimated from the data."))
+      }
+    }
+
   } else if(!is.null(env$sIn)) { # scalar-input case *******************************************
     # check validity and consistency of user inputs
     if (nrow(env$sIn) != length(env$sOut)) {
       stop("Inconsistent number of points. Please check that sIn and sOut have the same number of rows.")
+    }
+
+    if (!is.null(env$ls_s.hyp)) {
+      if (length(env$ls_s.hyp) != ncol(env$sIn)) {
+        stop(paste("Inconsistent number of length-scale parameters. Please check that the vector ls_s.hyp has as many elements as the number\n  ",
+                   "of columns in sIn., or leave this argument empty and the scalar length-scale parameters will be estimated from the data."))
+      }
     }
   }
 

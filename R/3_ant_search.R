@@ -1,58 +1,37 @@
-# ==========================================================================================================
-# Ants log
-# ==========================================================================================================
-#' @title Class: data structures related to the kernel of a funGp model
-#' @description Fill this!!!!!!!!!
-#'
-#' @slot sols Object of class \code{"character"}. Kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}.
-#' @slot args Object of class \code{"character"}. Kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}.
-#' @slot fitness Object of class \code{"character"}. Kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}.
-#'
-#' @author José Betancourt, François Bachoc and Thierry Klein
-#' @export
-setClass("antsLog",
-         representation(
-           sols = "data.frame",            # kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}
-           args = "list",                  # distance type. To be chosen from {"scalar", "functional"}
-           fitness = "numeric"             # search method
-         ),
-         validity = function(object) {T})
-# ==========================================================================================================
-
-
 # Method to plot a funGp model
 # ----------------------------------------------------------------------------------------------------------
 #' @importFrom scales alpha
 #' @importFrom graphics axis
 #' @importFrom stats median setNames
-#' @importFrom utils setTxtProgressBar txtProgressBar
-run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs, start.time, time.lim, quietly) {
+#' @importFrom utils txtProgressBar setTxtProgressBar
+# run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs, time.str, time.lim, quietly, par.clust) {
+run_ACO <- function(sIn, fIn, sOut, ind.vl, param, phero, base, extargs, time.str, time.lim, quietly, par.clust) {
   # recover heuristic parameters
   #___________________________________________________________________________________________
   # <---> population factors
-  n.gen <- param$n.gen
+  n.iter <- param$n.iter
   n.pop <- param$n.pop
 
   # <---> transition rules
   q0 <- param$q0
-  alp <- param$alp
-  bet <- param$bet
+  # alp <- param$alp
+  # bet <- param$bet
 
   # <---> local pheromone update
   rho.l <- param$rho.l
-  dt.l <- param$dt.l
+  # dt.l <- param$dt.l
 
   # <---> global pheromone update
+  tao0 <- param$tao0
   u.gbest <- param$u.gbest
-  n.gbest <- param$n.gbest
+  n.ibest <- param$n.ibest
   rho.g <- param$rho.g
   #___________________________________________________________________________________________
 
 
   # recover pheromones and visibility
-  phero <- env$phero
-  visib <- env$visib
-
+  # phero <- env$phero
+  # visib <- env$visib
 
   # set up heuristic controllers and statistics
   #___________________________________________________________________________________________
@@ -61,9 +40,9 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs, start.tim
   timestop <- F
 
   # <---> for statistics
-  evol.fitness <- rep(0, n.gen) # fitness of best ant of each colony
+  evol.fitness <- rep(0, n.iter) # fitness of best ant of each colony
   all.ants <- list() # log of all explored ants
-  # all.fitness <- matrix(nrow = n.pop, ncol = n.gen) # fitness of all explored ants
+  # all.fitness <- matrix(nrow = n.pop, ncol = n.iter) # fitness of all explored ants
   all.fitness <- list() # fitness of all explored ants
   crashes <- list()
 
@@ -71,12 +50,13 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs, start.tim
   b.ant <- "just use the mean" # initialize best ant
   b.fitness <- 0 # initialize best fitness
   #___________________________________________________________________________________________
-
+  # visib <- lapply(visib, function(M) M*0) # ojooooooooooooooooooooooooooo esto es temporal!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  # browser()
   # run the colony
-  for (c.gen in 1:n.gen) {
-    start_time <- Sys.time()
+  for (c.gen in 1:n.iter) {
+    # start_time <- Sys.time()
     cat(paste("Dispatching colony", c.gen, "\n"))
-    pb <- txtProgressBar(min = 0, max = n.pop, style = 3)
+    # pb <- txtProgressBar(min = 0, max = n.pop, style = 3)
 
     # create a new colony and mark as incomplete
     ants <- matrix(nrow = n.pop, ncol = n.layers)
@@ -95,31 +75,29 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs, start.tim
       id.ant <- sample.vec(id.partial, 1)
       myant <- list(id = id.ant, sol = ants[id.ant,], layer = antsLayers[id.ant], level = antsLevels[id.ant])
 
-      # cat(paste("\nid.ant:", id.ant, "\n"))
+      # print(paste("id.ant:", id.ant))
+      # print(myant$sol)
 
       # add step to selected ant based on decision rules
       # print("----------------< Next step")
       if (runif(1) <= q0) {
         # print("greedy")
-        antup <- nextNode_ACO(myant, "greedy", phero, visib, alp, bet, c.gen)
+        # antup <- nextNode_ACO(myant, "greedy", phero, visib, alp, bet, c.gen)
+        antup <- nextNode_ACO(myant, "greedy", phero, c.gen)
       } else {
         # print("propor")
-        antup <- nextNode_ACO(myant, "propor", phero, visib, alp, bet, c.gen)
+        # antup <- nextNode_ACO(myant, "propor", phero, visib, alp, bet, c.gen)
+        antup <- nextNode_ACO(myant, "propor", phero, c.gen)
       }
 
-      # if (antup$layer == 8) {
-      #   browser()
-      #   if (antup$sol[8] != 2) {
-      #     browser()
-      #   }
-      # }
-
+      # print(paste("id.ant:", id.ant))
+      # print(antup$sol)
 
       # perform local pheromone update only if the factor was not already fixed
       # print("----------------< Local update")
-      if (antup$layer - myant$layer == 1) {
-        phero <- localUpd_ACO(phero, myant, antup, rho.l, dt.l)
-      }
+      # if (antup$layer - myant$layer == 1) {
+      phero <- localUpd_ACO(phero, myant, antup, rho.l, tao0) #dt.l)
+      # }
 
       # save the ant
       ants[antup$id,] <- antup$sol
@@ -144,288 +122,94 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs, start.tim
       # check if the colony is done
       if (all(!antsPartial)) colPartial <- F
     }
-
-    # if there are no active inputs left, restart the ant !!!!!!!!!!!!!!!!!!!!!!! complete this!!!!!!!!!!!!!!!!!!!!!!!!!
-    # if (all(is.null(args$sIn), is.null(args$fIn))) browser()
-    # getActiveIn_ACO(ants[i,], sIn, fIn, base)
-
+# browser() ##### estamos haciend pruebas aca!!
     # compute fitness of each ant
     fitness <- rep(0, n.pop)
-    for (i in 1:n.pop) {
-      if (is.null(ind.vl)) {
-        # # translate ant data into funGp arguments format
-        # args <- formatSol_ACO(ants[i,], sIn, fIn, base)
-        #
-        # # build the model
-        # model <- quiet(funGp(sIn = args$sIn, fIn = args$fIn, sOut = sOut, kerType = args$kerType,
-        #                      f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType,
-        #                      nugget = extargs$nugget, n.starts = extargs$n.starts, n.presample = extargs$n.presample))
-        #
-        # # compute model fitness
-        # fitness[i] <- max(getFitness(model),0)
 
-
-        # translate ant data into funGp arguments format
-        args <- formatSol_ACO(ants[i,], sIn, fIn, base)
-
-        # attempt to build the model
-        poterr <- tryCatch(
-          {
-            if (quietly) {
-              model <- quiet(funGp(sIn = args$sIn, fIn = args$fIn, sOut = sOut, kerType = args$kerType,
-                                   f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType,
-                                   nugget = extargs$nugget, n.starts = extargs$n.starts, n.presample = extargs$n.presample))
-            } else {
-              cat("\n")
-              model <- funGp(sIn = args$sIn, fIn = args$fIn, sOut = sOut, kerType = args$kerType,
-                             f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType,
-                             nugget = extargs$nugget, n.starts = extargs$n.starts, n.presample = extargs$n.presample)
-            }
-
-
-          },
-          error = function(e) e
-        )
-
-        # if the model was succesfully built, compute model fitness
-        if (!inherits(poterr, "error")) {
-          # fitness[i] <- max(getFitness(model),0)
-          fitness[i] <- getFitness(model)
-
-          # save the model if it is the global best
-          if (fitness[i] > b.fitness) {
-            b.model <- model
-            b.args <- args
-          }
-        } else {
-          fitness[i] <- NA
-        }
-
-      } else {
-        n.rep <- ncol(ind.vl)# number of replicates
-        rep.fitness <- rep(0, n.rep)
-        for (r in 1:n.rep) {
-          # split data into training and validation
-          data <- splitData(sIn, fIn, sOut, ind.vl[,r]) # aca no hay que poner entradas inactivas en null
-
-          # translate ant data into funGp arguments format
-          args <- formatSol_ACO(ants[i,], sIn = data$sIn.tr, fIn = data$fIn.tr, base) # esto se encarga de poner en null las entradas inact
-
-          # build the model
-          # model <- quiet(funGp(sIn = args$sIn, fIn = args$fIn, sOut = data$sOut.tr, kerType = args$kerType,
-          #                      f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType,
-          #                      nugget = extargs$nugget, n.starts = extargs$n.starts, n.presample = extargs$n.presample))
-
-          # attempt to build the model
-          poterr <- tryCatch(
-            {
-              # if (i == 2) {
-              #   model <- quiet(funGp(sIn = args$sIn, fIn = args$fIn, sOut = data$sOut.tr, kerType = args$kerType,
-              #                        f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType,
-              #                        nugget = -10, n.starts = extargs$n.starts, n.presample = extargs$n.presample))
-              # } else {
-              if (quietly) {
-                model <- quiet(funGp(sIn = args$sIn, fIn = args$fIn, sOut = data$sOut.tr, kerType = args$kerType,
-                                     f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType,
-                                     nugget = extargs$nugget, n.starts = extargs$n.starts, n.presample = extargs$n.presample))
-              } else {
-                cat("\n")
-                model <- funGp(sIn = args$sIn, fIn = args$fIn, sOut = data$sOut.tr, kerType = args$kerType,
-                               f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType,
-                               nugget = extargs$nugget, n.starts = extargs$n.starts, n.presample = extargs$n.presample)
-              }
-
-              # }
-
-            },
-            error = function(e) e # {browser(); e}
-          )
-
-          # identify active inputs of both types
-          active <- getActiveIn_ACO(ants[i,], sIn, fIn, base)
-
-          # # compute model-replicate fitness
-          # rep.fitness[r] <- max(getFitness(model, data$sIn.vl, data$fIn.vl, data$sOut.vl, active),0)
-
-          # if the model was succesfully built, compute model fitness
-          if (!inherits(poterr, "error")) {
-            # rep.fitness[r] <- max(getFitness(model, data$sIn.vl, data$fIn.vl, data$sOut.vl, active),0)
-            rep.fitness[r] <- getFitness(model, data$sIn.vl, data$fIn.vl, data$sOut.vl, active)
-          } else {
-            rep.fitness[r] <- NA
-          }
-        }
-
-        # remove crashes and compute average model fitness
-        if (any(!is.na(rep.fitness))) {
-          fitness[i] <- mean(rep.fitness[!is.na(rep.fitness)])
-
-          # save the model if it is the global best
-          if (fitness[i] > b.fitness) {
-            b.model <- model
-            b.args <- args
-          }
-        } else {
-          fitness[i] <- NA
-        }
-      }
-
-      # # translate ant data into funGp arguments format
-      # args <- formatSol_ACO(ants[i,], sIn, fIn, base)
-      #
-      # if (all(is.null(args$sIn), is.null(args$fIn))) browser()
-      #
-      # # build the model
-      # model <- quiet(funGp(sIn = args$sIn, fIn = args$fIn, sOut = sOut, kerType = args$kerType,
-      #                      f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType))
-      #
-      # # compute model fitness #!!!!!!!!!!!!!!!!!! extend to other metrics
-      # # getFitness(model, sIn.vl, fIn.vl, sOut.vl)
-      # if (is.null(ind.vl)) {
-      #   fitness[i] <- max(getFitness(model),0)
-      # } else {
-      #   fitness[i] <- max(getFitness(model, sIn, fIn, ind.vl, getActiveIn_ACO(ants[i,], sIn, fIn, base)),0)
-      # }
-      # # print(ants[i,])
-      # # print(fitness[i])
-      #
-      # # save the model if it is the global best
-      # if (fitness[i] > b.fitness) {
-      #   b.model <- model
-      #   b.args <- args
-      # }
-      setTxtProgressBar(pb, i)
-      if (!is.null(time.lim)) {
-        t <- difftime(Sys.time(), start.time, units = 'secs')
-        if (t >= time.lim) {
-          if (i < n.pop) {
-            fitness[(i+1):n.pop] <- NA
-          }
-          cat(paste("\n\n** Time limit reached, exploration stopped after", format(as.numeric(t), digits = 3, nsmall = 2), "seconds."))
-          timestop <- T
-          stoppiv <- i
-          break
-        }
-      }
-    }
-    close(pb)
-
-    if (!timestop) {
-      # remove crashes from ants and save them in crashes
-      if (all(is.na(fitness))) { # if all ants crashed
-        stop(paste("Something is not working well, all models of this colony crashed (", n.pop, " models).\n",
-                   "  Please check your data, your call to funGp_factory and ultimately consider using a larger nugget.", sep = ""))
-      } else if (length(which(is.na(fitness))) > 0) {
-        ids.ok <- which(!is.na(fitness))
-        crashes[[c.gen]] <- ants[-ids.ok,]
-        fitness <- fitness[ids.ok]
-        ants <- ants[ids.ok,]
-      } else {
-        ids.ok <- which(!is.na(fitness))
-        fitness <- fitness[ids.ok]
-        ants <- ants[ids.ok,]
-      }
-
-      # extract ants and fitness for global update
-      res <- getElite_ACO(fitness, n.gbest, ants, u.gbest, c.gen, b.ant, b.fitness)
-
-      # perform global pheromone update
-      # print("----------------< Global update")
-      phero <- globalUpd_ACO(res$ants.up, res$fitness.up, phero, rho.g)
-
-      # save best ant
-      if (fitness[res$b.ind[1]] > b.fitness) {
-        b.ant <- ants[res$b.ind[1],]
-        b.fitness <- fitness[res$b.ind[1]]
-      }
-      # print(b.ant)
-
-      # save data for statistics
-      evol.fitness[c.gen] <- b.fitness
-      all.ants[[c.gen]] <- ants
-      all.fitness[[c.gen]] <- fitness
-
+    # browser()
+    if (is.null(ind.vl)) {
+      # cl <- parallel::makeCluster(3)
+      res <- eval_loocv_ACO(sIn, fIn, sOut, extargs, base, ants, time.str, time.lim, quietly, par.clust)
+      # parallel::stopCluster(cl)
     } else {
-      # browser()
-      # remove crashes from ants and save them in crashes
-      if (any(!is.na(fitness))) { # if there at least one usable ant
-        if (length(which(is.na(fitness))) > 0) {
-          ids.ok <- which(!is.na(fitness))
-          ids.cr <- which(is.na(fitness[1:stoppiv]))
-          if (length(ids.cr) > 0) {
-            crashes[[c.gen]] <- ants[ids.cr,]
-          }
-          fitness <- fitness[ids.ok]
-          ants <- ants[ids.ok,]
-        } else {
-          ids.ok <- which(!is.na(fitness))
-          fitness <- fitness[ids.ok]
-          ants <- ants[ids.ok,]
-        }
+      # par.clust <- parallel::makeCluster(3)
+      res <- eval_houtv_ACO(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str, time.lim, quietly, par.clust)
+      # parallel::stopCluster(par.clust)
+    }
+    # browser()
 
-        # extract ants and fitness for selection of best ant
-        res <- getElite_ACO(fitness, n.gbest, ants, u.gbest, c.gen, b.ant, b.fitness)
+    # extract complete evaluations
+    done <- which(!sapply(res, is.null))
+    argsList <- lapply(res[done], `[[`, 1)
+    modelList <- lapply(res[done], `[[`, 2)
+    fitness <- sapply(res[done], `[[`, 3)
 
-        # save best ant
-        if (fitness[res$b.ind[1]] > b.fitness) {
-          b.ant <- ants[res$b.ind[1],]
-          b.fitness <- fitness[res$b.ind[1]]
-        }
-        # print(b.ant)
+    # identify crashes and usable models
+    ids.cr <- which(is.na(fitness))
+    ids.ok <- which(!is.na(fitness))
 
-        # save data for statistics
-        evol.fitness[c.gen] <- b.fitness
-        all.ants[[c.gen]] <- ants
-        all.fitness[[c.gen]] <- fitness
-      }
+    # save args of crashes in ant mode (if any)
+    if (length(ids.cr) > 0) {
+      crashes[[c.gen]] <- ants[ids.cr,,drop = F]
+    }
+
+    # extract ants and fitness for global update
+    fitness <- fitness[ids.ok]
+    ants <- ants[ids.ok,]
+    elite <- getElite_ACO(fitness, n.ibest, ants, u.gbest, c.gen, b.ant, b.fitness)
+
+    # browser()
+    # perform global pheromone update
+    phero <- globalUpd_ACO(elite$ants.up, elite$fitness.up, phero, rho.g, tao0)
+
+    # save best ant, fitness, agrs and model
+    if (fitness[elite$b.ind[1]] > b.fitness) {
+      b.ant <- ants[elite$b.ind[1],]
+      b.fitness <- fitness[elite$b.ind[1]]
+      b.args <- argsList[ids.ok[elite$b.ind[1]]][[1]]
+      b.model <- modelList[ids.ok[elite$b.ind[1]]][[1]]
+    }
+
+    # save data for statistics
+    # browser()
+    evol.fitness[c.gen] <- b.fitness
+    all.ants[[c.gen]] <- ants
+    all.fitness[[c.gen]] <- fitness
+
+    dt <- difftime(Sys.time(), time.str, units = 'secs')
+    if (dt >= time.lim) {
+      cat(paste("\n** Time limit reached, exploration stopped after", format(as.numeric(dt), digits = 3, nsmall = 2), "seconds.\n"))
       break
     }
-
-    # if (!timestop) {
-    print(Sys.time() - start_time)
-    cat("\n")
-    # }
-
-
-    # plot current best model
-    # b.plot <- function(b.ant, b.fitness) {
-    #   print(b.fitness)
-    #   b.args <- getArgs(b.ant, ds, df, sIn, fIn, base)
-    #   model <- funGp(sIn = b.args$sIn, fIn = b.args$fIn, sOut = sOut, kerType = b.args$kerType,
-    #                  f_disType = b.args$f_disType, f_pdims = b.args$f_pdims, f_family = b.args$f_family)
-    #   plotLOO(model)
-    # }
-
-    # if (!is.character(b.ant)) {
-    #   b.plot(b.ant, b.fitness)
-    # }
   }
+# browser()
 
-  # plot(1, type = "n", xlab = "Colony", ylab = "Fitness", xlim = c(1, (n.gen + .3)), ylim = c(0, 1), xaxt = "n")
-  # axis(1, 1:n.gen)
-  # for (i in 1:n.gen) {
-  #   # points(rep(i, n.pop), all.fitness[,i], pch = 21, bg = alpha("red", .4), col = alpha("red", .4))
-  #   # points(i, median(all.fitness[,i]), pch = 21, bg = "blue", col = alpha("blue", .4))
+  # buena grafica --------------------<
+  # plot(1, type = "n", xlab = "Colony", ylab = "Fitness", xlim = c(1, (c.gen + .3)), ylim = c(0, 1), xaxt = "n")
+  # # axis(1, 1:c.gen)
+  # axis(1, axtags(c.gen))
+  # a <- rep(0, c.gen)
+  # m <- 0
+  # for (i in 1:c.gen) {
   #   points(rep(i, length(all.fitness[[i]])), all.fitness[[i]], pch = 21, bg = alpha("red", .4), col = alpha("red", .4))
   #   points(i, median(all.fitness[[i]]), pch = 21, bg = "blue", col = alpha("blue", .4))
-  #   # legend(x = (i + .2), y = (evol.fitness[i] - .05), legend = format(evol.fitness[i], digits = 2, nsmall = 3), cex = 1,
-  #   #        xjust = 0.5,      # 0.5 means center adjusted
-  #   #        yjust = 0.5,      # 0.5 means center adjusted
-  #   #        x.intersp = -0.5, # adjust character interspacing as you like to effect box width
-  #   #        y.intersp = 0.1,  # adjust character interspacing to effect box height
-  #   #        adj = c(0, 0.5))
+  #   a[i] <- max(c(m, all.fitness[[i]]))
+  #   m <- a[i]
+  #   points(i, a[i], pch = 21, cex = 2, bg = NA, col = "magenta")
   # }
-  # lines(evol.fitness, lty = 2, col = "blue")
-  # points(evol.fitness, pch = 21, bg = alpha("blue", 0), col = "black")
+  # lines(a, col = "magenta")
+  # buena grafica --------------------<
 
-  plot(1, type = "n", xlab = "Colony", ylab = "Fitness", xlim = c(1, (c.gen + .3)), ylim = c(0, 1), xaxt = "n")
-  axis(1, 1:c.gen)
-  for (i in 1:c.gen) {
-    points(rep(i, length(all.fitness[[i]])), all.fitness[[i]], pch = 21, bg = alpha("red", .4), col = alpha("red", .4))
-    points(i, median(all.fitness[[i]]), pch = 21, bg = "blue", col = alpha("blue", .4))
-  }
-
-  cat("\nAnts are done ;)")
+  # vrs <- sapply(all.ants, function(M) sum(apply(M, 2, var)))
+  # plot(vrs, type = "b", ylim = c(0, max(vrs)))
+  # abline(h = 0, col = "magenta")
+  # browser()
+  # buena grafica --------------------<
+  # totDif <- sapply(all.ants, function(M) sum(apply(M, 2, function(v) length(unique(v))-1)))
+  # plot(totDif, type = "b", ylim = c(0, max(totDif)))
+  # abline(h = 0, col = "magenta")
+  # buena grafica --------------------<
+  # browser()
 
   # merge all successful ants
   all.ants <- do.call(rbind, all.ants)
@@ -442,15 +226,18 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, env, base, extargs, start.tim
   # remove duplicates in crashed ants
   if (length(crashes) > 0) {
     crashes <- do.call(rbind, crashes)
-    crashes <- crashes[!duplicated(crashes), ]
+    crashes <- crashes[!duplicated(crashes),,drop = F]
   }
+
+  cat("\nAnts are done ;)\n")
 
   return(list(model = b.model, sol.vec = b.ant, sol.args = b.args, b.fitness = b.fitness,
               log.suc = top.ants, log.fitness = top.fitness, log.cra = crashes,
               all.details = list(param = param, evolution = all.fitness)))
 }
 
-nextNode_ACO <- function(myant, rule, phero, visib, alp, bet, c.gen) {
+# nextNode_ACO <- function(myant, rule, phero, visib, alp, bet, c.gen) {
+nextNode_ACO <- function(myant, rule, phero, c.gen) {
   # browser()
   # copy my ant to make updates on it
   antup <- myant
@@ -458,9 +245,30 @@ nextNode_ACO <- function(myant, rule, phero, visib, alp, bet, c.gen) {
   # compute attractiveness
   layer <- myant$layer + 1
   level <- myant$level
-  tao <- unname(phero[[layer]][level,]) # level of pheromones of neighbors
-  nab <- unname(visib[[layer]][level,]) # visibility  of neighbors
-  attr <- alp * tao + bet * nab # attractiveness of each neighbor node
+  # tao <- unname(phero[[layer]][level,]) # level of pheromones of neighbors
+  # nab <- unname(visib[[layer]][level,]) # visibility  of neighbors
+  # attr <- alp * tao + bet * nab # attractiveness of each neighbor node
+  attr <- unname(phero[[layer]][level,]) # level of pheromones of neighbors
+
+  # if (grepl("Dist", names(phero)[layer])) { # ojoooooooooooooooooooooooooo eliminar!!!!!!!!!!!!!!!!!!!!!!!!!
+  #   browser()
+  # }
+  # if (grepl("Dim", names(phero)[layer])) { # ojoooooooooooooooooooooooooo eliminar!!!!!!!!!!!!!!!!!!!!!!!!!
+  #   attr <- attr[1:6]
+  #   attr[1] <- 0
+  # }
+
+  # if (any(attr < 0)) {
+  #   browser()
+  # }
+
+  # if (grepl("Dim", names(phero)[layer])) { # ojoooooooooooooooooooooooooo eliminar!!!!!!!!!!!!!!!!!!!!!!!!!
+  #   browser()
+  # }
+
+  # if (grepl("State X1", names(phero)[layer])) { # ojoooooooooooooooooooooooooo eliminar!!!!!!!!!!!!!!!!!!!!!!!!!
+  #   browser()
+  # }
 
   # select next step
   switch(rule,
@@ -469,7 +277,7 @@ nextNode_ACO <- function(myant, rule, phero, visib, alp, bet, c.gen) {
          },
 
          "propor" = {# choose the neighbor randomly based on attractiveness pie
-           sel.level <- sample(1:length(tao), 1, prob = attr/sum(attr))
+           sel.level <- sample(1:length(attr), 1, prob = attr/sum(attr))
          })
 
   # print(paste("sel.level:", sel.level))
@@ -502,30 +310,47 @@ nextNode_ACO <- function(myant, rule, phero, visib, alp, bet, c.gen) {
   return(antup)
 }
 
-localUpd_ACO <- function(phero, myant, antup, rho.l, dt.l) {
+localUpd_ACO <- function(phero, myant, antup, rho.l, tao0) { #dt.l) {
   # browser()
   o <- myant$level
-  d <- antup$level
-  # if (any(compareNA(antup$sol, -1))) {
-  #   browser()
-  # }
-  if (phero[[antup$layer]][o,d] < 1) {
-    # print(paste("phero0:", phero[[antup$layer]][o,d]))
-    phero[[antup$layer]][o,d] <- (1 - rho.l) * phero[[antup$layer]][o,d] + rho.l * (dt.l)
-    # print(paste("phero1:", phero[[antup$layer]][o,d]))
+  if (antup$layer - myant$layer == 1) {
+    d <- antup$level
   } else {
-    # print(paste("fixed:", phero[[antup$layer]][o,d]))
+    d <- 2
+    antup$layer <- myant$layer + 1
+  }
+
+  if (phero[[antup$layer]][o,d] < 1) {
+    if (antup$layer > 1) {
+      if (antup$sol[antup$layer-1] == -1) {
+        for (o in 1:nrow(phero[[antup$layer]])) {
+          # print(paste("phero0:", phero[[antup$layer]][o,d])) # flaggggggggggggggggggggggggggggggggggggg
+          phero[[antup$layer]][o,d] <- (1 - rho.l) * phero[[antup$layer]][o,d] + rho.l * tao0 #(dt.l)
+          # print(paste("phero1:", phero[[antup$layer]][o,d])) # flaggggggggggggggggggggggggggggggggggggg
+        }
+      } else {
+        # print(paste("phero0:", phero[[antup$layer]][o,d])) # flaggggggggggggggggggggggggggggggggggggg
+        phero[[antup$layer]][o,d] <- (1 - rho.l) * phero[[antup$layer]][o,d] + rho.l * tao0 #(dt.l)
+        # print(paste("phero1:", phero[[antup$layer]][o,d])) # flaggggggggggggggggggggggggggggggggggggg
+      }
+    } else {
+      # print(paste("phero0:", phero[[antup$layer]][o,d])) # flaggggggggggggggggggggggggggggggggggggg
+      phero[[antup$layer]][o,d] <- (1 - rho.l) * phero[[antup$layer]][o,d] + rho.l * tao0 #(dt.l)
+      # print(paste("phero1:", phero[[antup$layer]][o,d])) # flaggggggggggggggggggggggggggggggggggggg
+    }
+  } else {
+    # print(paste("fixed:", phero[[antup$layer]][o,d])) # flaggggggggggggggggggggggggggggggggggggg
   }
   return(phero)
 }
 
-getElite_ACO <- function(fitness, n.gbest, ants, u.gbest, c.gen, b.ant, b.fitness){
+getElite_ACO <- function(fitness, n.ibest, ants, u.gbest, c.gen, b.ant, b.fitness){
   # browser()
-  # identify best n.gbest ants
-  b.ind <- order(fitness, decreasing = T)[1:min(n.gbest, length(fitness))]
+  # identify best n.ibest ants
+  b.ind <- order(fitness, decreasing = T)[1:min(n.ibest, length(fitness))]
 
   # remove duplicates if there is any
-  if (n.gbest > 1) {
+  if (n.ibest > 1) {
     u.ind <- b.ind[!duplicated(ants[b.ind,])] # unique best ants
   } else {
     u.ind <- b.ind
@@ -545,13 +370,15 @@ getElite_ACO <- function(fitness, n.gbest, ants, u.gbest, c.gen, b.ant, b.fitnes
   return(list(ants.up = ants.up, fitness.up = fitness.up, b.ind = b.ind))
 }
 
-globalUpd_ACO <- function(b.ants, b.fitness, phero, rho.g) {
+globalUpd_ACO <- function(b.ants, b.fitness, phero, rho.g, tao0) {
   # browser()
   n.best <- nrow(b.ants)
   for (i in 1:n.best) {
     c.ant <- b.ants[i,] # current ant (dynamic during the outer loop)
     c.lev <- 1 # current level (dynamic during the inner loop)
-    for (c.lay in 1:length(phero)) { # current layer (dynamic during the inner loop)
+    c.lay <- 1 # current layer (dynamic during the inner loop)
+    # for (c.lay in 1:length(phero)) { # current layer (dynamic during the inner loop)
+    while (c.lay <= length(phero)) {
       o <- c.lev
       if (grepl("Dim", names(phero)[c.lay])) {
         d <- c.ant[c.lay] + 1 # to correct projection dimension
@@ -564,17 +391,49 @@ globalUpd_ACO <- function(b.ants, b.fitness, phero, rho.g) {
       # }
       if (c.ant[c.lay] > 0) {
         if (phero[[c.lay]][o,d] < 1) {
-          if (all(grepl("State F", names(phero)[c.lay]), c.lev == 2)) {
+          if (all(grepl("State F", names(phero)[c.lay]), d == 2)) {
+            phero[[c.lay]][o,d] <- (1 - rho.g) * phero[[c.lay]][o,d] + rho.g * max(b.fitness[i],tao0) # pheromone update
             # identify the next layer of interest (just before next selection)
             # c.lay <- (which(!grepl("FI", names(phero))) > c.lay)[1]
             # browser()
             nff.lay <- which(!grepl("FI", names(phero)))
             # identify the next layer of interest (just before next selection)
-            c.lay <- (nff.lay[nff.lay > c.lay])[1]
+            c.lay <- (nff.lay[nff.lay > c.lay])[1] - 1
             c.lev <- 1 # current level update
+
           } else {
+            if (grepl("State X", names(phero)[c.lay])) { # if a scalar input has been activated
+              # if (d == 1) {
+              phero[[c.lay]][o,d] <- (1 - rho.g) * phero[[c.lay]][o,d] + rho.g * max(b.fitness[i],tao0) # pheromone update
+              # }
+            } else if (grepl("State F", names(phero)[c.lay])) { # if a functional input has been activated
+              # if (d == 1) {
+              if (c.ant[(c.lay-1)] == -1) { # if we come from an inactive functional input
+                for (o in 1:nrow(phero[[c.lay]])) {
+                  phero[[c.lay]][o,d] <- (1 - rho.g) * phero[[c.lay]][o,d] + rho.g * max(b.fitness[i],tao0) # pheromone update
+                }
+              } else {
+                phero[[c.lay]][o,d] <- (1 - rho.g) * phero[[c.lay]][o,d] + rho.g * max(b.fitness[i],tao0) # pheromone update
+              }
+              # }
+            } else { # current level does not have anything to do with the state of an input
+              if (c.ant[(c.lay-1)] == -1) { # if we come from an inactive functional input
+                for (o in 1:nrow(phero[[c.lay]])) {
+                  phero[[c.lay]][o,d] <- (1 - rho.g) * phero[[c.lay]][o,d] + rho.g * max(b.fitness[i],tao0) # pheromone update
+                }
+              } else {
+                phero[[c.lay]][o,d] <- (1 - rho.g) * phero[[c.lay]][o,d] + rho.g * max(b.fitness[i],tao0) # pheromone update
+              }
+            }
+            # if (c.ant[(c.lay-1)] == -1) {
+            #   for (o in 1:nrow(phero[c.lay-1])) {
+            #     phero[[c.lay]][o,d] <- (1 - rho.g) * phero[[c.lay]][o,d] + rho.g * max(b.fitness[i],1e-8) # pheromone update
+            #   }
+            # } else if (all(!grepl("State X", names(phero)[c.lay]), d == 1)) {
+            #   phero[[c.lay]][o,d] <- (1 - rho.g) * phero[[c.lay]][o,d] + rho.g * max(b.fitness[i],1e-8) # pheromone update
+            # }
             # print(paste("phero0:", phero[[c.lay]][o,d]))
-            phero[[c.lay]][o,d] <- (1 - rho.g) * phero[[c.lay]][o,d] + rho.g * b.fitness[i] # pheromone update
+            # phero[[c.lay]][o,d] <- (1 - rho.g) * phero[[c.lay]][o,d] + rho.g * max(b.fitness[i],1e-8) # pheromone update
             c.lev <- d # current level update
             # print(paste("phero1:", phero[[c.lay]][o,d]))
           }
@@ -584,6 +443,7 @@ globalUpd_ACO <- function(b.ants, b.fitness, phero, rho.g) {
           c.lev <- d
         }
       }
+      c.lay <- c.lay + 1
       # c.tao <- phero[[c.lay]][o,d] # current pheromone value
       # p.tao <- (1 - rho.g) * c.tao + rho.g * b.fitness[i] # potential tao # p.tao <- (1 - rho.g) * c.tao + (1 - (1 - rho.g) * c.tao) * b.fitness[i] # potential tao
       # phero[[c.lay]][o,d] <- max(c.tao, p.tao) # pheromone update

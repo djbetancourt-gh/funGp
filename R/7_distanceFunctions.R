@@ -2,6 +2,7 @@
 # -------------------------------------------------------------------------------------------------------------------------------------
 setDistMatrix_F <- function(fIn1, fIn2, J, disType){ # fIn1, fIn2 and J are lists. disType is a vector
   Dl <- list()
+  # browser()
   for (i in 1:length(J)) {
     switch(disType[i],
            "L2_byindex" = {
@@ -9,7 +10,8 @@ setDistMatrix_F <- function(fIn1, fIn2, J, disType){ # fIn1, fIn2 and J are list
            },
 
            "L2_bygroup" = {
-             Dl[[i]] <- L2_bygroup(fIn1[[i]], fIn2[[i]], J[[i]])
+             # Dl[[i]] <- L2_bygroup(fIn1[[i]], fIn2[[i]], J[[i]])
+             Dl <- c(Dl, list(L2_bygroup(fIn1[[i]], fIn2[[i]], J[[i]])))
            })
   }
   return(Dl)

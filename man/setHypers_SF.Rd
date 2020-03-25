@@ -14,7 +14,8 @@ setHypers_SF(
   ls_f.known,
   n.starts,
   n.presample,
-  nugget
+  nugget,
+  par.clust
 )
 }
 \arguments{

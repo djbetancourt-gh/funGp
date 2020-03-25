@@ -38,19 +38,16 @@ dimReduction <- function(fIn, df, fpDims, methvec) {
 # ----------------------------------------------------------------------------------------------------------
 #' @importFrom splines splineDesign
 proj_bsplines <- function(f, p){
-  # ord <- 4 # order of the B-spline (degree of each polynomial - 1)
-  if (p == 1) ord <- 3 else ord <- 4 # order of the B-spline (degree of each polynomial - 1)
+  if (p <= 3) ord <- p else ord <- 4 # order of the B-spline (degree of each polynomial + 1)
   n.inner <- p - ord + 2 # number of inner knots
   n.outer <- ord - 1 # number of endpoint extra knots
   ll <- 1 # lower 'time' instant
   ul <- ncol(f) # upper 'time' instant
-  if (n.inner < 0) {
-    browser()
-  }
   knots.inner <- seq(ll, ul, length.out = n.inner)
   knots.left <- rep(ll, n.outer)
   knots.right <- rep(ul, n.outer)
   knots <- c(knots.left, knots.inner, knots.right)
+  # matplot(splineDesign(knots = knots, x = ll:ul, outer.ok = T, ord = ord), type = "l")
   return(splineDesign(knots = knots, x = ll:ul, outer.ok = T, ord = ord))
 }
 # ----------------------------------------------------------------------------------------------------------

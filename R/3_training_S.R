@@ -17,7 +17,7 @@
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
-setHypers_S <- function(sIn, sMs, sOut, kerType, var.known, ls_s.known, n.starts, n.presample, nugget){
+setHypers_S <- function(sIn, sMs, sOut, kerType, var.known, ls_s.known, n.starts, n.presample, nugget, par.clust){
   # if the length-scale coefficients are known, skip optim and compute var analytically. Else optimize
   if (!is.null(ls_s.known)) {
     # 1. estimation of the correlation matrix
@@ -50,7 +50,7 @@ setHypers_S <- function(sIn, sMs, sOut, kerType, var.known, ls_s.known, n.starts
 
     # 4. Perform optimization
     cat("** Optimising...\n")
-    return(optimHypers_S(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, nugget))
+    return(optimHypers_S(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, nugget, par.clust))
   }
 }
 # -------------------------------------------------------------------------------------------------------------------------------------
@@ -94,6 +94,7 @@ setBounds_S <- function(sMs){
 #'
 #' @keywords internal
 #'
+#' @importFrom stats runif
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
 setSPoints_S <- function(bnds, sMs, sOut, kerType, varfun, n.starts, n.presample, nugget){
@@ -131,9 +132,14 @@ globalVariables('i')
 #'
 #' @keywords internal
 #'
+#' @importFrom foreach foreach `%dopar%`
+#' @importFrom utils txtProgressBar setTxtProgressBar
+#' @importFrom doSNOW registerDoSNOW
+#' @importFrom stats optim
+#'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
-optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, nugget){
+optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, nugget, par.clust){
   # if multistart is required then parallelize, else run single optimization
   if (n.starts == 1){
     optOut <- optim(par = as.numeric(spoints), fn = negLogLik_funGp_S, method = "L-BFGS-B",
@@ -141,18 +147,63 @@ optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, n
                     sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
   } else {
     # if (!requireNamespace("foreach", quietly = TRUE)){
-    if (!getDoParRegistered()){
+    # if (!getDoParRegistered()){
+    if (is.null(par.clust)) {
       cat("Parallel backend register not found. Multistart optimizations done in sequence.\n\n")
-      optOutList <- "%do%"(foreach(i = 1:n.starts, .errorhandling = 'remove'), {
-        optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
-              lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
-              sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)})
+
+      # set up progress bar
+      pb <- txtProgressBar(min = 0, max = n.starts, style = 3)
+      cat("\n")
+
+      # set up progress controller
+      progress <- function(n) setTxtProgressBar(pb, n)
+      opts <- list(progress = progress)
+
+      optOutList <- list()
+      for (i in 1:n.starts) {
+        modeval <- tryCatch(
+          {
+            optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
+                  lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
+                  sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
+          },
+          error = function(e) e
+        )
+
+        if (!inherits(modeval, "error")) {
+          optOutList[[i]] <- modeval
+        }
+        setTxtProgressBar(pb, i)
+        cat("\n")
+      }
+      close(pb)
+      # optOutList <- "%do%"(foreach(i = 1:n.starts, .errorhandling = 'remove'), {
+      #   optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
+      #         lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
+      #         sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)})
+
     } else {
       cat("Parallel backend register found. Multistart optimizations done in parallel.\n")
-      optOutList <- "%dopar%"(foreach(i = 1:n.starts, .errorhandling = 'remove'), {
+
+      # set up progress bar
+      pb <- txtProgressBar(min = 0, max = n.starts, style = 3)
+
+      # set up progress controller
+      progress <- function(n) setTxtProgressBar(pb, n)
+      opts <- list(progress = progress)
+
+      registerDoSNOW(par.clust)
+      optOutList <- foreach(i = 1:n.starts, .errorhandling = "remove", .options.snow = opts) %dopar%
+      {
         optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
-              lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
-              sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)})
+                      lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
+                      sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
+      }
+      close(pb)
+      # optOutList <- "%dopar%"(foreach(i = 1:n.starts, .errorhandling = 'remove'), {
+      #   optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
+      #         lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
+      #         sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)})
     }
 
     # check if there are usable results

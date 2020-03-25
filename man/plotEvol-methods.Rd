@@ -2,18 +2,66 @@
 % Please edit documentation in R/7_plottingFunctions.R
 \name{plotEvol}
 \alias{plotEvol}
-\alias{plotEvol,XfunGp-method}
-\title{Prediction Method for the apk Class}
+\alias{plotEvol,Xfgpm-method}
+\title{Plot for the evolution of model selection algorithm in funGp}
 \usage{
-\S4method{plotEvol}{XfunGp}(x.model, ...)
+\S4method{plotEvol}{Xfgpm}(x.model, ...)
 }
 \arguments{
-\item{x.model}{An object to predict from.}
+\item{x.model}{an object of class \linkS4class{Xfgpm} containing the output of the model selection
+algorithm in \link[funGp]{fgpm_factory}.}
 
-\item{...}{Further arguments for methods.}
+\item{...}{additional arguments affecting the plot. The following typical graphics parameters are
+valid entries: \emph{xlim}, \emph{ylim}, \emph{xlab}, \emph{ylab}, \emph{main}.}
 }
 \description{
-This is my description
+This method displays the evolution of the quality of the configurations evaluated along
+  the iterations, by the model selection algorithm in the \link[funGp]{fgpm_factory} function. For
+  each iteration, the performance statistic of all the evaluated models is printed, along with the
+  corresponding meadian and maximum value of the group. In this plot, it is tyipical to have some
+  points falling relatively far from the maximum, even after multiple iterations. Thishappens mainly
+  because we have multiple categorical features, whose alteration might changethe performance
+  statistic in a nonsmooth way. On the other hand, the points that fall bellow zero usually
+  correspond to models whose hyperparameters were hard to optimize. This occurs sporadically during
+  the log-likelihood optimization for Gaussian processes, due to the non-linearity of the objective
+  function. As long as the maximum keeps improving and the median remains close to it, none of the
+  two aforementioned phenomena is matter for worries. Both of them respond to the mechanism of
+  exploration implemented in the algorithm, which makes it able to progressively move towards
+  better model configurations.
+}
+\examples{
+# generating input and output data
+set.seed(100)
+n.tr <- 2^5
+sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
+                   x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
+                   x5 = seq(0,1,length = n.tr^(1/5)))
+fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
+sOut <- fgp_BB7(sIn, fIn, n.tr)
+\donttest{
+# optimizing the model structure with fgpm_factory (~5 seconds)
+xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
+
+# assessing the evolution of the algorithm
+plotEvol(xm)
+}
+
+}
+\references{
+Betancourt, J., Bachoc, F., and Klein, T. (2020),
+Technical Report: "Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression. Ref. B3D-WP3.2".
+\emph{RISCOPE project}.
+\href{https://drive.google.com/file/d/1GnalLS9jEr9AxPKmQk0S1bLQ7whuLm1T/view?usp=sharing}{[HAL]}
+
+Betancourt, J., Bachoc, F., and Klein, T. (2020),
+R package manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
+\emph{RISCOPE project}.
+\href{https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing}{[HAL]}
+}
+\seealso{
+\strong{*} \link[funGp]{fgpm_factory} for structural optimization of funGp models;
+
+\strong{*} \link[funGp]{plotX} for diagnostic plots for a fgpm_factory output and selected model.
 }
 \author{
 José Betancourt, François Bachoc and Thierry Klein

@@ -1,28 +1,35 @@
 Package: funGp
 Type: Package
-Title: Functional-input Gaussian Process Regression
 Version: 0.1.0
-Author: José Betancourt
-Maintainer: José Betancourt <jbetanco@math.univ-toulouse.fr>
+Date: 2020-03-21
+Title: Functional-input Gaussian Process Regression
+Authors@R: c(
+    person("José", "Betancourt", email = "jbetanco@math.univ-toulouse.fr", role = c("cre", "aut")),
+    person("François", "Bachoc", email = "francois.bachoc@math.univ-toulouse.fr", role = "aut"),
+    person("Thierry", "Klein", email = "thierry.klein@math.univ-toulouse.fr", role = "aut"),
+    person("Déborah", "Idier", email = "D.Idier@brgm.fr", role = "ctb"),
+    person("Jérémy", "Rohmer", email = "J.Rohmer@brgm.fr", role = "ctb"))
 Description: Fitting, validation and prediction of Gaussian process models with functional inputs.
     (Betancourt et al., 2018) <https://hal.archives-ouvertes.fr/hal-01998724>.
 Note: internal package of the RISCOPE project
     (ANR, project No.16CE04-0011) <https://perso.math.univ-toulouse.fr/riscope/>.
 License: GPL-3
-Depends: R (>= 3.0.1), methods, foreach, knitr, scales, lhs
+Depends: R (>= 3.0.1)
+Imports: methods, foreach, knitr, scales, lhs, doSNOW, doParallel, grDevices, latex2exp, qdapRegex
 Suggests: viridis, R.rsp
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 Collate: 
-    '1_funGp_Doc.R'
+    '0_funGp_Doc.R'
+    '0_show_Doc.R'
     '8_outilsCode.R'
-    '3_ant_search.R'
-    '2_funGpKern_Class.R'
-    '2_funGpProj_Class.R'
-    '2_funGp_Class.R'
-    '2_XfunGp_Class.R'
     '3_ant_admin.R'
+    '2_fgpKern_Class.R'
+    '2_fgpProj_Class.R'
+    '1_fgpm_Class.R'
+    '1_Xfgpm_Class.R'
+    '3_ant_search.R'
     '3_training_F.R'
     '3_training_S.R'
     '3_training_SF.R'
@@ -39,10 +46,6 @@ Collate:
     '7_dimRedFunctions.R'
     '7_distanceFunctions.R'
     '7_plottingFunctions.R'
-    '8_examplesManual.R'
-    '8_examplesPackage.R'
     '8_outilsStats.R'
-    'zzz_Biannual.R'
-    'zzz_Paralelizacion.R'
     'zzz_RemoveAtEnd.R'
 VignetteBuilder: R.rsp

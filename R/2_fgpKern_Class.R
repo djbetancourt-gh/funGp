@@ -1,30 +1,26 @@
 # ==========================================================================================================
-# Class for kernels of funGp models
+# S4 class for structures linked to the kernel of a funGp model
 # ==========================================================================================================
-
-
-
-# ==========================================================================================================
-# Developer oriented methods
-# ==========================================================================================================
-
-# Constructor of the class
-# ----------------------------------------------------------------------------------------------------------
-#' @title Class: data structures related to the kernel of a funGp model
-#' @description Fill this!!!!!!!!!
+#' @title S4 class for structures linked to the kernel of a funGp model
+#' @description This is the formal representation for data structures linked to the kernel of a Gaussian
+#'   process model within the \link[=funGp-package]{funGp package}.
 #'
-#' @slot kerType Object of class \code{"character"}. Kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}.
-#' @slot f_disType Object of class \code{"character"}. Distance type. To be chosen from {"scalar", "functional"}.
+#' @slot kerType Object of class \code{"character"}. Kernel type. To be set from {"gauss", "matern5_2",
+#'   "matern3_2"}.
+#' @slot f_disType Object of class \code{"character"}. Distance type. To be set from {"L2_bygroup",
+#'   "L2_index"}.
 #' @slot varHyp Object of class \code{"numeric"}. Estimated variance parameter.
 #' @slot s_lsHyps Object of class \code{"numeric"}. Estimated length-scale parameters for scalar inputs.
-#' @slot f_lsHyps Object of class \code{"numeric"}. Estimated length-scale parameters for functional inputs.
-#' @slot f_lsOwners Object of class \code{"character"}. Fill!!!!!!!!!!
+#' @slot f_lsHyps Object of class \code{"numeric"}. Estimated length-scale parameters for functional
+#'   inputs.
+#' @slot f_lsOwners Object of class \code{"character"}. Index of functional input variable linked to each
+#'   element in \emph{f_lsHyps}
 #'
 #' @rdname kernel-class
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #' @export
-setClass("funGpKern",
+setClass("fgpKern",
          representation(
                         kerType = "character",          # kernel type. To be chosen from {"gauss", "matern5_2", "matern3_2"}
                         f_disType = "character",        # distance type. To be chosen from {"scalar", "functional"}
@@ -34,32 +30,19 @@ setClass("funGpKern",
                         f_lsOwners = "character"        # owner of each length scale parameter in f_lsHyps
                         ),
          validity = function(object) {T})
-# ----------------------------------------------------------------------------------------------------------
+# ==========================================================================================================
+
 
 
 # ==========================================================================================================
-# User oriented methods.
+# Printer
 # ==========================================================================================================
-
-# Method to print the kernel of a funGp model
-# ----------------------------------------------------------------------------------------------------------
-#' @name show
-#' @description This is my description
 #' @rdname show-methods
-#' @importFrom methods show
 #' @importFrom knitr kable
-#' @param object An object to show.
-#' @author José Betancourt, François Bachoc and Thierry Klein
-if(!isGeneric("show")) {setGeneric(name = "show", def = function(object) standardGeneric("show"))}
+#' @aliases show,fgpKern-method
+setMethod("show", "fgpKern", function(object) show.fgpKern(kernel = object))
 
-#' @title Fill!!!!!!!!!!!
-#' @name show
-#' @rdname show-methods
-#' @aliases show,funGpKern-method
-# @keywords internal
-setMethod("show", "funGpKern", function(object) show.funGpKern(kernel = object))
-
-show.funGpKern <- function(kernel) {
+show.fgpKern <- function(kernel) {
   ds <- length(kernel@s_lsHyps)
   df <- length(unique(kernel@f_lsOwners))
 
@@ -133,4 +116,4 @@ show.funGpKern <- function(kernel) {
   }
   cat(paste(rep("_", 29), collapse = ""))
 }
-# ----------------------------------------------------------------------------------------------------------
+# ==========================================================================================================
