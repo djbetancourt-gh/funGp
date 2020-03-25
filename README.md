@@ -7,9 +7,7 @@
 * A     * B     * C
 * X     * Y     * Z
 
-**Note:** funG pwas first developed in the frame of the RISCOPE research project, funded by the French Agence Nationale de la Recherche (ANR) for the period 2017-2021 (ANR project No. 16CE04-0011, <a href="https://perso.math.univ-toulouse.fr/riscope/" target="_blank">RISCOPE.fr</a>), and certified by SAFE Cluster.
-
-<a href="http://example.com" target="_blank">http://example.com</a>
+**Note:** funG pwas first developed in the frame of the RISCOPE research project, funded by the French Agence Nationale de la Recherche (ANR) for the period 2017-2021 (ANR project No. 16CE04-0011, [RISCOPE.fr](https://perso.math.univ-toulouse.fr/riscope/)), and certified by SAFE Cluster.
 
 This project is licensed under the GPL-3 License.
 <br />
