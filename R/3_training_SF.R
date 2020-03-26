@@ -1,29 +1,6 @@
-#' @title Optimization of hyperparameters for funGp models
-#' @description Sets good values for the hyperparameters of the Gaussian process model based on optimization.
-#'
-# @param sIn a matrix of scalar input values to train the model. Each column must match an input variable and each row a training point.
-# @param fpIn a list with as many elements as functional inputs. The i-th element must be a matrix with the projection coefficients
-# for the i-th functional input.
-# @param J a list with as many elements as functional inputs. The i-th element must be the Gram matrix of the basis functions used for
-# the projection of the i-th functional input.
-#' @param sMs a list with as many elements as scalar input variables. Each element of the list is a n times n matrix of differences
-#' between the scalar observation coordinates.
-#' @param fMs a list with as many elements as functional input variables. Each element of the list is a n times n matrix of differences
-#' between the functional observation coordinates.
-#' @param sOut a vector (or 1-column matrix) containing the values of the scalar output at the training points.
-#' @param kerType a character string indicating the covariance structure to be used, to be choosen between "gauss", "matern5_2" or "matern3_2".
-#' @param var.known Fill!!!!!!!!!!
-#' @param ls_s.known Fill!!!!!!!!!!
-#' @param ls_f.known Fill!!!!!!!!!!
-#' @param n.starts Fill!!!!!!!!!!
-#' @param n.presample Fill!!!!!!!!!!
-#' @param nugget Fill!!!!!!!!!!
-#' @return The hyperparameters.
-#'
-#' @keywords internal
-#'
-#' @author José Betancourt, François Bachoc and Thierry Klein
-#' @export
+# ==========================================================================================================
+# Master function to manage the optimization of hybrid-input models
+# ==========================================================================================================
 setHypers_SF <- function(sMs, fMs, sOut, kerType, var.known, ls_s.known, ls_f.known, n.starts, n.presample, nugget, par.clust){
   # if all the length-scale coefficients are known, skip optim and compute var analytically. Else optimize
   if (all(!is.null(ls_s.known), !is.null(ls_f.known))) {
@@ -40,7 +17,6 @@ setHypers_SF <- function(sMs, fMs, sOut, kerType, var.known, ls_s.known, ls_f.kn
     return(c(sig2, ls_s.known, ls_f.known))
 
   } else {
-    # browser()
     # 1. set hypercube for solution space
     if (all(is.null(ls_s.known), is.null(ls_f.known))) { # case 1: all ls coefficients are unknown
       bnds <- setBounds_SF(sMs, fMs)
@@ -67,23 +43,13 @@ setHypers_SF <- function(sMs, fMs, sOut, kerType, var.known, ls_s.known, ls_f.kn
     return(optimHypers_SF(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known, nugget, par.clust))
   }
 }
-# -------------------------------------------------------------------------------------------------------------------------------------
+# ==========================================================================================================
 
 
-#' @title Setting up of hyperparameters' boundaries for optimization
-#' @description Fill this!!!!!!!!!!
-#'
-#' @param sMs a list with as many elements as scalar input variables. Each element of the list is a n times n matrix of differences
-#' between the scalar observation coordinates.
-#' @param fMs a list with as many elements as functional input variables. Each element of the list is a n times n matrix of differences
-#' between the functional observation coordinates.
-#' @return A matrix with two rows and as many columns as hyperparameters the metamodel requires. The first row indicates the lower limits
-#' and the second row the upper limits for the optimization.
-#'
-#' @keywords internal
-#'
-#' @author José Betancourt, François Bachoc and Thierry Klein
-#' @export
+
+# ==========================================================================================================
+# Function to set the boundaries for hyperparameters optimization - hybrid inputs
+# ==========================================================================================================
 setBounds_SF <- function(sMs, fMs){
   # lower and upper bounds for length-scale hypers linked to scalar inputs
   mxs <- sapply(sMs, max)
@@ -102,28 +68,15 @@ setBounds_SF <- function(sMs, fMs){
 
   return(wholeLims)
 }
-# -------------------------------------------------------------------------------------------------------------------------------------
+# ==========================================================================================================
 
 
-#' @title Setting up of starting points for optimization of hyperparameters
-#' @description Fill this!!!!!!!!!!
-#' @param niter Fill this!!!!!!!!!!
-#' @param bnds Fill this!!!!!!!!!!
-#' @param sMs a list with as many elements as scalar input variables. Each element of the list is a n times n matrix of differences
-#' between the scalar observation coordinates.
-#' @param fMs a list with as many elements as functional input variables. Each element of the list is a n times n matrix of differences
-#' between the functional observation coordinates.
-#' @param sOut Fill this!!!!!!!!!!
-#' @param kerType Fill this!!!!!!!!!!
-#' @return Fill this!!!!!!!!!!
-#'
-#' @keywords internal
-#'
+
+# ==========================================================================================================
+# Function to set the starting points for hyperparameters optimization - hybrid inputs
+# ==========================================================================================================
 #' @importFrom stats runif
-#' @author José Betancourt, François Bachoc and Thierry Klein
-#' @export
 setSPoints_SF <- function(bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known, n.starts, n.presample, nugget){
-  # browser()
   # recover lower and upper limits
   ll <- bnds[1,]
   ul <- bnds[2,]
@@ -141,31 +94,14 @@ setSPoints_SF <- function(bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_
 
   return(spoints)
 }
-# -------------------------------------------------------------------------------------------------------------------------------------
+# ==========================================================================================================
 
 
-#' @title Optimizing the hyperparameters
-#' @description Fill this!!!!!!!!!!
-#'
-#' @param spoints Fill this!!!!!!!!!!
-#' @param bnds Fill this!!!!!!!!!!
-#' @param sMs a list with as many elements as scalar input variables. Each element of the list is a n times n matrix of differences
-#' between the scalar observation coordinates.
-#' @param fMs a list with as many elements as functional input variables. Each element of the list is a n times n matrix of differences
-#' between the functional observation coordinates.
-#' @param sOut Fill this!!!!!!!!!!
-#' @param kerType Fill this!!!!!!!!!!
-#' @return Fill this!!!!!!!!!!
-#'
-#' @keywords internal
-#'
-#' @importFrom foreach foreach `%dopar%`
-#' @importFrom utils txtProgressBar setTxtProgressBar
-#' @importFrom doSNOW registerDoSNOW
+
+# ==========================================================================================================
+# Function optimize the hyperparameters of hybrid-input models
+# ==========================================================================================================
 #' @importFrom stats optim
-#'
-#' @author José Betancourt, François Bachoc and Thierry Klein
-#' @export
 optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known, nugget, par.clust){
   # if multistart is required then parallelize, else run single optimization
   if (n.starts == 1){
@@ -174,8 +110,6 @@ optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, var
                    sMs = sMs, fMs = fMs, sOut = sOut, kerType = kerType,
                    varfun = varfun, ls_s.known = ls_s.known, ls_f.known = ls_f.known, nugget = nugget)
   } else {
-    # if (!requireNamespace("foreach", quietly = TRUE)){
-    # if (!getDoParRegistered()){
     if (is.null(par.clust)) {
       cat("Parallel backend register not found. Multistart optimizations done in sequence.\n\n")
 
@@ -206,11 +140,6 @@ optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, var
         cat("\n")
       }
       close(pb)
-      # optOutList <- "%do%"(foreach(i = 1:n.starts, .errorhandling = 'remove'), {
-      #   optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_SF, method = "L-BFGS-B",
-      #         lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
-      #         sMs = sMs, fMs = fMs, sOut = sOut, kerType = kerType,
-      #         varfun = varfun, ls_s.known = ls_s.known, ls_f.known = ls_f.known, nugget = nugget)})
 
     } else {
       cat("Parallel backend register found. Multistart optimizations done in parallel.\n")
@@ -231,11 +160,6 @@ optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, var
               varfun = varfun, ls_s.known = ls_s.known, ls_f.known = ls_f.known, nugget = nugget)
       }
       close(pb)
-      # optOutList <- "%dopar%"(foreach(i = 1:n.starts, .errorhandling = 'remove'), {
-      #   optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_SF, method = "L-BFGS-B",
-      #         lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
-      #         sMs = sMs, fMs = fMs, sOut = sOut, kerType = kerType,
-      #         varfun = varfun, ls_s.known = ls_s.known, ls_f.known = ls_f.known, nugget = nugget)})
     }
 
     # check if there are usable results
@@ -272,29 +196,14 @@ optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, var
 
   return(c(sig2, c(thetas_s, thetas_f)))
 }
-# -------------------------------------------------------------------------------------------------------------------------------------
+# ==========================================================================================================
 
 
-# Potential objective functions for optimization of hyperparameters
-# =========================================================================================================
-#' @title Setting up of starting points for optimization of hyperparameters
-#' @description Fill this!!!!!!!!!!
-#'
-#' @param thetas Fill this!!!!!!!!!!
-#' @param sMs a list with as many elements as scalar input variables. Each element of the list is a n times n matrix of differences
-#' between the scalar observation coordinates.
-#' @param fMs a list with as many elements as functional input variables. Each element of the list is a n times n matrix of differences
-#' between the functional observation coordinates.
-#' @param sOut Fill this!!!!!!!!!!
-#' @param kerType Fill this!!!!!!!!!!
-#' @return Fill this!!!!!!!!!!
-#'
-#' @keywords internal
-#'
-#' @author José Betancourt, François Bachoc and Thierry Klein
-#' @export
+
+# ==========================================================================================================
+# Function to compute the negative log likelihood - hybrid inputs
+# ==========================================================================================================
 negLogLik_funGp_SF <- function(thetas, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known, nugget){
-  # browser()
   # recovering length-scale hypers linked to scalar and functional inputs
   ds <- length(sMs)
   df <- length(fMs)
@@ -322,12 +231,15 @@ negLogLik_funGp_SF <- function(thetas, sMs, fMs, sOut, kerType, varfun, ls_s.kno
 
   return(-llik)
 }
-# =========================================================================================================
+# ==========================================================================================================
 
 
-# =========================================================================================================
+
+# ==========================================================================================================
+# Analytic function for the optimal variance parameter in log likelihood - hybrid inputs
+# ==========================================================================================================
 analyticVar_llik <- function(U, sOut, n.tr) {
   UInvY <- backsolve(t(U), sOut, upper.tri = F)
   return(crossprod(UInvY)/n.tr)
 }
-# =========================================================================================================
+# ==========================================================================================================

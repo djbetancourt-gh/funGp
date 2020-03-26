@@ -25,22 +25,18 @@ setClass("antsLog",
 # ==========================================================================================================
 
 
-# ==========================================================================================================
-# Admin and preprocessing
-# ==========================================================================================================
 
-# Method to plot a funGp model
-# ----------------------------------------------------------------------------------------------------------
+# ==========================================================================================================
+# Master function to process ACO tasks
+# ==========================================================================================================
 master_ACO <- function(sIn, fIn, sOut, ind.vl, solspace, setup, extargs, time.str, time.lim, quietly, par.clust) {
   # set heuristic parameters based on defaults and user specifications
   param <- setParams_ACO(setup, length(fIn))
 
   # set pheromones based on the solution space and initial parameters
-  # env <- setEnvir_ACO(solspace, param)
   phero <- setEnvir_ACO(solspace, param)
 
   # perform exploration
-  # res <- run_ACO(sIn, fIn, sOut, ind.vl, param, env, solspace$sp.base, extargs, time.str, time.lim, quietly, par.clust)
   res <- run_ACO(sIn, fIn, sOut, ind.vl, param, phero, solspace$sp.base, extargs, time.str, time.lim, quietly, par.clust)
 
   # correct the howCalled of best model
@@ -61,34 +57,13 @@ master_ACO <- function(sIn, fIn, sOut, ind.vl, solspace, setup, extargs, time.st
 
   return(res)
 }
+# ==========================================================================================================
 
-# =====================================================================================================
-# ACO parameters checklist
-# =====================================================================================================
-# <---> population factors
-# n.iter: number of generations to run
-# n.pop: number of ants per generation
-#
-# <---> initial pheromones and visibility
-# tao0: initial pheromones (except for cases of already selected factors). should be decimal!
-# vis.s: probability of activating any scalar input
-# vis.f: probability of activating any functional input
-# dec.f: decay rate for visbility of dimension k for the functional inputs (loss: exp(-dec.f * k))
-#
-# <---> transition rules
-# q0: probability of using the greedy rule (more exploitation), otherwise the random proportional rule is used (more exploration)
-# alp: influence of the pheromones in random rule. !!!!!!!!! tao^-alp should not give Inf (preferably alp in [0,10])
-# bet: influence of the visibility random rule. !!!!!!!!!! nab^-bet should not give Inf (preferably bet in [0,10])
-#
-# <---> local pheromone update
-# rho.l: local evaporation rate: the lower it is, the more time learning is preserved
-# dt.l: compensation factor for local update
-#
-# <---> global pheromone update
-# u.gbest: should the global best ant be used for the global update?
-# n.gbest: number of best ants to be used for the global pheromone update
-# rho.g: global reinforcement coefficient: the larger it is, the more influence best ants have on each update
-# =====================================================================================================
+
+
+# ==========================================================================================================
+# Function to prepare the parameters of the heuristic considering the user inputs
+# ==========================================================================================================
 setParams_ACO <- function(setup, df) {
   if (!is.null(setup$n.iter)) n.iter <- setup$n.iter else n.iter <- 15
   if (!is.null(setup$n.pop)) n.pop <- setup$n.pop else n.pop <- 10
@@ -118,21 +93,10 @@ setParams_ACO <- function(setup, df) {
     dispr.f <- rep(1.4, max(1,df))
   }
   if (!is.null(setup$q0)) q0 <- setup$q0 else q0 <- .95
-  # if (!is.null(setup$alp)) alp <- setup$alp else alp <- 1
-  # if (!is.null(setup$bet)) bet <- setup$bet else bet <- 2
   if (!is.null(setup$rho.l)) rho.l <- setup$rho.l else rho.l <- .1
-  # if (!is.null(setup$dt.l)) dt.l <- setup$dt.l else dt.l <- tao0
   if (!is.null(setup$u.gbest)) u.gbest <- setup$u.gbest else u.gbest <- F
   if (!is.null(setup$n.ibest)) n.ibest <- setup$n.ibest else n.ibest <- 1
   if (!is.null(setup$rho.g)) rho.g <- setup$rho.g else rho.g <- .1
-
-  # params <- list(n.iter = n.iter, n.pop = n.pop, tao0 = tao0, dop.s = dop.s, dop.f = dop.f,
-  #                dec.f = dec.f, q0 = q0, alp = alp, bet = bet, rho.l = rho.l, dt.l = dt.l,
-  #                u.gbest = u.gbest, n.gbest = n.gbest, rho.g = rho.g)
-
-  # params <- list(n.iter = n.iter, n.pop = n.pop, tao0 = tao0, dop.s = dop.s, dop.f = dop.f,
-  #                dec.f = dec.f, q0 = q0, rho.l = rho.l, dt.l = dt.l,
-  #                u.gbest = u.gbest, n.ibest = n.ibest, rho.g = rho.g)
 
   params <- list(n.iter = n.iter, n.pop = n.pop, tao0 = tao0, dop.s = dop.s, dop.f = dop.f,
                  delta.f = delta.f, dispr.f = dispr.f, q0 = q0, rho.l = rho.l,
@@ -140,7 +104,13 @@ setParams_ACO <- function(setup, df) {
 
   return(params)
 }
+# ==========================================================================================================
 
+
+
+# ==========================================================================================================
+# Function to generate the initial pheromone load
+# ==========================================================================================================
 #' @importFrom scales rescale
 setEnvir_ACO <- function(solspace, param) {
   # recover base and user-defined solution space
@@ -177,20 +147,13 @@ setEnvir_ACO <- function(solspace, param) {
   # create pheromone list
   phero <- list()
   layers <- c()
-# browser()
   if (ds > 0) {
     # set up pheromones related to scalar inputs
     if (s.state.u[1] == 0) {
-      # phero[[1]] <- matrix(tao0, ncol = 2) # set up initial pheromones
-      # visib[[1]] <- matrix(c(vis.s, (1 - vis.s)), ncol = 2) # set up visibility
-      # phero[[1]] <- matrix(c(dop.s, tao0), ncol = 2) # set up initial pheromones ## before changing dop mechanism
       phero[[1]] <- matrix(c(tao0, tao0/dop.s), ncol = 2, byrow = T)
     } else {
       phero[[1]] <- matrix(c(1, 0), ncol = 2) # set up initial pheromones
-      # visib[[1]] <- matrix(c(1, 0), ncol = 2) # set up visibility
     }
-    # rownames(visib[[1]]) <- rownames(phero[[1]]) <- "Orig"
-    # colnames(visib[[1]]) <- colnames(phero[[1]]) <- c("Active", "Inactive")
     rownames(phero[[1]]) <- "Orig"
     colnames(phero[[1]]) <- c("Active", "Inactive")
     layers <- c(layers, paste("State X", 1, sep =""))
@@ -200,17 +163,12 @@ setEnvir_ACO <- function(solspace, param) {
         # state of scalar input i
         # ____________________________________________________________________________________
         if (s.state.u[i] == 0) {
-          # phero[[i]] <- matrix(tao0, nrow = 2, ncol = 2) # set up initial pheromones
-          # visib[[i]] <- matrix(rep(c(vis.s, (1 - vis.s)), 2), nrow = 2, byrow = T) # set up visibility
-          # phero[[i]] <- matrix(rep(c(dop.s, tao0), 2), nrow = 2, byrow = T) # set up initial pheromones ## before changing dop mechanism
           phero[[i]] <- matrix(rep(c(tao0, tao0/dop.s), 2), nrow = 2, byrow = T)
         } else {
           phero[[i]] <- matrix(rep(c(1, 0), 2), nrow = 2, byrow = T) # set up initial pheromones
-          # visib[[i]] <- matrix(rep(c(1, 0), 2), nrow = 2, byrow = T) # set up visibility
         }
         # set up colnames
         colnames(phero[[i]]) <- rownames(phero[[i]]) <- c("Active", "Inactive")
-        # colnames(visib[[i]]) <- rownames(visib[[i]]) <- c("Active", "Inactive")
         # ____________________________________________________________________________________
         layers <- c(layers, paste("State X", i, sep = ""))
       }
@@ -222,35 +180,23 @@ setEnvir_ACO <- function(solspace, param) {
     for (j in 1:df) {
       # state of functional input j
       # ____________________________________________________________________________________
-      # i <- length(visib) + 1
       i <- length(phero) + 1
       if (all(i == 1, j == 1)) {
         if (f.state.u[j] == 0) { # free, distribute pheromones and assign default visibilities
-          # phero[[i]] <- matrix(tao0, ncol = 2) # set up initial pheromones
-          # visib[[i]] <- matrix(c(vis.f, (1 - vis.f)), ncol = 2) # set up visibility
-          # phero[[i]] <- matrix(c(dop.f, tao0), ncol = 2) # set up initial pheromones ## before changing dop mechanism
           phero[[i]] <- matrix(c(tao0, tao0/dop.f), ncol = 2)
         } else { # fixed, put all load in first colum
           phero[[i]] <- matrix(c(1, 0), ncol = 2) # set up initial pheromones
-          # visib[[i]] <- matrix(c(1, 0), ncol = 2) # set up visibility
         }
-        # rownames(visib[[i]]) <- rownames(phero[[i]]) <- "Orig"
-        # colnames(visib[[i]]) <- colnames(phero[[i]]) <- c("Active", "Inactive")
         rownames(phero[[i]]) <- "Orig"
         colnames(phero[[i]]) <- c("Active", "Inactive")
 
       } else {
         if (f.state.u[j] == 0) { # free, distribute pheromones and assign default visibilities
-          # phero[[i]] <- matrix(tao0, nrow = 2, ncol = 2)
-          # visib[[i]] <- matrix(rep(c(vis.f, (1-vis.f)), 2), nrow = 2, byrow = T)
-          # phero[[i]] <- matrix(rep(c(dop.f, tao0), 2), nrow = 2, byrow = T) ## before changing dop mechanism
           phero[[i]] <- matrix(rep(c(tao0, tao0/dop.f), 2), nrow = 2, byrow = T)
         } else { # fixed, put all load in first colum
           phero[[i]] <- matrix(rep(c(1, 0), 2), nrow = 2, byrow = T)
-          # visib[[i]] <- matrix(rep(c(1, 0), 2), nrow = 2, byrow = T)
         }
-        # rownames(visib[[i]]) <- rownames(phero[[i]]) <- colnames(phero[[i-1]])
-        # colnames(visib[[i]]) <- colnames(phero[[i]]) <- c("Active", "Inactive")
+        # <--> names
         rownames(phero[[i]]) <- colnames(phero[[i-1]])
         colnames(phero[[i]]) <- c("Active", "Inactive")
       }
@@ -263,19 +209,12 @@ setEnvir_ACO <- function(solspace, param) {
       i <- length(phero) + 1 # i <- length(visib) + 1
       nr <- ncol(phero[[i-1]]) # nr <- ncol(visib[[i-1]])
       # <--> identify active levels
-      # v1 <- v2 <- rep(0, length(f.dist.0[[j]]))
       v <- rep(0, length(f.dist.0[[j]]))
       t <- unname(sapply(f.dist.u[[j]], function(x) which(f.dist.0[[j]] == x)))
       # <--> assign initial pheromones
-      # if (length(t) == 1)  v1[t] <- 1 else v1[t] <- tao0
       if (length(t) == 1)  v[t] <- 1 else v[t] <- tao0
       phero[[i]] <- matrix(rep(v, nr), nrow = nr, byrow = T)
-      # <--> distribute visbility evenly
-      # v2[t] <- 1
-      # visib[[i]] <- matrix(rep(v2/sum(v2), nr), nrow = nr, byrow = T)
       # <--> names
-      # rownames(visib[[i]]) <- rownames(phero[[i]]) <- colnames(phero[[i-1]])
-      # colnames(visib[[i]]) <- colnames(phero[[i]]) <- f.dist.0[[j]]
       rownames(phero[[i]]) <- colnames(phero[[i-1]])
       colnames(phero[[i]]) <- f.dist.0[[j]]
       layers <- c(layers, paste("Dist. FI", j, sep =""))
@@ -287,41 +226,23 @@ setEnvir_ACO <- function(solspace, param) {
       i <- length(phero) + 1 # i <- length(visib) + 1
       nr <- ncol(phero[[i-1]]) # nr <- ncol(visib[[i-1]])
       # <--> identify active levels
-      # v <- vgro <- vind <- rep(0, length(f.dims.0[[j]])) # zero vector with as many elements as potential dimensions in the original set
       vgro <- vind <- rep(0, length(f.dims.0[[j]])) # zero vector with as many elements as potential dimensions in the original set
       t <- unname(sapply(f.dims.u[[j]], function(x) which(f.dims.0[[j]] == x))) # locations of dimensions still active
       # <--> assign initial pheromones
-      # if (length(t) == 1)  v[t] <- 1 else v[t] <- tao0
-      # phero[[i]] <- matrix(rep(v, nr), nrow = nr, byrow = T)
-      # <--> visbility vith L2_bygroup distance (distribute evenly)
-      # if (length(t) == 1)  vgro[t] <- 1 else vgro[t] <- 1/length(t)
-      # if (length(t) == 1) vgro[t] <- 1 else vgro[t] <- tao0
-      # <--> visbility vith L2_byindex distance (distribute according to loss function)
-      # browser()
       if (length(t) == 1) {
         vind[t] <- vgro[t] <- 1
       } else {
         vgro[t] <- tao0
         if (0 %in% f.dims.u[[j]]) {
-          # l <- exp(-dec.f * c(max(f.dims.u[[j]]), f.dims.u[[j]][-1]))
-          # l <- decay(tao0 = tao0, delta = delta.f[j], dispr = dispr.f[j], k = f.dims.u[[j]][-1], doplot = F, deliver = T)
           l <- decay(tao0 = tao0, delta = delta.f[j], dispr = dispr.f[j], k = max(f.dims.u[[j]]), doplot = F, deliver = T)
         } else {
-          # l <- exp(-dec.f * f.dims.u[[j]])
-          # l <- decay(tao0 = tao0, delta = delta.f[j], dispr = dispr.f[j], k = f.dims.u[[j]][-1], doplot = F, deliver = T)[-1]
-          # l <- decay(tao0 = tao0, delta = delta.f[j], dispr = dispr.f[j], k = f.dims.u[[j]], doplot = F, deliver = T)[-1]
           l <- decay(tao0 = tao0, delta = delta.f[j], dispr = dispr.f[j], k = max(f.dims.u[[j]]), doplot = F, deliver = T)[-1]
         }
-        # l <- rescale(l, c(min(min(l), tao0),tao0))
-        vind[t] <- l#[t]
+        vind[t] <- l
       }
       # <--> wrap visibility
-      # visib[[i]] <- rbind(vgro, vind)
       phero[[i]] <- rbind(vgro, vind)
       # <--> names
-      # <--> names
-      # rownames(visib[[i]]) <- rownames(phero[[i]]) <- colnames(phero[[i-1]])
-      # colnames(visib[[i]]) <- colnames(phero[[i]]) <- f.dims.0[[j]]
       rownames(phero[[i]]) <- colnames(phero[[i-1]])
       colnames(phero[[i]]) <- f.dims.0[[j]]
       layers <- c(layers, paste("Dim. FI", j, sep =""))
@@ -330,25 +251,15 @@ setEnvir_ACO <- function(solspace, param) {
 
       # basis for functional input j
       # ____________________________________________________________________________________
-      # i <- length(visib) + 1
-      # nr <- ncol(visib[[i-1]])
       i <- length(phero) + 1
       nr <- ncol(phero[[i-1]])
       # <--> identify active levels
       v <- rep(0, length(f.bas.0[[j]])) # zero vector with as many elements as basis families in the original set
-      # v1 <- v2 <- rep(0, length(f.bas.0[[j]])) # zero vector with as many elements as basis families in the original set
       t <- unname(sapply(f.bas.u[[j]], function(x) which(f.bas.0[[j]] == x))) # locations of basis still active
       # <--> assign initial pheromones
-      # if (length(t) == 1)  v1[t] <- 1 else v1[t] <- tao0
       if (length(t) == 1)  v[t] <- 1 else v[t] <- tao0
-      # phero[[i]] <- matrix(rep(v1, nr), nrow = nr, byrow = T)
       phero[[i]] <- matrix(rep(v, nr), nrow = nr, byrow = T)
-      # <--> distribute visbility evenly
-      # v2[t] <- 1
-      # visib[[i]] <- matrix(rep(v2/sum(v2), nr), nrow = nr, byrow = T)
       # <--> names
-      # colnames(visib[[i]]) <- colnames(phero[[i]]) <- f.bas.0[[j]]
-      # rownames(visib[[i]]) <- rownames(phero[[i]]) <- f.dims.0[[j]]
       colnames(phero[[i]]) <- f.bas.0[[j]]
       rownames(phero[[i]]) <- f.dims.0[[j]]
       layers <- c(layers, paste("Basis FI", j, sep =""))
@@ -358,25 +269,15 @@ setEnvir_ACO <- function(solspace, param) {
 
   # kernel function
   # ____________________________________________________________________________________
-  # i <- length(visib) + 1
-  # nr <- ncol(visib[[i-1]])
   i <- length(phero) + 1
   nr <- ncol(phero[[i-1]])
   # <--> identify active levels
-  # v1 <- v2 <- rep(0, length(k.type.0)) # zero vector with as many elements as kernel functions in the original set
   v <- rep(0, length(k.type.0)) # zero vector with as many elements as kernel functions in the original set
   t <- unname(sapply(k.type.u, function(x) which(k.type.0 == x))) # locations of kernels still active
   # <--> assign initial pheromones
-  # if (length(t) == 1)  v1[t] <- 1 else v1[t] <- tao0
   if (length(t) == 1)  v[t] <- 1 else v[t] <- tao0
-  # phero[[i]] <- matrix(rep(v1, nr), nrow = nr, byrow = T)
   phero[[i]] <- matrix(rep(v, nr), nrow = nr, byrow = T)
-  # <--> distribute visbility evenly
-  # v2[t] <- 1
-  # visib[[i]] <- matrix(rep(v2/sum(v2), nr), nrow = nr, byrow = T)
   # <--> names
-  # rownames(visib[[i]]) <- rownames(phero[[i]]) <- colnames(phero[[i-1]])
-  # colnames(visib[[i]]) <- colnames(phero[[i]]) <- k.type.0
   rownames(phero[[i]]) <- colnames(phero[[i-1]])
   colnames(phero[[i]]) <- k.type.0
   layers <- c(layers, "Kernel")
@@ -388,7 +289,13 @@ setEnvir_ACO <- function(solspace, param) {
   # return(list(phero = phero, visib = visib))
   return(phero)
 }
+# ==========================================================================================================
 
+
+
+# ==========================================================================================================
+# Function to transform ants into data structures for fgpm
+# ==========================================================================================================
 formatSol_ACO <- function(ant, sIn, fIn, base) {
   # recover input dimensions
   if (!is.null(sIn)) ds <- ncol(sIn) else ds <- 0
@@ -406,7 +313,6 @@ formatSol_ACO <- function(ant, sIn, fIn, base) {
   if (ds > 0) {
     s.active.ac <- which(ant[1:ds] == 1) # index of active scalar inputs
     if (length(s.active.ac) > 0) {
-      # print(paste("s.active:", s.active.ac)) #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Remove this line
       sIn.ac <- sIn[,s.active.ac, drop = F]
     } else {
       sIn.ac <- NULL
@@ -427,7 +333,6 @@ formatSol_ACO <- function(ant, sIn, fIn, base) {
       if (ant[piv] == 1) f.active.ac <- c(f.active.ac, j)
       piv <- piv + 1
       if (ant[piv] == -1) { # assign default value
-        # browser()
         f.dist.ac[[j]] <- defargs$f_disType
         f.dims.ac[[j]] <- defargs$f_pdims
         f.bas.ac[[j]] <- defargs$f_basType
@@ -435,7 +340,6 @@ formatSol_ACO <- function(ant, sIn, fIn, base) {
       } else {
         f.dist.ac[[j]] <- f.dist[[j]][ant[piv]]
         piv <- piv + 1
-        # if (ant[piv] == 1) f.dims.ac[[j]] <- 0 else f.dims.ac[[j]] <- ant[piv] - 1
         f.dims.ac[[j]] <- ant[piv]
         piv <- piv + 1
         f.bas.ac[[j]] <- f.bas[[j]][ant[piv]]
@@ -465,7 +369,13 @@ formatSol_ACO <- function(ant, sIn, fIn, base) {
 
   return(list(sIn = sIn.ac, fIn = fIn.ac, kerType = k.type.ac, f_disType = f.dist.ac, f_pdims = f.dims.ac, f_basType = f.bas.ac))
 }
+# ==========================================================================================================
 
+
+
+# ==========================================================================================================
+# Function to identify active functional inputs in an ant
+# ==========================================================================================================
 getActiveIn_ACO <- function(ant, sIn, fIn, base) {
   # recover input dimensions
   if (!is.null(sIn)) ds <- ncol(sIn) else ds <- 0
@@ -495,7 +405,13 @@ getActiveIn_ACO <- function(ant, sIn, fIn, base) {
 
   return(list(s.active = s.active.ac, f.active = f.active.ac))
 }
+# ==========================================================================================================
 
+
+
+# ==========================================================================================================
+# Function to reconstructu the fgpm call for a given ant
+# ==========================================================================================================
 getCall_ACO <- function(ant, sIn, fIn, args, base, extargs) {
   # recover input dimensions
   if (!is.null(sIn)) ds <- ncol(sIn) else ds <- 0
@@ -586,7 +502,13 @@ getCall_ACO <- function(ant, sIn, fIn, args, base, extargs) {
 
   return(modcall)
 }
+# ==========================================================================================================
 
+
+
+# ==========================================================================================================
+# Function to translate ants coded levels to lexicographic tags in data.frame format
+# ==========================================================================================================
 vec2DFrame_ACO <- function(sol.vec, sIn, fIn) {
   # recover input dimensions
   if (!is.null(sIn)) ds <- ncol(sIn) else ds <- 0
@@ -596,7 +518,6 @@ vec2DFrame_ACO <- function(sol.vec, sIn, fIn) {
   if (ds > 0) {
     for (i in 1:ds) {
       names[i] <- paste("State_X", i, sep = "")
-      # vals[i] <- c("Active", "Inactive")[sol.vec[i]]
       vals[i] <- c("On", "Off")[sol.vec[i]]
     }
     piv <- ds
@@ -607,7 +528,6 @@ vec2DFrame_ACO <- function(sol.vec, sIn, fIn) {
     for (i in 1:df) {
       piv <- piv + 1
       names[piv] <- paste("State_F", i, sep = "")
-      # vals[piv] <- c("Active", "Inactive")[sol.vec[piv]]
       vals[piv] <- c("On", "Off")[sol.vec[piv]]
 
       piv <- piv + 1
@@ -634,7 +554,13 @@ vec2DFrame_ACO <- function(sol.vec, sIn, fIn) {
 
   return(vals)
 }
+# ==========================================================================================================
 
+
+
+# ==========================================================================================================
+# Function to build ant logs (success and crashes)
+# ==========================================================================================================
 getLog_ACO <- function(sIn, fIn, log.vec, log.fitness, base, extargs) {
   mylog <- new("antsLog")
   args <- list()
@@ -648,14 +574,20 @@ getLog_ACO <- function(sIn, fIn, log.vec, log.fitness, base, extargs) {
   mylog@fitness <- log.fitness
   return(mylog)
 }
+# ==========================================================================================================
 
+
+
+# ==========================================================================================================
+# Function to evaluate ants for the Q2loocv statistic
+# ==========================================================================================================
 #' @importFrom foreach foreach `%dopar%`
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #' @importFrom doSNOW registerDoSNOW
 eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.lim, quietly, par.clust) {
   # recover population size
   n.pop <- nrow(ants)
-# browser() ##### estamos haciend pruebas aca!!
+
   # set up progress bar
   pb <- txtProgressBar(min = 0, max = n.pop, style = 3)
 
@@ -711,7 +643,13 @@ eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.l
   }
   return(result)
 }
+# ==========================================================================================================
 
+
+
+# ==========================================================================================================
+# Function to evaluate ants for the Q2hout statistic
+# ==========================================================================================================
 #' @importFrom foreach foreach `%dopar%`
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #' @importFrom doSNOW registerDoSNOW
@@ -724,7 +662,6 @@ eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str
   pb <- txtProgressBar(min = 0, max = n.pop, style = 3)
 
   if (!is.null(par.clust)) {
-    # print("Parallel!")
     # set up progress controller
     progress <- function(n) setTxtProgressBar(pb, n)
     opts <- list(progress = progress)
@@ -793,7 +730,6 @@ eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str
     close(pb)
 
   } else {
-    # print("Sequence!")
     # evaluate the ants as models
     result <- list()
     for (i in 1:n.pop) {
@@ -857,292 +793,15 @@ eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str
   }
   return(result)
 }
+# ==========================================================================================================
 
 
 
-# @importFrom doSNOW registerDoSNOW
-# @importFrom foreach registerDoSEQ
-# eval_loocv_ACO2 <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.lim, quietly, par.clust) {
-#   # recover population size
-#   n.pop <- nrow(ants)
-#
-#   # set up stopping condition down to start
-#   onTime <- T
-#
-#   # was a cluster provided?
-#   if (!is.null(par.clust)) {
-#     # set up parallel backend
-#     registerDoSNOW(par.clust)
-#
-#     # set up progress bar
-#     pb <- txtProgressBar(max = n.pop, style = 3)
-#     progress <- function(n) setTxtProgressBar(pb, n)
-#     opts <- list(progress = progress)
-#
-#     # evaluate the ants as models
-#     result <- foreach(i = 1:n.pop, .errorhandling = "pass", .options.snow = opts) %dopar%
-#     {
-#       if (onTime) {
-#         amf <- fitNtests_ACO(ants[i,], sIn, fIn, sOut, extargs, base)
-#
-#         # check if we are still on time
-#         dt <- difftime(Sys.time(), time.str, units = 'secs')
-#         if (dt >= time.lim) {
-#           onTime <- F
-#         }
-#         return(amf)
-#       } else {
-#         return(NULL)
-#       }
-#     }
-#     close(pb)
-#     # env <- foreach:::.foreachGlobals
-#     # rm(list = ls(name = env), pos = env)
-#     registerDoSEQ()
-#
-#   } else {
-#     # set up progress bar
-#     pb <- txtProgressBar(min = 0, max = n.pop, style = 3)
-#
-#     # evaluate the ants as models
-#     result <- list()
-#     for (i in 1:n.pop) {
-#       cat("\n")
-#       if (onTime) {
-#         if (quietly) {
-#           result[[i]] <- quiet(fitNtests_ACO(ants[i,], sIn, fIn, sOut, extargs, base))
-#         } else {
-#           result[[i]] <- fitNtests_ACO(ants[i,], sIn, fIn, sOut, extargs, base)
-#         }
-#
-#         # check if we are still on time
-#         dt <- difftime(Sys.time(), time.str, units = 'secs')
-#         if (dt < time.lim) {
-#           setTxtProgressBar(pb, i)
-#         } else {
-#           onTime <- F
-#           if (i < n.pop) result[(i+1):n.pop] <- NULL
-#           setTxtProgressBar(pb, n.pop)
-#           break
-#         }
-#       }
-#     }
-#     close(pb)
-#   }
-#
-#   return(result)
-# }
-
-# @importFrom doSNOW registerDoSNOW
-# @importFrom foreach registerDoSEQ
-# eval_houtv_ACO2 <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str, time.lim, quietly, par.clust) {
-#   # recover population size and number of replicates
-#   n.pop <- nrow(ants)
-#   n.rep <- ncol(ind.vl)
-#
-#   # set up stopping condition down to start
-#   onTime <- T
-#
-#   # was a cluster provided?
-#   if (!is.null(par.clust)) {
-#     # set up parallel backend
-#     registerDoSNOW(par.clust)
-#
-#     # set up progress bar
-#     pb <- txtProgressBar(max = n.pop, style = 3)
-#     progress <- function(n) setTxtProgressBar(pb, n)
-#     opts <- list(progress = progress)
-#
-#     # evaluate the ants as models
-#     result <- foreach(i = 1:n.pop, .errorhandling = "pass", .options.snow = opts) %dopar%
-#     {
-#       # evaluate the ants as models
-#       res <- foreach(r = 1:n.rep, .errorhandling = "pass") %dopar%
-#       {
-#         if (onTime) {
-#           # split data into training and validation
-#           data <- splitData(sIn, fIn, sOut, ind.vl[,r])
-#
-#           # identify active inputs of both types
-#           active <- getActiveIn_ACO(ants[i,], sIn, fIn, base)
-#
-#           amf <- fitNtests_ACO(ants[i,], data$sIn.tr, data$fIn.tr, data$sOut.tr, extargs, base,
-#                                  ind.vl, data$sIn.vl, data$fIn.vl, data$sOut.vl, active)
-#
-#           # check if we are still on time
-#           dt <- difftime(Sys.time(), time.str, units = 'secs')
-#           if (dt >= time.lim) {
-#             onTime <- F
-#           }
-#           return(amf)
-#
-#         } else {
-#           return(NULL)
-#         }
-#       }
-#
-#       # extract complete evaluations
-#       done <- which(!sapply(res, is.null))
-#       argsList <- lapply(res[done], `[[`, 1)
-#       modelList <- lapply(res[done], `[[`, 2)
-#       fitnessVec <- sapply(res[done], `[[`, 3)
-#
-#       # identify crashes and usable models
-#       ids.cr <- which(is.na(fitnessVec))
-#       ids.ok <- which(!is.na(fitnessVec))
-#
-#       # remove crashes and compute average model fitness
-#       if (length(ids.ok) > 0) {
-#         fitness <- mean(fitnessVec[ids.ok])
-#         piv <- sample.vec(which(fitnessVec == max(fitnessVec)))
-#         args <- argsList[[piv]]
-#         model <- modelList[[piv]]
-#         return(list(args, model, fitness))
-#       } else {
-#         return(NULL)
-#       }
-#     }
-#     close(pb)
-#     # env <- foreach:::.foreachGlobals
-#     # rm(list = ls(name = env), pos = env)
-#     registerDoSEQ()
-#
-#   } else {
-#     # set up sequential backend
-#     registerDoSEQ()
-#
-#     # set up progress bar
-#     pb <- txtProgressBar(max = n.pop, style = 3)
-#     progress <- function(n) setTxtProgressBar(pb, n)
-#     opts <- list(progress = progress)
-#
-#     # evaluate the ants as models
-#     result <- foreach(i = 1:n.pop, .errorhandling = "pass", .options.snow = opts) %do%
-#     {
-#       # evaluate the ants as models
-#       res <- foreach(r = 1:n.rep, .errorhandling = "pass") %do%
-#       {
-#         if (onTime) {
-#           # split data into training and validation
-#           data <- splitData(sIn, fIn, sOut, ind.vl[,r])
-#
-#           # identify active inputs of both types
-#           active <- getActiveIn_ACO(ants[i,], sIn, fIn, base)
-# browser()
-#           amf <- fitNtests_ACO(ants[i,], data$sIn.tr, data$fIn.tr, data$sOut.tr, extargs, base,
-#                                  ind.vl, data$sIn.vl, data$fIn.vl, data$sOut.vl, active, quietly)
-# browser()
-#           # check if we are still on time
-#           dt <- difftime(Sys.time(), time.str, units = 'secs')
-#           if (dt >= time.lim) {
-#             onTime <- F
-#           }
-#           return(amf)
-#
-#         } else {
-#           return(NULL)
-#         }
-#       }
-#
-#       # extract complete evaluations
-#       done <- which(!sapply(res, is.null))
-#       argsList <- lapply(res[done], `[[`, 1)
-#       modelList <- lapply(res[done], `[[`, 2)
-#       fitnessVec <- sapply(res[done], `[[`, 3)
-#
-#       # identify crashes and usable models
-#       ids.cr <- which(is.na(fitnessVec))
-#       ids.ok <- which(!is.na(fitnessVec))
-#
-#       # remove crashes and compute average model fitness
-#       if (length(ids.ok) > 0) {
-#         fitness <- mean(fitnessVec[ids.ok])
-#         piv <- sample.vec(which(fitnessVec == max(fitnessVec)))
-#         args <- argsList[[piv]]
-#         model <- modelList[[piv]]
-#         return(list(args, model, fitness))
-#       } else {
-#         return(NULL)
-#       }
-#     }
-#     close(pb)
-#   }
-#
-# #   } else {
-# #     # set up progress bar
-# #     # pb <- txtProgressBar(min = 0, max = (n.pop*n.rep), style = 3)
-# #     pb <- txtProgressBar(min = 0, max = (n.pop), style = 3)
-# # # browser()
-# #     # evaluate the ants as models
-# #     result <- list()
-# #     for (i in 1:n.pop) {
-# #       cat("\n")
-# #       res <- list()
-# #       for (r in 1:n.rep) {
-# #         # split data into training and validation
-# #         data <- splitData(sIn, fIn, sOut, ind.vl[,r])
-# #
-# #         # identify active inputs of both types
-# #         active <- getActiveIn_ACO(ants[i,], sIn, fIn, base)
-# #
-# #         amf <- fitNtests_ACO(ants[i,], data$sIn.tr, data$fIn.tr, data$sOut.tr, extargs, base,
-# #                                ind.vl, data$sIn.vl, data$fIn.vl, data$sOut.vl, active, quietly)
-# #
-# #         res[[r]] <- amf
-# #
-# #         # check if we are still on time
-# #         dt <- difftime(Sys.time(), time.str, units = 'secs')
-# #         # if (dt < time.lim) {
-# #         #   setTxtProgressBar(pb, (n.rep * (i-1) + r))
-# #         # } else {
-# #         if (dt >= time.lim) {
-# #           if (r < n.rep) res[(r+1):n.rep] <- NULL
-# #           break
-# #         }
-# #       }
-# #
-# #       # extract complete evaluations
-# #       done <- which(!sapply(res, is.null))
-# #       argsList <- lapply(res[done], `[[`, 1)
-# #       modelList <- lapply(res[done], `[[`, 2)
-# #       fitnessVec <- sapply(res[done], `[[`, 3)
-# #
-# #       # identify crashes and usable models
-# #       ids.cr <- which(is.na(fitnessVec))
-# #       ids.ok <- which(!is.na(fitnessVec))
-# #
-# #       # remove crashes and compute average model fitness
-# #       if (length(ids.ok) > 0) {
-# #         fitness <- mean(fitnessVec[ids.ok])
-# #         piv <- sample.vec(which(fitnessVec == max(fitnessVec)))
-# #         args <- argsList[[piv]]
-# #         model <- modelList[[piv]]
-# #         result[[i]] <- list(args, model, fitness)
-# #       } else {
-# #         result[[i]] <- NULL
-# #       }
-# #
-# #       # check if we are still on time
-# #       dt <- difftime(Sys.time(), time.str, units = 'secs')
-# #       if (dt < time.lim) {
-# #         setTxtProgressBar(pb, (i))
-# #       } else {
-# #         if (i < n.pop) {
-# #           result[(i+1):n.pop] <- NULL
-# #           setTxtProgressBar(pb, (n.pop*n.rep))
-# #         }
-# #         break
-# #       }
-# #     }
-# #     close(pb)
-# #   }
-#
-#   return(result)
-# }
-
+# ==========================================================================================================
+# Function that makes the actual call to fgpm in order to build each model sent by the ants
+# ==========================================================================================================
 fitNtests_ACO <- function(ant, sIn, fIn, sOut, extargs, base,
                             ind.vl = NULL, sIn.vl = NULL, fIn.vl = NULL, sOut.vl = NULL, active = NULL) {
-  # browser() ##### estamos haciend pruebas aca!!
   b.model <- b.args <- NULL
   args <- formatSol_ACO(ant, sIn, fIn, base)
   poterr <- tryCatch(
@@ -1163,16 +822,46 @@ fitNtests_ACO <- function(ant, sIn, fIn, sOut, extargs, base,
   }
   return(list(args[-(1:2)], model, fitness))
 }
+# ==========================================================================================================
 
-#' @title Fitting of functional-input Gaussian process models
-#' @description Creates a Gaussian process model based on the nature of the inputs which could be scalar,
-#' functional or hybrid. For functional inputs, the user might specify a projection method, projection
-#' dimension and distance type seeking for optimal processing time or metamodel predictability.
-#' @param sIn.pr Fill!!!!!!!!!!
-#' @param fIn.pr Fill!!!!!!!!!!
-#' @param args Fill!!!!!!!!!!
+
+
+# ==========================================================================================================
+# Function to prepare input data structures for prediction based on a fgpm arguments
+# ==========================================================================================================
+#' @title Preparation of inputs for predictions based on an fgpm modelCall
+#' @description This function prepared input data structures according to the active inpues specified by a
+#'   \code{"\linkS4class{modelCall}"} object. This function is intended to easily adapt the data structures
+#'   to the requirements of a specific model delivered by the model factory function
+#'   \link[funGp]{fgpm_factory}.
+#'
+#' @param sIn.pr sIn.pr an optional matrix of scalar input coordinates at which the output values should be
+#'   predicted. Each column is interpreted as a scalar input variable and each row as a coordinate.
+#'   Either scalar input coordinates (sIn.pr), functional input coordinates (fIn.pr), or both must be provided.
+#'   The \code{"\linkS4class{modelCall}"} object provided through args will lead the extraction of only the
+#'   active scalar inputs in the model.
+#' @param fIn.pr an optional list of functional input coordinates at which the output values should be
+#'   predicted. Each element of the list is interpreted as a functional input variable. Every functional input
+#'   variable should be provided as a matrix with one curve per row. Either scalar input coordinates (sIn.pr),
+#'   functional input coordinates (fIn.pr), or both must be provided. The \code{"\linkS4class{modelCall}"}
+#'   object provided through args will lead the extraction of only the active functional inputs in the model.
+#' @param args an object of class \code{"\linkS4class{modelCall}"}, which specifies the set of active
+#'   scalar and functional inputs.
+#'
+#' @return An object of class \code{"list"}, containing the input data structures with only the active inputs
+#'   specified by \emph{args}.
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
+#'
+#' @references Betancourt, J., Bachoc, F., and Klein, T. (2020),
+#' R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
+#' \emph{RISCOPE project}.
+#' \href{https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing}{[HAL]}
+#'
+#' @seealso \strong{*} \link[funGp]{predict} for predictions based on a funGp model;
+#' @seealso \strong{*} \link[funGp]{fgpm} for creation of a funGp model;
+#' @seealso \strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection.
+#'
 #' @export
 format4pred <- function(sIn.pr = NULL, fIn.pr = NULL, args) {
   s.on <- f.on <- F
@@ -1190,7 +879,15 @@ format4pred <- function(sIn.pr = NULL, fIn.pr = NULL, args) {
     # formatting scalar inputs ----------------------------------------------------
     x <- rm_between(key, "sIn = ", ", fIn", extract = TRUE)[[1]] # extract the fragment of the call related to the scalar inputs
     if (grepl("\\d", x)) { # does the fragment include input indices?
-      sIn.4mat <- sIn.pr[, as.numeric(rm_between(x, "[,", ",d", extract = TRUE)[[1]]), drop=F]
+      if (grepl("\\(", x)) { # are they grouped in a vector?
+        sIn.4mat <- sIn.pr[, as.numeric(unlist(regmatches(x, gregexpr("[[:digit:]]+", x)))), drop=F]
+      } else if (grepl("drop", x)) {
+        sIn.4mat <- sIn.pr[, as.numeric(unlist(regmatches(x, gregexpr("[[:digit:]]+", x)))), drop=F]
+      } else {
+        v <- as.numeric(unlist(regmatches(x, gregexpr("[[:digit:]]+", x))))
+        sIn.4mat <- sIn.pr[, v[1]:v[2]]
+      }
+
     } else {
       sIn.4mat <- sIn.pr
     }
@@ -1198,16 +895,28 @@ format4pred <- function(sIn.pr = NULL, fIn.pr = NULL, args) {
     # formatting functional inputs ----------------------------------------------------
     x <- rm_between(key, "fIn = ", ", sOut", extract = TRUE)[[1]] # extract the fragment of the call related to the functional inputs
     if (grepl("\\d", x)) { # does the fragment include input indices?
-      fIn.4mat <- fIn.pr[as.numeric(rm_between(x, "[", "]", extract = TRUE)[[1]])]
+      if (grepl("\\(", x)) { # are they grouped in a vector?
+        fIn.4mat <- fIn.pr[[as.numeric(unlist(regmatches(x, gregexpr("[[:digit:]]+", x))))]]
+      } else {
+        fIn.4mat <- fIn.pr[as.numeric(rm_between(x, "[", "]", extract = TRUE)[[1]])]
+      }
     } else {
       fIn.4mat <- fIn.pr
     }
 
   } else if (s.on) { # there are only scalar inputs active
     # formatting scalar inputs ----------------------------------------------------
-    x <- rm_between(key, "sIn = ", ", fIn", extract = TRUE)[[1]] # extract the fragment of the call related to the scalar inputs
+    x <- rm_between(key, "sIn = ", ", sOut", extract = TRUE)[[1]] # extract the fragment of the call related to the scalar inputs
     if (grepl("\\d", x)) { # does the fragment include input indices?
-      sIn.4mat <- sIn.pr[, as.numeric(rm_between(x, "[,", ",d", extract = TRUE)[[1]]), drop=F]
+      if (grepl("\\(", x)) { # are they grouped in a vector?
+        sIn.4mat <- sIn.pr[, as.numeric(unlist(regmatches(x, gregexpr("[[:digit:]]+", x)))), drop=F]
+      } else if (grepl("drop", x)) {
+        sIn.4mat <- sIn.pr[, as.numeric(unlist(regmatches(x, gregexpr("[[:digit:]]+", x)))), drop=F]
+      } else {
+        v <- as.numeric(unlist(regmatches(x, gregexpr("[[:digit:]]+", x))))
+        sIn.4mat <- sIn.pr[, v[1]:v[2]]
+      }
+
     } else {
       sIn.4mat <- sIn.pr
     }
@@ -1216,7 +925,11 @@ format4pred <- function(sIn.pr = NULL, fIn.pr = NULL, args) {
     # formatting functional inputs ----------------------------------------------------
     x <- rm_between(key, "fIn = ", ", sOut", extract = TRUE)[[1]] # extract the fragment of the call related to the functional inputs
     if (grepl("\\d", x)) { # does the fragment include input indices?
-      fIn.4mat <- fIn.pr[as.numeric(rm_between(x, "[", "]", extract = TRUE)[[1]])]
+      if (grepl("\\(", x)) { # are they grouped in a vector?
+        fIn.4mat <- fIn.pr[[as.numeric(unlist(regmatches(x, gregexpr("[[:digit:]]+", x))))]]
+      } else {
+        fIn.4mat <- fIn.pr[as.numeric(rm_between(x, "[", "]", extract = TRUE)[[1]])]
+      }
     } else {
       fIn.4mat <- fIn.pr
     }
@@ -1225,57 +938,4 @@ format4pred <- function(sIn.pr = NULL, fIn.pr = NULL, args) {
 
   return(list(sIn.pr = sIn.4mat, fIn.pr = fIn.4mat))
 }
-
-
-
-
-
-
-
-
-
-# if (!is.null(par.clust)) {
-#   # set up progress bar
-#   doSNOW::registerDoSNOW(par.clust)
-#   pb <- txtProgressBar(max = n.pop, style = 3)
-#   progress <- function(n) setTxtProgressBar(pb, n)
-#   opts <- list(progress = progress)
-#
-#   # evaluate the ants as models
-#   onTime <- T
-#   result <- foreach(i = 1:n.pop, .errorhandling = "pass", .options.snow = opts) %dopar%
-#   {
-#     if (onTime) {
-#       args <- formatSol_ACO(ants[i,], sIn, fIn, base)
-#       poterr <- tryCatch(
-#         {
-#           model <- fgpm(sIn = args$sIn, fIn = args$fIn, sOut = sOut, kerType = args$kerType,
-#                          f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType,
-#                          nugget = extargs$nugget, n.starts = extargs$n.starts, n.presample = extargs$n.presample)
-#         },
-#         error = function(e) e
-#       )
-#
-#       # if the model was succesfully built, compute model fitness
-#       if (!inherits(poterr, "error")) {
-#         fitness <- getFitness(model)
-#       } else {
-#         model <- poterr
-#         fitness <- NA
-#       }
-#
-#       dt <- difftime(Sys.time(), time.str, units = 'secs')
-#       if (dt >= time.lim) {
-#         onTime <- F
-#       }
-#       return(list(args[-(1:2)], model, fitness))
-#
-#     } else { # time limit reached
-#       return(NULL)
-#     }
-#   }
-#   close(pb)
-#   env <- foreach:::.foreachGlobals
-#   rm(list=ls(name=env), pos=env)
-#
-# }
+# ==========================================================================================================

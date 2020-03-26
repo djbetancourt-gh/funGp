@@ -49,6 +49,13 @@ simulated output values, with as many rows as requested random samples. \emph{Fu
 list with the matrix of simulated output values, along with the predicted mean, standard deviation and
 limts of the 95\% confidence intervals at the simulation points. Default is "light".}
 }
+\value{
+An object containing the data structures linked to simulations. For \emph{light} simulations, the
+  output will be a matrix with of simulated output values, with as many rows as requested random samples.
+  For \emph{full} simulations, the output will be a list with the matrix of simulated output values,
+  along with the predicted mean, standard deviation and limts of the 95\% confidence intervals at the
+  simulation points.
+}
 \description{
 This method enables simulation of Gaussian process values at any given set of points
   based on a pre-built funGp model. Check \code{\link{fgpm}} for information on how to create funGp models.

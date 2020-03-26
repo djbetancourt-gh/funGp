@@ -70,6 +70,9 @@
 #' \strong{*}\emph{n.tr}: Object of class \code{"numeric"}. The number of input points provided and
 #'   correspondingly, the number of observations to produce.
 #'
+#' @section Value:
+#' An object of class \code{"matrix"} with the values of the output at the specified input coordinates.
+#'
 #' @section Note:
 #' The functions listed above were used to validate the functionality and stability of this package.
 #' Several tests involving \link[=funGp-package]{all main functions, plotters and getters} were run

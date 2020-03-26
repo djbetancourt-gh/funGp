@@ -152,7 +152,7 @@ setClass("fgpm",
 #' @param par.clust an optional parallel processing cluster created with the \code{\link[parallel]{makeCluster}} function
 #'   of the \link[=parallel]{parallel package}. If not provided, multistart optimizations are done in sequence.
 #'
-#' @return An object of class \linkS4class{fgpm}.
+#' @return An object of class \linkS4class{fgpm} containing the data structures representing the fitted funGp model.
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #'
@@ -162,13 +162,13 @@ setClass("fgpm",
 #' \href{https://www.sciencedirect.com/science/article/abs/pii/S0951832019301693}{[RESS]}
 #' \href{https://hal.archives-ouvertes.fr/hal-01998724}{[HAL]}
 #'
-#' @references Betancourt, J., Bachoc, F., and Klein, T. (2020),
+#' @references Betancourt, J., Bachoc, F., Klein, T., and Gamboa, F. (2020),
 #' Technical Report: "Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression. Ref. B3D-WP3.2".
 #' \emph{RISCOPE project}.
 #' \href{https://drive.google.com/file/d/1GnalLS9jEr9AxPKmQk0S1bLQ7whuLm1T/view?usp=sharing}{[HAL]}
 #'
 #' @references Betancourt, J., Bachoc, F., and Klein, T. (2020),
-#' R package manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
+#' R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
 #' \emph{RISCOPE project}.
 #' \href{https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing}{[HAL]}
 #'
@@ -300,33 +300,48 @@ setClass("fgpm",
 #' # multistart and parallelization in fgpm___________________________________________________
 #' # generating input and output data
 #' set.seed(100)
-#' n.tr <- 3^5
+#' n.tr <- 243
 #' sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
 #'                    x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
 #'                    x5 = seq(0,1,length = n.tr^(1/5)))
 #' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
 #' sOut <- fgp_BB7(sIn, fIn, n.tr)
 #'
-#' # calling fgpm with multistart in sequence (This might take ~22 seconds)
-#' time.str <- Sys.time()
-#' m1 <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut, n.starts = 10)
-#' dt.seq <- difftime(Sys.time(), time.str, units = 'secs')
-#'
-#' # calling fgpm with multistart in parallel (This might take ~15 seconds)
-#' time.str <- Sys.time()
+#' # calling fgpm with multistart in parallel
 #' cl <- parallel::makeCluster(3)
-#' m1 <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut, n.starts = 10, par.clust = cl)
+#' m1 <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut, n.starts = 10, par.clust = cl) # (~16 seconds)
 #' parallel::stopCluster(cl)
-#' dt.par <- difftime(Sys.time(), time.str, units = 'secs')
 #'
-#' # checking processing times
-#' knitr::kable(format(matrix(c(dt.seq, dt.par), ncol = 2), digits = 5),
-#'              col.names = c("Sequence", "Parallel"))
+#' # ----------< small experiment to show benfit of parallelization in fgpm
+#' # generating input and output data
+#' set.seed(100)
+#' n.tr <- 1024
+#' sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
+#'                    x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
+#'                    x5 = seq(0,1,length = n.tr^(1/5)))
+#' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
+#' sOut <- fgp_BB7(sIn, fIn, n.tr)
+#'
+#' # to run fgpm in sequence
+#' run_seq <- function() {
+#'   m1 <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut, n.starts = 3)
+#' }
+#'
+#' # to run fgpm in parallel
+#' run_par <- function() {
+#'   cl <- parallel::makeCluster(3)
+#'   m1 <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut, n.starts = 3, par.clust = cl)
+#'   parallel::stopCluster(cl)
+#' }
+#'
+#' # performance test
+#' microbenchmark(run_seq(), run_par(), times = 3) # NOTE: this might take ~ 14 min!
 #'
 #' # ~R output:~
-#' # |Sequence |Parallel |
-#' # |:--------|:--------|
-#' # |21.924   |15.520   |
+#' # Unit: seconds
+#' #      expr       min        lq      mean    median        uq      max neval
+#' # run_seq() 121.26699 154.09797 166.18970 186.92895 188.65106 190.3732     3
+#' # run_par()  71.40084  79.05249  88.38985  86.70413  96.88435 107.0646     3
 #' }
 #'
 #' @importFrom methods new
@@ -678,6 +693,12 @@ setGeneric(name = "predict", def = function(object, ...) standardGeneric("predic
 #'   training-prediction cross-covariance matrix and the prediction auto-covariance matrix. Default is
 #'   "light".
 #'
+#' @return An object of class \code{"list"} containing the data structures linked to predictions. For
+#'   \emph{light} predictions, the list will include the mean, standard deviation and limits of the 95\%
+#'   confidence intervals at the prediction points. For \emph{full} predictions, it will include the same
+#'   information, plus the training-prediction cross-covariance matrix and the prediction auto-covariance
+#'   matrix.
+#'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #'
 #' @seealso \strong{*} \link[funGp]{plotPreds} for the predictions plot of a funGp model;
@@ -891,6 +912,12 @@ setGeneric(name = "simulate", def = function(object, nsim = 1, seed = NULL, ...)
 #'   list with the matrix of simulated output values, along with the predicted mean, standard deviation and
 #'   limts of the 95\% confidence intervals at the simulation points. Default is "light".
 #'
+#' @return An object containing the data structures linked to simulations. For \emph{light} simulations, the
+#'   output will be a matrix with of simulated output values, with as many rows as requested random samples.
+#'   For \emph{full} simulations, the output will be a list with the matrix of simulated output values,
+#'   along with the predicted mean, standard deviation and limts of the 95\% confidence intervals at the
+#'   simulation points.
+#'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #'
 #' @seealso \strong{*} \link[funGp]{plotSims} for the simulations plot of a funGp model;
@@ -1080,6 +1107,8 @@ setGeneric(name = "update", def = function(object, ...) standardGeneric("update"
 #'   should be re-estimated. Default is FALSE.
 #' @param ls_f.re an optional boolean indicating wether the length-scale parameters of the functional
 #'   inputs should be re-estimated. Default is FALSE.
+#'
+#' @return An object of class \linkS4class{fgpm} representing the updated funGp model.
 #'
 #' @details
 #' The arguments listed above enable the completion of the following updating tasks:

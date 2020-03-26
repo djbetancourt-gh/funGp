@@ -15,7 +15,7 @@ Note: internal package of the RISCOPE project
     (ANR, project No.16CE04-0011) <https://perso.math.univ-toulouse.fr/riscope/>.
 License: GPL-3
 Depends: R (>= 3.0.1)
-Imports: methods, foreach, knitr, scales, lhs, doSNOW, doParallel, grDevices, latex2exp, qdapRegex
+Imports: methods, foreach, knitr, scales, lhs, doSNOW, doParallel, grDevices, latex2exp, qdapRegex, microbenchmark
 Suggests: viridis, R.rsp
 Encoding: UTF-8
 LazyData: true

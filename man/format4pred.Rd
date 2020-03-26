@@ -2,21 +2,48 @@
 % Please edit documentation in R/3_ant_admin.R
 \name{format4pred}
 \alias{format4pred}
-\title{Fitting of functional-input Gaussian process models}
+\title{Preparation of inputs for predictions based on an fgpm modelCall}
 \usage{
 format4pred(sIn.pr = NULL, fIn.pr = NULL, args)
 }
 \arguments{
-\item{sIn.pr}{Fill!!!!!!!!!!}
+\item{sIn.pr}{sIn.pr an optional matrix of scalar input coordinates at which the output values should be
+predicted. Each column is interpreted as a scalar input variable and each row as a coordinate.
+Either scalar input coordinates (sIn.pr), functional input coordinates (fIn.pr), or both must be provided.
+The \code{"\linkS4class{modelCall}"} object provided through args will lead the extraction of only the
+active scalar inputs in the model.}
 
-\item{fIn.pr}{Fill!!!!!!!!!!}
+\item{fIn.pr}{an optional list of functional input coordinates at which the output values should be
+predicted. Each element of the list is interpreted as a functional input variable. Every functional input
+variable should be provided as a matrix with one curve per row. Either scalar input coordinates (sIn.pr),
+functional input coordinates (fIn.pr), or both must be provided. The \code{"\linkS4class{modelCall}"}
+object provided through args will lead the extraction of only the active functional inputs in the model.}
 
-\item{args}{Fill!!!!!!!!!!}
+\item{args}{an object of class \code{"\linkS4class{modelCall}"}, which specifies the set of active
+scalar and functional inputs.}
+}
+\value{
+An object of class \code{"list"}, containing the input data structures with only the active inputs
+  specified by \emph{args}.
 }
 \description{
-Creates a Gaussian process model based on the nature of the inputs which could be scalar,
-functional or hybrid. For functional inputs, the user might specify a projection method, projection
-dimension and distance type seeking for optimal processing time or metamodel predictability.
+This function prepared input data structures according to the active inpues specified by a
+  \code{"\linkS4class{modelCall}"} object. This function is intended to easily adapt the data structures
+  to the requirements of a specific model delivered by the model factory function
+  \link[funGp]{fgpm_factory}.
+}
+\references{
+Betancourt, J., Bachoc, F., and Klein, T. (2020),
+R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
+\emph{RISCOPE project}.
+\href{https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing}{[HAL]}
+}
+\seealso{
+\strong{*} \link[funGp]{predict} for predictions based on a funGp model;
+
+\strong{*} \link[funGp]{fgpm} for creation of a funGp model;
+
+\strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection.
 }
 \author{
 José Betancourt, François Bachoc and Thierry Klein

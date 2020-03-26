@@ -1,21 +1,6 @@
-#' @title Optimization of hyperparameters for funGp models
-#' @description Sets good values for the hyperparameters of the Gaussian process model based on optimization.
-#'
-#' @param fMs a list with as many elements as functional input variables. Each element of the list is a n times n matrix of differences
-#' between the functional observation coordinates.
-#' @param sOut a vector (or 1-column matrix) containing the values of the scalar output at the training points.
-#' @param kerType a character string indicating the covariance structure to be used, to be choosen between "gauss", "matern5_2" or "matern3_2".
-#' @param var.known Fill!!!!!!!!!!
-#' @param ls_f.known Fill!!!!!!!!!!
-#' @param n.starts Fill!!!!!!!!!!
-#' @param n.presample Fill!!!!!!!!!!
-#' @param nugget Fill!!!!!!!!!!
-#' @return The hyperparameters.
-#'
-#' @keywords internal
-#'
-#' @author José Betancourt, François Bachoc and Thierry Klein
-#' @export
+# ==========================================================================================================
+# Master function to manage the optimization of functional-input models
+# ==========================================================================================================
 setHypers_F <- function(fMs, sOut, kerType, var.known, ls_f.known, n.starts, n.presample, nugget, par.clust){
   # if the length-scale coefficients are known, skip optim and compute var analytically. Else optimize
   if (!is.null(ls_f.known)) {
@@ -52,21 +37,13 @@ setHypers_F <- function(fMs, sOut, kerType, var.known, ls_f.known, n.starts, n.p
     return(optimHypers_F(spoints, n.starts, bnds, fMs, sOut, kerType, varfun, nugget, par.clust))
   }
 }
-# -------------------------------------------------------------------------------------------------------------------------------------
+# ==========================================================================================================
 
 
-#' @title Setting up of hyperparameters' boundaries for optimization
-#' @description Fill this!!!!!!!!!!
-#'
-#' @param fMs a list with as many elements as functional input variables. Each element of the list is a n times n matrix of differences
-#' between the functional observation coordinates.
-#' @return A matrix with two rows and as many columns as hyperparameters the metamodel requires. The first row indicates the lower limits
-#' and the second row the upper limits for the optimization.
-#'
-#' @keywords internal
-#'
-#' @author José Betancourt, François Bachoc and Thierry Klein
-#' @export
+
+# ==========================================================================================================
+# Function to set the boundaries for hyperparameters optimization - functional inputs
+# ==========================================================================================================
 setBounds_F <- function(fMs){
   # define lower and upper bounds for length-scale hypers linked to functional inputs
   mxf <- sapply(fMs, max)
@@ -78,24 +55,14 @@ setBounds_F <- function(fMs){
 
   return(wholeLims)
 }
-# -------------------------------------------------------------------------------------------------------------------------------------
+# ==========================================================================================================
 
 
-#' @title Setting up of starting points for optimization of hyperparameters
-#' @description Fill this!!!!!!!!!!
-#' @param niter Fill this!!!!!!!!!!
-#' @param bnds Fill this!!!!!!!!!!
-#' @param fMs a list with as many elements as functional input variables. Each element of the list is a n times n matrix of differences
-#' between the functional observation coordinates.
-#' @param sOut Fill this!!!!!!!!!!
-#' @param kerType Fill this!!!!!!!!!!
-#' @return Fill this!!!!!!!!!!
-#'
-#' @keywords internal
-#'
+
+# ==========================================================================================================
+# Function to set the starting points for hyperparameters optimization - functional inputs
+# ==========================================================================================================
 #' @importFrom stats runif
-#' @author José Betancourt, François Bachoc and Thierry Klein
-#' @export
 setSPoints_F <- function(bnds, fMs, sOut, kerType, varfun, n.starts, n.presample, nugget){
   # recover lower and upper limits
   ll <- bnds[1,]
@@ -114,30 +81,14 @@ setSPoints_F <- function(bnds, fMs, sOut, kerType, varfun, n.starts, n.presample
 
   return(spoints)
 }
-# -------------------------------------------------------------------------------------------------------------------------------------
+# ==========================================================================================================
 
 
-#' @title Optimizing the hyperparameters
-#' @description Fill this!!!!!!!!!!
-#'
-#' @param spoints Fill this!!!!!!!!!!
-#' @param n.starts Fill this!!!!!!!!!!
-#' @param bnds Fill this!!!!!!!!!!
-#' @param fMs a list with as many elements as functional input variables. Each element of the list is a n times n matrix of differences
-#' between the functional observation coordinates.
-#' @param sOut Fill this!!!!!!!!!!
-#' @param kerType Fill this!!!!!!!!!!
-#' @return Fill this!!!!!!!!!!
-#'
-#' @keywords internal
-#'
-#' @importFrom foreach foreach `%dopar%`
-#' @importFrom utils txtProgressBar setTxtProgressBar
-#' @importFrom doSNOW registerDoSNOW
+
+# ==========================================================================================================
+# Function optimize the hyperparameters of functional-input models
+# ==========================================================================================================
 #' @importFrom stats optim
-#'
-#' @author José Betancourt, François Bachoc and Thierry Klein
-#' @export
 optimHypers_F <- function(spoints, n.starts, bnds, fMs, sOut, kerType, varfun, nugget, par.clust){
   # if multistart is required then parallelize, else run single optimization
   if (n.starts == 1){
@@ -145,8 +96,6 @@ optimHypers_F <- function(spoints, n.starts, bnds, fMs, sOut, kerType, varfun, n
                     lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
                     fMs = fMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
   } else {
-    # if (!requireNamespace("foreach", quietly = TRUE)){
-    # if (!getDoParRegistered()){
     if (is.null(par.clust)) {
       cat("Parallel backend register not found. Multistart optimizations done in sequence.\n\n")
 
@@ -176,10 +125,6 @@ optimHypers_F <- function(spoints, n.starts, bnds, fMs, sOut, kerType, varfun, n
         cat("\n")
       }
       close(pb)
-      # optOutList <- "%do%"(foreach(i = 1:n.starts, .errorhandling = 'remove'), {
-      #   optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_F, method = "L-BFGS-B",
-      #         lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
-      #         fMs = fMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)})
 
     } else {
       cat("Parallel backend register found. Multistart optimizations done in parallel.\n")
@@ -199,10 +144,6 @@ optimHypers_F <- function(spoints, n.starts, bnds, fMs, sOut, kerType, varfun, n
                 fMs = fMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
       }
       close(pb)
-      # optOutList <- "%dopar%"(foreach(i = 1:n.starts, .errorhandling = 'remove'), {
-      #   optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_F, method = "L-BFGS-B",
-      #         lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
-      #         fMs = fMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)})
     }
 
     # check if there are usable results
@@ -226,25 +167,13 @@ optimHypers_F <- function(spoints, n.starts, bnds, fMs, sOut, kerType, varfun, n
 
   return(c(sig2, thetas_f))
 }
-# -------------------------------------------------------------------------------------------------------------------------------------
+# ==========================================================================================================
 
 
-# Potential objective functions for optimization of hyperparameters
-# =========================================================================================================
-#' @title Setting up of starting points for optimization of hyperparameters
-#' @description Fill this!!!!!!!!!!
-#'
-#' @param thetas Fill this!!!!!!!!!!
-#' @param fMs a list with as many elements as functional input variables. Each element of the list is a n times n matrix of differences
-#' between the functional observation coordinates.
-#' @param sOut Fill this!!!!!!!!!!
-#' @param kerType Fill this!!!!!!!!!!
-#' @return Fill this!!!!!!!!!!
-#'
-#' @keywords internal
-#'
-#' @author José Betancourt, François Bachoc and Thierry Klein
-#' @export
+
+# ==========================================================================================================
+# Function to compute the negative log likelihood - functional inputs
+# ==========================================================================================================
 negLogLik_funGp_F <- function(thetas_f, fMs, sOut, kerType, varfun, nugget){
   # Estimation of the correlation matrix
   n.tr <- length(sOut)
@@ -259,4 +188,4 @@ negLogLik_funGp_F <- function(thetas_f, fMs, sOut, kerType, varfun, nugget){
 
   return(-llik)
 }
-# =========================================================================================================
+# ==========================================================================================================

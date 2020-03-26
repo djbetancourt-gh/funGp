@@ -463,17 +463,6 @@ plotPreds.fgpm <- function(preds, sOut.pr, calib, sortp, ...) {
 # ==========================================================================================================
 # Plot of simulations by input index - option to add predicted mean and confidence bands
 # ==========================================================================================================
-# @name plotSims
-# @description This is my description
-# @rdname plotSims-methods
-# @importFrom graphics lines plot layout legend par matplot
-# @param model An object to predict from.
-# @param sims An object to predict from.
-# @param ... Further arguments for methods.
-#
-# @author José Betancourt, François Bachoc and Thierry Klein
-# @exportMethod plotSims
-
 #' @title Plot for simulations of random processes
 #' @description This method displays the simulated output values delivered by some random process model.
 #'   The plot might be constituted differently, depending on the type of model at hand.
@@ -919,13 +908,13 @@ if(!isGeneric("plotX")) {setGeneric("plotX", function(x.model, ...) standardGene
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #'
-#' @references Betancourt, J., Bachoc, F., and Klein, T. (2020),
+#' @references Betancourt, J., Bachoc, F., Klein, T., and Gamboa, F. (2020),
 #' Technical Report: "Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression. Ref. B3D-WP3.2".
 #' \emph{RISCOPE project}.
 #' \href{https://drive.google.com/file/d/1GnalLS9jEr9AxPKmQk0S1bLQ7whuLm1T/view?usp=sharing}{[HAL]}
 #'
 #' @references Betancourt, J., Bachoc, F., and Klein, T. (2020),
-#' R package manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
+#' R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
 #' \emph{RISCOPE project}.
 #' \href{https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing}{[HAL]}
 #'
@@ -1158,13 +1147,13 @@ if(!isGeneric("plotEvol")) {setGeneric("plotEvol", function(x.model, ...) standa
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #'
-#' @references Betancourt, J., Bachoc, F., and Klein, T. (2020),
+#' @references Betancourt, J., Bachoc, F., and Klein, T., and Gamboa, F. (2020),
 #' Technical Report: "Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression. Ref. B3D-WP3.2".
 #' \emph{RISCOPE project}.
 #' \href{https://drive.google.com/file/d/1GnalLS9jEr9AxPKmQk0S1bLQ7whuLm1T/view?usp=sharing}{[HAL]}
 #'
 #' @references Betancourt, J., Bachoc, F., and Klein, T. (2020),
-#' R package manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
+#' R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
 #' \emph{RISCOPE project}.
 #' \href{https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing}{[HAL]}
 #'

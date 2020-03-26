@@ -208,7 +208,9 @@ show.Xfgpm <- function(object) {
 #' @param quietly an optional boolean indicating in the calls to fgpm should ommit text related to the optimization
 #'   of the hyperparameters. Parallelized optimizations are always performed quietly. Default is TRUE.
 #'
-#' @return An object of class \linkS4class{Xfgpm}.
+#' @return An object of class \linkS4class{Xfgpm} containing the data structures linked to the structural optimization
+#'   of a funGp model. It includes as the main component, an object of class \linkS4class{fgpm} corresponding to the
+#'   optimized model. It is accessible through the \code{@@model} slot of the Xfgpm object.
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #'
@@ -218,13 +220,13 @@ show.Xfgpm <- function(object) {
 #' \href{https://www.sciencedirect.com/science/article/abs/pii/S0951832019301693}{[RESS]}
 #' \href{https://hal.archives-ouvertes.fr/hal-01998724}{[HAL]}
 #'
-#' @references Betancourt, J., Bachoc, F., and Klein, T. (2020),
+#' @references Betancourt, J., Bachoc, F., Klein, T., and Gamboa, F. (2020),
 #' Technical Report: "Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression. Ref. B3D-WP3.2".
 #' \emph{RISCOPE project}.
 #' \href{https://drive.google.com/file/d/1GnalLS9jEr9AxPKmQk0S1bLQ7whuLm1T/view?usp=sharing}{[HAL]}
 #'
 #' @references Betancourt, J., Bachoc, F., and Klein, T. (2020),
-#' R package manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
+#' R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
 #' \emph{RISCOPE project}.
 #' \href{https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing}{[HAL]}
 #'
@@ -379,36 +381,48 @@ show.Xfgpm <- function(object) {
 #' # parallelization in the model factory_____________________________________________________
 #' # generating input and output data
 #' set.seed(100)
-#' n.tr <- 3^5
+#' n.tr <- 243
 #' sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
 #'                    x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
 #'                    x5 = seq(0,1,length = n.tr^(1/5)))
 #' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
 #' sOut <- fgp_BB7(sIn, fIn, n.tr)
 #'
-#' # setting up time based stopping condition
-#' mysup <- list(n.iter = 2000)
-#' mytlim <- 60
-#'
-#' # calling the funGp factory in sequence (~60 seconds)
-#' xm.seq <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut,
-#'                        setup = mysup, time.lim = mytlim)
-#'
-#' # calling the funGp factory in parallel (~60 seconds)
+#' # calling fgpm_factory in parallel
 #' cl <- parallel::makeCluster(3)
-#' xm.par <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut,
-#'                        setup = mysup, time.lim = mytlim, par.clust = cl)
+#' xm.par <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, par.clust = cl) #  (~119 seconds)
 #' parallel::stopCluster(cl)
 #'
-#' # checking number of iterations completed
-#' its.seq <- length(xm.seq@details$evolution)
-#' its.par <- length(xm.par@details$evolution)
-#' knitr::kable(matrix(c(its.seq, its.par), ncol = 2), col.names = c("Sequence", "Parallel"))
+#' # ----------< small experiment to show benfit of paralellization in fgpm_factory
+#' # generating input and output data
+#' set.seed(100)
+#' n.tr <- 243
+#' sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
+#'                    x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
+#'                    x5 = seq(0,1,length = n.tr^(1/5)))
+#' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
+#' sOut <- fgp_BB7(sIn, fIn, n.tr)
+#'
+#' # to run the factory in sequence
+#' fact_seq <- function() {
+#'   xm.seq <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
+#' }
+#'
+#' # to run the factory in parallel
+#' fact_par <- function() {
+#'   cl <- parallel::makeCluster(3)
+#'   xm.par <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, par.clust = cl)
+#'   parallel::stopCluster(cl)
+#' }
+#'
+#' # performance test
+#' microbenchmark(fact_seq(), fact_par(), times = 3) # NOTE: this might take ~ 19 min!
 #'
 #' # ~R output:~
-#' # | Sequence| Parallel|
-#' # |--------:|--------:|
-#' # |        3|        6|
+#' # Unit: seconds
+#' #       expr       min        lq     mean    median       uq      max neval
+#' # fact_seq() 126.69960 164.49382 242.2199 202.28804 299.9801 397.6722     3
+#' # fact_par()  88.10726  92.05694 118.8896  96.00663 134.2807 172.5548     3
 #' }
 #'
 #' @importFrom methods new

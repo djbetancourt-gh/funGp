@@ -57,13 +57,13 @@ plotX(xm, calib.gpars = list(xlim = c(800,1000), ylim = c(600,1200)),
 
 }
 \references{
-Betancourt, J., Bachoc, F., and Klein, T. (2020),
+Betancourt, J., Bachoc, F., Klein, T., and Gamboa, F. (2020),
 Technical Report: "Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression. Ref. B3D-WP3.2".
 \emph{RISCOPE project}.
 \href{https://drive.google.com/file/d/1GnalLS9jEr9AxPKmQk0S1bLQ7whuLm1T/view?usp=sharing}{[HAL]}
 
 Betancourt, J., Bachoc, F., and Klein, T. (2020),
-R package manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
+R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
 \emph{RISCOPE project}.
 \href{https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing}{[HAL]}
 }

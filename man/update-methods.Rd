@@ -73,6 +73,9 @@ should be re-estimated. Default is FALSE.}
 \item{ls_f.re}{an optional boolean indicating wether the length-scale parameters of the functional
 inputs should be re-estimated. Default is FALSE.}
 }
+\value{
+An object of class \linkS4class{fgpm} representing the updated funGp model.
+}
 \description{
 This method enables the update of data or hyperparameters of a funGp Gaussian process model.
   It corresponds to an object of the class \linkS4class{fgpm}. The method allows addition, subtraction

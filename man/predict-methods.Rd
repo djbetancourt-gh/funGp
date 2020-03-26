@@ -31,6 +31,13 @@ points. \emph{Full} predictions produce the same information as light ones, in a
 training-prediction cross-covariance matrix and the prediction auto-covariance matrix. Default is
 "light".}
 }
+\value{
+An object of class \code{"list"} containing the data structures linked to predictions. For
+  \emph{light} predictions, the list will include the mean, standard deviation and limits of the 95\%
+  confidence intervals at the prediction points. For \emph{full} predictions, it will include the same
+  information, plus the training-prediction cross-covariance matrix and the prediction auto-covariance
+  matrix.
+}
 \description{
 This method enables prediction based on a funGp Gaussian process model, at any given set of
   points. Check \code{\link{fgpm}} for information on how to create funGp models.
