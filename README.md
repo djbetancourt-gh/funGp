@@ -2,7 +2,7 @@
 
 ## Gaussian process regression models with emphasis on functional inputs
 
-**Description:** funGp is a regresssion package based on Gaussian process models. It allows inputs to be either scalar, functional (represented as vectors), or a combination of both. A dimension reduction functionality is implemented in order to reduce the complexity of the functional inputs while keeping a sufficient amount of information to use in the model. Moreover, funGp offers a model selection feature which allows to tune different characteristics of the model such as the active scalar and functional inputs, the type of kernel function and the family of basis function used for the projection of the inputs.
+**Description:** funGp is a regresssion package based on Gaussian process models. It allows inputs to be either scalar, functional (represented as vectors), or a combination of both. A dimension reduction functionality is implemented in order to reduce the complexity of the functional inputs while keeping a sufficient amount of information to use in the model. Moreover, funGp offers a model selection feature which allows to tune different characteristics of the model such as the active scalar and functional inputs, the type of kernel function and the family of basis function used for the projection of the inputs. This is an extension of the work presented in Betancourt et al. (2020).
 
 **Main functionalities** <br />
 :small_blue_diamond: Creation of regression models <br />
@@ -34,6 +34,10 @@ githubinstall("funGp")
 ```
 <br />
 
+**Manual** :book: <br />
+[Gaussian Process Regression for Scalar andFunctional Inputs with funGp - The in-depth tour](https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing)
+<br /><br />
+
 **Authors:** José Betancourt :wrench: (IMT, ENAC), François Bachoc (IMT) and Thierry Klein (IMT, ENAC).
 
 **Contributors:** Déborah Idier (BRGM) and Jérémy Rohmer (BRGM).
@@ -42,3 +46,12 @@ githubinstall("funGp")
 <br /><br />
 
 **Acknowledgments:** we are grateful to Yves Deville from Alpestat for his advice on the documentation of R packages.
+<br /><br />
+
+**References** <br />
+
+Betancourt, J., Bachoc, F., Klein, T., Idier, D., Pedreros, R., and Rohmer, J. (2020), "Gaussian process metamodeling of functional-input code for coastal flood hazard assessment". *Reliability Engineering & System Safety*, **198**, 106870. [[RESS](https://www.sciencedirect.com/science/article/abs/pii/S0951832019301693)] [[HAL](https://hal.archives-ouvertes.fr/hal-01998724)]
+
+Betancourt, J., Bachoc, F., Klein, T., and Gamboa, F. (2020), Technical Report: "Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression. Ref. B3D-WP3.2". *RISCOPE project*. [[HAL](https://drive.google.com/file/d/1GnalLS9jEr9AxPKmQk0S1bLQ7whuLm1T/view?usp=sharing)]
+
+Betancourt, J., Bachoc, F., and Klein, T. (2020), R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour". *RISCOPE project*. [[HAL](https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing)]
