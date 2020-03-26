@@ -12,12 +12,25 @@
 This project is licensed under the GPL-3 License.
 <br /><br />
 
-**Installing:** Fill this.XX
+**Installation**
 
 ```
-Give examples
+# Install release version from CRAN
+install.packages("funGp")
+```
+
+```
+# Install development version from GitHub
+# way 1
+library(devtools)
+install_github("djbetancourt-gh/funGp")
+
+# way 2
+library(githubinstall)
+githubinstall("funGp")
 ```
 <br /><br />
+
 
 **Authors:** José Betancourt :wrench: (IMT, ENAC), François Bachoc (IMT) and Thierry Klein (IMT, ENAC).
 
