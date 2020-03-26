@@ -1,4 +1,4 @@
-# funGp
+![**funGp**](https://drive.google.com/thumbnail?id=1GsHPb5GnE0YS7b7nRpHqXyFKeHuLw3hF)
 
 ## Gaussian process regression models with emphasis on functional inputs
 
