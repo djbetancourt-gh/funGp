@@ -335,6 +335,7 @@ setClass("fgpm",
 #' }
 #'
 #' # performance test
+#' library(microbenchmark)
 #' microbenchmark(run_seq(), run_par(), times = 3) # NOTE: this might take ~ 14 min!
 #'
 #' # ~R output:~

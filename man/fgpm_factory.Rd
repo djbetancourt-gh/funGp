@@ -323,6 +323,7 @@ fact_par <- function() {
 }
 
 # performance test
+library(microbenchmark)
 microbenchmark(fact_seq(), fact_par(), times = 3) # NOTE: this might take ~ 19 min!
 
 # ~R output:~

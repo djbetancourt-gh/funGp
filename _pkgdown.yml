@@ -1,0 +1,31 @@
+navbar:
+  type: inverse
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Reference"
+      href: reference/index.html
+  right:
+    - icon: fa-github fa-lg
+      href: https://github.com/djbetancourt-gh/funGp
+
+reference:
+- title: Main functions
+  contents:
+  - '`fgpm`'
+  - '`predict`'
+  - '`simulate`'
+  - '`fgpm_factory`'
+- title: Main plotters
+  contents:
+  - '`plotLOO`'
+  - '`plotPreds`'
+  - '`plotSims`'
+  - '`plotX`'
+  - '`plotEvol`'
+- title: Main classes
+  contents:
+  - '`fgpm-class`'
+  - '`fgpKern-class`'
+  - '`Xfgpm-class`'
+  - '`fgpProj-class`'
