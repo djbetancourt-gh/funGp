@@ -568,7 +568,7 @@ if(!isGeneric("plotSims")) {setGeneric("plotSims", function(model, sims, ...) st
 #'
 #' @name plotSims
 #' @rdname plotSims-methods
-#' @importFrom graphics lines plot layout legend par matplot
+#' @importFrom graphics lines plot layout legend par matplot axis
 #' @aliases plotSims,fgpm-method
 setMethod("plotSims", "fgpm",
           function(model, sims, detail = "full", ...) {
@@ -700,7 +700,7 @@ plotSims.fgpm <- function(sims, detail, ...) {
 #' # input of dimension 15 projected maximum in dimension 15
 #' decay(15, deliver = TRUE)
 #'
-#' @importFrom graphics abline points
+#' @importFrom graphics abline points axis
 #' @export
 decay <- function(k, pmax = NULL, tao0 = .1, delta = 2, dispr = 1.4, doplot = TRUE, deliver = FALSE) {
   if (is.null(pmax)) {
@@ -817,7 +817,7 @@ decay <- function(k, pmax = NULL, tao0 = .1, delta = 2, dispr = 1.4, doplot = TR
 #' # input of dimension 15 projected maximum in dimension 15
 #' decay2probs(15, deliver = TRUE)
 #'
-#' @importFrom graphics abline points
+#' @importFrom graphics abline points axis
 #' @export
 decay2probs <- function(k, pmax = NULL, tao0 = .1, delta = 2, dispr = 1.4, doplot = TRUE, deliver = FALSE) {
   if (is.null(pmax)) {
@@ -945,7 +945,8 @@ if(!isGeneric("plotX")) {setGeneric("plotX", function(x.model, ...) standardGene
 #'
 #' @name plotX
 #' @rdname plotX-methods
-#' @importFrom graphics lines points plot layout legend par arrows abline
+#' @importFrom graphics lines points plot layout legend par arrows abline axis
+#' @importFrom scales alpha
 #' @aliases plotX,Xfgpm-method
 setMethod("plotX", "Xfgpm",
           function(x.model, calib = TRUE, fitp = TRUE, ...) {
@@ -1179,7 +1180,9 @@ if(!isGeneric("plotEvol")) {setGeneric("plotEvol", function(x.model, ...) standa
 #'
 #' @name plotEvol
 #' @rdname plotEvol-methods
-#' @importFrom graphics lines points plot layout legend par arrows
+#' @importFrom graphics lines points plot layout legend par arrows axis
+#' @importFrom scales alpha
+#' @importFrom stats median
 #' @aliases plotEvol,Xfgpm-method
 setMethod("plotEvol", "Xfgpm",
           function(x.model, ...) {

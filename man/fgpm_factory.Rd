@@ -130,8 +130,8 @@ n.starts will be assigned to n.presample if this last is smaller. Default is 20.
 function of the \link[=parallel]{parallel package}. If not provided, structural configurations are evaluated in
 sequence.}
 
-\item{quietly}{an optional boolean indicating in the calls to fgpm should ommit text related to the optimization
-of the hyperparameters. Parallelized optimizations are always performed quietly. Default is TRUE.}
+\item{quietly}{an optional boolean indicating if the calls to fgpm should ommit text related to the optimization
+of the hyperparameters. Default is TRUE.}
 }
 \value{
 An object of class \linkS4class{Xfgpm} containing the data structures linked to the structural optimization
@@ -273,6 +273,7 @@ sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr
                    x5 = seq(0,1,length = n.tr^(1/5)))
 fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
 sOut <- fgp_BB7(sIn, fIn, n.tr)
+
 # calling the funGp factory with custom fgpm parameters (~8 seconds)
 xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut,
                    nugget = 0, n.starts = 3, n.presample = 12)

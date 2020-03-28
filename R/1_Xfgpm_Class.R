@@ -205,8 +205,8 @@ show.Xfgpm <- function(object) {
 #' @param par.clust an optional parallel processing cluster created with the \code{\link[parallel]{makeCluster}}
 #'   function of the \link[=parallel]{parallel package}. If not provided, structural configurations are evaluated in
 #'   sequence.
-#' @param quietly an optional boolean indicating in the calls to fgpm should ommit text related to the optimization
-#'   of the hyperparameters. Parallelized optimizations are always performed quietly. Default is TRUE.
+#' @param quietly an optional boolean indicating if the calls to fgpm should ommit text related to the optimization
+#'   of the hyperparameters. Default is TRUE.
 #'
 #' @return An object of class \linkS4class{Xfgpm} containing the data structures linked to the structural optimization
 #'   of a funGp model. It includes as the main component, an object of class \linkS4class{fgpm} corresponding to the
@@ -365,7 +365,7 @@ show.Xfgpm <- function(object) {
 #'                    x5 = seq(0,1,length = n.tr^(1/5)))
 #' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
 #' sOut <- fgp_BB7(sIn, fIn, n.tr)
-
+#'
 #' # calling the funGp factory with custom fgpm parameters (~8 seconds)
 #' xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut,
 #'                    nugget = 0, n.starts = 3, n.presample = 12)
@@ -427,6 +427,7 @@ show.Xfgpm <- function(object) {
 #' }
 #'
 #' @importFrom methods new
+#' @importFrom microbenchmark microbenchmark
 #' @export
 fgpm_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, ind.vl = NULL,
                           ctraints = list(), setup = list(), time.lim = Inf,

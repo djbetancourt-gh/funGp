@@ -583,40 +583,42 @@ getLog_ACO <- function(sIn, fIn, log.vec, log.fitness, base, extargs) {
 # ==========================================================================================================
 #' @importFrom foreach foreach `%dopar%`
 #' @importFrom utils txtProgressBar setTxtProgressBar
-#' @importFrom doSNOW registerDoSNOW
+#' @importFrom doFuture registerDoFuture
+#' @importFrom future plan cluster
+#' @importFrom progressr with_progress progressor
 eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.lim, quietly, par.clust) {
   # recover population size
   n.pop <- nrow(ants)
 
-  # set up progress bar
-  pb <- txtProgressBar(min = 0, max = n.pop, style = 3)
-
   if (!is.null(par.clust)) {
-    # set up progress controller
-    progress <- function(n) setTxtProgressBar(pb, n)
-    opts <- list(progress = progress)
+    # register parallel backend
+    registerDoFuture()
+    plan(cluster, workers = par.clust)
 
     # evaluate the ants as models
-    onTime <- T
-    registerDoSNOW(par.clust)
-    result <- foreach(i = 1:n.pop, .errorhandling = "pass", .options.snow = opts) %dopar%
-    {
-      if (onTime) {
-        amf <- fitNtests_ACO(ants[i,], sIn, fIn, sOut, extargs, base)
-
-        # check if we are still on time
+    with_progress({
+      p <- progressor(along = 1:n.pop, auto_finish = F)
+      result <- foreach(i = 1:n.pop, .errorhandling = "pass") %dopar% {
         dt <- difftime(Sys.time(), time.str, units = 'secs')
-        if (dt >= time.lim) {
-          onTime <- F
+        if (dt < time.lim) {
+          if (quietly) {
+            amf <- quiet(fitNtests_ACO(ants[i,], sIn, fIn, sOut, extargs, base))
+          } else {
+            amf <- fitNtests_ACO(ants[i,], sIn, fIn, sOut, extargs, base)
+          }
+          p()
+          return(amf)
+        } else {
+          p()
+          return(NULL)
         }
-        return(amf)
-      } else {
-        return(NULL)
       }
-    }
-    close(pb)
+    })
 
   } else {
+    # set up progress bar
+    pb <- txtProgressBar(min = 0, max = n.pop, style = 3)
+
     # evaluate the ants as models
     result <- list()
     for (i in 1:n.pop) {
@@ -652,84 +654,85 @@ eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.l
 # ==========================================================================================================
 #' @importFrom foreach foreach `%dopar%`
 #' @importFrom utils txtProgressBar setTxtProgressBar
-#' @importFrom doSNOW registerDoSNOW
+#' @importFrom doFuture registerDoFuture
+#' @importFrom future plan cluster
+#' @importFrom progressr with_progress progressor
 eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str, time.lim, quietly, par.clust) {
   # recover population size and number of replicates
   n.pop <- nrow(ants)
   n.rep <- ncol(ind.vl)
 
-  # set up progress bar
-  pb <- txtProgressBar(min = 0, max = n.pop, style = 3)
-
   if (!is.null(par.clust)) {
-    # set up progress controller
-    progress <- function(n) setTxtProgressBar(pb, n)
-    opts <- list(progress = progress)
+    # register parallel backend
+    registerDoFuture()
+    plan(cluster, workers = par.clust)
 
     # evaluate the ants as models
-    onTime <- T
-    registerDoSNOW(par.clust)
-    result <- foreach(i = 1:n.pop, .errorhandling = "pass", .options.snow = opts) %dopar%
-    {
-      if (onTime) {
-        sub_result <- list()
-        for (j in 1:n.rep) {
-          # split data into training and validation
-          data <- splitData(sIn, fIn, sOut, ind.vl[,j])
-          # identify active inputs of both types
-          active <- getActiveIn_ACO(ants[i,], sIn, fIn, base)
-          # evaluate model
-          if (quietly) {
-            sub_result[[j]] <- quiet(fitNtests_ACO(ants[i,], data$sIn.tr, data$fIn.tr, data$sOut.tr, extargs, base,
-                                                     ind.vl, data$sIn.vl, data$fIn.vl, data$sOut.vl, active))
-          } else {
-            cat("\n")
-            sub_result[[j]] <- fitNtests_ACO(ants[i,], data$sIn.tr, data$fIn.tr, data$sOut.tr, extargs, base,
-                                               ind.vl, data$sIn.vl, data$fIn.vl, data$sOut.vl, active)
-          }
-
-          # check if we are still on time
-          dt <- difftime(Sys.time(), time.str, units = 'secs')
-          if (dt >= time.lim) {
-            if (j < n.rep) {
-              sub_result[(j+1):n.rep] <- NULL
-            }
-            break
-          }
-        }
-        # extract complete evaluations
-        done <- which(!sapply(sub_result, is.null))
-        argsList <- lapply(sub_result[done], `[[`, 1)
-        modelList <- lapply(sub_result[done], `[[`, 2)
-        fitnessVec <- sapply(sub_result[done], `[[`, 3)
-
-        # identify crashes and usable models
-        ids.cr <- which(is.na(fitnessVec))
-        ids.ok <- which(!is.na(fitnessVec))
-
-        # remove crashes and compute average model fitness
-        if (length(ids.ok) > 0) {
-          fitness <- mean(fitnessVec[ids.ok])
-          piv <- sample.vec(which(fitnessVec == max(fitnessVec)))
-          args <- argsList[[piv]]
-          model <- modelList[[piv]]
-          amf <- list(args, model, fitness)
-        } else {
-          amf <- NULL
-        }
-
+    with_progress({
+      p <- progressor(along = 1:n.pop, auto_finish = F)
+      result <- foreach(i = 1:n.pop, .errorhandling = "pass") %dopar% {
         dt <- difftime(Sys.time(), time.str, units = 'secs')
-        if (dt >= time.lim) {
-          onTime <- F
+        if (dt < time.lim) {
+          sub_result <- list()
+          for (j in 1:n.rep) {
+            # split data into training and validation
+            data <- splitData(sIn, fIn, sOut, ind.vl[,j])
+
+            # identify active inputs of both types
+            active <- getActiveIn_ACO(ants[i,], sIn, fIn, base)
+
+            if (quietly) {
+              sub_result[[j]] <- quiet(fitNtests_ACO(ants[i,], data$sIn.tr, data$fIn.tr, data$sOut.tr, extargs, base,
+                                                     ind.vl, data$sIn.vl, data$fIn.vl, data$sOut.vl, active))
+            } else {
+              cat("\n")
+              sub_result[[j]] <- fitNtests_ACO(ants[i,], data$sIn.tr, data$fIn.tr, data$sOut.tr, extargs, base,
+                                               ind.vl, data$sIn.vl, data$fIn.vl, data$sOut.vl, active)
+            }
+
+            # check if we are still on time
+            dt <- difftime(Sys.time(), time.str, units = 'secs')
+            if (dt >= time.lim) {
+              if (j < n.rep) {
+                sub_result[(j+1):n.rep] <- NULL
+              }
+              break
+            }
+          }
+
+          # extract complete evaluations
+          done <- which(!sapply(sub_result, is.null))
+          argsList <- lapply(sub_result[done], `[[`, 1)
+          modelList <- lapply(sub_result[done], `[[`, 2)
+          fitnessVec <- sapply(sub_result[done], `[[`, 3)
+
+          # identify crashes and usable models
+          ids.cr <- which(is.na(fitnessVec))
+          ids.ok <- which(!is.na(fitnessVec))
+
+          # remove crashes and compute average model fitness
+          if (length(ids.ok) > 0) {
+            fitness <- mean(fitnessVec[ids.ok])
+            piv <- sample.vec(which(fitnessVec == max(fitnessVec)))
+            args <- argsList[[piv]]
+            model <- modelList[[piv]]
+            amf <- list(args, model, fitness)
+          } else {
+            amf <- NULL
+          }
+          p()
+          return(amf)
+        } else {
+          p()
+          return(NULL)
         }
-        return(amf)
-      } else {
-        return(NULL)
       }
-    }
-    close(pb)
+    })
 
   } else {
+    # set up progress bar
+    pb <- txtProgressBar(min = 0, max = n.pop, style = 3)
+
     # evaluate the ants as models
     result <- list()
     for (i in 1:n.pop) {

@@ -2,21 +2,20 @@ Package: funGp
 Type: Package
 Version: 0.1.0
 Date: 2020-03-21
-Title: Functional-input Gaussian Process Regression
+Title: Functional-Input Gaussian Process Regression
 Authors@R: c(
-    person("José", "Betancourt", email = "jbetanco@math.univ-toulouse.fr", role = c("cre", "aut")),
+    person("Jose", "Betancourt", email = "jbetanco@math.univ-toulouse.fr", role = c("cre", "aut")),
     person("François", "Bachoc", email = "francois.bachoc@math.univ-toulouse.fr", role = "aut"),
     person("Thierry", "Klein", email = "thierry.klein@math.univ-toulouse.fr", role = "aut"),
-    person("Déborah", "Idier", email = "D.Idier@brgm.fr", role = "ctb"),
-    person("Jérémy", "Rohmer", email = "J.Rohmer@brgm.fr", role = "ctb"))
+    person("Deborah", "Idier", email = "D.Idier@brgm.fr", role = "ctb"),
+    person("Jeremy", "Rohmer", email = "J.Rohmer@brgm.fr", role = "ctb"))
 Description: Fitting, validation and prediction of Gaussian process models with functional inputs.
     (Betancourt et al., 2018) <https://hal.archives-ouvertes.fr/hal-01998724>.
 Note: internal package of the RISCOPE project
     (ANR, project No.16CE04-0011) <https://perso.math.univ-toulouse.fr/riscope/>.
 License: GPL-3
 Depends: R (>= 3.0.1)
-Imports: methods, foreach, knitr, scales, lhs, doSNOW, doParallel, grDevices, latex2exp, qdapRegex, microbenchmark
-Suggests: viridis, R.rsp
+Imports: methods, foreach, knitr, scales, doSNOW, qdapRegex, microbenchmark, doFuture, future, progressr
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.0
@@ -47,5 +46,3 @@ Collate:
     '7_distanceFunctions.R'
     '7_plottingFunctions.R'
     '8_outilsStats.R'
-    'zzz_RemoveAtEnd.R'
-VignetteBuilder: R.rsp

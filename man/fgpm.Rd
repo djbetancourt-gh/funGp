@@ -18,7 +18,8 @@ fgpm(
   nugget = 1e-08,
   n.starts = 1,
   n.presample = 20,
-  par.clust = NULL
+  par.clust = NULL,
+  quietly = FALSE
 )
 }
 \arguments{
@@ -95,6 +96,9 @@ n.starts will be assigned to n.presample if this last is smaller. Default is 20.
 
 \item{par.clust}{an optional parallel processing cluster created with the \code{\link[parallel]{makeCluster}} function
 of the \link[=parallel]{parallel package}. If not provided, multistart optimizations are done in sequence.}
+
+\item{quietly}{an optional boolean indicating if the calls to the hyperparameters optimizer should ommit text related to
+the evolution of the optimization. Default is FALSE.}
 }
 \value{
 An object of class \linkS4class{fgpm} containing the data structures representing the fitted funGp model.

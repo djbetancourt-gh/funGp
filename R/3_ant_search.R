@@ -1,10 +1,6 @@
 # ==========================================================================================================
 # Skeleton of the Ant Colony Optimization algoritm for model selection
 # ==========================================================================================================
-#' @importFrom scales alpha
-#' @importFrom graphics axis
-#' @importFrom stats median setNames
-#' @importFrom utils txtProgressBar setTxtProgressBar
 run_ACO <- function(sIn, fIn, sOut, ind.vl, param, phero, base, extargs, time.str, time.lim, quietly, par.clust) {
   # recover heuristic parameters
   #___________________________________________________________________________________________
@@ -50,7 +46,6 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, phero, base, extargs, time.st
   for (c.gen in 1:n.iter) {
     # start_time <- Sys.time()
     cat(paste("Dispatching colony", c.gen, "\n"))
-    # pb <- txtProgressBar(min = 0, max = n.pop, style = 3)
 
     # create a new colony and mark as incomplete
     ants <- matrix(nrow = n.pop, ncol = n.layers)

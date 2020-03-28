@@ -15,10 +15,12 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cerulean/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
@@ -43,13 +45,11 @@
 
 
 
-<meta property="og:title" content="Gaussian process models for scalar and functional inputs — fgpm" />
 
+<meta property="og:title" content="Gaussian process models for scalar and functional inputs — fgpm" />
 <meta property="og:description" content="This function enables fitting of Gaussian process regression models. The inputs can be
   either scalar, functional or a combination of both types." />
-
 <meta property="og:image" content="/logo.png" />
-
 
 
 
@@ -97,7 +97,6 @@
   <a href="../news/index.html">News</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/djbetancourt-gh/funGp">
@@ -124,10 +123,8 @@
     </div>
 
     <div class="ref-description">
-    
     <p>This function enables fitting of Gaussian process regression models. The inputs can be
   either scalar, functional or a combination of both types.</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>fgpm</span>(
@@ -144,9 +141,10 @@
   <span class='kw'>nugget</span> <span class='kw'>=</span> <span class='fl'>1e-08</span>,
   <span class='kw'>n.starts</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>n.presample</span> <span class='kw'>=</span> <span class='fl'>20</span>,
-  <span class='kw'>par.clust</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
+  <span class='kw'>par.clust</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>quietly</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
 )</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -252,12 +250,16 @@ n.starts will be assigned to n.presample if this last is smaller. Default is 20.
       <td><p>an optional parallel processing cluster created with the <code><a href='https://rdrr.io/r/parallel/makeCluster.html'>makeCluster</a></code> function
 of the parallel package. If not provided, multistart optimizations are done in sequence.</p></td>
     </tr>
+    <tr>
+      <th>quietly</th>
+      <td><p>an optional boolean indicating if the calls to the hyperparameters optimizer should ommit text related to
+the evolution of the optimization. Default is FALSE.</p></td>
+    </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>An object of class <a href='fgpm-class.html'>fgpm</a> containing the data structures representing the fitted funGp model.</p>
-    
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Betancourt, J., Bachoc, F., Klein, T., Idier, D., Pedreros, R., and Rohmer, J. (2020),
@@ -273,7 +275,6 @@ Technical Report: "Ant Colony Based Model Selection for Functional-Input Gaussia
 R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
 <em>RISCOPE project</em>.
 <a href='https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing'>[HAL]</a></p>
-    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><strong>*</strong> <a href='plotLOO-methods.html'>plotLOO</a> for diagnostic plot of a funGp model;</p>
@@ -281,7 +282,6 @@ R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs 
 <p><strong>*</strong> <a href='simulate-methods.html'>simulate</a> for simulations based on a funGp model;</p>
 <p><strong>*</strong> <a href='update-methods.html'>update</a> for post-creation updates on a funGp model;</p>
 <p><strong>*</strong> <a href='fgpm_factory.html'>fgpm_factory</a> for funGp heuristic model selection.</p></div>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># creating funGp model using default fgpm arguments________________________________________</span>
@@ -460,7 +460,7 @@ R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs 
 
       <footer>
       <div class="copyright">
-  <p>Developed by José Betancourt, François Bachoc, Thierry Klein.</p>
+  <p>Developed by Jose Betancourt, François Bachoc, Thierry Klein.</p>
 </div>
 
 <div class="pkgdown">
