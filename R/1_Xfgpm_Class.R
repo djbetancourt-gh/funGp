@@ -245,7 +245,7 @@ show.Xfgpm <- function(object) {
 #' # calling fgpm_factory with the default arguments__________________________________________
 #' # generating input and output data
 #' set.seed(100)
-#' n.tr <- 2^5
+#' n.tr <- 243
 #' sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
 #'                    x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
 #'                    x5 = seq(0,1,length = n.tr^(1/5)))
@@ -271,7 +271,7 @@ show.Xfgpm <- function(object) {
 #' # improving performance with more iterations_______________________________________________
 #' # generating input and output data
 #' set.seed(100)
-#' n.tr <- 2^5
+#' n.tr <- 243
 #' sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
 #'                    x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
 #'                    x5 = seq(0,1,length = n.tr^(1/5)))
@@ -292,7 +292,7 @@ show.Xfgpm <- function(object) {
 #' # custom solution space____________________________________________________________________
 #' # generating input and output data
 #' set.seed(100)
-#' n.tr <- 2^5
+#' n.tr <- 243
 #' sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
 #'                    x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
 #'                    x5 = seq(0,1,length = n.tr^(1/5)))
@@ -318,7 +318,7 @@ show.Xfgpm <- function(object) {
 #' # custom heuristic parameters______________________________________________________________
 #' # generating input and output data
 #' set.seed(100)
-#' n.tr <- 2^5
+#' n.tr <- 243
 #' sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
 #'                    x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
 #'                    x5 = seq(0,1,length = n.tr^(1/5)))
@@ -339,7 +339,7 @@ show.Xfgpm <- function(object) {
 #' # stopping condition based on time_________________________________________________________
 #' # generating input and output data
 #' set.seed(100)
-#' n.tr <- 2^5
+#' n.tr <- 243
 #' sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
 #'                    x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
 #'                    x5 = seq(0,1,length = n.tr^(1/5)))
@@ -359,7 +359,7 @@ show.Xfgpm <- function(object) {
 #' # passing fgpm arguments through fgpm_factory______________________________________________
 #' # generating input and output data
 #' set.seed(100)
-#' n.tr <- 2^5
+#' n.tr <- 243
 #' sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
 #'                    x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
 #'                    x5 = seq(0,1,length = n.tr^(1/5)))
@@ -389,41 +389,9 @@ show.Xfgpm <- function(object) {
 #' sOut <- fgp_BB7(sIn, fIn, n.tr)
 #'
 #' # calling fgpm_factory in parallel
-#' cl <- parallel::makeCluster(3)
-#' xm.par <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, par.clust = cl) #  (~119 seconds)
+#' cl <- parallel::makeCluster(2)
+#' xm.par <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, par.clust = cl) #  (~214 seconds)
 #' parallel::stopCluster(cl)
-#'
-#' # ----------< small experiment to show benfit of paralellization in fgpm_factory
-#' # generating input and output data
-#' set.seed(100)
-#' n.tr <- 243
-#' sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
-#'                    x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
-#'                    x5 = seq(0,1,length = n.tr^(1/5)))
-#' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
-#' sOut <- fgp_BB7(sIn, fIn, n.tr)
-#'
-#' # to run the factory in sequence
-#' fact_seq <- function() {
-#'   xm.seq <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
-#' }
-#'
-#' # to run the factory in parallel
-#' fact_par <- function() {
-#'   cl <- parallel::makeCluster(3)
-#'   xm.par <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, par.clust = cl)
-#'   parallel::stopCluster(cl)
-#' }
-#'
-#' # performance test
-#' library(microbenchmark)
-#' microbenchmark(fact_seq(), fact_par(), times = 3) # NOTE: this might take ~ 19 min!
-#'
-#' # ~R output:~
-#' # Unit: seconds
-#' #       expr       min        lq     mean    median       uq      max neval
-#' # fact_seq() 126.69960 164.49382 242.2199 202.28804 299.9801 397.6722     3
-#' # fact_par()  88.10726  92.05694 118.8896  96.00663 134.2807 172.5548     3
 #' }
 #'
 #' @importFrom methods new

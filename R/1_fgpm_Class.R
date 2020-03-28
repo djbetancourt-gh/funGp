@@ -310,41 +310,9 @@ setClass("fgpm",
 #' sOut <- fgp_BB7(sIn, fIn, n.tr)
 #'
 #' # calling fgpm with multistart in parallel
-#' cl <- parallel::makeCluster(3)
-#' m1 <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut, n.starts = 10, par.clust = cl) # (~16 seconds)
+#' cl <- parallel::makeCluster(2)
+#' m1 <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut, n.starts = 10, par.clust = cl) # (~14 seconds)
 #' parallel::stopCluster(cl)
-#'
-#' # ----------< small experiment to show benfit of parallelization in fgpm
-#' # generating input and output data
-#' set.seed(100)
-#' n.tr <- 1024
-#' sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
-#'                    x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
-#'                    x5 = seq(0,1,length = n.tr^(1/5)))
-#' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
-#' sOut <- fgp_BB7(sIn, fIn, n.tr)
-#'
-#' # to run fgpm in sequence
-#' run_seq <- function() {
-#'   m1 <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut, n.starts = 3)
-#' }
-#'
-#' # to run fgpm in parallel
-#' run_par <- function() {
-#'   cl <- parallel::makeCluster(3)
-#'   m1 <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut, n.starts = 3, par.clust = cl)
-#'   parallel::stopCluster(cl)
-#' }
-#'
-#' # performance test
-#' library(microbenchmark)
-#' microbenchmark(run_seq(), run_par(), times = 3) # NOTE: this might take ~ 14 min!
-#'
-#' # ~R output:~
-#' # Unit: seconds
-#' #      expr       min        lq      mean    median        uq      max neval
-#' # run_seq() 121.26699 154.09797 166.18970 186.92895 188.65106 190.3732     3
-#' # run_par()  71.40084  79.05249  88.38985  86.70413  96.88435 107.0646     3
 #' }
 #'
 #' @importFrom methods new

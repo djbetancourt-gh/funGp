@@ -15,7 +15,7 @@ Note: internal package of the RISCOPE project
     (ANR, project No.16CE04-0011) <https://perso.math.univ-toulouse.fr/riscope/>.
 License: GPL-3
 Depends: R (>= 3.0.1)
-Imports: methods, foreach, knitr, scales, doSNOW, qdapRegex, microbenchmark, doFuture, future, progressr
+Imports: methods, foreach, knitr, scales, qdapRegex, microbenchmark, doFuture, future, progressr
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.0
