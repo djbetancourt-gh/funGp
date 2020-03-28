@@ -80,20 +80,21 @@
 <h2 class="hasAnchor">
 <a href="#gaussian-process-regression-models-with-emphasis-on-functional-inputs" class="anchor"></a>Gaussian process regression models with emphasis on functional inputs</h2>
 <p><strong>Description:</strong> funGp is a regresssion package based on Gaussian process models. It allows inputs to be either scalar, functional (represented as vectors), or a combination of both. A dimension reduction functionality is implemented in order to reduce the complexity of the functional inputs while keeping a sufficient amount of information to use in the model. Moreover, funGp offers a model selection feature which allows to tune different characteristics of the model such as the active scalar and functional inputs, the type of kernel function and the family of basis function used for the projection of the inputs. This is an extension of the work presented in Betancourt et al. (2020).</p>
-<p><strong>Main functionalities</strong> <br> 🔹 Creation of regression models <br> 🔹 Output estimation at unobserved input points <br> 🔹 Random sampling from a Gaussian process model <br> 🔹 Heuristic optimization of model structure <br></p>
+<p><strong>Main functionalities</strong> <br> :small_blue_diamond: Creation of regression models <br> :small_blue_diamond: Output estimation at unobserved input points <br> :small_blue_diamond: Random sampling from a Gaussian process model <br> :small_blue_diamond: Heuristic optimization of model structure <br></p>
 <p><strong>Note:</strong> funG pwas first developed in the frame of the RISCOPE research project, funded by the French Agence Nationale de la Recherche (ANR) for the period 2017-2021 (ANR project No. 16CE04-0011, <a href="https://perso.math.univ-toulouse.fr/riscope/">RISCOPE.fr</a>), and certified by SAFE Cluster.</p>
 <p>This project is licensed under the GPL-3 License. <br><br></p>
 <p><strong>Installation</strong></p>
-<pre><code><a href="https://rdrr.io/r/utils/install.packages.html"># Install release version from CRAN
-install.packages("funGp")</a></code></pre>
-<pre><code><a href="https://devtools.r-lib.org//reference"># Install development version from GitHub
-# way 1
-library(devtools)
-install_github("djbetancourt-gh/funGp")
+<div class="sourceCode"><pre class="sourceCode R"><code class="sourceCode r"><span class="co"># Install release version from CRAN</span>
+<span class="kw">install.packages</span>(<span class="st">"funGp"</span>)
 
-# way 2
-library(githubinstall)
-githubinstall("funGp")</a></code></pre>
+<span class="co"># Install development version from GitHub</span>
+<span class="co"># way 1</span>
+<span class="kw">library</span>(devtools)
+<span class="kw">install_github</span>(<span class="st">"djbetancourt-gh/funGp"</span>)
+
+<span class="co"># way 2</span>
+<span class="kw">library</span>(githubinstall)
+<span class="kw">githubinstall</span>(<span class="st">"funGp"</span>)</code></pre></div>
 <p><br></p>
 <p><strong>Manual</strong> 📖 <br><a href="https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing">Gaussian Process Regression for Scalar andFunctional Inputs with funGp - The in-depth tour</a> <br><br></p>
 <p><strong>Authors:</strong> José Betancourt 🔧 (IMT, ENAC), François Bachoc (IMT) and Thierry Klein (IMT, ENAC).</p>
@@ -101,9 +102,9 @@ githubinstall("funGp")</a></code></pre>
 <p>🔧 maintainer - <a href="jbetanco@math.univ-toulouse.fr" class="uri">jbetanco@math.univ-toulouse.fr</a> <br><br></p>
 <p><strong>Acknowledgments:</strong> we are grateful to Yves Deville from Alpestat for his advice on the documentation of R packages. <br><br></p>
 <p><strong>References</strong> <br></p>
-<p>Betancourt, J., Bachoc, F., Klein, T., Idier, D., Pedreros, R., and Rohmer, J. (2020), “Gaussian process metamodeling of functional-input code for coastal flood hazard assessment”. <em>Reliability Engineering &amp; System Safety</em>, <strong>198</strong>, 106870. [<a href="https://www.sciencedirect.com/science/article/abs/pii/S0951832019301693">RESS</a>] [<a href="https://hal.archives-ouvertes.fr/hal-01998724">HAL</a>]</p>
-<p>Betancourt, J., Bachoc, F., Klein, T., and Gamboa, F. (2020), Technical Report: “Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression. Ref. B3D-WP3.2”. <em>RISCOPE project</em>. [<a href="https://drive.google.com/file/d/1GnalLS9jEr9AxPKmQk0S1bLQ7whuLm1T/view?usp=sharing">HAL</a>]</p>
-<p>Betancourt, J., Bachoc, F., and Klein, T. (2020), R Package Manual: “Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour”. <em>RISCOPE project</em>. [<a href="https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing">HAL</a>]</p>
+<p>Betancourt, J., Bachoc, F., Klein, T., Idier, D., Pedreros, R., and Rohmer, J. (2020), “Gaussian process metamodeling of functional-input code for coastal flood hazard assessment”. <em>Reliability Engineering &amp; System Safety</em>, <strong>198</strong>, 106870. <br><span class="math display">[<em>R</em><em>E</em><em>S</em><em>S</em>](<em>h</em><em>t</em><em>t</em><em>p</em><em>s</em> : //<em>w</em><em>w</em><em>w</em>.<em>s</em><em>c</em><em>i</em><em>e</em><em>n</em><em>c</em><em>e</em><em>d</em><em>i</em><em>r</em><em>e</em><em>c</em><em>t</em>.<em>c</em><em>o</em><em>m</em>/<em>s</em><em>c</em><em>i</em><em>e</em><em>n</em><em>c</em><em>e</em>/<em>a</em><em>r</em><em>t</em><em>i</em><em>c</em><em>l</em><em>e</em>/<em>a</em><em>b</em><em>s</em>/<em>p</em><em>i</em><em>i</em>/<em>S</em>0951832019301693)</span><br><br><span class="math display">[<em>H</em><em>A</em><em>L</em>](<em>h</em><em>t</em><em>t</em><em>p</em><em>s</em> : //<em>h</em><em>a</em><em>l</em>.<em>a</em><em>r</em><em>c</em><em>h</em><em>i</em><em>v</em><em>e</em><em>s</em> − <em>o</em><em>u</em><em>v</em><em>e</em><em>r</em><em>t</em><em>e</em><em>s</em>.<em>f</em><em>r</em>/<em>h</em><em>a</em><em>l</em> − 01998724)</span><br></p>
+<p>Betancourt, J., Bachoc, F., Klein, T., and Gamboa, F. (2020), Technical Report: “Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression. Ref. B3D-WP3.2”. <em>RISCOPE project</em>. <br><span class="math display">[<em>H</em><em>A</em><em>L</em>](<em>h</em><em>t</em><em>t</em><em>p</em><em>s</em> : //<em>d</em><em>r</em><em>i</em><em>v</em><em>e</em>.<em>g</em><em>o</em><em>o</em><em>g</em><em>l</em><em>e</em>.<em>c</em><em>o</em><em>m</em>/<em>f</em><em>i</em><em>l</em><em>e</em>/<em>d</em>/1<em>G</em><em>n</em><em>a</em><em>l</em><em>L</em><em>S</em>9<em>j</em><em>E</em><em>r</em>9<em>A</em><em>x</em><em>P</em><em>K</em><em>m</em><em>Q</em><em>k</em>0<em>S</em>1<em>b</em><em>L</em><em>Q</em>7<em>w</em><em>h</em><em>u</em><em>L</em><em>m</em>1<em>T</em>/<em>v</em><em>i</em><em>e</em><em>w</em>?<em>u</em><em>s</em><em>p</em> = <em>s</em><em>h</em><em>a</em><em>r</em><em>i</em><em>n</em><em>g</em>)</span><br></p>
+<p>Betancourt, J., Bachoc, F., and Klein, T. (2020), R Package Manual: “Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour”. <em>RISCOPE project</em>. <br><span class="math display">[<em>H</em><em>A</em><em>L</em>](<em>h</em><em>t</em><em>t</em><em>p</em><em>s</em> : //<em>d</em><em>r</em><em>i</em><em>v</em><em>e</em>.<em>g</em><em>o</em><em>o</em><em>g</em><em>l</em><em>e</em>.<em>c</em><em>o</em><em>m</em>/<em>f</em><em>i</em><em>l</em><em>e</em>/<em>d</em>/1<em>M</em><em>t</em><em>Y</em><em>i</em> − <em>Q</em><em>q</em> − <em>B</em><em>N</em><em>Z</em><em>p</em><em>b</em><em>p</em>1<em>S</em><em>W</em><em>W</em><em>G</em>4<em>F</em><em>b</em>35<em>H</em><em>v</em><em>V</em><em>q</em><em>R</em><em>H</em><em>Q</em><em>M</em>/<em>v</em><em>i</em><em>e</em><em>w</em>?<em>u</em><em>s</em><em>p</em> = <em>s</em><em>h</em><em>a</em><em>r</em><em>i</em><em>n</em><em>g</em>)</span><br></p>
 </div>
 
   </div>
