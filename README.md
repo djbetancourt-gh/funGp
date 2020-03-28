@@ -21,11 +21,11 @@ This project is licensed under the GPL-3 License. <br /><br />
     # Install development version from GitHub
     # way 1
     library(devtools)
-    install_github("djbetancourt-gh/funGp")
+    install_github("djbetancourt-gh/funGp", dependencies = TRUE)
 
     # way 2
     library(githubinstall)
-    githubinstall("funGp")
+    githubinstall("funGp", dependencies = TRUE)
 
 <br />
 

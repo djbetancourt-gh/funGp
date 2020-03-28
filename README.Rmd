@@ -32,11 +32,11 @@ install.packages("funGp")
 # Install development version from GitHub
 # way 1
 library(devtools)
-install_github("djbetancourt-gh/funGp")
+install_github("djbetancourt-gh/funGp", dependencies = TRUE)
 
 # way 2
 library(githubinstall)
-githubinstall("funGp")
+githubinstall("funGp", dependencies = TRUE)
 ```
 <br />
 
