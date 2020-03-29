@@ -35,7 +35,7 @@ This project is licensed under the GPL-3 License. <br /><br />
 
 **Contributors:** Déborah Idier (BRGM) and Jérémy Rohmer (BRGM).
 
-:wrench: maintainer - [jbetanco@math.univ-toulouse.fr](jbetanco@math.univ-toulouse.fr) <br /><br />
+:wrench: maintainer - <a href = "mailto: jbetanco@math.univ-toulouse.fr">jbetanco@math.univ-toulouse.fr</a> <br /><br />
 
 **Acknowledgments:** we are grateful to Yves Deville from Alpestat for his advice on the documentation of R packages. <br /><br />
 
