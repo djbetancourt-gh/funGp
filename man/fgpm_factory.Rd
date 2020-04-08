@@ -160,7 +160,7 @@ sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr
 fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
 sOut <- fgp_BB7(sIn, fIn, n.tr)
 \donttest{
-# optimizing the model structure with fgpm_factory (~5 seconds)
+# optimizing the model structure with fgpm_factory (~12 seconds)
 xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
 plotLOO(xm@model) # plotting the model
 
@@ -186,10 +186,10 @@ sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr
 fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
 sOut <- fgp_BB7(sIn, fIn, n.tr)
 
-# default of 15 iterations (~5 seconds)
+# default of 15 iterations (~12 seconds)
 xm15 <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
 
-# increasing to 25 iterations (~16 seconds)
+# increasing to 25 iterations (~20 seconds)
 xm25 <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, setup = list(n.iter = 25))
 
 # plotting both models
@@ -216,7 +216,7 @@ myctr <- list(s_keepOn = c(1,2), # keep both scalar inputs always on
               f_basTypes = list("1" = c("B-splines")), # only use B-splines projection for f1
               kerTypes = c("matern5_2", "gauss")) # test only Matern 5/2 and Gaussian kernels
 
-# calling the funGp factory with specific constraints (~12 seconds)
+# calling the funGp factory with specific constraints (~17 seconds)
 xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, ctraints = myctr)
 
 # verifying constraints with the log of some successfully built models
@@ -237,7 +237,7 @@ sOut <- fgp_BB7(sIn, fIn, n.tr)
 mysup <- list(n.iter = 30, n.pop = 12, tao0 = .15, dop.s = 1.2, dop.f = 1.3, delta.f = 4,
               dispr.f = 1.1, q0 = .85, rho.l = .2, u.gbest = TRUE, n.ibest = 2, rho.g = .08)
 
-# calling the funGp factory with a custom heuristic setup (~21 seconds)
+# calling the funGp factory with a custom heuristic setup (~17 seconds)
 xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, setup = mysup)
 
 # verifying heuristic setup through the details of the Xfgpm object
@@ -274,7 +274,7 @@ sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr
 fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
 sOut <- fgp_BB7(sIn, fIn, n.tr)
 
-# calling the funGp factory with custom fgpm parameters (~8 seconds)
+# calling the funGp factory with custom fgpm parameters (~25 seconds)
 xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut,
                    nugget = 0, n.starts = 3, n.presample = 12)
 
@@ -298,7 +298,7 @@ sOut <- fgp_BB7(sIn, fIn, n.tr)
 
 # calling fgpm_factory in parallel
 cl <- parallel::makeCluster(2)
-xm.par <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, par.clust = cl) #  (~214 seconds)
+xm.par <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, par.clust = cl) #  (~260 seconds)
 parallel::stopCluster(cl)
 }
 
