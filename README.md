@@ -37,7 +37,7 @@ This project is licensed under the GPL-3 License. <br /><br />
 
 **Contributors:** Déborah Idier (BRGM) and Jérémy Rohmer (BRGM).
 
-:wrench: maintainer - <a href = "mailto: jbetanco@math.univ-toulouse.fr">jbetanco@math.univ-toulouse.fr</a> <br /><br />
+:wrench: maintainer - <a href = "mailto: djbetancourt@uninorte.edu.co">djbetancourt@uninorte.edu.co</a> <br /><br />
 
 **Acknowledgments:** we are grateful to Yves Deville from Alpestat for his advice on the documentation of R packages and to Juliette Garcia from ENAC for her assistance on the stabilization of the Ant Colony algorithm for structural parameter optimization. <br /><br />
 

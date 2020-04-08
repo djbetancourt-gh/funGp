@@ -3,7 +3,7 @@ Type: Package
 Title: Gaussian Process Models for Scalar and Functional Inputs
 Version: 0.1.0
 Authors@R: c(
-    person("Jose", "Betancourt", email = "jbetanco@math.univ-toulouse.fr", role = c("cre", "aut")),
+    person("Jose", "Betancourt", email = "djbetancourt@uninorte.edu.co", role = c("cre", "aut")),
     person("François", "Bachoc", email = "francois.bachoc@math.univ-toulouse.fr", role = "aut"),
     person("Thierry", "Klein", email = "thierry.klein@math.univ-toulouse.fr", role = "aut"),
     person("Deborah", "Idier", email = "D.Idier@brgm.fr", role = "ctb"),
