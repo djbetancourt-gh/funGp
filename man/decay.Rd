@@ -2,7 +2,7 @@
 % Please edit documentation in R/7_plottingFunctions.R
 \name{decay}
 \alias{decay}
-\title{Decay functions for ant colony optimzation in funGp}
+\title{Decay functions for ant colony optimization in funGp}
 \usage{
 decay(
   k,
@@ -17,7 +17,7 @@ decay(
 \arguments{
 \item{k}{a number indicating the dimension of the functional input under analysis.}
 
-\item{pmax}{an optional number specifying the hypotetical maximum projection dimension of this input. The
+\item{pmax}{an optional number specifying the hypothetical maximum projection dimension of this input. The
 user will be able to set this value later in the call to \link[funGp]{fgpm_factory} as a constraint. If
 not specified, it takes the value of k.}
 
@@ -37,7 +37,7 @@ not specified, it takes the value of k.}
   in dimensions further than \eqn{delta + 1}. If \emph{pmax} = \emph{k}, then the dimension 0,
   representing no projection, receives a pheromone load identical to that of dimension \emph{k}. This, in
   order to represent the fact that both, the representation of the function in its original dimension or
-  a projection in a space of the same dimension, are equaly heavy for the model. The default values of
+  a projection in a space of the same dimension, are equally heavy for the model. The default values of
   \emph{tao0}, \emph{delta} and \emph{dispr}, are 0.1, 2 and 1.4, respectively, which match the default
   values used by the \link[funGp]{fgpm_factory} function. Check
   \href{https://hal.archives-ouvertes.fr/hal-02532713}{this technical

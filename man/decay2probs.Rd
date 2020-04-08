@@ -2,7 +2,7 @@
 % Please edit documentation in R/7_plottingFunctions.R
 \name{decay2probs}
 \alias{decay2probs}
-\title{Probability functions for ant colony optimzation in funGp}
+\title{Probability functions for ant colony optimization in funGp}
 \usage{
 decay2probs(
   k,
@@ -17,7 +17,7 @@ decay2probs(
 \arguments{
 \item{k}{a number indicating the dimension of the functional input under analysis.}
 
-\item{pmax}{an optional number specifying the hypotetical maximum projection dimension of this input. The
+\item{pmax}{an optional number specifying the hypothetical maximum projection dimension of this input. The
 user will be able to set this value later in the call to \link[funGp]{fgpm_factory} as a constraint. If
 not specified, it takes the value of k.}
 
@@ -37,10 +37,10 @@ not specified, it takes the value of k.}
   in dimensions further than \eqn{delta + 1}. If \emph{pmax} = \emph{k}, then the dimension 0,
   representing no projection, receives a pheromone load identical to that of dimension \emph{k}. This, in
   order to represent the fact that both, the representation of the function in its original dimension or
-  a projection in a space of the same dimension, are equaly heavy for the model. In order to obtain the
+  a projection in a space of the same dimension, are equally heavy for the model. In order to obtain the
   probability loads, the initial pheromone values are normalized to sum 1. Note that the normalization
   makes the value of tao0 become irrelevant in the initial probability load. This does not mean that the
-  eefect of tao0 is completely removed from the algorithm. Despite the fact that tao0 does not have
+  effect of tao0 is completely removed from the algorithm. Despite the fact that tao0 does not have
   influence on the selection of the projection dimension during the first iteration, it will be
   protagonist during the global pheromone update and will have an impact on every further iteration.
   The argument tao0 is left active in the input just for a better comprehension of the functioning of the

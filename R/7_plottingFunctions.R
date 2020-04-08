@@ -160,7 +160,7 @@ if(!isGeneric("plotPreds")) {setGeneric("plotPreds", function(model, preds, ...)
 #' @param preds a list containing the predictions and confidence bands. In funGp, this argument is just the
 #'   data structure delivered by the \link[funGp]{predict} method.
 #' @param sOut.pr an optional vector (or 1-column matrix) containing the true values of the scalar output at
-#'   the prediction points. If provided, the method will diplay two figures: (i) a calibration plot with
+#'   the prediction points. If provided, the method will display two figures: (i) a calibration plot with
 #'   true vs predicted output values, and (ii) a plot including the true and predicted output along with the
 #'   confidence bands, sorted according to the increasing order of the true output. If not provided, only
 #'   the second plot will be made, and the predictions will be arranged according to the increasing order of
@@ -505,7 +505,7 @@ if(!isGeneric("plotSims")) {setGeneric("plotSims", function(model, sims, ...) st
 #' @param model a \linkS4class{fgpm} object for which the plot is to be made.
 #' @param sims a list containing the simulated output values. In funGp, this argument is just the data
 #'   structure delivered by the \link[funGp]{simulate} method.
-#' @param detail an optional character string spcifying the data elements that should be included in the plot,
+#' @param detail an optional character string specifying the data elements that should be included in the plot,
 #'   to be chosen between "light" and "full". A \emph{light} plot will include only include the simulated
 #'   values, while a a \emph{full} plot will also include the predicted mean and confidence bands at the
 #'   simulation points. This argument will only be used if full simulations (including the mean and confidence
@@ -632,7 +632,7 @@ plotSims.fgpm <- function(sims, detail, ...) {
 # ==========================================================================================================
 # Plot of decay functions used to set the pheromones for projection dimension in ACO
 # ==========================================================================================================
-#' @title Decay functions for ant colony optimzation in funGp
+#' @title Decay functions for ant colony optimization in funGp
 #' @description This function is intended to aid the selection of the heuristic parameters \emph{tao0},
 #'   \emph{delta} and \emph{dispr} in the call to the model selection function \link[funGp]{fgpm_factory}.
 #'   The values computed by decay are the ones that would be used by the ant colony algorithm as initial
@@ -643,7 +643,7 @@ plotSims.fgpm <- function(sims, detail, ...) {
 #'   manual} of the package.
 #'
 #' @param k a number indicating the dimension of the functional input under analysis.
-#' @param pmax an optional number specifying the hypotetical maximum projection dimension of this input. The
+#' @param pmax an optional number specifying the hypothetical maximum projection dimension of this input. The
 #'   user will be able to set this value later in the call to \link[funGp]{fgpm_factory} as a constraint. If
 #'   not specified, it takes the value of k.
 #' @param tao0 explained in the description of \emph{dispr}.
@@ -660,7 +660,7 @@ plotSims.fgpm <- function(sims, detail, ...) {
 #'   in dimensions further than \eqn{delta + 1}. If \emph{pmax} = \emph{k}, then the dimension 0,
 #'   representing no projection, receives a pheromone load identical to that of dimension \emph{k}. This, in
 #'   order to represent the fact that both, the representation of the function in its original dimension or
-#'   a projection in a space of the same dimension, are equaly heavy for the model. The default values of
+#'   a projection in a space of the same dimension, are equally heavy for the model. The default values of
 #'   \emph{tao0}, \emph{delta} and \emph{dispr}, are 0.1, 2 and 1.4, respectively, which match the default
 #'   values used by the \link[funGp]{fgpm_factory} function. Check
 #'   \href{https://hal.archives-ouvertes.fr/hal-02532713}{this technical
@@ -736,7 +736,7 @@ decay <- function(k, pmax = NULL, tao0 = .1, delta = 2, dispr = 1.4, doplot = TR
 # ==========================================================================================================
 # Plot of probability functions used for projection dimension in ACO
 # ==========================================================================================================
-#' @title Probability functions for ant colony optimzation in funGp
+#' @title Probability functions for ant colony optimization in funGp
 #' @description This function is intended to aid the selection of the heuristic parameters \emph{tao0},
 #'   \emph{delta} and \emph{dispr} in the call to the model selection function \link[funGp]{fgpm_factory}.
 #'   The values computed by decay2probs are the ones that would be used by the ant colony algorithm as
@@ -749,7 +749,7 @@ decay <- function(k, pmax = NULL, tao0 = .1, delta = 2, dispr = 1.4, doplot = TR
 #'   manual} of the package.
 #'
 #' @param k a number indicating the dimension of the functional input under analysis.
-#' @param pmax an optional number specifying the hypotetical maximum projection dimension of this input. The
+#' @param pmax an optional number specifying the hypothetical maximum projection dimension of this input. The
 #'   user will be able to set this value later in the call to \link[funGp]{fgpm_factory} as a constraint. If
 #'   not specified, it takes the value of k.
 #' @param tao0 explained in the description of \emph{dispr}.
@@ -766,10 +766,10 @@ decay <- function(k, pmax = NULL, tao0 = .1, delta = 2, dispr = 1.4, doplot = TR
 #'   in dimensions further than \eqn{delta + 1}. If \emph{pmax} = \emph{k}, then the dimension 0,
 #'   representing no projection, receives a pheromone load identical to that of dimension \emph{k}. This, in
 #'   order to represent the fact that both, the representation of the function in its original dimension or
-#'   a projection in a space of the same dimension, are equaly heavy for the model. In order to obtain the
+#'   a projection in a space of the same dimension, are equally heavy for the model. In order to obtain the
 #'   probability loads, the initial pheromone values are normalized to sum 1. Note that the normalization
 #'   makes the value of tao0 become irrelevant in the initial probability load. This does not mean that the
-#'   eefect of tao0 is completely removed from the algorithm. Despite the fact that tao0 does not have
+#'   effect of tao0 is completely removed from the algorithm. Despite the fact that tao0 does not have
 #'   influence on the selection of the projection dimension during the first iteration, it will be
 #'   protagonist during the global pheromone update and will have an impact on every further iteration.
 #'   The argument tao0 is left active in the input just for a better comprehension of the functioning of the
@@ -894,9 +894,9 @@ if(!isGeneric("plotX")) {setGeneric("plotX", function(x.model, ...) standardGene
 #'
 #' @param x.model an object of class \linkS4class{Xfgpm} containing the output of the model selection
 #'   algorithm in \link[funGp]{fgpm_factory}.
-#' @param calib a boolean indicating wether the calibration plot of the selected model shoud be included
+#' @param calib a boolean indicating whether the calibration plot of the selected model should be included
 #'   in the display. Default is TRUE.
-#' @param fitp a boolean indicating wether scatter plot of the quality of all explored models should be
+#' @param fitp a boolean indicating whether scatter plot of the quality of all explored models should be
 #'   included in the display. Default is TRUE.
 #' @param ... additional arguments affecting the display. Since this method allows to generate two plots
 #'   from a single function call, the extra arguments for each plot should be included in a list. For the
@@ -1094,7 +1094,7 @@ plotX.Xfgpm <- function(x.model, calib, fitp, ...) {
 # Diagnostic plot for ACO evolution along iterations
 # ==========================================================================================================
 #' @title Plot for the evolution of model selection algorithm
-#' @description This method displays the evoution of an iterative algorithm for model selection.
+#' @description This method displays the evolution of an iterative algorithm for model selection.
 #'
 #' @param x.model an object containing the data structures returned by the model selection algorithm.
 #' @param ... additional arguments affecting the plot.
@@ -1130,11 +1130,11 @@ if(!isGeneric("plotEvol")) {setGeneric("plotEvol", function(x.model, ...) standa
 #' @description This method displays the evolution of the quality of the configurations evaluated along
 #'   the iterations, by the model selection algorithm in the \link[funGp]{fgpm_factory} function. For
 #'   each iteration, the performance statistic of all the evaluated models is printed, along with the
-#'   corresponding meadian of the group. The plot also includes the global maximum, which corresponds
+#'   corresponding median of the group. The plot also includes the global maximum, which corresponds
 #'   to the best performance statistic obtained up to the current iteration. In this plot, it is
-#'   tyipical to have some points falling relatively far from the maximum, even after multiple
-#'   iterations. Thishappens mainly because we have multiple categorical features, whose alteration
-#'   might changethe performance statistic in a nonsmooth way. On the other hand, the points that fall
+#'   typical to have some points falling relatively far from the maximum, even after multiple
+#'   iterations. This happens mainly because we have multiple categorical features, whose alteration
+#'   might change the performance statistic in a nonsmooth way. On the other hand, the points that fall
 #'   bellow zero usually correspond to models whose hyperparameters were hard to optimize. This occurs
 #'   sporadically during the log-likelihood optimization for Gaussian processes, due to the
 #'   non-linearity of the objective function. As long as the maximum keeps improving and the median

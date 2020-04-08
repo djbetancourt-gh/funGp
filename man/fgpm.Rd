@@ -39,11 +39,11 @@ between "gauss", "matern5_2" and "matern3_2". Default is "matern5_2".}
 
 \item{f_disType}{an optional array of character strings specifying the distance function to be used for
 each functional coordinates within the covariance function of the Gaussian process. To be chosen between
-"L2_bygroup" and "L2_byindex". The L2_bygroup distance considers each courve as a whole and uses a single
+"L2_bygroup" and "L2_byindex". The L2_bygroup distance considers each curve as a whole and uses a single
 length-scale parameter per functional input variable. The L2_byindex distance uses as many length-scale
 parameters per functional input as discretization points it has. For instance an input discretized as
 a vector of size 8 will use 8 length-scale parameters when using L2_byindex. If dimension reduction of
-a functional input is requested, then L2_byindex uses as many length scale parameters as efective
+a functional input is requested, then L2_byindex uses as many length scale parameters as effective
 dimensions are used to represent the input. A single character string can also be passed as a general
 selection for all the functional inputs of the model. More details in
 \href{https://www.sciencedirect.com/science/article/abs/pii/S0951832019301693}{
@@ -88,7 +88,7 @@ hyperparameters. A parallel processing cluster can be exploited in order to spee
 multiple initial points. More details in the description of the argument par.clust below. Default is 1.}
 
 \item{n.presample}{an optional integer indicating the number of points to be tested in order to select the
-n.starts intial points. The n.presampre points will be randomly sampled from the hyper-rectangle defined by: \cr \cr
+n.starts initial points. The n.presample points will be randomly sampled from the hyper-rectangle defined by: \cr \cr
 1e-10 \eqn{\le} \code{ls_s.hyp[i]} \eqn{\le} 2*max(\code{sMs[[i]]}), for i in 1 to the number of scalar inputs, \cr
 1e-10 \eqn{\le} \code{ls_f.hyp[i]} \eqn{\le} 2*max(\code{fMs[[i]]}), for i in 1 to the number of functional inputs, \cr \cr
 with  sMs and fMs the lists of distance matrices for the scalar and functional inputs, respectively. The value of
@@ -97,7 +97,7 @@ n.starts will be assigned to n.presample if this last is smaller. Default is 20.
 \item{par.clust}{an optional parallel processing cluster created with the \code{\link[parallel]{makeCluster}} function
 of the \link[=parallel]{parallel package}. If not provided, multistart optimizations are done in sequence.}
 
-\item{quietly}{an optional boolean indicating if the calls to the hyperparameters optimizer should ommit text related to
+\item{quietly}{an optional boolean indicating if the calls to the hyperparameters optimizer should skip text related to
 the evolution of the optimization. Default is FALSE.}
 }
 \value{

@@ -11,10 +11,10 @@
 \item{x.model}{an object of class \linkS4class{Xfgpm} containing the output of the model selection
 algorithm in \link[funGp]{fgpm_factory}.}
 
-\item{calib}{a boolean indicating wether the calibration plot of the selected model shoud be included
+\item{calib}{a boolean indicating whether the calibration plot of the selected model should be included
 in the display. Default is TRUE.}
 
-\item{fitp}{a boolean indicating wether scatter plot of the quality of all explored models should be
+\item{fitp}{a boolean indicating whether scatter plot of the quality of all explored models should be
 included in the display. Default is TRUE.}
 
 \item{...}{additional arguments affecting the display. Since this method allows to generate two plots

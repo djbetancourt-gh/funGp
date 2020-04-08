@@ -40,7 +40,7 @@ as one validation set, and the multiple columns will imply replicates. In the si
 used for each model configuration explored. If not provided, the optimization will be conducted in terms
 of the leave-one-out cross-validation Q2, which for a total number of n observations, comes from training
 the model n times, each using n-1 points for training and the remaining one for validation. This procedure
-is tipically costly due to the large number of hyperparameters optimizations that should be conducted,
+is typically costly due to the large number of hyperparameters optimizations that should be conducted,
 nonetheless, fgpm_factory implements the virtual equations introduced by Dubrule (1983) for Gaussian
 processes, which require a single hyperparameters optimization. See the reference below for more details.}
 
@@ -96,7 +96,7 @@ algorithm. The ant colony optimization algorithm available at this time allows t
 \strong{Global pheromone update}\cr\cr
   \strong{*}\emph{u.gbest}: a boolean indicating if at each iterations, the pheromone load on the links
     of the best ant of the whole trial should be reinforced. Default is FALSE. \cr\cr
-  \strong{*}\emph{n.ibest}: a number inficating how many top ants of each iteration should be used for
+  \strong{*}\emph{n.ibest}: a number indicating how many top ants of each iteration should be used for
     pheromone reinforcement. Default is 1. \cr\cr
   \strong{*}\emph{rho.g}: a number specifying the learning reinforcement rate. Default is 0.1. \cr\cr
 \strong{Population factors}\cr\cr
@@ -120,7 +120,7 @@ hyperparameters. A parallel processing cluster can be exploited in order to spee
 multiple initial points. More details in the description of the argument par.clust below. Default is 1.}
 
 \item{n.presample}{an optional integer indicating the number of points to be tested in order to select the
-n.starts intial points. The n.presampre points will be randomly sampled from the hyper-rectangle defined by: \cr \cr
+n.starts initial points. The n.presample points will be randomly sampled from the hyper-rectangle defined by: \cr \cr
 1e-10 \eqn{\le} \code{ls_s.hyp[i]} \eqn{\le} 2*max(\code{sMs[[i]]}), for i in 1 to the number of scalar inputs, \cr
 1e-10 \eqn{\le} \code{ls_f.hyp[i]} \eqn{\le} 2*max(\code{fMs[[i]]}), for i in 1 to the number of functional inputs, \cr \cr
 with  sMs and fMs the lists of distance matrices for the scalar and functional inputs, respectively. The value of
@@ -130,7 +130,7 @@ n.starts will be assigned to n.presample if this last is smaller. Default is 20.
 function of the \link[=parallel]{parallel package}. If not provided, structural configurations are evaluated in
 sequence.}
 
-\item{quietly}{an optional boolean indicating if the calls to fgpm should ommit text related to the optimization
+\item{quietly}{an optional boolean indicating if the calls to fgpm should skip text related to the optimization
 of the hyperparameters. Default is TRUE.}
 }
 \value{

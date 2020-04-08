@@ -11,7 +11,7 @@ Register of model structures and their performance statistic, if available.
 
 \describe{
 \item{\code{sols}}{Object of class \code{"data.frame"}. Compendium of model structures arranged by rows. Each
-column is linked to one structural parameter of the model such as the state of one variable (innactive,
+column is linked to one structural parameter of the model such as the state of one variable (inactive,
 active) or the type of kernel function.}
 
 \item{\code{args}}{Object of class \code{"list"}. Compendium of model structures represented by objects of class

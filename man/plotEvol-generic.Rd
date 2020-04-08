@@ -9,7 +9,7 @@
 \item{...}{additional arguments affecting the plot.}
 }
 \description{
-This method displays the evoution of an iterative algorithm for model selection.
+This method displays the evolution of an iterative algorithm for model selection.
 }
 \examples{
 require(funGp) # a package with a plotEvol method implemented

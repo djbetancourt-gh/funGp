@@ -5,7 +5,7 @@
 #' @description Register of model structures and their performance statistic, if available.
 #'
 #' @slot sols Object of class \code{"data.frame"}. Compendium of model structures arranged by rows. Each
-#'   column is linked to one structural parameter of the model such as the state of one variable (innactive,
+#'   column is linked to one structural parameter of the model such as the state of one variable (inactive,
 #'   active) or the type of kernel function.
 #' @slot args Object of class \code{"list"}. Compendium of model structures represented by objects of class
 #'   \code{"\linkS4class{modelCall}"}
@@ -833,7 +833,7 @@ fitNtests_ACO <- function(ant, sIn, fIn, sOut, extargs, base,
 # Function to prepare input data structures for prediction based on a fgpm arguments
 # ==========================================================================================================
 #' @title Preparation of inputs for predictions based on an fgpm modelCall
-#' @description This function prepared input data structures according to the active inpues specified by a
+#' @description This function prepared input data structures according to the active inputs specified by a
 #'   \code{"\linkS4class{modelCall}"} object. This function is intended to easily adapt the data structures
 #'   to the requirements of a specific model delivered by the model factory function
 #'   \link[funGp]{fgpm_factory}.

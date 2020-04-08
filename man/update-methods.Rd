@@ -64,13 +64,13 @@ current length-scale parameters for the scalar inputs of the model.}
 \item{ls_f.sb}{an optional numerical array indicating the values that should be used to substitute the
 current length-scale parameters for the functional inputs of the model.}
 
-\item{var.re}{an optional boolean indicating wether the variance parameter should be re-estimated.
+\item{var.re}{an optional boolean indicating whether the variance parameter should be re-estimated.
 Default is FALSE.}
 
-\item{ls_s.re}{an optional boolean indicating wether the length-scale parameters of the scalar inputs
+\item{ls_s.re}{an optional boolean indicating whether the length-scale parameters of the scalar inputs
 should be re-estimated. Default is FALSE.}
 
-\item{ls_f.re}{an optional boolean indicating wether the length-scale parameters of the functional
+\item{ls_f.re}{an optional boolean indicating whether the length-scale parameters of the functional
 inputs should be re-estimated. Default is FALSE.}
 }
 \value{
@@ -100,7 +100,7 @@ be provided and the new input points should correspond to the set of variables a
 \linkS4class{fgpm} object passed for update; and (ii) for data substitution, the argument ind.sb is
 always mandatory.
 
-\strong{Conflictive task combinations:}
+\strong{Conflicting task combinations:}
 \itemize{
  \item Data points deletion and substitution;
  \item Substitution and re-estimation of the same hyperparameter.

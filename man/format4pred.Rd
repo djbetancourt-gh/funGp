@@ -27,7 +27,7 @@ An object of class \code{"list"}, containing the input data structures with only
   specified by \emph{args}.
 }
 \description{
-This function prepared input data structures according to the active inpues specified by a
+This function prepared input data structures according to the active inputs specified by a
   \code{"\linkS4class{modelCall}"} object. This function is intended to easily adapt the data structures
   to the requirements of a specific model delivered by the model factory function
   \link[funGp]{fgpm_factory}.

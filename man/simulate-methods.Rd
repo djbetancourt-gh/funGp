@@ -47,13 +47,13 @@ Default is 0.}
 by the method, to be chosen between "light" and "full". \emph{Light} simulations produce a matrix of
 simulated output values, with as many rows as requested random samples. \emph{Full} simulations produce a
 list with the matrix of simulated output values, along with the predicted mean, standard deviation and
-limts of the 95\% confidence intervals at the simulation points. Default is "light".}
+limits of the 95\% confidence intervals at the simulation points. Default is "light".}
 }
 \value{
 An object containing the data structures linked to simulations. For \emph{light} simulations, the
   output will be a matrix with of simulated output values, with as many rows as requested random samples.
   For \emph{full} simulations, the output will be a list with the matrix of simulated output values,
-  along with the predicted mean, standard deviation and limts of the 95\% confidence intervals at the
+  along with the predicted mean, standard deviation and limits of the 95\% confidence intervals at the
   simulation points.
 }
 \description{

@@ -1,13 +1,13 @@
 # ==========================================================================================================
-# S4 class for structures linked to prjections in a funGp model
+# S4 class for structures linked to projections in a funGp model
 # ==========================================================================================================
-#' @title S4 class for structures linked to prjections in a funGp model
+#' @title S4 class for structures linked to projections in a funGp model
 #' @description This is the formal representation for data structures linked to projection of inputs in a
 #'   Gaussian process model within the \link[=funGp-package]{funGp package}.
 #'
 #' @slot pdims Object of class \code{"numeric"}. Projection dimension of each input.
 #' @slot basType Object of class \code{"character"}. To be chosen from {"PCA", "B-splines"}.
-#' @slot basis Object of class \code{"list"}. Projection basis. For functioanl inputs, each element
+#' @slot basis Object of class \code{"list"}. Projection basis. For functional inputs, each element
 #'   (fDims_i x fpDims_i) contains the basis functions used for the projection of one functional input.
 #' @slot coefs Object of class \code{"list"}. Each element (n x fpDims_i) contains the coefficients used for
 #'   the projection of one functional input.

@@ -10,7 +10,7 @@ Construction and smart selection of Gaussian process models with emphasis on tre
 \note{
 This package was first developed in the frame of the RISCOPE research project, funded
   by the French Agence Nationale de la Recherche (ANR) for the period 2017-2021 (ANR,
-  projectNo. 16CE04-0011,
+  project No. 16CE04-0011,
   \href{https://perso.math.univ-toulouse.fr/riscope/}{
   RISCOPE.fr}), and certified by SAFE Cluster.
 }
@@ -61,7 +61,7 @@ This package was first developed in the frame of the RISCOPE research project, f
  }}
  \item{\strong{Tech. report}}{
  \href{https://hal.archives-ouvertes.fr/hal-02532713}{
- Ant Colony Based Model Selection forFunctional-Input Gaussian Process Regression
+ Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression
  }}
 }
 }

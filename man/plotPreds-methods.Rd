@@ -14,7 +14,7 @@
 data structure delivered by the \link[funGp]{predict} method.}
 
 \item{sOut.pr}{an optional vector (or 1-column matrix) containing the true values of the scalar output at
-the prediction points. If provided, the method will diplay two figures: (i) a calibration plot with
+the prediction points. If provided, the method will display two figures: (i) a calibration plot with
 true vs predicted output values, and (ii) a plot including the true and predicted output along with the
 confidence bands, sorted according to the increasing order of the true output. If not provided, only
 the second plot will be made, and the predictions will be arranged according to the increasing order of

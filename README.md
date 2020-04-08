@@ -3,7 +3,7 @@
 Gaussian Process Models for Scalar and Functional Inputs
 --------------------------------------------------------
 
-**Description:** funGp is a regresssion package based on Gaussian process models. It allows inputs to be either scalar, functional (represented as vectors), or a combination of both. A dimension reduction functionality is implemented in order aid keeping the model light while keeping enough information about the inputs for the model to predict well. Moreover, funGp offers a model selection feature which allows to tune different characteristics of the model such as the active scalar and functional inputs, the type of kernel function and the family of basis function used for the projection of the inputs. This is an extension of the work presented in Betancourt et al. (2020).
+**Description:** funGp is a regression package based on Gaussian process models. It allows inputs to be either scalar, functional (represented as vectors), or a combination of both. A dimension reduction functionality is implemented in order aid keeping the model light while keeping enough information about the inputs for the model to predict well. Moreover, funGp offers a model selection feature which allows to tune different characteristics of the model such as the active scalar and functional inputs, the type of kernel function and the family of basis function used for the projection of the inputs. This is an extension of the work presented in Betancourt et al. (2020).
 
 **Main functionalities** <br />
 :small_blue_diamond: Creation of regression models <br />
@@ -31,7 +31,7 @@ This project is licensed under the GPL-3 License. <br /><br />
 
 <br />
 
-**Manual** :book: <br /> [Gaussian Process Regression for Scalar andFunctional Inputs with funGp - The in-depth tour](https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing) <br /><br />
+**Manual** :book: <br /> [Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour](https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing) <br /><br />
 
 **Authors:** José Betancourt :wrench: (IMT, ENAC), François Bachoc (IMT) and Thierry Klein (IMT, ENAC).
 

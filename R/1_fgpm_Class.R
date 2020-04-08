@@ -103,11 +103,11 @@ setClass("fgpm",
 #'   between "gauss", "matern5_2" and "matern3_2". Default is "matern5_2".
 #' @param f_disType an optional array of character strings specifying the distance function to be used for
 #'   each functional coordinates within the covariance function of the Gaussian process. To be chosen between
-#'   "L2_bygroup" and "L2_byindex". The L2_bygroup distance considers each courve as a whole and uses a single
+#'   "L2_bygroup" and "L2_byindex". The L2_bygroup distance considers each curve as a whole and uses a single
 #'   length-scale parameter per functional input variable. The L2_byindex distance uses as many length-scale
 #'   parameters per functional input as discretization points it has. For instance an input discretized as
 #'   a vector of size 8 will use 8 length-scale parameters when using L2_byindex. If dimension reduction of
-#'   a functional input is requested, then L2_byindex uses as many length scale parameters as efective
+#'   a functional input is requested, then L2_byindex uses as many length scale parameters as effective
 #'   dimensions are used to represent the input. A single character string can also be passed as a general
 #'   selection for all the functional inputs of the model. More details in
 #'   \href{https://www.sciencedirect.com/science/article/abs/pii/S0951832019301693}{
@@ -144,14 +144,14 @@ setClass("fgpm",
 #'   hyperparameters. A parallel processing cluster can be exploited in order to speed up the evaluation of
 #'   multiple initial points. More details in the description of the argument par.clust below. Default is 1.
 #' @param n.presample an optional integer indicating the number of points to be tested in order to select the
-#'   n.starts intial points. The n.presampre points will be randomly sampled from the hyper-rectangle defined by: \cr \cr
+#'   n.starts initial points. The n.presample points will be randomly sampled from the hyper-rectangle defined by: \cr \cr
 #'   1e-10 \eqn{\le} \code{ls_s.hyp[i]} \eqn{\le} 2*max(\code{sMs[[i]]}), for i in 1 to the number of scalar inputs, \cr
 #'   1e-10 \eqn{\le} \code{ls_f.hyp[i]} \eqn{\le} 2*max(\code{fMs[[i]]}), for i in 1 to the number of functional inputs, \cr \cr
 #'   with  sMs and fMs the lists of distance matrices for the scalar and functional inputs, respectively. The value of
 #'   n.starts will be assigned to n.presample if this last is smaller. Default is 20.
 #' @param par.clust an optional parallel processing cluster created with the \code{\link[parallel]{makeCluster}} function
 #'   of the \link[=parallel]{parallel package}. If not provided, multistart optimizations are done in sequence.
-#' @param quietly an optional boolean indicating if the calls to the hyperparameters optimizer should ommit text related to
+#' @param quietly an optional boolean indicating if the calls to the hyperparameters optimizer should skip text related to
 #'   the evolution of the optimization. Default is FALSE.
 #'
 #' @return An object of class \linkS4class{fgpm} containing the data structures representing the fitted funGp model.
@@ -882,12 +882,12 @@ setGeneric(name = "simulate", def = function(object, nsim = 1, seed = NULL, ...)
 #'   by the method, to be chosen between "light" and "full". \emph{Light} simulations produce a matrix of
 #'   simulated output values, with as many rows as requested random samples. \emph{Full} simulations produce a
 #'   list with the matrix of simulated output values, along with the predicted mean, standard deviation and
-#'   limts of the 95\% confidence intervals at the simulation points. Default is "light".
+#'   limits of the 95\% confidence intervals at the simulation points. Default is "light".
 #'
 #' @return An object containing the data structures linked to simulations. For \emph{light} simulations, the
 #'   output will be a matrix with of simulated output values, with as many rows as requested random samples.
 #'   For \emph{full} simulations, the output will be a list with the matrix of simulated output values,
-#'   along with the predicted mean, standard deviation and limts of the 95\% confidence intervals at the
+#'   along with the predicted mean, standard deviation and limits of the 95\% confidence intervals at the
 #'   simulation points.
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
@@ -1073,11 +1073,11 @@ setGeneric(name = "update", def = function(object, ...) standardGeneric("update"
 #'   current length-scale parameters for the scalar inputs of the model.
 #' @param ls_f.sb an optional numerical array indicating the values that should be used to substitute the
 #'   current length-scale parameters for the functional inputs of the model.
-#' @param var.re an optional boolean indicating wether the variance parameter should be re-estimated.
+#' @param var.re an optional boolean indicating whether the variance parameter should be re-estimated.
 #'   Default is FALSE.
-#' @param ls_s.re an optional boolean indicating wether the length-scale parameters of the scalar inputs
+#' @param ls_s.re an optional boolean indicating whether the length-scale parameters of the scalar inputs
 #'   should be re-estimated. Default is FALSE.
-#' @param ls_f.re an optional boolean indicating wether the length-scale parameters of the functional
+#' @param ls_f.re an optional boolean indicating whether the length-scale parameters of the functional
 #'   inputs should be re-estimated. Default is FALSE.
 #'
 #' @return An object of class \linkS4class{fgpm} representing the updated funGp model.
@@ -1102,7 +1102,7 @@ setGeneric(name = "update", def = function(object, ...) standardGeneric("update"
 #' always mandatory.
 #'
 #' @details
-#' \strong{Conflictive task combinations:}
+#' \strong{Conflicting task combinations:}
 #' \itemize{
 #'  \item Data points deletion and substitution;
 #'  \item Substitution and re-estimation of the same hyperparameter.

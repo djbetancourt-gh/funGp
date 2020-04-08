@@ -18,11 +18,11 @@ valid entries: \emph{xlim}, \emph{ylim}, \emph{xlab}, \emph{ylab}, \emph{main}.}
 This method displays the evolution of the quality of the configurations evaluated along
   the iterations, by the model selection algorithm in the \link[funGp]{fgpm_factory} function. For
   each iteration, the performance statistic of all the evaluated models is printed, along with the
-  corresponding meadian of the group. The plot also includes the global maximum, which corresponds
+  corresponding median of the group. The plot also includes the global maximum, which corresponds
   to the best performance statistic obtained up to the current iteration. In this plot, it is
-  tyipical to have some points falling relatively far from the maximum, even after multiple
-  iterations. Thishappens mainly because we have multiple categorical features, whose alteration
-  might changethe performance statistic in a nonsmooth way. On the other hand, the points that fall
+  typical to have some points falling relatively far from the maximum, even after multiple
+  iterations. This happens mainly because we have multiple categorical features, whose alteration
+  might change the performance statistic in a nonsmooth way. On the other hand, the points that fall
   bellow zero usually correspond to models whose hyperparameters were hard to optimize. This occurs
   sporadically during the log-likelihood optimization for Gaussian processes, due to the
   non-linearity of the objective function. As long as the maximum keeps improving and the median
