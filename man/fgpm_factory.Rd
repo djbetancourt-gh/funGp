@@ -153,7 +153,7 @@ This function enables the smart exploration of the solution space of potential s
 # calling fgpm_factory with the default arguments__________________________________________
 # generating input and output data
 set.seed(100)
-n.tr <- 243
+n.tr <- 32
 sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
                    x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
                    x5 = seq(0,1,length = n.tr^(1/5)))
@@ -179,7 +179,7 @@ plotEvol(xm)
 # improving performance with more iterations_______________________________________________
 # generating input and output data
 set.seed(100)
-n.tr <- 243
+n.tr <- 32
 sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
                    x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
                    x5 = seq(0,1,length = n.tr^(1/5)))
@@ -200,7 +200,7 @@ plotLOO(xm25@model)
 # custom solution space____________________________________________________________________
 # generating input and output data
 set.seed(100)
-n.tr <- 243
+n.tr <- 32
 sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
                    x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
                    x5 = seq(0,1,length = n.tr^(1/5)))
@@ -226,7 +226,7 @@ cbind(xm@log.success@sols, "Q2" = xm@log.success@fitness)
 # custom heuristic parameters______________________________________________________________
 # generating input and output data
 set.seed(100)
-n.tr <- 243
+n.tr <- 32
 sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
                    x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
                    x5 = seq(0,1,length = n.tr^(1/5)))
@@ -247,7 +247,7 @@ unlist(xm@details$param)
 # stopping condition based on time_________________________________________________________
 # generating input and output data
 set.seed(100)
-n.tr <- 243
+n.tr <- 32
 sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
                    x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
                    x5 = seq(0,1,length = n.tr^(1/5)))
@@ -267,7 +267,7 @@ xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, setup = mysup, time.lim = 
 # passing fgpm arguments through fgpm_factory______________________________________________
 # generating input and output data
 set.seed(100)
-n.tr <- 243
+n.tr <- 32
 sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
                    x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
                    x5 = seq(0,1,length = n.tr^(1/5)))

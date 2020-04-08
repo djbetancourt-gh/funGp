@@ -92,7 +92,7 @@ plotLOO.fgpm <- function(model, ...) {
   if (!is.null(gpars$line)) line <- gpars$line else line <- "blue"
   if (!is.null(gpars$xlab)) xlab <- gpars$xlab else xlab <- "Observed"
   if (!is.null(gpars$ylab)) ylab <- gpars$ylab else ylab <- "Predicted"
-  if (!is.null(gpars$main)) main <- gpars$main else main <- "Model diagnostic by leave-one-out cross-valitation"
+  if (!is.null(gpars$main)) main <- gpars$main else main <- "Model diagnostic by leave-one-out cross-validation"
 
   # save current par state
   opar <- par('mar', 'mfrow')
@@ -983,7 +983,7 @@ plotX.Xfgpm <- function(x.model, calib, fitp, ...) {
     if (!is.null(cal.gpars$line)) line <- cal.gpars$line else line <- "blue"
     if (!is.null(cal.gpars$xlab)) xlab <- cal.gpars$xlab else xlab <- "Observed"
     if (!is.null(cal.gpars$ylab)) ylab <- cal.gpars$ylab else ylab <- "Predicted"
-    if (!is.null(cal.gpars$main)) main <- cal.gpars$main else main <- "Model diagnostic by leave-one-out cross-valitation"
+    if (!is.null(cal.gpars$main)) main <- cal.gpars$main else main <- "Model diagnostic by leave-one-out cross-validation"
     if (!is.null(cal.gpars$legends)) legends <- cal.gpars$legends else legends <- T
 
     # add points
@@ -1130,16 +1130,17 @@ if(!isGeneric("plotEvol")) {setGeneric("plotEvol", function(x.model, ...) standa
 #' @description This method displays the evolution of the quality of the configurations evaluated along
 #'   the iterations, by the model selection algorithm in the \link[funGp]{fgpm_factory} function. For
 #'   each iteration, the performance statistic of all the evaluated models is printed, along with the
-#'   corresponding meadian and maximum value of the group. In this plot, it is tyipical to have some
-#'   points falling relatively far from the maximum, even after multiple iterations. Thishappens mainly
-#'   because we have multiple categorical features, whose alteration might changethe performance
-#'   statistic in a nonsmooth way. On the other hand, the points that fall bellow zero usually
-#'   correspond to models whose hyperparameters were hard to optimize. This occurs sporadically during
-#'   the log-likelihood optimization for Gaussian processes, due to the non-linearity of the objective
-#'   function. As long as the maximum keeps improving and the median remains close to it, none of the
-#'   two aforementioned phenomena is matter for worries. Both of them respond to the mechanism of
-#'   exploration implemented in the algorithm, which makes it able to progressively move towards
-#'   better model configurations.
+#'   corresponding meadian of the group. The plot also includes the global maximum, which corresponds
+#'   to the best performance statistic obtained up to the current iteration. In this plot, it is
+#'   tyipical to have some points falling relatively far from the maximum, even after multiple
+#'   iterations. Thishappens mainly because we have multiple categorical features, whose alteration
+#'   might changethe performance statistic in a nonsmooth way. On the other hand, the points that fall
+#'   bellow zero usually correspond to models whose hyperparameters were hard to optimize. This occurs
+#'   sporadically during the log-likelihood optimization for Gaussian processes, due to the
+#'   non-linearity of the objective function. As long as the maximum keeps improving and the median
+#'   remains close to it, none of the two aforementioned phenomena is matter for worries. Both of them
+#'   respond to the mechanism of exploration implemented in the algorithm, which makes it able to
+#'   progressively move towards better model configurations.
 #'
 #' @param x.model an object of class \linkS4class{Xfgpm} containing the output of the model selection
 #'   algorithm in \link[funGp]{fgpm_factory}.
@@ -1235,7 +1236,7 @@ plotEvol.Xfgpm <- function(x.model, ...) {
   lines(cummax(sapply(all.fitness, max)), col = "green")
   points(cummax(sapply(all.fitness, max)), pch = 21, bg = "green")
 
-  legend("bottomright", legend = c("All models", "Max. per gen.", "Med. per gen.", "Points < 0"),
+  legend("bottomright", legend = c("All models", "Global max.", "Med. per gen.", "Points < 0"),
          pch = c(21, 21, 21, NA), col = c("blue", "green", "red", NA), pt.bg = c("blue", "green", "red", NA),
          lty = c(0, 1, 1, 0), pt.cex = c(1, 1, 1, NA), cex = .85, inset = c(.02,.07))
 

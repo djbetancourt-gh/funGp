@@ -45,7 +45,7 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, phero, base, extargs, time.st
   # run the colony
   for (c.gen in 1:n.iter) {
     # start_time <- Sys.time()
-    cat(paste("Dispatching colony", c.gen, "\n"))
+    cat(paste("Dispatching colony ", c.gen, "/", n.iter, "\n", sep = ""))
 
     # create a new colony and mark as incomplete
     ants <- matrix(nrow = n.pop, ncol = n.layers)
