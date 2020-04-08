@@ -66,7 +66,7 @@ setClass("Xfgpm",
            n.explored = "numeric",         # search method
            details = "list"                # search method
          ),
-         validity = function(object) {T})
+         validity = function(object) {TRUE})
 
 
 
@@ -421,7 +421,7 @@ fgpm_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, ind.vl = NULL,
   # optimize model structure
   opt <- master_ACO(sIn, fIn, sOut, ind.vl, solspace, setup, extargs, time.str, time.lim, quietly, par.clust)
   X.model <- new("Xfgpm")
-  X.model@factoryCall@string <- gsub("^ *|(?<= ) | *$", "", paste0(deparse(match.call()), collapse = " "), perl = T)
+  X.model@factoryCall@string <- gsub("^ *|(?<= ) | *$", "", paste0(deparse(match.call()), collapse = " "), perl = TRUE)
   X.model@model <- opt$model
   X.model@stat <- stat
   X.model@fitness <- opt$b.fitness
@@ -551,7 +551,7 @@ getFitness <- function(model, sIn.vl = NULL, fIn.vl = NULL, sOut.vl = NULL, acti
   } else {
     stat <- "Q2hout"
     if (!is.null(active)) {
-      if (length(active$s.active) > 0) sIn.pr <- sIn.vl[, active$s.active, drop = F] else sIn.pr <- NULL
+      if (length(active$s.active) > 0) sIn.pr <- sIn.vl[, active$s.active, drop = FALSE] else sIn.pr <- NULL
       if (length(active$f.active) > 0) fIn.pr <- fIn.vl[active$f.active] else fIn.pr <- NULL
     } else {
       sIn.pr <- sIn.vl
@@ -585,23 +585,23 @@ splitData <- function(sIn, fIn, sOut, ind.vl) {
 
   # splitting scalar inputs (if any)
   if (!is.null(sIn)) {
-    sIn.tr <- sIn[ind.all[-ind.vl],,drop = F]
-    sIn.vl <- sIn[ind.all[ind.vl],,drop = F]
+    sIn.tr <- sIn[ind.all[-ind.vl],,drop = FALSE]
+    sIn.vl <- sIn[ind.all[ind.vl],,drop = FALSE]
   } else {
     sIn.tr <- sIn.vl <- NULL
   }
 
   # splitting functional inputs (if any)
   if (!is.null(fIn)) {
-    fIn.tr <- lapply(fIn, function(M) M[ind.all[-ind.vl],,drop = F])
-    fIn.vl <- lapply(fIn, function(M) M[ind.all[ind.vl],,drop = F])
+    fIn.tr <- lapply(fIn, function(M) M[ind.all[-ind.vl],,drop = FALSE])
+    fIn.vl <- lapply(fIn, function(M) M[ind.all[ind.vl],,drop = FALSE])
   } else {
     fIn.tr <- fIn.vl <- NULL
   }
 
   # splitting the output
-  sOut.tr <- sOut[ind.all[-ind.vl],,drop = F]
-  sOut.vl <- sOut[ind.all[ind.vl],,drop = F]
+  sOut.tr <- sOut[ind.all[-ind.vl],,drop = FALSE]
+  sOut.vl <- sOut[ind.all[ind.vl],,drop = FALSE]
 
   return(list(sIn.tr = sIn.tr, fIn.tr = fIn.tr, sOut.tr = sOut.tr,
               sIn.vl = sIn.vl, fIn.vl = fIn.vl, sOut.vl = sOut.vl))

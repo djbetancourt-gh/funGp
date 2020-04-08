@@ -77,7 +77,7 @@ axtags <- function(x){
 #'
 #' @rdname modelCall-class
 #' @export
-setClass("modelCall", slots = c(string = "character"), validity = function(object) {T})
+setClass("modelCall", slots = c(string = "character"), validity = function(object) {TRUE})
 
 if(!isGeneric("show")) {setGeneric(name = "show", def = function(object) standardGeneric("show"))}
 setMethod("show", "modelCall", function(object) show.modelCall(x = object@string))
@@ -109,7 +109,7 @@ show.modelCall <- function (x, ...) {
 #'
 #' @rdname factoryCall-class
 #' @export
-setClass("factoryCall", slots = c(string = "character"), validity = function(object) {T})
+setClass("factoryCall", slots = c(string = "character"), validity = function(object) {TRUE})
 
 if(!isGeneric("show")) {setGeneric(name = "show", def = function(object) standardGeneric("show"))}
 setMethod("show", "factoryCall", function(object) show.factoryCall(x = object@string))

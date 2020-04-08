@@ -1,16 +1,16 @@
 Package: funGp
 Type: Package
-Version: 0.1.0
-Date: 2020-03-30
 Title: Gaussian Process Models for Scalar and Functional Inputs
-Description: Construction and smart selection of Gaussian process models with emphasis on treatment of functional inputs.
+Version: 0.1.0
 Authors@R: c(
     person("Jose", "Betancourt", email = "jbetanco@math.univ-toulouse.fr", role = c("cre", "aut")),
     person("François", "Bachoc", email = "francois.bachoc@math.univ-toulouse.fr", role = "aut"),
     person("Thierry", "Klein", email = "thierry.klein@math.univ-toulouse.fr", role = "aut"),
     person("Deborah", "Idier", email = "D.Idier@brgm.fr", role = "ctb"),
     person("Jeremy", "Rohmer", email = "J.Rohmer@brgm.fr", role = "ctb"))
-Note: internal package of the RISCOPE project
+Maintainer: Jose Betancourt <djbetancourt@uninorte.edu.co>
+Description: Construction and smart selection of Gaussian process models with emphasis on treatment of functional inputs.
+Note: research product of the RISCOPE project
     (ANR, project No.16CE04-0011) <https://perso.math.univ-toulouse.fr/riscope/>.
 License: GPL-3
 Imports: methods, foreach, knitr, scales, qdapRegex, microbenchmark, doFuture, future, progressr

@@ -10,9 +10,9 @@ upd_del <- function(model, ind.dl, remake) {
 
   if (model@type == "hybrid") { # hybrid-input case *******************************************
     # extract inputs from original model and remove points according to deletion indices
-    sIn <- model@sIn[-ind.dl,,drop = F]
+    sIn <- model@sIn[-ind.dl,,drop = FALSE]
     fIn <- lapply(model@fIn, function(M) M[-ind.dl,])
-    sOut <- model@sOut[-ind.dl,,drop = F]
+    sOut <- model@sOut[-ind.dl,,drop = FALSE]
 
     # the model is re-made if this is the last one in the sequence of requested tasks
     if (remake) {
@@ -39,7 +39,7 @@ upd_del <- function(model, ind.dl, remake) {
 
     # remove points according to deletion indices
     fIn <- lapply(fIn, function(M) M[-ind.dl,])
-    sOut <- sOut[-ind.dl,,drop = F]
+    sOut <- sOut[-ind.dl,,drop = FALSE]
 
     # the model is re-made if this is the last one in the sequence of requested tasks
     if (remake) {
@@ -63,8 +63,8 @@ upd_del <- function(model, ind.dl, remake) {
     sIn <- model@sIn
 
     # remove points according to deletion indices
-    sIn <- sIn[-ind.dl,,drop = F]
-    sOut <- sOut[-ind.dl,,drop = F]
+    sIn <- sIn[-ind.dl,,drop = FALSE]
+    sOut <- sOut[-ind.dl,,drop = FALSE]
 
     # request new model to fgpm if indicated
     if (remake) {
@@ -93,7 +93,7 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake) {
   if(all(is.null(sIn.sb), is.null(fIn.sb), !is.null(sOut.sb))) justOut <- T else justOut <- F
 
   # provide substituting output if not specified by the user
-  if(is.null(sOut.sb)) sOut.sb <- sOut[ind.sb,,drop = F]
+  if(is.null(sOut.sb)) sOut.sb <- sOut[ind.sb,,drop = FALSE]
 
   if (model@type == "hybrid") { # Hybrid-input case *******************************************
     # extract inputs from original model
@@ -101,8 +101,8 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake) {
     fIn <- model@fIn
 
     # provide substituting inputs if not specified by the user
-    if(is.null(sIn.sb)) sIn.sb <- sIn[ind.sb,,drop = F]
-    if(is.null(fIn.sb)) fIn.sb <- lapply(fIn, function(M) M[ind.sb,,drop = F])
+    if(is.null(sIn.sb)) sIn.sb <- sIn[ind.sb,,drop = FALSE]
+    if(is.null(fIn.sb)) fIn.sb <- lapply(fIn, function(M) M[ind.sb,,drop = FALSE])
 
     # check for validty of substituting data
     check_subData(as.list(environment()))
@@ -117,15 +117,15 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake) {
     } else if (length(ind.dp) > 0) {
       warning(paste("There are some duplicates in the substituting inputs. Those have been ignored.\n",
                     "Duplicate substitute points: ", ind.dp, sep = ""))
-      sIn.sb <- sIn.sb[-ind.dp,,drop = F]
-      fIn.sb <- lapply(fIn.sb, function(M) M[-ind.dp,,drop = F])
-      sOut.sb <- sOut.sb[-ind.dp,,drop = F]
+      sIn.sb <- sIn.sb[-ind.dp,,drop = FALSE]
+      fIn.sb <- lapply(fIn.sb, function(M) M[-ind.dp,,drop = FALSE])
+      sOut.sb <- sOut.sb[-ind.dp,,drop = FALSE]
       ind.sb <- ind.sb[-ind.dp]
     }
 
     # check for duplicates bewteen substituting inputs and existing inputs at not substituting rows
     sIn.exsb <- sIn[-ind.sb,]
-    fIn.exsb <- lapply(fIn, function(M) M[-ind.sb,,drop = F])
+    fIn.exsb <- lapply(fIn, function(M) M[-ind.sb,,drop = FALSE])
     ind.dp <- check_duplicates_SF(sIn.exsb, fIn.exsb, sIn.sb, fIn.sb)
 
     if (length(ind.sb) == length(ind.dp)) {
@@ -135,9 +135,9 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake) {
     } else if (length(ind.dp) > 0) {
       warning(paste("There are some duplicates in the substituting inputs. Those have been ignored.\n",
                     "Duplicate substitute points: ", ind.dp, sep = ""))
-      sIn.sb <- sIn.sb[-ind.dp,,drop = F]
-      fIn.sb <- lapply(fIn.sb, function(M) M[-ind.dp,,drop = F])
-      Sout.sb <- sOut.sb[-ind.dp,,drop = F]
+      sIn.sb <- sIn.sb[-ind.dp,,drop = FALSE]
+      fIn.sb <- lapply(fIn.sb, function(M) M[-ind.dp,,drop = FALSE])
+      Sout.sb <- sOut.sb[-ind.dp,,drop = FALSE]
       ind.sb <- ind.sb[-ind.dp]
     }
 
@@ -150,7 +150,7 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake) {
     if (remake) {
       if (justOut) {
         modelup <- model
-        modelup@preMats$LInvY <- backsolve(model@preMats$L, sOut, upper.tri = F)
+        modelup@preMats$LInvY <- backsolve(model@preMats$L, sOut, upper.tri = FALSE)
         modelup@sIn <- sIn
         modelup@fIn <- fIn
         modelup@sOut <- sOut
@@ -179,7 +179,7 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake) {
     fIn <- model@fIn
 
     # provide substituting inputs if not specified by the user
-    if(is.null(fIn.sb)) fIn.sb <- lapply(fIn, function(M) M[ind.sb,,drop = F])
+    if(is.null(fIn.sb)) fIn.sb <- lapply(fIn, function(M) M[ind.sb,,drop = FALSE])
 
     # check for validty of substituting data
     check_subData(as.list(environment()))
@@ -194,13 +194,13 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake) {
     } else if (length(ind.dp) > 0) {
       warning(paste("There are some duplicates in the substituting inputs. Those have been ignored.\n",
                     "Duplicate substitute points: ", ind.dp, sep = ""))
-      fIn.sb <- lapply(fIn.sb, function(M) M[-ind.dp,,drop = F])
-      sOut.sb <- sOut.sb[-ind.dp,,drop = F]
+      fIn.sb <- lapply(fIn.sb, function(M) M[-ind.dp,,drop = FALSE])
+      sOut.sb <- sOut.sb[-ind.dp,,drop = FALSE]
       ind.sb <- ind.sb[-ind.dp]
     }
 
     # check for duplicates bewteen substituting inputs and existing inputs at not substituting rows
-    fIn.exsb <- lapply(fIn, function(M) M[-ind.sb,,drop = F])
+    fIn.exsb <- lapply(fIn, function(M) M[-ind.sb,,drop = FALSE])
     ind.dp <- check_duplicates_F(fIn.exsb, fIn.sb)
 
     if (length(ind.sb) == length(ind.dp)) {
@@ -210,8 +210,8 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake) {
     } else if (length(ind.dp) > 0) {
       warning(paste("There are some duplicates in the substituting inputs. Those have been ignored.\n",
                     "Duplicate substitute points: ", ind.dp, sep = ""))
-      fIn.sb <- lapply(fIn.sb, function(M) M[-ind.dp,,drop = F])
-      Sout.sb <- sOut.sb[-ind.dp,,drop = F]
+      fIn.sb <- lapply(fIn.sb, function(M) M[-ind.dp,,drop = FALSE])
+      Sout.sb <- sOut.sb[-ind.dp,,drop = FALSE]
       ind.sb <- ind.sb[-ind.dp]
     }
 
@@ -223,7 +223,7 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake) {
     if (remake) {
       if (justOut) {
         modelup <- model
-        modelup@preMats$LInvY <- backsolve(model@preMats$L, sOut, upper.tri = F)
+        modelup@preMats$LInvY <- backsolve(model@preMats$L, sOut, upper.tri = FALSE)
         modelup@fIn <- fIn
         modelup@sOut <- sOut
         model@n.tot <- length(sOut)
@@ -264,13 +264,13 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake) {
     } else if (length(ind.dp) > 0) {
       warning(paste("There are some duplicates in the substituting inputs. Those have been ignored.\n",
                     "Duplicate substitute points: ", ind.dp, sep = ""))
-      sIn.sb <- sIn.sb[-ind.dp,,drop = F]
-      sOut.sb <- sOut.sb[-ind.dp,,drop = F]
+      sIn.sb <- sIn.sb[-ind.dp,,drop = FALSE]
+      sOut.sb <- sOut.sb[-ind.dp,,drop = FALSE]
       ind.sb <- ind.sb[-ind.dp]
     }
 
     # check for duplicates bewteen substituting inputs and existing inputs at not substituting rows
-    sIn.exsb <- sIn[-ind.sb,,drop = F]
+    sIn.exsb <- sIn[-ind.sb,,drop = FALSE]
     ind.dp <- check_duplicates_S(sIn.exsb, sIn.sb)
 
     if (length(ind.sb) == length(ind.dp)) {
@@ -280,8 +280,8 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake) {
     } else if (length(ind.dp) > 0) {
       warning(paste("There are some duplicates in the substituting inputs. Those have been ignored.\n",
                     "Duplicate substitute points: ", ind.dp, sep = ""))
-      sIn.sb <- sIn.sb[-ind.dp,,drop = F]
-      sOut.sb <- sOut.sb[-ind.dp,,drop = F]
+      sIn.sb <- sIn.sb[-ind.dp,,drop = FALSE]
+      sOut.sb <- sOut.sb[-ind.dp,,drop = FALSE]
       ind.sb <- ind.sb[-ind.dp]
     }
 
@@ -293,7 +293,7 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake) {
     if (remake) {
       if (justOut) {
         modelup <- model
-        modelup@preMats$LInvY <- backsolve(model@preMats$L, sOut, upper.tri = F)
+        modelup@preMats$LInvY <- backsolve(model@preMats$L, sOut, upper.tri = FALSE)
         modelup@sIn <- sIn
         modelup@sOut <- sOut
         model@n.tot <- length(sOut)
@@ -338,9 +338,9 @@ upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake) {
     } else if (length(ind.dp) > 0) {
       warning(paste("There are some duplicates in the substituting inputs. Those have been ignored.\n",
                     "Duplicate substitute points: ", ind.dp, sep = ""))
-      sIn.nw <- sIn.nw[-ind.dp,,drop = F]
-      fIn.nw <- lapply(fIn.nw, function(M) M[-ind.dp,,drop = F])
-      sOut.nw <- sOut.nw[-ind.dp,,drop = F]
+      sIn.nw <- sIn.nw[-ind.dp,,drop = FALSE]
+      fIn.nw <- lapply(fIn.nw, function(M) M[-ind.dp,,drop = FALSE])
+      sOut.nw <- sOut.nw[-ind.dp,,drop = FALSE]
     }
 
     # check for duplicates bewteen substituting inputs and existing inputs at not substituting rows
@@ -353,9 +353,9 @@ upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake) {
     } else if (length(ind.dp) > 0) {
       warning(paste("There are some duplicates in the substituting inputs. Those have been ignored.\n",
                     "Duplicate substitute points: ", ind.dp, sep = ""))
-      sIn.nw <- sIn.nw[-ind.dp,,drop = F]
-      fIn.nw <- lapply(fIn.nw, function(M) M[-ind.dp,,drop = F])
-      sOut.nw <- sOut.nw[-ind.dp,,drop = F]
+      sIn.nw <- sIn.nw[-ind.dp,,drop = FALSE]
+      fIn.nw <- lapply(fIn.nw, function(M) M[-ind.dp,,drop = FALSE])
+      sOut.nw <- sOut.nw[-ind.dp,,drop = FALSE]
     }
 
     # recover inputs and outputs after duplicates check
@@ -396,8 +396,8 @@ upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake) {
     } else if (length(ind.dp) > 0) {
       warning(paste("There are some duplicates in the substituting inputs. Those have been ignored.\n",
                     "Duplicate substitute points: ", ind.dp, sep = ""))
-      fIn.nw <- lapply(fIn.nw, function(M) M[-ind.dp,,drop = F])
-      sOut.nw <- sOut.nw[-ind.dp,,drop = F]
+      fIn.nw <- lapply(fIn.nw, function(M) M[-ind.dp,,drop = FALSE])
+      sOut.nw <- sOut.nw[-ind.dp,,drop = FALSE]
     }
 
     # check for duplicates bewteen substituting inputs and existing inputs at not substituting rows
@@ -410,8 +410,8 @@ upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake) {
     } else if (length(ind.dp) > 0) {
       warning(paste("There are some duplicates in the substituting inputs. Those have been ignored.\n",
                     "Duplicate substitute points: ", ind.dp, sep = ""))
-      fIn.nw <- lapply(fIn.nw, function(M) M[-ind.dp,,drop = F])
-      sOut.nw <- sOut.nw[-ind.dp,,drop = F]
+      fIn.nw <- lapply(fIn.nw, function(M) M[-ind.dp,,drop = FALSE])
+      sOut.nw <- sOut.nw[-ind.dp,,drop = FALSE]
     }
 
     # recover inputs and outputs after duplicates check
@@ -449,8 +449,8 @@ upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake) {
     } else if (length(ind.dp) > 0) {
       warning(paste("There are some duplicates in the substituting inputs. Those have been ignored.\n",
                     "Duplicate substitute points: ", ind.dp, sep = ""))
-      sIn.nw <- sIn.nw[-ind.dp,,drop = F]
-      sOut.nw <- sOut.nw[-ind.dp,,drop = F]
+      sIn.nw <- sIn.nw[-ind.dp,,drop = FALSE]
+      sOut.nw <- sOut.nw[-ind.dp,,drop = FALSE]
     }
 
     # check for duplicates bewteen substituting inputs and existing inputs at not substituting rows
@@ -463,8 +463,8 @@ upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake) {
     } else if (length(ind.dp) > 0) {
       warning(paste("There are some duplicates in the substituting inputs. Those have been ignored.\n",
                     "Duplicate substitute points: ", ind.dp, sep = ""))
-      sIn.nw <- sIn.nw[-ind.dp,,drop = F]
-      sOut.nw <- sOut.nw[-ind.dp,,drop = F]
+      sIn.nw <- sIn.nw[-ind.dp,,drop = FALSE]
+      sOut.nw <- sOut.nw[-ind.dp,,drop = FALSE]
     }
 
     # recover inputs and outputs after duplicates check
@@ -508,7 +508,7 @@ upd_subHypers <- function(model, var.sb, ls_s.sb, ls_f.sb) {
 
     # build preMats and replace them in the model
     L <- t(chol(K.tt))
-    LInvY <- backsolve(L, model@sOut, upper.tri = F)
+    LInvY <- backsolve(L, model@sOut, upper.tri = FALSE)
     modelup@preMats <- list(L = L, LInvY = LInvY)
 
     # update the variance slot

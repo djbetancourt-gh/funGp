@@ -265,7 +265,7 @@ plotPreds.fgpm <- function(preds, sOut.pr, calib, sortp, ...) {
   cal.gpars <- gpars$calib.gpars
 
   # calibration plot _____________________________________________________
-  plot.c <- function (tight = F) {
+  plot.c <- function (tight = FALSE) {
     # <---> limits
     if (!is.null(cal.gpars$xlim)) xlim <- cal.gpars$xlim else xlim <- range(c(y_obs, y_pre))
     if (!is.null(cal.gpars$ylim)) ylim <- cal.gpars$ylim else ylim <- range(c(y_obs, y_pre))
@@ -312,7 +312,7 @@ plotPreds.fgpm <- function(preds, sOut.pr, calib, sortp, ...) {
 
 
   # line plot ____________________________________________________________
-  plot.l <- function (tight = F) {
+  plot.l <- function (tight = FALSE) {
     # browser()
     # <---> limits
     if (!is.null(lin.gpars$xlim)) xlim <- lin.gpars$xlim else xlim <- c(1, length(y_pre))
@@ -439,7 +439,7 @@ plotPreds.fgpm <- function(preds, sOut.pr, calib, sortp, ...) {
   # identify the case
   # case 1: plotPreds(model, preds) -> plot.l
   # case 2: plotPreds(model, preds, sOut.pr) -> [plot.c, plot.l]
-  # case 3: plotPreds(model, preds, sOut.pr, calib = F) -> [plot.l]
+  # case 3: plotPreds(model, preds, sOut.pr, calib = FALSE) -> [plot.l]
   if (is.null(sOut.pr)) {
     par(mar = c(5.1, 4.1, 4.1, 2.1), mfrow = c(1,1))
     plot.l()
@@ -827,7 +827,7 @@ decay2probs <- function(k, pmax = NULL, tao0 = .1, delta = 2, dispr = 1.4, doplo
     if (pmax >= k) pmin <- 0 else pmin <- 1
     pmax <- min(k, pmax)
   }
-  v <- decay(k, pmax, tao0, delta, dispr, doplot = F, deliver = T)
+  v <- decay(k, pmax, tao0, delta, dispr, doplot = FALSE, deliver = TRUE)
 
   p <- v/sum(v)
   if (doplot) {
@@ -940,7 +940,7 @@ if(!isGeneric("plotX")) {setGeneric("plotX", function(x.model, ...) standardGene
 #'
 #' # customizing some graphical parameters
 #' plotX(xm, calib.gpars = list(xlim = c(800,1000), ylim = c(600,1200)),
-#'           fitp.gpars = list(main = "Relative quality", legends = F))
+#'           fitp.gpars = list(main = "Relative quality", legends = FALSE))
 #' }
 #'
 #' @name plotX

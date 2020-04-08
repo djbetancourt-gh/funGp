@@ -118,7 +118,7 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, phero, base, extargs, time.st
 
     # save args of crashes in ant mode (if any)
     if (length(ids.cr) > 0) {
-      crashes[[c.gen]] <- ants[ids.cr,,drop = F]
+      crashes[[c.gen]] <- ants[ids.cr,,drop = FALSE]
     }
 
     # extract ants and fitness for global update
@@ -154,17 +154,17 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, phero, base, extargs, time.st
 
   # identify duplicates (if any) and keep only the best
   all.fitness.v <- unlist(all.fitness)
-  ord.fitness <- sort(all.fitness.v, decreasing = T)
-  ord.ants <- all.ants[order(all.fitness.v, decreasing = T),]
+  ord.fitness <- sort(all.fitness.v, decreasing = TRUE)
+  ord.ants <- all.ants[order(all.fitness.v, decreasing = TRUE),]
   top.fitness <- ord.fitness[!duplicated(ord.ants)]
   top.ants <- ord.ants[!duplicated(ord.ants),]
-  top.fitness <- sort(top.fitness, decreasing = T)
-  top.ants <- top.ants[order(top.fitness, decreasing = T),]
+  top.fitness <- sort(top.fitness, decreasing = TRUE)
+  top.ants <- top.ants[order(top.fitness, decreasing = TRUE),]
 
   # remove duplicates in crashed ants
   if (length(crashes) > 0) {
     crashes <- do.call(rbind, crashes)
-    crashes <- crashes[!duplicated(crashes),,drop = F]
+    crashes <- crashes[!duplicated(crashes),,drop = FALSE]
   }
 
   cat("\nAnts are done ;)\n")
@@ -262,7 +262,7 @@ localUpd_ACO <- function(phero, myant, antup, rho.l, tao0) {
 # ==========================================================================================================
 getElite_ACO <- function(fitness, n.ibest, ants, u.gbest, c.gen, b.ant, b.fitness){
   # identify best n.ibest ants
-  b.ind <- order(fitness, decreasing = T)[1:min(n.ibest, length(fitness))]
+  b.ind <- order(fitness, decreasing = TRUE)[1:min(n.ibest, length(fitness))]
 
   # remove duplicates if there is any
   if (n.ibest > 1) {
@@ -273,7 +273,7 @@ getElite_ACO <- function(fitness, n.ibest, ants, u.gbest, c.gen, b.ant, b.fitnes
 
   # group best ants and their fitness
   if (!is.matrix(ants)) ants <- matrix(ants, ncol = length(ants))
-  ants.up <- ants[u.ind,,drop = F]
+  ants.up <- ants[u.ind,,drop = FALSE]
   fitness.up <- fitness[u.ind]
 
   # add the global best only if required

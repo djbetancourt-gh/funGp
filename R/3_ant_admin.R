@@ -21,7 +21,7 @@ setClass("antsLog",
            args = "list",                  # compendium of model structures with selections as modelCall objects
            fitness = "numeric"             # performance statistic of each model, if available
          ),
-         validity = function(object) {T})
+         validity = function(object) {TRUE})
 # ==========================================================================================================
 
 
@@ -150,7 +150,7 @@ setEnvir_ACO <- function(solspace, param) {
   if (ds > 0) {
     # set up pheromones related to scalar inputs
     if (s.state.u[1] == 0) {
-      phero[[1]] <- matrix(c(tao0, tao0/dop.s), ncol = 2, byrow = T)
+      phero[[1]] <- matrix(c(tao0, tao0/dop.s), ncol = 2, byrow = TRUE)
     } else {
       phero[[1]] <- matrix(c(1, 0), ncol = 2) # set up initial pheromones
     }
@@ -163,9 +163,9 @@ setEnvir_ACO <- function(solspace, param) {
         # state of scalar input i
         # ____________________________________________________________________________________
         if (s.state.u[i] == 0) {
-          phero[[i]] <- matrix(rep(c(tao0, tao0/dop.s), 2), nrow = 2, byrow = T)
+          phero[[i]] <- matrix(rep(c(tao0, tao0/dop.s), 2), nrow = 2, byrow = TRUE)
         } else {
-          phero[[i]] <- matrix(rep(c(1, 0), 2), nrow = 2, byrow = T) # set up initial pheromones
+          phero[[i]] <- matrix(rep(c(1, 0), 2), nrow = 2, byrow = TRUE) # set up initial pheromones
         }
         # set up colnames
         colnames(phero[[i]]) <- rownames(phero[[i]]) <- c("Active", "Inactive")
@@ -192,9 +192,9 @@ setEnvir_ACO <- function(solspace, param) {
 
       } else {
         if (f.state.u[j] == 0) { # free, distribute pheromones and assign default visibilities
-          phero[[i]] <- matrix(rep(c(tao0, tao0/dop.f), 2), nrow = 2, byrow = T)
+          phero[[i]] <- matrix(rep(c(tao0, tao0/dop.f), 2), nrow = 2, byrow = TRUE)
         } else { # fixed, put all load in first colum
-          phero[[i]] <- matrix(rep(c(1, 0), 2), nrow = 2, byrow = T)
+          phero[[i]] <- matrix(rep(c(1, 0), 2), nrow = 2, byrow = TRUE)
         }
         # <--> names
         rownames(phero[[i]]) <- colnames(phero[[i-1]])
@@ -213,7 +213,7 @@ setEnvir_ACO <- function(solspace, param) {
       t <- unname(sapply(f.dist.u[[j]], function(x) which(f.dist.0[[j]] == x)))
       # <--> assign initial pheromones
       if (length(t) == 1)  v[t] <- 1 else v[t] <- tao0
-      phero[[i]] <- matrix(rep(v, nr), nrow = nr, byrow = T)
+      phero[[i]] <- matrix(rep(v, nr), nrow = nr, byrow = TRUE)
       # <--> names
       rownames(phero[[i]]) <- colnames(phero[[i-1]])
       colnames(phero[[i]]) <- f.dist.0[[j]]
@@ -234,9 +234,9 @@ setEnvir_ACO <- function(solspace, param) {
       } else {
         vgro[t] <- tao0
         if (0 %in% f.dims.u[[j]]) {
-          l <- decay(tao0 = tao0, delta = delta.f[j], dispr = dispr.f[j], k = max(f.dims.u[[j]]), doplot = F, deliver = T)
+          l <- decay(tao0 = tao0, delta = delta.f[j], dispr = dispr.f[j], k = max(f.dims.u[[j]]), doplot = FALSE, deliver = TRUE)
         } else {
-          l <- decay(tao0 = tao0, delta = delta.f[j], dispr = dispr.f[j], k = max(f.dims.u[[j]]), doplot = F, deliver = T)[-1]
+          l <- decay(tao0 = tao0, delta = delta.f[j], dispr = dispr.f[j], k = max(f.dims.u[[j]]), doplot = FALSE, deliver = TRUE)[-1]
         }
         vind[t] <- l
       }
@@ -258,7 +258,7 @@ setEnvir_ACO <- function(solspace, param) {
       t <- unname(sapply(f.bas.u[[j]], function(x) which(f.bas.0[[j]] == x))) # locations of basis still active
       # <--> assign initial pheromones
       if (length(t) == 1)  v[t] <- 1 else v[t] <- tao0
-      phero[[i]] <- matrix(rep(v, nr), nrow = nr, byrow = T)
+      phero[[i]] <- matrix(rep(v, nr), nrow = nr, byrow = TRUE)
       # <--> names
       colnames(phero[[i]]) <- f.bas.0[[j]]
       rownames(phero[[i]]) <- f.dims.0[[j]]
@@ -276,7 +276,7 @@ setEnvir_ACO <- function(solspace, param) {
   t <- unname(sapply(k.type.u, function(x) which(k.type.0 == x))) # locations of kernels still active
   # <--> assign initial pheromones
   if (length(t) == 1)  v[t] <- 1 else v[t] <- tao0
-  phero[[i]] <- matrix(rep(v, nr), nrow = nr, byrow = T)
+  phero[[i]] <- matrix(rep(v, nr), nrow = nr, byrow = TRUE)
   # <--> names
   rownames(phero[[i]]) <- colnames(phero[[i-1]])
   colnames(phero[[i]]) <- k.type.0
@@ -313,7 +313,7 @@ formatSol_ACO <- function(ant, sIn, fIn, base) {
   if (ds > 0) {
     s.active.ac <- which(ant[1:ds] == 1) # index of active scalar inputs
     if (length(s.active.ac) > 0) {
-      sIn.ac <- sIn[,s.active.ac, drop = F]
+      sIn.ac <- sIn[,s.active.ac, drop = FALSE]
     } else {
       sIn.ac <- NULL
     }
@@ -597,7 +597,7 @@ eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.l
 
     # evaluate the ants as models
     with_progress({
-      p <- progressor(along = 1:n.pop, auto_finish = F)
+      p <- progressor(along = 1:n.pop, auto_finish = FALSE)
       result <- foreach(i = 1:n.pop, .errorhandling = "pass") %dopar% {
         dt <- difftime(Sys.time(), time.str, units = 'secs')
         if (dt < time.lim) {
@@ -669,7 +669,7 @@ eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str
 
     # evaluate the ants as models
     with_progress({
-      p <- progressor(along = 1:n.pop, auto_finish = F)
+      p <- progressor(along = 1:n.pop, auto_finish = FALSE)
       result <- foreach(i = 1:n.pop, .errorhandling = "pass") %dopar% {
         dt <- difftime(Sys.time(), time.str, units = 'secs')
         if (dt < time.lim) {

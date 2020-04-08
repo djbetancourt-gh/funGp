@@ -25,7 +25,7 @@ setClass("fgpProj",
                         coefs = "list"              # each element (n x fpDims_i) contains the coefficients
                                                     # used for the projection of one fun. input
                         ),
-         validity = function(object) {T})
+         validity = function(object) {TRUE})
 # ==========================================================================================================
 
 
@@ -49,7 +49,7 @@ show.fgpProj <- function(object) {
     if (np < df) {
       G <- rbind(G, rep("...", 4))
     }
-    print(kable(G, align = 'c', row.names = F))
+    print(kable(G, align = 'c', row.names = FALSE))
     cat(paste(rep("_", 45), collapse = ""))
 
   } else {

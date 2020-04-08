@@ -52,7 +52,7 @@ plotX(xm)
 
 # customizing some graphical parameters
 plotX(xm, calib.gpars = list(xlim = c(800,1000), ylim = c(600,1200)),
-          fitp.gpars = list(main = "Relative quality", legends = F))
+          fitp.gpars = list(main = "Relative quality", legends = FALSE))
 }
 
 }

@@ -79,7 +79,7 @@ setClass("fgpm",
            nugget = "numeric",         # variance parameter standing for the homogeneous nugget effect
            preMats = "list"            # Pre-computed KttInv and KttInv.sOut matrices
          ),
-         validity = function(object) {T})
+         validity = function(object) {TRUE})
 # ==========================================================================================================
 
 
@@ -499,7 +499,7 @@ fgpm <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
   kern@varHyp <- varHyp
 
   # fill general fgpm slots
-  model@howCalled@string <- gsub("^ *|(?<= ) | *$", "", paste0(deparse(match.call()), collapse = " "), perl = T)
+  model@howCalled@string <- gsub("^ *|(?<= ) | *$", "", paste0(deparse(match.call()), collapse = " "), perl = TRUE)
   model@sOut <- sOut
   model@n.tot <- n.tr
   model@n.tr <- n.tr
@@ -568,7 +568,7 @@ show.fgpm <- function(model) {
     if (np < model@df) {
       G <- rbind(G, rep("...", 5))
     }
-    print(kable(G, align = 'c', row.names = F))
+    print(kable(G, align = 'c', row.names = FALSE))
   }
 
   cat(paste("\n* Total data points: ", model@n.tot, "\n", sep = ""))
@@ -785,7 +785,7 @@ predict.fgpm <- function(model, sIn.pr, fIn.pr, detail = "light") {
 
     # project functional inputs
     f_basis <- model@f_proj@basis
-    f_coefs.pr <- mapply(function(B, f) t(solve(crossprod(B), tcrossprod(t(B),f))), f_basis, fIn.pr, SIMPLIFY = F)
+    f_coefs.pr <- mapply(function(B, f) t(solve(crossprod(B), tcrossprod(t(B),f))), f_basis, fIn.pr, SIMPLIFY = FALSE)
     f_J <- lapply(f_basis, crossprod)
 
     # compute scalar distance matrices
@@ -804,7 +804,7 @@ predict.fgpm <- function(model, sIn.pr, fIn.pr, detail = "light") {
   } else if (model@df > 0) { # functional-input case *******************************************
     # project functional inputs
     f_basis <- model@f_proj@basis
-    f_coefs.pr <- mapply(function(B, f) t(solve(crossprod(B), tcrossprod(t(B),f))), f_basis, fIn.pr, SIMPLIFY = F)
+    f_coefs.pr <- mapply(function(B, f) t(solve(crossprod(B), tcrossprod(t(B),f))), f_basis, fIn.pr, SIMPLIFY = FALSE)
     f_J <- lapply(f_basis, crossprod)
 
     # compute functional distance matrices
@@ -967,7 +967,7 @@ simulate.fgpm <- function(model, nsim, seed, sIn.sm, fIn.sm, nugget.sm = 10^-8, 
 
     # project functional inputs
     f_basis <- model@f_proj@basis
-    f_coefs.sm <- mapply(function(B, f) t(solve(crossprod(B), tcrossprod(t(B),f))), f_basis, fIn.sm, SIMPLIFY = F)
+    f_coefs.sm <- mapply(function(B, f) t(solve(crossprod(B), tcrossprod(t(B),f))), f_basis, fIn.sm, SIMPLIFY = FALSE)
     f_J <- lapply(f_basis, crossprod)
 
     # compute scalar distance matrices
@@ -986,7 +986,7 @@ simulate.fgpm <- function(model, nsim, seed, sIn.sm, fIn.sm, nugget.sm = 10^-8, 
   } else if (model@df > 0) { # functional-input case *******************************************
     # project functional inputs
     f_basis <- model@f_proj@basis
-    f_coefs.sm <- mapply(function(B, f) t(solve(crossprod(B), tcrossprod(t(B),f))), f_basis, fIn.sm, SIMPLIFY = F)
+    f_coefs.sm <- mapply(function(B, f) t(solve(crossprod(B), tcrossprod(t(B),f))), f_basis, fIn.sm, SIMPLIFY = FALSE)
     f_J <- lapply(f_basis, crossprod)
 
     # compute functional distance matrices

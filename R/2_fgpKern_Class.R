@@ -29,7 +29,7 @@ setClass("fgpKern",
                         f_lsHyps = "numeric",           # estimated length-scale parameters for functional inputs
                         f_lsOwners = "character"        # owner of each length scale parameter in f_lsHyps
                         ),
-         validity = function(object) {T})
+         validity = function(object) {TRUE})
 # ==========================================================================================================
 
 
@@ -61,7 +61,7 @@ show.fgpKern <- function(kernel) {
     if (np < df) {
       G <- rbind(G, rep("...", 2))
     }
-    print(kable(G, align = 'c', row.names = F))
+    print(kable(G, align = 'c', row.names = FALSE))
   }
 
   cat("\n* Hyperparameters:\n")

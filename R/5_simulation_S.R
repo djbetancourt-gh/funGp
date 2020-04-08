@@ -7,7 +7,7 @@ makeSims_S <- function(sMs.ts, sMs.ss, sig2, thetas_s, kerType, L, LInvY, nsim, 
   # compute and store conditional realizations
   K.ts <- sig2 * setR(thetas_s, sMs.ts, kerType)
   K.ss <- sig2 * setR(thetas_s, sMs.ss, kerType)
-  LInvK <- backsolve(L, K.ts, upper.tri = F)
+  LInvK <- backsolve(L, K.ts, upper.tri = FALSE)
   ys.mean <- t(LInvK) %*% LInvY
   n.sm <- nrow(K.ss)
   if (!is.null(seed)) set.seed(seed)

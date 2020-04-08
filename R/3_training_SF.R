@@ -97,7 +97,7 @@ setSPoints_SF <- function(bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_
   fitvec <- apply(allspoints, 2, negLogLik_funGp_SF, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known, nugget)
 
   # get the best n.starts points
-  spoints <- allspoints[,order(fitvec)[1:n.starts], drop = F]
+  spoints <- allspoints[,order(fitvec)[1:n.starts], drop = FALSE]
 
   return(spoints)
 }
@@ -117,12 +117,12 @@ optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, var
   if (n.starts == 1){
     if (quietly) {
       optOut <- quiet(optim(par = as.numeric(spoints), fn = negLogLik_funGp_SF, method = "L-BFGS-B",
-                            lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
+                            lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
                             sMs = sMs, fMs = fMs, sOut = sOut, kerType = kerType,
                             varfun = varfun, ls_s.known = ls_s.known, ls_f.known = ls_f.known, nugget = nugget))
     } else {
       optOut <- optim(par = as.numeric(spoints), fn = negLogLik_funGp_SF, method = "L-BFGS-B",
-                      lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
+                      lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
                       sMs = sMs, fMs = fMs, sOut = sOut, kerType = kerType,
                       varfun = varfun, ls_s.known = ls_s.known, ls_f.known = ls_f.known, nugget = nugget)
     }
@@ -145,12 +145,12 @@ optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, var
           {
             if (quietly) {
               quiet(optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_SF, method = "L-BFGS-B",
-                          lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
+                          lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
                           sMs = sMs, fMs = fMs, sOut = sOut, kerType = kerType,
                           varfun = varfun, ls_s.known = ls_s.known, ls_f.known = ls_f.known, nugget = nugget))
             } else {
               optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_SF, method = "L-BFGS-B",
-                    lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
+                    lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
                     sMs = sMs, fMs = fMs, sOut = sOut, kerType = kerType,
                     varfun = varfun, ls_s.known = ls_s.known, ls_f.known = ls_f.known, nugget = nugget)
             }
@@ -184,16 +184,16 @@ optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, var
       # optOutList <- foreach(i = 1:n.starts, .errorhandling = "remove", .options.snow = opts) %dopar%
       # {
       with_progress({
-        p <- progressor(along = 1:n.starts, auto_finish = F)
+        p <- progressor(along = 1:n.starts, auto_finish = FALSE)
         optOutList <- foreach(i = 1:n.starts, .errorhandling = "remove") %dopar% {
           if (quietly) {
             o <- quiet(optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_SF, method = "L-BFGS-B",
-                             lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
+                             lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
                              sMs = sMs, fMs = fMs, sOut = sOut, kerType = kerType,
                              varfun = varfun, ls_s.known = ls_s.known, ls_f.known = ls_f.known, nugget = nugget))
           } else {
             o <- optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_SF, method = "L-BFGS-B",
-                       lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
+                       lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
                        sMs = sMs, fMs = fMs, sOut = sOut, kerType = kerType,
                        varfun = varfun, ls_s.known = ls_s.known, ls_f.known = ls_f.known, nugget = nugget)
           }
@@ -281,7 +281,7 @@ negLogLik_funGp_SF <- function(thetas, sMs, fMs, sOut, kerType, varfun, ls_s.kno
 # Analytic function for the optimal variance parameter in log likelihood - hybrid inputs
 # ==========================================================================================================
 analyticVar_llik <- function(U, sOut, n.tr) {
-  UInvY <- backsolve(t(U), sOut, upper.tri = F)
+  UInvY <- backsolve(t(U), sOut, upper.tri = FALSE)
   return(crossprod(UInvY)/n.tr)
 }
 # ==========================================================================================================

@@ -5,7 +5,7 @@ makePreds_F <- function(fMs.tp, fMs.pp, sig2, thetas_f, kerType, L, LInvY, detai
 
   # compute and store conditional mean and standard deviation
   K.tp <- sig2 * setR(thetas_f, fMs.tp, kerType)
-  LInvK <- backsolve(L, K.tp, upper.tri = F)
+  LInvK <- backsolve(L, K.tp, upper.tri = FALSE)
   preds$mean <- t(LInvK) %*% LInvY
   preds$sd <- sqrt(pmax(sig2 - apply(LInvK, 2, crossprod), 0))
 
@@ -25,7 +25,7 @@ preMats_F <- function(fMs, sOut, sig2, thetas_f, kerType, nugget){
   R <- setR(thetas_f, fMs, kerType)
   K.tt <- sig2 * (R + diag(nugget, nrow = nrow(R), ncol = ncol(R)))
   L <- t(chol(K.tt))
-  LInvY <- backsolve(L, sOut, upper.tri = F)
+  LInvY <- backsolve(L, sOut, upper.tri = FALSE)
 
   return(list(L = L, LInvY = LInvY))
 }

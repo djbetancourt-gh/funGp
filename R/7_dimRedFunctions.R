@@ -47,8 +47,7 @@ proj_bsplines <- function(f, p){
   knots.left <- rep(ll, n.outer)
   knots.right <- rep(ul, n.outer)
   knots <- c(knots.left, knots.inner, knots.right)
-  # matplot(splineDesign(knots = knots, x = ll:ul, outer.ok = T, ord = ord), type = "l")
-  return(splineDesign(knots = knots, x = ll:ul, outer.ok = T, ord = ord))
+  return(splineDesign(knots = knots, x = ll:ul, outer.ok = TRUE, ord = ord))
 }
 # ----------------------------------------------------------------------------------------------------------
 

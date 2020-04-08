@@ -84,7 +84,7 @@ setSPoints_S <- function(bnds, sMs, sOut, kerType, varfun, n.starts, n.presample
   fitvec <- apply(allspoints, 2, negLogLik_funGp_S, sMs, sOut, kerType, varfun, nugget)
 
   # get the best n.starts points
-  spoints <- allspoints[,order(fitvec)[1:n.starts], drop = F]
+  spoints <- allspoints[,order(fitvec)[1:n.starts], drop = FALSE]
 
   return(spoints)
 }
@@ -104,11 +104,11 @@ optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, n
   if (n.starts == 1){
     if (quietly) {
       optOut <- quiet(optim(par = as.numeric(spoints), fn = negLogLik_funGp_S, method = "L-BFGS-B",
-                            lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
+                            lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
                             sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget))
     } else {
       optOut <- optim(par = as.numeric(spoints), fn = negLogLik_funGp_S, method = "L-BFGS-B",
-                      lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
+                      lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
                       sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
     }
 
@@ -130,11 +130,11 @@ optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, n
           {
             if (quietly) {
               quietly(optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
-                            lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
+                            lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
                             sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget))
             } else {
               optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
-                    lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
+                    lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
                     sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
             }
           },
@@ -167,15 +167,15 @@ optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, n
       # optOutList <- foreach(i = 1:n.starts, .errorhandling = "remove", .options.snow = opts) %dopar%
       # {
       with_progress({
-        p <- progressor(along = 1:n.starts, auto_finish = F)
+        p <- progressor(along = 1:n.starts, auto_finish = FALSE)
         optOutList <- foreach(i = 1:n.starts, .errorhandling = "remove") %dopar% {
           if (quietly) {
             o <- quiet(optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
-                             lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
+                             lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
                              sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget))
           } else {
             o <- optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
-                       lower = bnds[1,], upper = bnds[2,], control = list(trace = T),
+                       lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
                        sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
           }
           p()
