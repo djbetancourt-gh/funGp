@@ -145,7 +145,7 @@ This function enables the smart exploration of the solution space of potential s
   solution space based on the levels of each structural parameter currently available in the
   \link[funGp]{fgpm} function, and performs as smart exploration of it. More details on the algorithm are
   provided in a dedicated
-  \href{https://drive.google.com/file/d/1GnalLS9jEr9AxPKmQk0S1bLQ7whuLm1T/view?usp=sharing}{technical report}.
+  \href{https://hal.archives-ouvertes.fr/hal-02532713}{technical report}.
   funGp might evolve in the future to include improvements in the current algorithm or alternative
   solution methods.
 }
@@ -311,9 +311,9 @@ Betancourt, J., Bachoc, F., Klein, T., Idier, D., Pedreros, R., and Rohmer, J. (
 \href{https://hal.archives-ouvertes.fr/hal-01998724}{[HAL]}
 
 Betancourt, J., Bachoc, F., Klein, T., and Gamboa, F. (2020),
-Technical Report: "Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression. Ref. B3D-WP3.2".
+Technical Report: "Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression. Ref. D3.b (WP3.2)".
 \emph{RISCOPE project}.
-\href{https://drive.google.com/file/d/1GnalLS9jEr9AxPKmQk0S1bLQ7whuLm1T/view?usp=sharing}{[HAL]}
+\href{https://hal.archives-ouvertes.fr/hal-02532713}{[HAL]}
 
 Betancourt, J., Bachoc, F., and Klein, T. (2020),
 R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".

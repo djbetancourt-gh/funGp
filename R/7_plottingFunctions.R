@@ -637,7 +637,7 @@ plotSims.fgpm <- function(sims, detail, ...) {
 #'   \emph{delta} and \emph{dispr} in the call to the model selection function \link[funGp]{fgpm_factory}.
 #'   The values computed by decay are the ones that would be used by the ant colony algorithm as initial
 #'   pheromone load of the links pointing out to projection on each dimension. For more details, check the
-#'   \href{https://drive.google.com/file/d/1GnalLS9jEr9AxPKmQk0S1bLQ7whuLm1T/view?usp=sharing}{technical report}
+#'   \href{https://hal.archives-ouvertes.fr/hal-02532713}{technical report}
 #'   explaining the ant colony algorithm implemented in funGp, and the
 #'   \href{https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing}{
 #'   manual} of the package.
@@ -663,7 +663,7 @@ plotSims.fgpm <- function(sims, detail, ...) {
 #'   a projection in a space of the same dimension, are equaly heavy for the model. The default values of
 #'   \emph{tao0}, \emph{delta} and \emph{dispr}, are 0.1, 2 and 1.4, respectively, which match the default
 #'   values used by the \link[funGp]{fgpm_factory} function. Check
-#'   \href{https://drive.google.com/file/d/1GnalLS9jEr9AxPKmQk0S1bLQ7whuLm1T/view?usp=sharing}{this technical
+#'   \href{https://hal.archives-ouvertes.fr/hal-02532713}{this technical
 #'   report} for more details.
 #' @param doplot an optional boolean indicating if the pheromone loads should be plotted. Default = TRUE.
 #' @param deliver an optional boolean indicating if the pheromone loads should be returned. Default = FALSE.
@@ -743,7 +743,7 @@ decay <- function(k, pmax = NULL, tao0 = .1, delta = 2, dispr = 1.4, doplot = TR
 #'   probability load of the links pointing out to projection on each dimension. These values result from
 #'   the normalization of the initial pheromone loads delivered by the \link[funGp]{decay} function, which
 #'   are made to sum 1. For more details, check the
-#'   \href{https://drive.google.com/file/d/1GnalLS9jEr9AxPKmQk0S1bLQ7whuLm1T/view?usp=sharing}{technical report}
+#'   \href{https://hal.archives-ouvertes.fr/hal-02532713}{technical report}
 #'   explaining the ant colony algorithm implemented in funGp, and the
 #'   \href{https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing}{
 #'   manual} of the package.
@@ -776,7 +776,7 @@ decay <- function(k, pmax = NULL, tao0 = .1, delta = 2, dispr = 1.4, doplot = TR
 #'   mechanisms defining the initial pheromone and probability loads. The default values of
 #'   \emph{tao0}, \emph{delta} and \emph{dispr}, are 0.1, 2 and 1.4, respectively, which match the default
 #'   values used by the \link[funGp]{fgpm_factory} function. Check
-#'   \href{https://drive.google.com/file/d/1GnalLS9jEr9AxPKmQk0S1bLQ7whuLm1T/view?usp=sharing}{this technical
+#'   \href{https://hal.archives-ouvertes.fr/hal-02532713}{this technical
 #'   report} for more details.
 #' @param doplot an optional boolean indicating if the probability loads should be plotted. Default = TRUE.
 #' @param deliver an optional boolean indicating if the probability loads should be returned. Default = FALSE.
@@ -911,7 +911,7 @@ if(!isGeneric("plotX")) {setGeneric("plotX", function(x.model, ...) standardGene
 #' @references Betancourt, J., Bachoc, F., Klein, T., and Gamboa, F. (2020),
 #' Technical Report: "Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression. Ref. B3D-WP3.2".
 #' \emph{RISCOPE project}.
-#' \href{https://drive.google.com/file/d/1GnalLS9jEr9AxPKmQk0S1bLQ7whuLm1T/view?usp=sharing}{[HAL]}
+#' \href{https://hal.archives-ouvertes.fr/hal-02532713}{[HAL]}
 #'
 #' @references Betancourt, J., Bachoc, F., and Klein, T. (2020),
 #' R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
@@ -1150,9 +1150,9 @@ if(!isGeneric("plotEvol")) {setGeneric("plotEvol", function(x.model, ...) standa
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #'
 #' @references Betancourt, J., Bachoc, F., and Klein, T., and Gamboa, F. (2020),
-#' Technical Report: "Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression. Ref. B3D-WP3.2".
+#' Technical Report: "Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression. Ref. D3.b (WP3.2)".
 #' \emph{RISCOPE project}.
-#' \href{https://drive.google.com/file/d/1GnalLS9jEr9AxPKmQk0S1bLQ7whuLm1T/view?usp=sharing}{[HAL]}
+#' \href{https://hal.archives-ouvertes.fr/hal-02532713}{[HAL]}
 #'
 #' @references Betancourt, J., Bachoc, F., and Klein, T. (2020),
 #' R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".

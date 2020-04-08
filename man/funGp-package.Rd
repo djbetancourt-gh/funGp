@@ -60,7 +60,7 @@ This package was first developed in the frame of the RISCOPE research project, f
  Gaussian process metamodeling of functional-input code for coastal flood hazard assessment
  }}
  \item{\strong{Tech. report}}{
- \href{https://drive.google.com/file/d/1GnalLS9jEr9AxPKmQk0S1bLQ7whuLm1T/view?usp=sharing}{
+ \href{https://hal.archives-ouvertes.fr/hal-02532713}{
  Ant Colony Based Model Selection forFunctional-Input Gaussian Process Regression
  }}
 }
