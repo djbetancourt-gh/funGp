@@ -14,9 +14,9 @@ navbar:
     - text: "Home"
       href: index.html
     - text: "Reference"
-      href: reference/index.html
+      href: reference/
     - text: "News"
-      href: news/index.html
+      href: news/
   right:
     - icon: fa-github fa-lg
       href: https://github.com/djbetancourt-gh/funGp

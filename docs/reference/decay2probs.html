@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Probability functions for ant colony optimzation in funGp — decay2probs • funGp</title>
+<title>Probability functions for ant colony optimization in funGp — decay2probs • funGp</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,7 +46,7 @@
 
 
 
-<meta property="og:title" content="Probability functions for ant colony optimzation in funGp — decay2probs" />
+<meta property="og:title" content="Probability functions for ant colony optimization in funGp — decay2probs" />
 <meta property="og:description" content="This function is intended to aid the selection of the heuristic parameters tao0,
   delta and dispr in the call to the model selection function fgpm_factory.
   The values computed by decay2probs are the ones that would be used by the ant colony algorithm as
@@ -99,10 +99,10 @@
   <a href="../index.html">Home</a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../reference/">Reference</a>
 </li>
 <li>
-  <a href="../news/index.html">News</a>
+  <a href="../news/">News</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -125,7 +125,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Probability functions for ant colony optimzation in funGp</h1>
+    <h1>Probability functions for ant colony optimization in funGp</h1>
     
     <div class="hidden name"><code>decay2probs.Rd</code></div>
     </div>
@@ -162,7 +162,7 @@
     </tr>
     <tr>
       <th>pmax</th>
-      <td><p>an optional number specifying the hypotetical maximum projection dimension of this input. The
+      <td><p>an optional number specifying the hypothetical maximum projection dimension of this input. The
 user will be able to set this value later in the call to <a href='fgpm_factory.html'>fgpm_factory</a> as a constraint. If
 not specified, it takes the value of k.</p></td>
     </tr>
@@ -186,10 +186,10 @@ not specified, it takes the value of k.</p></td>
   in dimensions further than \(delta + 1\). If <em>pmax</em> = <em>k</em>, then the dimension 0,
   representing no projection, receives a pheromone load identical to that of dimension <em>k</em>. This, in
   order to represent the fact that both, the representation of the function in its original dimension or
-  a projection in a space of the same dimension, are equaly heavy for the model. In order to obtain the
+  a projection in a space of the same dimension, are equally heavy for the model. In order to obtain the
   probability loads, the initial pheromone values are normalized to sum 1. Note that the normalization
   makes the value of tao0 become irrelevant in the initial probability load. This does not mean that the
-  eefect of tao0 is completely removed from the algorithm. Despite the fact that tao0 does not have
+  effect of tao0 is completely removed from the algorithm. Despite the fact that tao0 does not have
   influence on the selection of the projection dimension during the first iteration, it will be
   protagonist during the global pheromone update and will have an impact on every further iteration.
   The argument tao0 is left active in the input just for a better comprehension of the functioning of the

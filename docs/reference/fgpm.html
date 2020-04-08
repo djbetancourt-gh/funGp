@@ -91,10 +91,10 @@
   <a href="../index.html">Home</a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../reference/">Reference</a>
 </li>
 <li>
-  <a href="../news/index.html">News</a>
+  <a href="../news/">News</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -174,11 +174,11 @@ between "gauss", "matern5_2" and "matern3_2". Default is "matern5_2".</p></td>
       <th>f_disType</th>
       <td><p>an optional array of character strings specifying the distance function to be used for
 each functional coordinates within the covariance function of the Gaussian process. To be chosen between
-"L2_bygroup" and "L2_byindex". The L2_bygroup distance considers each courve as a whole and uses a single
+"L2_bygroup" and "L2_byindex". The L2_bygroup distance considers each curve as a whole and uses a single
 length-scale parameter per functional input variable. The L2_byindex distance uses as many length-scale
 parameters per functional input as discretization points it has. For instance an input discretized as
 a vector of size 8 will use 8 length-scale parameters when using L2_byindex. If dimension reduction of
-a functional input is requested, then L2_byindex uses as many length scale parameters as efective
+a functional input is requested, then L2_byindex uses as many length scale parameters as effective
 dimensions are used to represent the input. A single character string can also be passed as a general
 selection for all the functional inputs of the model. More details in
 <a href='https://www.sciencedirect.com/science/article/abs/pii/S0951832019301693'>
@@ -239,7 +239,7 @@ multiple initial points. More details in the description of the argument par.clu
     <tr>
       <th>n.presample</th>
       <td><p>an optional integer indicating the number of points to be tested in order to select the
-n.starts intial points. The n.presampre points will be randomly sampled from the hyper-rectangle defined by: <br /> <br />
+n.starts initial points. The n.presample points will be randomly sampled from the hyper-rectangle defined by: <br /> <br />
 1e-10 \(\le\) <code>ls_s.hyp[i]</code> \(\le\) 2*max(<code>sMs[[i]]</code>), for i in 1 to the number of scalar inputs, <br />
 1e-10 \(\le\) <code>ls_f.hyp[i]</code> \(\le\) 2*max(<code>fMs[[i]]</code>), for i in 1 to the number of functional inputs, <br /> <br />
 with  sMs and fMs the lists of distance matrices for the scalar and functional inputs, respectively. The value of
@@ -252,7 +252,7 @@ of the parallel package. If not provided, multistart optimizations are done in s
     </tr>
     <tr>
       <th>quietly</th>
-      <td><p>an optional boolean indicating if the calls to the hyperparameters optimizer should ommit text related to
+      <td><p>an optional boolean indicating if the calls to the hyperparameters optimizer should skip text related to
 the evolution of the optimization. Default is FALSE.</p></td>
     </tr>
     </table>
