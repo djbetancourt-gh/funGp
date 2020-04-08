@@ -12,10 +12,11 @@ navbar:
   type: inverse
   left:
     - text: "Home"
+      href: home
     - text: "Reference"
-      href: reference/
+      href: reference
     - text: "News"
-      href: news/
+      href: news
   right:
     - icon: fa-github fa-lg
       href: https://github.com/djbetancourt-gh/funGp
