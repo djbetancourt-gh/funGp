@@ -13,6 +13,7 @@ Description: Construction and smart selection of Gaussian process models with em
 Note: research product of the RISCOPE project
     (ANR, project No.16CE04-0011) <https://perso.math.univ-toulouse.fr/riscope/>.
 License: GPL-3
+URL: https://djbetancourt-gh.github.io/funGp/
 Imports: methods, foreach, knitr, scales, qdapRegex, microbenchmark, doFuture, future, progressr
 Encoding: UTF-8
 LazyData: true
