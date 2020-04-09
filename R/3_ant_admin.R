@@ -859,7 +859,7 @@ fitNtests_ACO <- function(ant, sIn, fIn, sOut, extargs, base,
 #' @references Betancourt, J., Bachoc, F., and Klein, T. (2020),
 #' R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
 #' \emph{RISCOPE project}.
-#' \href{https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing}{[HAL]}
+#' \href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
 #'
 #' @seealso \strong{*} \link[funGp]{predict} for predictions based on a funGp model;
 #' @seealso \strong{*} \link[funGp]{fgpm} for creation of a funGp model;

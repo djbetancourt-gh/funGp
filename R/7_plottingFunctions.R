@@ -639,7 +639,7 @@ plotSims.fgpm <- function(sims, detail, ...) {
 #'   pheromone load of the links pointing out to projection on each dimension. For more details, check the
 #'   \href{https://hal.archives-ouvertes.fr/hal-02532713}{technical report}
 #'   explaining the ant colony algorithm implemented in funGp, and the
-#'   \href{https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing}{
+#'   \href{https://hal.archives-ouvertes.fr/hal-02536624}{
 #'   manual} of the package.
 #'
 #' @param k a number indicating the dimension of the functional input under analysis.
@@ -745,7 +745,7 @@ decay <- function(k, pmax = NULL, tao0 = .1, delta = 2, dispr = 1.4, doplot = TR
 #'   are made to sum 1. For more details, check the
 #'   \href{https://hal.archives-ouvertes.fr/hal-02532713}{technical report}
 #'   explaining the ant colony algorithm implemented in funGp, and the
-#'   \href{https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing}{
+#'   \href{https://hal.archives-ouvertes.fr/hal-02536624}{
 #'   manual} of the package.
 #'
 #' @param k a number indicating the dimension of the functional input under analysis.
@@ -916,7 +916,7 @@ if(!isGeneric("plotX")) {setGeneric("plotX", function(x.model, ...) standardGene
 #' @references Betancourt, J., Bachoc, F., and Klein, T. (2020),
 #' R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
 #' \emph{RISCOPE project}.
-#' \href{https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing}{[HAL]}
+#' \href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
 #'
 #' @seealso \strong{*} \link[funGp]{fgpm_factory} for structural optimization of funGp models;
 #' @seealso \strong{*} \link[funGp]{plotEvol} for a plot on the evolution of the model selection algorithm
@@ -1157,7 +1157,7 @@ if(!isGeneric("plotEvol")) {setGeneric("plotEvol", function(x.model, ...) standa
 #' @references Betancourt, J., Bachoc, F., and Klein, T. (2020),
 #' R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
 #' \emph{RISCOPE project}.
-#' \href{https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing}{[HAL]}
+#' \href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
 #'
 #' @seealso \strong{*} \link[funGp]{fgpm_factory} for structural optimization of funGp models;
 #' @seealso \strong{*} \link[funGp]{plotX} for diagnostic plots for a fgpm_factory output and selected model.

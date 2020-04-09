@@ -1,4 +1,4 @@
-![**funGp**](https://drive.google.com/thumbnail?id=1GsHPb5GnE0YS7b7nRpHqXyFKeHuLw3hF)
+![**funGp**](https://hal.archives-ouvertes.fr/hal-02536624)
 
 Gaussian Process Models for Scalar and Functional Inputs
 --------------------------------------------------------
@@ -31,7 +31,7 @@ This project is licensed under the GPL-3 License. <br /><br />
 
 <br />
 
-**Manual** :book: <br /> [Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour](https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing) <br /><br />
+**Manual** :book: <br /> [Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour](https://hal.archives-ouvertes.fr/hal-02536624) <br /><br />
 
 **Authors:** José Betancourt :wrench: (IMT, ENAC), François Bachoc (IMT) and Thierry Klein (IMT, ENAC).
 
@@ -47,4 +47,4 @@ Betancourt, J., Bachoc, F., Klein, T., Idier, D., Pedreros, R., and Rohmer, J. (
 
 Betancourt, J., Bachoc, F., Klein, T., and Gamboa, F. (2020), Technical Report: "Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression. Ref. D3.b (WP3.2)". *RISCOPE project*. [[HAL](https://hal.archives-ouvertes.fr/hal-02532713)]
 
-Betancourt, J., Bachoc, F., and Klein, T. (2020), R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour". *RISCOPE project*. [[HAL](https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing)]
+Betancourt, J., Bachoc, F., and Klein, T. (2020), R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour". *RISCOPE project*. [[HAL](https://hal.archives-ouvertes.fr/hal-02536624)]

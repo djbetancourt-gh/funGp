@@ -35,7 +35,7 @@
 #' @section Useful material:
 #' \itemize{
 #'  \item{\strong{Manual}}{
-#'  \href{https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing}{
+#'  \href{https://hal.archives-ouvertes.fr/hal-02536624}{
 #'  Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour
 #'  }}
 #'  \item{\strong{Paper}}{

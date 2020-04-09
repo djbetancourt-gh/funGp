@@ -49,7 +49,7 @@
 #' @section Useful material:
 #' \itemize{
 #'  \item{\strong{Manual}}{
-#'  \href{https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing}{
+#'  \href{https://hal.archives-ouvertes.fr/hal-02536624}{
 #'  Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour
 #'  }}
 #' }
@@ -113,7 +113,7 @@ setClass("fgpm",
 #'   \href{https://www.sciencedirect.com/science/article/abs/pii/S0951832019301693}{
 #'   the reference article}
 #'   and
-#'   \href{https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing}{
+#'   \href{https://hal.archives-ouvertes.fr/hal-02536624}{
 #'   the in-depth package manual}. Default is "L2_bygroup".
 #' @param f_pdims an optional array with the projection dimension for each functional input. For each input,
 #'   the projection dimension should be an integer between 0 and its original dimension, with 0 denoting
@@ -172,7 +172,7 @@ setClass("fgpm",
 #' @references Betancourt, J., Bachoc, F., and Klein, T. (2020),
 #' R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
 #' \emph{RISCOPE project}.
-#' \href{https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing}{[HAL]}
+#' \href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
 #'
 #' @seealso \strong{*} \link[funGp]{plotLOO} for diagnostic plot of a funGp model;
 #' @seealso \strong{*} \link[funGp]{predict} for predictions based on a funGp model;

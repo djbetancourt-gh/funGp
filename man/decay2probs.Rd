@@ -63,7 +63,7 @@ This function is intended to aid the selection of the heuristic parameters \emph
   are made to sum 1. For more details, check the
   \href{https://hal.archives-ouvertes.fr/hal-02532713}{technical report}
   explaining the ant colony algorithm implemented in funGp, and the
-  \href{https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing}{
+  \href{https://hal.archives-ouvertes.fr/hal-02536624}{
   manual} of the package.
 }
 \examples{

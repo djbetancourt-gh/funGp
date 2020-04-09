@@ -49,7 +49,7 @@ selection for all the functional inputs of the model. More details in
 \href{https://www.sciencedirect.com/science/article/abs/pii/S0951832019301693}{
 the reference article}
 and
-\href{https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing}{
+\href{https://hal.archives-ouvertes.fr/hal-02536624}{
 the in-depth package manual}. Default is "L2_bygroup".}
 
 \item{f_pdims}{an optional array with the projection dimension for each functional input. For each input,
@@ -258,7 +258,7 @@ Technical Report: "Ant Colony Based Model Selection for Functional-Input Gaussia
 Betancourt, J., Bachoc, F., and Klein, T. (2020),
 R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
 \emph{RISCOPE project}.
-\href{https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing}{[HAL]}
+\href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
 }
 \seealso{
 \strong{*} \link[funGp]{plotLOO} for diagnostic plot of a funGp model;

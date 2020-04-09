@@ -89,7 +89,7 @@ Several tests involving \link[=funGp-package]{all main functions, plotters and g
 for scalar-input, functional-input and hybrid-input models. In all cases, the output of the functions
 were correct from the statistical and programmatic perspectives. For an example on the kind of tests
 performed, the interested user is referred to
-\href{https://drive.google.com/open?id=0B5dR1D0AmTvsb01qcmJ0UWg1TlE}{the introductory funGp manual}.
+\href{https://hal.archives-ouvertes.fr/hal-02536624}{the introductory funGp manual}.
 }
 
 \references{

@@ -318,7 +318,7 @@ Technical Report: "Ant Colony Based Model Selection for Functional-Input Gaussia
 Betancourt, J., Bachoc, F., and Klein, T. (2020),
 R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
 \emph{RISCOPE project}.
-\href{https://drive.google.com/file/d/1MtYi-Qq-BNZpbp1SWWG4Fb35HvVqRHQM/view?usp=sharing}{[HAL]}
+\href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
 
 Dubrule, O. (1983),
 "Cross validation of kriging in a unique neighborhood".
