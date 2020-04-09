@@ -1,4 +1,4 @@
-![**funGp**](https://hal.archives-ouvertes.fr/hal-02536624)
+![**funGp**](https://drive.google.com/thumbnail?id=1GsHPb5GnE0YS7b7nRpHqXyFKeHuLw3hF)
 
 Gaussian Process Models for Scalar and Functional Inputs
 --------------------------------------------------------
