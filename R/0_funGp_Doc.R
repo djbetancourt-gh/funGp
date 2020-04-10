@@ -20,15 +20,15 @@
 #' @section Model selection:
 #' \itemize{
 #'  \item{\strong{Main methods}}{\cr
-#'        \link[funGp]{fgpm_factory}: fill
+#'        \link[funGp]{fgpm_factory}: structural parameter optimization
 #'  }
 #'  \item{\strong{Plotters pre-optimization}}{\cr
-#'        \link[funGp]{decay}: only title \cr
-#'        \link[funGp]{decay2probs}: only title
+#'        \link[funGp]{decay}: regularized initial pheromones \cr
+#'        \link[funGp]{decay2probs}: normalized initial pheromones
 #'  }
 #'  \item{\strong{Plotters post-optimization}}{\cr
-#'        \link[funGp]{plotX}: only title \cr
-#'        \link[funGp]{plotEvol}: only title
+#'        \link[funGp]{plotX}: absolute and relative quality of the optimized model \cr
+#'        \link[funGp]{plotEvol}: evolution of the algorithm
 #'  }
 #' }
 #'

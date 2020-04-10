@@ -865,6 +865,7 @@ fitNtests_ACO <- function(ant, sIn, fIn, sOut, extargs, base,
 #' @seealso \strong{*} \link[funGp]{fgpm} for creation of a funGp model;
 #' @seealso \strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection.
 #'
+#' @importFrom qdapRegex rm_between
 #' @export
 format4pred <- function(sIn.pr = NULL, fIn.pr = NULL, args) {
   s.on <- f.on <- F

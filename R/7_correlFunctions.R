@@ -1,16 +1,3 @@
-#' @title Fill this!!!
-#' @description Fill this!!!!!!!!!!
-#'
-#' @param thetas Fill this!!!!!!!!!!
-#' @param Ms a list with as many elements as scalar input variables. Each element of the list is a n times n matrix of differences
-#' between the scalar observation coordinates.
-#' @param kerType Fill this!!!!!!!!!!
-#' @return Fill this!!!!!!!!!!
-#'
-#' @keywords internal
-#'
-#' @author José Betancourt, François Bachoc and Thierry Klein
-#' @export
 setR <- function(thetas, Ms, kerType) {
   switch(kerType,
          "gauss" = {# 1: Gaussian

@@ -44,13 +44,6 @@ print_2C <- function(main, cnames, gap1, gap2, c1, c2){
   }
 }
 
-#' @title Fitting of functional-input Gaussian process models
-#' @description Creates a Gaussian process model based on the nature of the inputs which could be scalar,
-#' functional or hybrid.
-#' @param x Fill!!!!!!!!!!
-#'
-#' @export
-#' @keywords internal
 axtags <- function(x){
   if (x > 6) {
     y <- seq_len(x)

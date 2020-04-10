@@ -530,19 +530,6 @@ setSpace <- function(sIn, fIn, ctraints) {
 
 # ==========================================================================================================
 # ==========================================================================================================
-#' @title Fitting of functional-input Gaussian process models
-#' @description Creates a Gaussian process model based on the nature of the inputs which could be scalar,
-#' functional or hybrid. For functional inputs, the user might specify a projection method, projection
-#' dimension and distance type seeking for optimal processing time or metamodel predictability.
-#' @param model Fill!!!!!!!!!!
-#' @param sIn.vl Fill!!!!!!!!!!
-#' @param fIn.vl Fill!!!!!!!!!!
-#' @param sOut.vl Fill!!!!!!!!!!
-#' @param active Fill!!!!!!!!!!
-#'
-#' @importFrom qdapRegex rm_between
-#' @export
-#' @keywords internal
 getFitness <- function(model, sIn.vl = NULL, fIn.vl = NULL, sOut.vl = NULL, active = NULL) {
   # identify required statistic based on the ind.vl matrix
   if (is.null(sOut.vl)) {
