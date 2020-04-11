@@ -1,129 +1,120 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://funGp.r-lib.org/index.html</loc>
+    <loc>http://funGp.r-pck.org/index.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/Xfgpm-class.html</loc>
+    <loc>http://funGp.r-pck.org/reference/Xfgpm-class.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/antsLog-class.html</loc>
+    <loc>http://funGp.r-pck.org/reference/antsLog-class.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/axtags.html</loc>
+    <loc>http://funGp.r-pck.org/reference/black-boxes.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/black-boxes.html</loc>
+    <loc>http://funGp.r-pck.org/reference/decay.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/decay.html</loc>
+    <loc>http://funGp.r-pck.org/reference/decay2probs.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/decay2probs.html</loc>
+    <loc>http://funGp.r-pck.org/reference/factoryCall-class.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/factoryCall-class.html</loc>
+    <loc>http://funGp.r-pck.org/reference/fgp_BB1.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/fgp_BB1.html</loc>
+    <loc>http://funGp.r-pck.org/reference/fgp_BB2.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/fgp_BB2.html</loc>
+    <loc>http://funGp.r-pck.org/reference/fgp_BB3.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/fgp_BB3.html</loc>
+    <loc>http://funGp.r-pck.org/reference/fgp_BB4.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/fgp_BB4.html</loc>
+    <loc>http://funGp.r-pck.org/reference/fgp_BB5.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/fgp_BB5.html</loc>
+    <loc>http://funGp.r-pck.org/reference/fgp_BB6.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/fgp_BB6.html</loc>
+    <loc>http://funGp.r-pck.org/reference/fgp_BB7.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/fgp_BB7.html</loc>
+    <loc>http://funGp.r-pck.org/reference/fgpm-class.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/fgpm-class.html</loc>
+    <loc>http://funGp.r-pck.org/reference/fgpm.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/fgpm.html</loc>
+    <loc>http://funGp.r-pck.org/reference/fgpm_factory.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/fgpm_factory.html</loc>
+    <loc>http://funGp.r-pck.org/reference/format4pred.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/format4pred.html</loc>
+    <loc>http://funGp.r-pck.org/reference/funGp-package.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/funGp-package.html</loc>
+    <loc>http://funGp.r-pck.org/reference/gaussian_cor.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/gaussian_cor.html</loc>
+    <loc>http://funGp.r-pck.org/reference/kernel-class.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/getFitness.html</loc>
+    <loc>http://funGp.r-pck.org/reference/matern32_cor.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/kernel-class.html</loc>
+    <loc>http://funGp.r-pck.org/reference/matern52_cor.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/matern32_cor.html</loc>
+    <loc>http://funGp.r-pck.org/reference/modelCall-class.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/matern52_cor.html</loc>
+    <loc>http://funGp.r-pck.org/reference/plotEvol-generic.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/modelCall-class.html</loc>
+    <loc>http://funGp.r-pck.org/reference/plotEvol-methods.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/plotEvol-generic.html</loc>
+    <loc>http://funGp.r-pck.org/reference/plotLOO-generic.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/plotEvol-methods.html</loc>
+    <loc>http://funGp.r-pck.org/reference/plotLOO-methods.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/plotLOO-generic.html</loc>
+    <loc>http://funGp.r-pck.org/reference/plotPreds-generic.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/plotLOO-methods.html</loc>
+    <loc>http://funGp.r-pck.org/reference/plotPreds-methods.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/plotPreds-generic.html</loc>
+    <loc>http://funGp.r-pck.org/reference/plotSims-generic.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/plotPreds-methods.html</loc>
+    <loc>http://funGp.r-pck.org/reference/plotSims-methods.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/plotSims-generic.html</loc>
+    <loc>http://funGp.r-pck.org/reference/plotX-generic.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/plotSims-methods.html</loc>
+    <loc>http://funGp.r-pck.org/reference/plotX-methods.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/plotX-generic.html</loc>
+    <loc>http://funGp.r-pck.org/reference/predict-methods.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/plotX-methods.html</loc>
+    <loc>http://funGp.r-pck.org/reference/proj-Class.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/predict-methods.html</loc>
+    <loc>http://funGp.r-pck.org/reference/show-methods.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/proj-Class.html</loc>
+    <loc>http://funGp.r-pck.org/reference/simulate-methods.html</loc>
   </url>
   <url>
-    <loc>https://funGp.r-lib.org/reference/setR.html</loc>
-  </url>
-  <url>
-    <loc>https://funGp.r-lib.org/reference/show-methods.html</loc>
-  </url>
-  <url>
-    <loc>https://funGp.r-lib.org/reference/simulate-methods.html</loc>
-  </url>
-  <url>
-    <loc>https://funGp.r-lib.org/reference/update-methods.html</loc>
+    <loc>http://funGp.r-pck.org/reference/update-methods.html</loc>
   </url>
 </urlset>

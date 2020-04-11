@@ -1,10 +1,11 @@
+url: http://funGp.r-pck.org
+
 template:
   params:
     bootswatch: cerulean
 
 home:
   title: An R package for regression with scalar and functional inputs
-  url: http://funGp.r-pck.org
   description: >
     This package makes the power of Gaussian process regression models
     usable for functional inputs. Smart model selection takes Gaussian
