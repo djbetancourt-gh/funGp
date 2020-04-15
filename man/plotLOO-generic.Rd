@@ -8,6 +8,9 @@
 
 \item{...}{additional arguments affecting the plot.}
 }
+\value{
+None.
+}
 \description{
 This method provides a diagnostic plot for the validation of regression models. It displays
   a calibration plot based on the leave-one-out predictions of the output at the points used to train the

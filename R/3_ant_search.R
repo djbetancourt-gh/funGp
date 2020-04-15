@@ -1,7 +1,7 @@
 # ==========================================================================================================
 # Skeleton of the Ant Colony Optimization algoritm for model selection
 # ==========================================================================================================
-run_ACO <- function(sIn, fIn, sOut, ind.vl, param, phero, base, extargs, time.str, time.lim, quietly, par.clust) {
+run_ACO <- function(sIn, fIn, sOut, ind.vl, param, phero, base, extargs, time.str, time.lim, trace, pbars, par.clust) {
   # recover heuristic parameters
   #___________________________________________________________________________________________
   # <---> population factors
@@ -45,7 +45,7 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, phero, base, extargs, time.st
   # run the colony
   for (c.gen in 1:n.iter) {
     # start_time <- Sys.time()
-    cat(paste("Dispatching colony ", c.gen, "/", n.iter, "\n", sep = ""))
+    if (pbars) cat(paste("Dispatching colony ", c.gen, "/", n.iter, "\n", sep = ""))
 
     # create a new colony and mark as incomplete
     ants <- matrix(nrow = n.pop, ncol = n.layers)
@@ -101,9 +101,9 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, phero, base, extargs, time.st
     # compute fitness of each ant
     fitness <- rep(0, n.pop)
     if (is.null(ind.vl)) {
-      res <- eval_loocv_ACO(sIn, fIn, sOut, extargs, base, ants, time.str, time.lim, quietly, par.clust)
+      res <- eval_loocv_ACO(sIn, fIn, sOut, extargs, base, ants, time.str, time.lim, trace, pbars, par.clust)
     } else {
-      res <- eval_houtv_ACO(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str, time.lim, quietly, par.clust)
+      res <- eval_houtv_ACO(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str, time.lim, trace, pbars, par.clust)
     }
 
     # extract complete evaluations
@@ -144,7 +144,7 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, phero, base, extargs, time.st
 
     dt <- difftime(Sys.time(), time.str, units = 'secs')
     if (dt >= time.lim) {
-      cat(paste("\n** Time limit reached, exploration stopped after", format(as.numeric(dt), digits = 3, nsmall = 2), "seconds.\n"))
+      message(paste("\n** Time limit reached, exploration stopped after", format(as.numeric(dt), digits = 3, nsmall = 2), "seconds.\n"))
       break
     }
   }
@@ -167,7 +167,7 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, phero, base, extargs, time.st
     crashes <- crashes[!duplicated(crashes),,drop = FALSE]
   }
 
-  cat("\nAnts are done ;)\n")
+  message("\nAnts are done ;)\n")
 
   return(list(model = b.model, sol.vec = b.ant, sol.args = b.args, b.fitness = b.fitness,
               log.suc = top.ants, log.fitness = top.fitness, log.cra = crashes,

@@ -34,6 +34,9 @@ entries of both lists: \emph{xlim}, \emph{ylim}, \emph{xlab}, \emph{ylab}, \emph
 argument \emph{legends} can also be included in any of the two lists in order to control the display of
 legends in the corresponding plot.}
 }
+\value{
+None.
+}
 \description{
 This method displays the predicted output values delivered by a funGp Gaussian process model.
 }

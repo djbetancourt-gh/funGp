@@ -29,7 +29,7 @@ setClass("antsLog",
 # ==========================================================================================================
 # Master function to process ACO tasks
 # ==========================================================================================================
-master_ACO <- function(sIn, fIn, sOut, ind.vl, solspace, setup, extargs, time.str, time.lim, quietly, par.clust) {
+master_ACO <- function(sIn, fIn, sOut, ind.vl, solspace, setup, extargs, time.str, time.lim, trace, pbars, par.clust) {
   # set heuristic parameters based on defaults and user specifications
   param <- setParams_ACO(setup, length(fIn))
 
@@ -37,7 +37,7 @@ master_ACO <- function(sIn, fIn, sOut, ind.vl, solspace, setup, extargs, time.st
   phero <- setEnvir_ACO(solspace, param)
 
   # perform exploration
-  res <- run_ACO(sIn, fIn, sOut, ind.vl, param, phero, solspace$sp.base, extargs, time.str, time.lim, quietly, par.clust)
+  res <- run_ACO(sIn, fIn, sOut, ind.vl, param, phero, solspace$sp.base, extargs, time.str, time.lim, trace, pbars, par.clust)
 
   # correct the howCalled of best model
   res$model@howCalled@string <- getCall_ACO(res$sol.vec, sIn, fIn, res$sol.args, solspace$sp.base, extargs)
@@ -586,7 +586,7 @@ getLog_ACO <- function(sIn, fIn, log.vec, log.fitness, base, extargs) {
 #' @importFrom doFuture registerDoFuture
 #' @importFrom future plan cluster
 #' @importFrom progressr with_progress progressor
-eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.lim, quietly, par.clust) {
+eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.lim, trace, pbars, par.clust) {
   # recover population size
   n.pop <- nrow(ants)
 
@@ -597,19 +597,20 @@ eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.l
 
     # evaluate the ants as models
     with_progress({
-      p <- progressor(along = 1:n.pop, auto_finish = FALSE)
+      if (pbars) p <- progressor(along = 1:n.pop, auto_finish = FALSE)
       result <- foreach(i = 1:n.pop, .errorhandling = "pass") %dopar% {
         dt <- difftime(Sys.time(), time.str, units = 'secs')
         if (dt < time.lim) {
-          if (quietly) {
-            amf <- quiet(fitNtests_ACO(ants[i,], sIn, fIn, sOut, extargs, base))
-          } else {
+          if (trace) {
+            cat("\n")
             amf <- fitNtests_ACO(ants[i,], sIn, fIn, sOut, extargs, base)
+          } else {
+            amf <- quiet(fitNtests_ACO(ants[i,], sIn, fIn, sOut, extargs, base))
           }
-          p()
+          if (pbars) p()
           return(amf)
         } else {
-          p()
+          if (pbars) p()
           return(NULL)
         }
       }
@@ -617,31 +618,30 @@ eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.l
 
   } else {
     # set up progress bar
-    pb <- txtProgressBar(min = 0, max = n.pop, style = 3)
+    if (pbars) pb <- txtProgressBar(min = 0, max = n.pop, style = 3)
 
     # evaluate the ants as models
     result <- list()
     for (i in 1:n.pop) {
-      if (quietly) {
-        result[[i]] <- quiet(fitNtests_ACO(ants[i,], sIn, fIn, sOut, extargs, base))
-      } else {
+      if (trace) {
         cat("\n")
         result[[i]] <- fitNtests_ACO(ants[i,], sIn, fIn, sOut, extargs, base)
+      } else {
+        result[[i]] <- quiet(fitNtests_ACO(ants[i,], sIn, fIn, sOut, extargs, base))
       }
-
-      setTxtProgressBar(pb, i)
+      if (pbars) setTxtProgressBar(pb, i)
 
       # check if we are still on time
       dt <- difftime(Sys.time(), time.str, units = 'secs')
       if (dt >= time.lim) {
         if (i < n.pop) {
           result[(i+1):n.pop] <- NULL
-          setTxtProgressBar(pb, n.pop)
+          if (pbars) setTxtProgressBar(pb, n.pop)
         }
         break
       }
     }
-    close(pb)
+    if (pbars) close(pb)
   }
   return(result)
 }
@@ -657,7 +657,7 @@ eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.l
 #' @importFrom doFuture registerDoFuture
 #' @importFrom future plan cluster
 #' @importFrom progressr with_progress progressor
-eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str, time.lim, quietly, par.clust) {
+eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str, time.lim, trace, pbars, par.clust) {
   # recover population size and number of replicates
   n.pop <- nrow(ants)
   n.rep <- ncol(ind.vl)
@@ -669,7 +669,7 @@ eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str
 
     # evaluate the ants as models
     with_progress({
-      p <- progressor(along = 1:n.pop, auto_finish = FALSE)
+      if (pbars) p <- progressor(along = 1:n.pop, auto_finish = FALSE)
       result <- foreach(i = 1:n.pop, .errorhandling = "pass") %dopar% {
         dt <- difftime(Sys.time(), time.str, units = 'secs')
         if (dt < time.lim) {
@@ -681,13 +681,13 @@ eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str
             # identify active inputs of both types
             active <- getActiveIn_ACO(ants[i,], sIn, fIn, base)
 
-            if (quietly) {
-              sub_result[[j]] <- quiet(fitNtests_ACO(ants[i,], data$sIn.tr, data$fIn.tr, data$sOut.tr, extargs, base,
-                                                     ind.vl, data$sIn.vl, data$fIn.vl, data$sOut.vl, active))
-            } else {
+            if (trace) {
               cat("\n")
               sub_result[[j]] <- fitNtests_ACO(ants[i,], data$sIn.tr, data$fIn.tr, data$sOut.tr, extargs, base,
                                                ind.vl, data$sIn.vl, data$fIn.vl, data$sOut.vl, active)
+            } else {
+              sub_result[[j]] <- quiet(fitNtests_ACO(ants[i,], data$sIn.tr, data$fIn.tr, data$sOut.tr, extargs, base,
+                                                     ind.vl, data$sIn.vl, data$fIn.vl, data$sOut.vl, active))
             }
 
             # check if we are still on time
@@ -720,10 +720,10 @@ eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str
           } else {
             amf <- NULL
           }
-          p()
+          if (pbars) p()
           return(amf)
         } else {
-          p()
+          if (pbars) p()
           return(NULL)
         }
       }
@@ -731,7 +731,7 @@ eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str
 
   } else {
     # set up progress bar
-    pb <- txtProgressBar(min = 0, max = n.pop, style = 3)
+    if (pbars) pb <- txtProgressBar(min = 0, max = n.pop, style = 3)
 
     # evaluate the ants as models
     result <- list()
@@ -743,13 +743,13 @@ eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str
         # identify active inputs of both types
         active <- getActiveIn_ACO(ants[i,], sIn, fIn, base)
         # evaluate model
-        if (quietly) {
-          sub_result[[j]] <- quiet(fitNtests_ACO(ants[i,], data$sIn.tr, data$fIn.tr, data$sOut.tr, extargs, base,
-                                                   ind.vl, data$sIn.vl, data$fIn.vl, data$sOut.vl, active))
-        } else {
+        if (trace) {
           cat("\n")
           sub_result[[j]] <- fitNtests_ACO(ants[i,], data$sIn.tr, data$fIn.tr, data$sOut.tr, extargs, base,
-                                             ind.vl, data$sIn.vl, data$fIn.vl, data$sOut.vl, active)
+                                           ind.vl, data$sIn.vl, data$fIn.vl, data$sOut.vl, active)
+        } else {
+          sub_result[[j]] <- quiet(fitNtests_ACO(ants[i,], data$sIn.tr, data$fIn.tr, data$sOut.tr, extargs, base,
+                                                 ind.vl, data$sIn.vl, data$fIn.vl, data$sOut.vl, active))
         }
 
         # check if we are still on time
@@ -781,18 +781,18 @@ eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str
       } else {
         result[[i]] <- NULL
       }
-      setTxtProgressBar(pb, i)
+      if (pbars) setTxtProgressBar(pb, i)
 
       dt <- difftime(Sys.time(), time.str, units = 'secs')
       if (dt >= time.lim) {
         if (i < n.pop) {
           result[(i+1):n.pop] <- NULL
-          setTxtProgressBar(pb, n.pop)
+          if (pbars) setTxtProgressBar(pb, n.pop)
         }
         break
       }
     }
-    close(pb)
+    if (pbars) close(pb)
   }
   return(result)
 }

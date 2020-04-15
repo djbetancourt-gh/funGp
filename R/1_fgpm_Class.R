@@ -151,8 +151,9 @@ setClass("fgpm",
 #'   n.starts will be assigned to n.presample if this last is smaller. Default is 20.
 #' @param par.clust an optional parallel processing cluster created with the \code{\link[parallel]{makeCluster}} function
 #'   of the \link[=parallel]{parallel package}. If not provided, multistart optimizations are done in sequence.
-#' @param quietly an optional boolean indicating if the calls to the hyperparameters optimizer should skip text related to
-#'   the evolution of the optimization. Default is FALSE.
+#' @param trace an optional boolean indicating if control messages from the \link[stats]{optim} function regarding the
+#'   optimization of the hyperparameters should be printed to console. Default is TRUE.
+#' @param pbars an optional boolean indicating if progress bars should be displayed. Default is TRUE.
 #'
 #' @return An object of class \linkS4class{fgpm} containing the data structures representing the fitted funGp model.
 #'
@@ -321,7 +322,7 @@ setClass("fgpm",
 fgpm <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
                   f_disType = "L2_bygroup", f_pdims = 3, f_basType = "B-splines",
                   var.hyp = NULL, ls_s.hyp = NULL, ls_f.hyp = NULL, nugget = 1e-8,
-                  n.starts = 1, n.presample = 20, par.clust = NULL, quietly = FALSE) {
+                  n.starts = 1, n.presample = 20, par.clust = NULL, trace = TRUE, pbars = TRUE) {
 
   # extend simplified user inputs to full versions
   if (!is.null(sIn)) {
@@ -383,7 +384,7 @@ fgpm <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
       varHyp <- var.hyp
       lsHyps <- c(ls_s.hyp, ls_f.hyp)
     } else {
-      hypers <- setHypers_SF(sMs, fMs, sOut, kerType, var.hyp, ls_s.hyp, ls_f.hyp, n.starts, n.presample, nugget, par.clust, quietly)
+      hypers <- setHypers_SF(sMs, fMs, sOut, kerType, var.hyp, ls_s.hyp, ls_f.hyp, n.starts, n.presample, nugget, par.clust, trace, pbars)
       varHyp <- hypers[1]
       lsHyps <- hypers[-1]
     }
@@ -432,7 +433,7 @@ fgpm <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
       varHyp <- var.hyp
       lsHyps <- ls_f.hyp
     } else {
-      hypers <- setHypers_F(fMs, sOut, kerType, var.hyp, ls_f.hyp, n.starts, n.presample, nugget, par.clust, quietly)
+      hypers <- setHypers_F(fMs, sOut, kerType, var.hyp, ls_f.hyp, n.starts, n.presample, nugget, par.clust, trace, pbars)
       varHyp <- hypers[1]
       lsHyps <- hypers[-1]
     }
@@ -472,7 +473,7 @@ fgpm <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
       varHyp <- var.hyp
       lsHyps <- ls_s.hyp
     } else {
-      hypers <- setHypers_S(sIn, sMs, sOut, kerType, var.hyp, ls_s.hyp, n.starts, n.presample, nugget, par.clust, quietly)
+      hypers <- setHypers_S(sIn, sMs, sOut, kerType, var.hyp, ls_s.hyp, n.starts, n.presample, nugget, par.clust, trace, pbars)
       varHyp <- hypers[1]
       lsHyps <- hypers[-1]
     }

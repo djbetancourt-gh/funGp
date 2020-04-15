@@ -13,6 +13,9 @@
 \item{...}{additional arguments affecting the plot. The following typical graphics parameters are
 valid entries: \emph{xlim}, \emph{ylim}, \emph{xlab}, \emph{ylab}, \emph{main}.}
 }
+\value{
+None.
+}
 \description{
 This method provides a diagnostic plot for the validation of a funGp Gaussian process model.
   It displays a calibration plot based on the leave-one-out predictions of the output at the points

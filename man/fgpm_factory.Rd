@@ -16,7 +16,8 @@ fgpm_factory(
   n.starts = 1,
   n.presample = 20,
   par.clust = NULL,
-  quietly = TRUE
+  trace = FALSE,
+  pbars = TRUE
 )
 }
 \arguments{
@@ -130,8 +131,10 @@ n.starts will be assigned to n.presample if this last is smaller. Default is 20.
 function of the \link[=parallel]{parallel package}. If not provided, structural configurations are evaluated in
 sequence.}
 
-\item{quietly}{an optional boolean indicating if the calls to fgpm should skip text related to the optimization
-of the hyperparameters. Default is TRUE.}
+\item{trace}{an optional boolean indicating if control messages regarding the optimization of the hyperparameters
+should be printed to console. Default is FALSE.}
+
+\item{pbars}{an optional boolean indicating if progress bars should be displayed. Default is TRUE.}
 }
 \value{
 An object of class \linkS4class{Xfgpm} containing the data structures linked to the structural optimization

@@ -1,7 +1,7 @@
 # ==========================================================================================================
 # Master function to manage the optimization of scalar-input models
 # ==========================================================================================================
-setHypers_S <- function(sIn, sMs, sOut, kerType, var.known, ls_s.known, n.starts, n.presample, nugget, par.clust, quietly){
+setHypers_S <- function(sIn, sMs, sOut, kerType, var.known, ls_s.known, n.starts, n.presample, nugget, par.clust, trace, pbars){
   # if the length-scale coefficients are known, skip optim and compute var analytically. Else optimize
   if (!is.null(ls_s.known)) {
     # 1. estimation of the correlation matrix
@@ -10,7 +10,7 @@ setHypers_S <- function(sIn, sMs, sOut, kerType, var.known, ls_s.known, n.starts
     U <- chol(R)
 
     # 2. estimate the a priori process variance
-    cat("** Computing optimal variance...\n")
+    message("** Computing optimal variance...")
     sig2 <- analyticVar_llik(U, sOut, n.tr)
 
     # 3. merge hyperparameters and return
@@ -29,18 +29,13 @@ setHypers_S <- function(sIn, sMs, sOut, kerType, var.known, ls_s.known, n.starts
     }
 
     # 3. set starting points
-    cat("** Presampling...\n")
+    message("** Presampling...")
     spoints <- setSPoints_S(bnds, sMs, sOut, kerType, varfun, n.starts, n.presample, nugget)
 
     # 4. Perform optimization
-    cat("** Optimising...\n")
-    # if (quietly) {
-    #   hypers <- quiet(optimHypers_S(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, nugget, par.clust))
-    # } else {
-    #   hypers <- optimHypers_S(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, nugget, par.clust)
-    # }
-    hypers <- optimHypers_S(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, nugget, par.clust, quietly)
-    cat("** Hyperparameters done!\n")
+    message("** Optimising...")
+    hypers <- optimHypers_S(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, nugget, par.clust, trace, pbars)
+    message("** Hyperparameters done!")
     return(hypers)
   }
 }
@@ -99,43 +94,41 @@ setSPoints_S <- function(bnds, sMs, sOut, kerType, varfun, n.starts, n.presample
 #' @importFrom doFuture registerDoFuture
 #' @importFrom future plan cluster
 #' @importFrom progressr with_progress progressor
-optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, nugget, par.clust, quietly){
+optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, nugget, par.clust, trace, pbars){
   # if multistart is required then parallelize, else run single optimization
   if (n.starts == 1){
-    if (quietly) {
-      optOut <- quiet(optim(par = as.numeric(spoints), fn = negLogLik_funGp_S, method = "L-BFGS-B",
-                            lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
-                            sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget))
-    } else {
+    if (trace) {
       optOut <- optim(par = as.numeric(spoints), fn = negLogLik_funGp_S, method = "L-BFGS-B",
                       lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
                       sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
+    } else {
+      optOut <- quiet(optim(par = as.numeric(spoints), fn = negLogLik_funGp_S, method = "L-BFGS-B",
+                            lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
+                            sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget))
     }
 
   } else {
     if (is.null(par.clust)) {
-      cat("** Parallel backend register not found. Multistart optimizations done in sequence.\n\n")
+      message("** Parallel backend register not found. Multistart optimizations done in sequence.")
 
       # set up progress bar
-      pb <- txtProgressBar(min = 0, max = n.starts, style = 3)
-      cat("\n")
-
-      # set up progress controller
-      progress <- function(n) setTxtProgressBar(pb, n)
-      opts <- list(progress = progress)
+      if (pbars) {
+        pb <- txtProgressBar(min = 0, max = n.starts, style = 3)
+        ("\n")
+      }
 
       optOutList <- list()
       for (i in 1:n.starts) {
         modeval <- tryCatch(
           {
-            if (quietly) {
-              quietly(optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
-                            lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
-                            sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget))
-            } else {
+            if (trace) {
               optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
                     lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
                     sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
+            } else {
+              quiet(optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
+                            lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
+                            sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget))
             }
           },
           error = function(e) e
@@ -144,44 +137,35 @@ optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, n
         if (!inherits(modeval, "error")) {
           optOutList[[i]] <- modeval
         }
-        setTxtProgressBar(pb, i)
-        cat("\n")
+        if (pbars) {
+          setTxtProgressBar(pb, i)
+          cat("\n")
+        }
       }
-      close(pb)
+      if (pbars) close(pb)
 
     } else {
-      cat("** Parallel backend register found. Multistart optimizations done in parallel.\n")
-
-      # # set up progress bar
-      # pb <- txtProgressBar(min = 0, max = n.starts, style = 3)
+      message("** Parallel backend register found. Multistart optimizations done in parallel.")
 
       # register parallel backend
       registerDoFuture()
       plan(cluster, workers = par.clust)
 
-      # # set up progress controller
-      # progress <- function(n) setTxtProgressBar(pb, n)
-      # opts <- list(progress = progress)
-
-      # registerDoSNOW(par.clust)
-      # optOutList <- foreach(i = 1:n.starts, .errorhandling = "remove", .options.snow = opts) %dopar%
-      # {
       with_progress({
-        p <- progressor(along = 1:n.starts, auto_finish = FALSE)
+        if (pbars) p <- progressor(along = 1:n.starts, auto_finish = FALSE)
         optOutList <- foreach(i = 1:n.starts, .errorhandling = "remove") %dopar% {
-          if (quietly) {
-            o <- quiet(optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
-                             lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
-                             sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget))
-          } else {
+          if (trace) {
             o <- optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
                        lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
                        sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
+          } else {
+            o <- quiet(optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
+                             lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
+                             sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget))
           }
-          p()
+          if (pbars) p()
           return(o)
         }
-        # close(pb)
       })
     }
 

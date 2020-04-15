@@ -8,6 +8,9 @@
 
 \item{...}{additional arguments affecting the plot.}
 }
+\value{
+None.
+}
 \description{
 This method provides plots for assessing the quality of regression models whose structure
   have been somehow optimized for predictability.

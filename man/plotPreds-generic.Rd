@@ -11,6 +11,9 @@ used, it might also contain, for instance, the confidence bands at the predictio
 
 \item{...}{additional arguments affecting the plot.}
 }
+\value{
+None.
+}
 \description{
 This method displays the predicted output values delivered by some regression model. The
   plot might be constituted differently, depending on the type of model at hand.

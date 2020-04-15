@@ -153,7 +153,8 @@
   <span class='kw'>n.starts</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>n.presample</span> <span class='kw'>=</span> <span class='fl'>20</span>,
   <span class='kw'>par.clust</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>quietly</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+  <span class='kw'>trace</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>pbars</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -292,9 +293,13 @@ function of the parallel package. If not provided, structural configurations are
 sequence.</p></td>
     </tr>
     <tr>
-      <th>quietly</th>
-      <td><p>an optional boolean indicating if the calls to fgpm should skip text related to the optimization
-of the hyperparameters. Default is TRUE.</p></td>
+      <th>trace</th>
+      <td><p>an optional boolean indicating if control messages regarding the optimization of the hyperparameters
+should be printed to console. Default is FALSE.</p></td>
+    </tr>
+    <tr>
+      <th>pbars</th>
+      <td><p>an optional boolean indicating if progress bars should be displayed. Default is TRUE.</p></td>
     </tr>
     </table>
 

@@ -25,6 +25,9 @@ entries: \emph{xlim}, \emph{ylim}, \emph{xlab}, \emph{ylab}, \emph{main}. The bo
 \emph{legends} can also be included in any of the two lists in order to control the display of legends
 in the corresponding plot.}
 }
+\value{
+None.
+}
 \description{
 This method displays the simulated output values delivered by a funGp Gaussian process model.
 }

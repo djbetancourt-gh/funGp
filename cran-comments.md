@@ -1,13 +1,16 @@
 ## Resubmission
-This is a resubmission. In this version I have:
+This is a resubmission. In this version we have:
 
-* Extended the description of the package at the Description field
-  of the DESCRIPTION file. Added relevant references describing
-  the techniques behind the methods in the package.
-
-* Double checked all the files for incomplete documentation and
-  unnecessary developer notes. In particular, "Fill!!!!!!!'" and
-  "fill this!!!" were removed everywhere.
+* Added the Value field previously missing in the documentation
+  of some exported methods, e.g., in decay.Rd.
+  
+* Replaced cat(..) with message(..) and also added the boolean
+  param 'trace' in some functions in order to allow the user to
+  easily suppress messages printed to console,
+  e.g., in 3_training_S.R.
+  
+* Added the boolean pbars param in relevant functions to allow
+  easy suppression of progress bars.
 
 ## Test environments
 * local Linux install, R 3.6.3

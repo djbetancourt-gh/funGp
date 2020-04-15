@@ -11,6 +11,9 @@ used, it might also contain, for instance, the mean and confidence bands at the 
 
 \item{...}{additional arguments affecting the plot.}
 }
+\value{
+None.
+}
 \description{
 This method displays the simulated output values delivered by some random process model.
   The plot might be constituted differently, depending on the type of model at hand.

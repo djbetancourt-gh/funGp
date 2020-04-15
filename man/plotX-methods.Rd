@@ -25,6 +25,9 @@ are valid entries of both lists: \emph{xlim}, \emph{ylim}, \emph{xlab}, \emph{yl
 boolean argument legends can also be included in any of the two lists in order to control the display
 of legends in the corresponding plot.}
 }
+\value{
+None.
+}
 \description{
 This method provides two plots for assessing the quality of the output delivered by the
   model selection algorithm in the \link[funGp]{fgpm_factory} function. The first one is a calibration

@@ -19,7 +19,8 @@ fgpm(
   n.starts = 1,
   n.presample = 20,
   par.clust = NULL,
-  quietly = FALSE
+  trace = TRUE,
+  pbars = TRUE
 )
 }
 \arguments{
@@ -97,8 +98,10 @@ n.starts will be assigned to n.presample if this last is smaller. Default is 20.
 \item{par.clust}{an optional parallel processing cluster created with the \code{\link[parallel]{makeCluster}} function
 of the \link[=parallel]{parallel package}. If not provided, multistart optimizations are done in sequence.}
 
-\item{quietly}{an optional boolean indicating if the calls to the hyperparameters optimizer should skip text related to
-the evolution of the optimization. Default is FALSE.}
+\item{trace}{an optional boolean indicating if control messages from the \link[stats]{optim} function regarding the
+optimization of the hyperparameters should be printed to console. Default is TRUE.}
+
+\item{pbars}{an optional boolean indicating if progress bars should be displayed. Default is TRUE.}
 }
 \value{
 An object of class \linkS4class{fgpm} containing the data structures representing the fitted funGp model.

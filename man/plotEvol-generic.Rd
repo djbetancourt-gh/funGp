@@ -8,6 +8,9 @@
 
 \item{...}{additional arguments affecting the plot.}
 }
+\value{
+None.
+}
 \description{
 This method displays the evolution of an iterative algorithm for model selection.
 }

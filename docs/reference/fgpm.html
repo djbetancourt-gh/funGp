@@ -142,7 +142,8 @@
   <span class='kw'>n.starts</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>n.presample</span> <span class='kw'>=</span> <span class='fl'>20</span>,
   <span class='kw'>par.clust</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>quietly</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  <span class='kw'>trace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>pbars</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -251,9 +252,13 @@ n.starts will be assigned to n.presample if this last is smaller. Default is 20.
 of the parallel package. If not provided, multistart optimizations are done in sequence.</p></td>
     </tr>
     <tr>
-      <th>quietly</th>
-      <td><p>an optional boolean indicating if the calls to the hyperparameters optimizer should skip text related to
-the evolution of the optimization. Default is FALSE.</p></td>
+      <th>trace</th>
+      <td><p>an optional boolean indicating if control messages from the <a href='https://rdrr.io/r/stats/optim.html'>optim</a> function regarding the
+optimization of the hyperparameters should be printed to console. Default is TRUE.</p></td>
+    </tr>
+    <tr>
+      <th>pbars</th>
+      <td><p>an optional boolean indicating if progress bars should be displayed. Default is TRUE.</p></td>
     </tr>
     </table>
 

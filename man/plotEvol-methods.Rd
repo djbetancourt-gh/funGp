@@ -14,6 +14,9 @@ algorithm in \link[funGp]{fgpm_factory}.}
 \item{...}{additional arguments affecting the plot. The following typical graphics parameters are
 valid entries: \emph{xlim}, \emph{ylim}, \emph{xlab}, \emph{ylab}, \emph{main}.}
 }
+\value{
+None.
+}
 \description{
 This method displays the evolution of the quality of the configurations evaluated along
   the iterations, by the model selection algorithm in the \link[funGp]{fgpm_factory} function. For

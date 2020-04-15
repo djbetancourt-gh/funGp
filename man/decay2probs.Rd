@@ -54,6 +54,11 @@ not specified, it takes the value of k.}
 
 \item{deliver}{an optional boolean indicating if the probability loads should be returned. Default = FALSE.}
 }
+\value{
+If deliver is TRUE, an object of class \code{"numeric"} containing the normalized initial pheromone values
+  corresponding to the specified projection dimensions. Otherwise, the function plots the normalized
+  pheromones and nothing is returned.
+}
 \description{
 This function is intended to aid the selection of the heuristic parameters \emph{tao0},
   \emph{delta} and \emph{dispr} in the call to the model selection function \link[funGp]{fgpm_factory}.
