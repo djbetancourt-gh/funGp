@@ -39,7 +39,7 @@ setHypers_SF <- function(sMs, fMs, sOut, kerType, var.known, ls_s.known, ls_f.kn
     spoints <- setSPoints_SF(bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known, n.starts, n.presample, nugget)
 
     # 4. Perform optimization
-    message("** Optimising...")
+    message("** Optimising hyperparameters...")
     hypers <- optimHypers_SF(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known, nugget, par.clust, trace, pbars)
     message("** Hyperparameters done!")
     return(hypers)
@@ -172,11 +172,11 @@ optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, var
         if (pbars) p <- progressor(along = 1:n.starts, auto_finish = FALSE)
         optOutList <- foreach(i = 1:n.starts, .errorhandling = "remove") %dopar% {
           if (trace) {
-            cat("\n")
             o <- optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_SF, method = "L-BFGS-B",
                        lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
                        sMs = sMs, fMs = fMs, sOut = sOut, kerType = kerType,
                        varfun = varfun, ls_s.known = ls_s.known, ls_f.known = ls_f.known, nugget = nugget)
+            cat("\n")
           } else {
             o <- quiet(optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_SF, method = "L-BFGS-B",
                              lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),

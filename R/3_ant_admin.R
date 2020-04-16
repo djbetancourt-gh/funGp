@@ -29,15 +29,17 @@ setClass("antsLog",
 # ==========================================================================================================
 # Master function to process ACO tasks
 # ==========================================================================================================
-master_ACO <- function(sIn, fIn, sOut, ind.vl, solspace, setup, extargs, time.str, time.lim, trace, pbars, par.clust) {
+master_ACO <- function(sIn, fIn, sOut, ind.vl, solspace, setup, extargs, time.str, time.lim, pbars, par.clust) {
   # set heuristic parameters based on defaults and user specifications
   param <- setParams_ACO(setup, length(fIn))
 
   # set pheromones based on the solution space and initial parameters
+  message("** Initializing decision network...")
   phero <- setEnvir_ACO(solspace, param)
 
   # perform exploration
-  res <- run_ACO(sIn, fIn, sOut, ind.vl, param, phero, solspace$sp.base, extargs, time.str, time.lim, trace, pbars, par.clust)
+  message("** Optimizing structural parameters...")
+  res <- run_ACO(sIn, fIn, sOut, ind.vl, param, phero, solspace$sp.base, extargs, time.str, time.lim, pbars, par.clust)
 
   # correct the howCalled of best model
   res$model@howCalled@string <- getCall_ACO(res$sol.vec, sIn, fIn, res$sol.args, solspace$sp.base, extargs)
@@ -586,7 +588,7 @@ getLog_ACO <- function(sIn, fIn, log.vec, log.fitness, base, extargs) {
 #' @importFrom doFuture registerDoFuture
 #' @importFrom future plan cluster
 #' @importFrom progressr with_progress progressor
-eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.lim, trace, pbars, par.clust) {
+eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.lim, pbars, par.clust) {
   # recover population size
   n.pop <- nrow(ants)
 
@@ -601,12 +603,8 @@ eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.l
       result <- foreach(i = 1:n.pop, .errorhandling = "pass") %dopar% {
         dt <- difftime(Sys.time(), time.str, units = 'secs')
         if (dt < time.lim) {
-          if (trace) {
-            cat("\n")
-            amf <- fitNtests_ACO(ants[i,], sIn, fIn, sOut, extargs, base)
-          } else {
-            amf <- quiet(fitNtests_ACO(ants[i,], sIn, fIn, sOut, extargs, base))
-          }
+          # build and validate the model
+          amf <- fitNtests_ACO(ants[i,], sIn, fIn, sOut, extargs, base)
           if (pbars) p()
           return(amf)
         } else {
@@ -623,12 +621,8 @@ eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.l
     # evaluate the ants as models
     result <- list()
     for (i in 1:n.pop) {
-      if (trace) {
-        cat("\n")
-        result[[i]] <- fitNtests_ACO(ants[i,], sIn, fIn, sOut, extargs, base)
-      } else {
-        result[[i]] <- quiet(fitNtests_ACO(ants[i,], sIn, fIn, sOut, extargs, base))
-      }
+      # build and validate the model
+      result[[i]] <- fitNtests_ACO(ants[i,], sIn, fIn, sOut, extargs, base)
       if (pbars) setTxtProgressBar(pb, i)
 
       # check if we are still on time
@@ -657,7 +651,7 @@ eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.l
 #' @importFrom doFuture registerDoFuture
 #' @importFrom future plan cluster
 #' @importFrom progressr with_progress progressor
-eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str, time.lim, trace, pbars, par.clust) {
+eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str, time.lim, pbars, par.clust) {
   # recover population size and number of replicates
   n.pop <- nrow(ants)
   n.rep <- ncol(ind.vl)
@@ -681,14 +675,9 @@ eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str
             # identify active inputs of both types
             active <- getActiveIn_ACO(ants[i,], sIn, fIn, base)
 
-            if (trace) {
-              cat("\n")
-              sub_result[[j]] <- fitNtests_ACO(ants[i,], data$sIn.tr, data$fIn.tr, data$sOut.tr, extargs, base,
-                                               ind.vl, data$sIn.vl, data$fIn.vl, data$sOut.vl, active)
-            } else {
-              sub_result[[j]] <- quiet(fitNtests_ACO(ants[i,], data$sIn.tr, data$fIn.tr, data$sOut.tr, extargs, base,
-                                                     ind.vl, data$sIn.vl, data$fIn.vl, data$sOut.vl, active))
-            }
+            # build and validate the model
+            sub_result[[j]] <- fitNtests_ACO(ants[i,], data$sIn.tr, data$fIn.tr, data$sOut.tr, extargs, base,
+                                             ind.vl, data$sIn.vl, data$fIn.vl, data$sOut.vl, active)
 
             # check if we are still on time
             dt <- difftime(Sys.time(), time.str, units = 'secs')
@@ -740,17 +729,13 @@ eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str
       for (j in 1:n.rep) {
         # split data into training and validation
         data <- splitData(sIn, fIn, sOut, ind.vl[,j])
+
         # identify active inputs of both types
         active <- getActiveIn_ACO(ants[i,], sIn, fIn, base)
-        # evaluate model
-        if (trace) {
-          cat("\n")
+
+        # build and validate the model
           sub_result[[j]] <- fitNtests_ACO(ants[i,], data$sIn.tr, data$fIn.tr, data$sOut.tr, extargs, base,
                                            ind.vl, data$sIn.vl, data$fIn.vl, data$sOut.vl, active)
-        } else {
-          sub_result[[j]] <- quiet(fitNtests_ACO(ants[i,], data$sIn.tr, data$fIn.tr, data$sOut.tr, extargs, base,
-                                                 ind.vl, data$sIn.vl, data$fIn.vl, data$sOut.vl, active))
-        }
 
         # check if we are still on time
         dt <- difftime(Sys.time(), time.str, units = 'secs')
@@ -809,9 +794,10 @@ fitNtests_ACO <- function(ant, sIn, fIn, sOut, extargs, base,
   args <- formatSol_ACO(ant, sIn, fIn, base)
   poterr <- tryCatch(
     {
-      model <- fgpm(sIn = args$sIn, fIn = args$fIn, sOut = sOut, kerType = args$kerType,
-                     f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType,
-                     nugget = extargs$nugget, n.starts = extargs$n.starts, n.presample = extargs$n.presample)
+      model <- suppressMessages(fgpm(sIn = args$sIn, fIn = args$fIn, sOut = sOut, kerType = args$kerType,
+                                     f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType,
+                                     nugget = extargs$nugget, n.starts = extargs$n.starts, n.presample = extargs$n.presample,
+                                     trace = F, pbars = F))
     },
     error = function(e) e
   )

@@ -205,8 +205,6 @@ show.Xfgpm <- function(object) {
 #' @param par.clust an optional parallel processing cluster created with the \code{\link[parallel]{makeCluster}}
 #'   function of the \link[=parallel]{parallel package}. If not provided, structural configurations are evaluated in
 #'   sequence.
-#' @param trace an optional boolean indicating if control messages regarding the optimization of the hyperparameters
-#'   should be printed to console. Default is FALSE.
 #' @param pbars an optional boolean indicating if progress bars should be displayed. Default is TRUE.
 #'
 #' @return An object of class \linkS4class{Xfgpm} containing the data structures linked to the structural optimization
@@ -393,6 +391,15 @@ show.Xfgpm <- function(object) {
 #' cl <- parallel::makeCluster(2)
 #' xm.par <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, par.clust = cl) #  (~260 seconds)
 #' parallel::stopCluster(cl)
+#'
+#' # NOTE: in order to provide progress bars for the monitoring of time consuming processes
+#' #       ran in parallel, funGp relies on the doFuture and future packages. Parallel processes
+#' #       suddenly interrupted by the user tend to leave corrupt connections. This problem is
+#' #       originated outside funGp, which limits our control over it. On section 4.1 of the
+#' #       of funGp, we provide a temporary solution to the issue and we remain attentive in
+#' #       case it appears a more elegant way to handle it or a manner to suppress it.
+#' #
+#' #       funGp manual: https://hal.archives-ouvertes.fr/hal-02536624
 #' }
 #'
 #' @importFrom methods new
@@ -401,7 +408,7 @@ show.Xfgpm <- function(object) {
 fgpm_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, ind.vl = NULL,
                           ctraints = list(), setup = list(), time.lim = Inf,
                           nugget = 1e-8, n.starts = 1, n.presample = 20,
-                          par.clust = NULL, trace = FALSE, pbars = TRUE) {
+                          par.clust = NULL, pbars = TRUE) {
 
   # launch timer
   time.str <- Sys.time()
@@ -420,7 +427,7 @@ fgpm_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, ind.vl = NULL,
   }
 
   # optimize model structure
-  opt <- master_ACO(sIn, fIn, sOut, ind.vl, solspace, setup, extargs, time.str, time.lim, trace, pbars, par.clust)
+  opt <- master_ACO(sIn, fIn, sOut, ind.vl, solspace, setup, extargs, time.str, time.lim, pbars, par.clust)
   X.model <- new("Xfgpm")
   X.model@factoryCall@string <- gsub("^ *|(?<= ) | *$", "", paste0(deparse(match.call()), collapse = " "), perl = TRUE)
   X.model@model <- opt$model

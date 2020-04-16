@@ -33,7 +33,7 @@ setHypers_S <- function(sIn, sMs, sOut, kerType, var.known, ls_s.known, n.starts
     spoints <- setSPoints_S(bnds, sMs, sOut, kerType, varfun, n.starts, n.presample, nugget)
 
     # 4. Perform optimization
-    message("** Optimising...")
+    message("** Optimising hyperparameters...")
     hypers <- optimHypers_S(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, nugget, par.clust, trace, pbars)
     message("** Hyperparameters done!")
     return(hypers)
@@ -158,6 +158,7 @@ optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, n
             o <- optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
                        lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
                        sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
+            cat("\n")
           } else {
             o <- quiet(optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
                              lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
