@@ -4,9 +4,10 @@ template:
   opengraph:
     image:
       src: docs/ghub.png
+      alt: "funGp"
 
 home:
-  title: An R package for regression with scalar and functional inputs
+  title: Non-parametric regression models for scalar and functional inputs
   description: >
     Construction and smart selection of Gaussian process regression models
     with scalar and/or functional inputs.
