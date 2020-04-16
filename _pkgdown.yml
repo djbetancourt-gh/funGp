@@ -1,6 +1,9 @@
 template:
   params:
     bootswatch: cerulean
+  opengraph:
+    image:
+      src: docs/ghub.png
 
 home:
   title: An R package for regression with scalar and functional inputs
