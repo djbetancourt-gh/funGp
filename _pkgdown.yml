@@ -5,9 +5,8 @@ template:
 home:
   title: An R package for regression with scalar and functional inputs
   description: >
-    This package makes the power of Gaussian process regression models
-    usable for functional inputs. Smart model selection takes Gaussian
-    process modeling one step further.
+    Construction and smart selection of Gaussian process regression models
+    with scalar and/or functional inputs.
 
 navbar:
   type: inverse
@@ -18,9 +17,9 @@ navbar:
       href: reference/index.html
     - text: "News"
       href: news/index.html
-  right:
     - icon: fa-github fa-lg
       href: https://github.com/djbetancourt-gh/funGp
+
 
 reference:
 - title: Main functions
