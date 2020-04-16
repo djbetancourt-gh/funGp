@@ -153,7 +153,6 @@
   <span class='kw'>n.starts</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>n.presample</span> <span class='kw'>=</span> <span class='fl'>20</span>,
   <span class='kw'>par.clust</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>trace</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>pbars</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
 )</pre>
 
@@ -291,11 +290,6 @@ n.starts will be assigned to n.presample if this last is smaller. Default is 20.
       <td><p>an optional parallel processing cluster created with the <code><a href='https://rdrr.io/r/parallel/makeCluster.html'>makeCluster</a></code>
 function of the parallel package. If not provided, structural configurations are evaluated in
 sequence.</p></td>
-    </tr>
-    <tr>
-      <th>trace</th>
-      <td><p>an optional boolean indicating if control messages regarding the optimization of the hyperparameters
-should be printed to console. Default is FALSE.</p></td>
     </tr>
     <tr>
       <th>pbars</th>
@@ -486,6 +480,15 @@ R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs 
 <span class='no'>cl</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>parallel</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/r/parallel/makeCluster.html'>makeCluster</a></span>(<span class='fl'>2</span>)
 <span class='no'>xm.par</span> <span class='kw'>&lt;-</span> <span class='fu'>fgpm_factory</span>(<span class='kw'>sIn</span> <span class='kw'>=</span> <span class='no'>sIn</span>, <span class='kw'>fIn</span> <span class='kw'>=</span> <span class='no'>fIn</span>, <span class='kw'>sOut</span> <span class='kw'>=</span> <span class='no'>sOut</span>, <span class='kw'>par.clust</span> <span class='kw'>=</span> <span class='no'>cl</span>) <span class='co'>#  (~260 seconds)</span>
 <span class='kw pkg'>parallel</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/r/parallel/makeCluster.html'>stopCluster</a></span>(<span class='no'>cl</span>)
+
+<span class='co'># NOTE: in order to provide progress bars for the monitoring of time consuming processes</span>
+<span class='co'>#       ran in parallel, funGp relies on the doFuture and future packages. Parallel processes</span>
+<span class='co'>#       suddenly interrupted by the user tend to leave corrupt connections. This problem is</span>
+<span class='co'>#       originated outside funGp, which limits our control over it. On section 4.1 of the</span>
+<span class='co'>#       of funGp, we provide a temporary solution to the issue and we remain attentive in</span>
+<span class='co'>#       case it appears a more elegant way to handle it or a manner to suppress it.</span>
+<span class='co'>#</span>
+<span class='co'>#       funGp manual: https://hal.archives-ouvertes.fr/hal-02536624</span>
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -502,7 +505,7 @@ R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs 
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>
