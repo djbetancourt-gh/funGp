@@ -20,7 +20,7 @@ This project is licensed under the GPL-3 License. <br /><br />
     # Install release version from CRAN
     install.packages("funGp")
 
-    # Install development version from GitHub
+    # Install release version from GitHub
     # way 1
     library(devtools)
     install_github("djbetancourt-gh/funGp", dependencies = TRUE)
@@ -28,6 +28,16 @@ This project is licensed under the GPL-3 License. <br /><br />
     # way 2
     library(githubinstall)
     githubinstall("funGp", dependencies = TRUE)
+    
+    
+    # Install development version from GitHub
+    # way 1
+    library(devtools)
+    install_github("djbetancourt-gh/funGp@develop", dependencies = TRUE)
+
+    # way 2
+    library(githubinstall)
+    githubinstall("funGp@develop", dependencies = TRUE)
 
 <br />
 
