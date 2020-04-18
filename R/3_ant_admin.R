@@ -429,7 +429,7 @@ getCall_ACO <- function(ant, sIn, fIn, args, base, extargs) {
     if (length(s.used) == ncol(sIn)) {
       s.str <- "sIn = sIn"
     } else if (length(s.used) == 1) {
-      s.str <- paste("sIn = sIn[,", s.used, ",drop=F]", sep = "")
+      s.str <- paste("sIn = sIn[,", s.used, ",drop=FALSE]", sep = "")
     } else if (all(diff(s.used) == 1)) {
       s.str <- paste("sIn = sIn[,", paste(range(s.used), collapse = ":"), "]", sep = "")
     } else {
@@ -819,10 +819,10 @@ fitNtests_ACO <- function(ant, sIn, fIn, sOut, extargs, base,
 # Function to prepare input data structures for prediction based on a fgpm arguments
 # ==========================================================================================================
 #' @title Preparation of inputs for predictions based on an fgpm modelCall
-#' @description This function prepared input data structures according to the active inputs specified by a
-#'   \code{"\linkS4class{modelCall}"} object. This function is intended to easily adapt the data structures
-#'   to the requirements of a specific model delivered by the model factory function
-#'   \link[funGp]{fgpm_factory}.
+#' @description \strong{Deprecated function, use \link[funGp]{get_active_in} instead.}\cr This function prepared
+#'   input data structures according to the active inputs specified by a \code{"\linkS4class{modelCall}"}
+#'   object. This function is intended to easily adapt the data structures to the requirements of a specific
+#'   model delivered by the model factory function \link[funGp]{fgpm_factory}.
 #'
 #' @param sIn.pr sIn.pr an optional matrix of scalar input coordinates at which the output values should be
 #'   predicted. Each column is interpreted as a scalar input variable and each row as a coordinate.
@@ -847,85 +847,268 @@ fitNtests_ACO <- function(ant, sIn, fIn, sOut, extargs, base,
 #' \emph{RISCOPE project}.
 #' \href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
 #'
+#' @seealso \strong{*} \link[funGp]{get_active_in} for the substitute of this function in future releases;
 #' @seealso \strong{*} \link[funGp]{predict} for predictions based on a funGp model;
 #' @seealso \strong{*} \link[funGp]{fgpm} for creation of a funGp model;
 #' @seealso \strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection.
 #'
 #' @importFrom qdapRegex rm_between
+#' @rdname package-deprecated
 #' @export
 format4pred <- function(sIn.pr = NULL, fIn.pr = NULL, args) {
-  s.on <- f.on <- F
-  sIn.4mat <- fIn.4mat <- NULL
+  .Deprecated("get_active_in")
+  return(get_active_in(sIn.pr, fIn.pr, args))
+}
+# ==========================================================================================================
 
-  key <- args@string # extract the model call
-  if (grepl("sIn", key)) { # is any scalar input active?
-    s.on <- T
+
+
+# ==========================================================================================================
+# Function to obtain the indices of the variables kept active in some structure delivered by the factory
+# ==========================================================================================================
+#' @title Indices of active inputs in a given model structure
+#' @description The \link[funGp]{fgpm_factory} function returns an object of class \code{"\linkS4class{Xfgpm}"}
+#'   with the function call of all the evaluated models stored in the \code{@log.success@args} and
+#'   \code{@log.crashes@args} slots. The \code{which_on} function interprets the arguments linked to any
+#'   structural configuration and returns a list with two elements: (i) an \code{array} of indices of the scalar
+#'   inputs kept active; and (ii) an \code{array} of indices of the functional inputs kept active.
+#'
+#' @param sIn sIn an optional matrix of scalar input coordinates with all the orignal scalar input variables.
+#'   This is used only to know the total number of scalar input variables. Any \code{matrix} with as many
+#'   columns as original scalar input variables could be used instead.
+#' @param fIn an optional list of functional input coordinates with all the original functional input
+#'   variables. This is used only to know the total number of functional input variables. Any \code{list}
+#'   with as many elements as original functional input variables could be used instead.
+#' @param args an object of class \code{"\linkS4class{modelCall}"}, which specifies the model structure for
+#'   which the active inputs should be extracted.
+#'
+#' @return An object of class \code{"list"}, containing the following information extracted from the
+#'   \emph{args} parameter: (i) an array of indices of the scalar inputs kept active; and (ii) an array of
+#'   indices of the functional inputs kept active.
+#'
+#' @author José Betancourt, François Bachoc and Thierry Klein
+#'
+#' @references Betancourt, J., Bachoc, F., and Klein, T. (2020),
+#' R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
+#' \emph{RISCOPE project}.
+#' \href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
+#'
+#' @seealso \strong{*} \link[funGp]{get_active_in} for details how to obtain the data structures linked to the
+#' active inputs.
+#' @seealso \strong{*} \code{"\linkS4class{modelCall}"} for details on the \emph{args} argument.
+#' @seealso \strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection.
+#' @seealso \strong{*} \code{"\linkS4class{Xfgpm}"} for details on object delivered by \link[funGp]{fgpm_factory}.
+#'
+#' @examples
+#' # extracting the indices of the active inputs in an optimized model________________________
+#' # generating input and output data
+#' set.seed(100)
+#' n.tr <- 32
+#' sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
+#'                    x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
+#'                    x5 = seq(0,1,length = n.tr^(1/5)))
+#' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
+#' sOut <- fgp_BB7(sIn, fIn, n.tr)
+#' \donttest{
+#' # optimizing the model structure with fgpm_factory (~12 seconds)
+#' xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
+#'
+#' # active inputs in the best model
+#' xm@log.success@args[[1]] # the full fgpm call
+#' which_on(sIn, fIn, xm@log.success@args[[1]]) # only the indices extracted bu which_on
+#' }
+#'
+#' @importFrom qdapRegex rm_between
+#' @export
+which_on <- function (sIn = NULL, fIn = NULL, args) {
+  # initalize controllers and outputs of the function
+  s.on <- f.on <- FALSE
+  s.inds <- f.inds <- NULL
+
+  # determine if there are scalars and functional inputs active
+  key <- args@string
+  if (grepl("sIn", key)) {
+    s.on <- TRUE
   }
-  if (grepl("fIn", key)) { # is any functional input active?
-    f.on <- T
+  if (grepl("fIn", key)) {
+    f.on <- TRUE
   }
 
-  if (all(s.on, f.on)) { # there both, scalar and funtional inputs active
-    # formatting scalar inputs ----------------------------------------------------
-    x <- rm_between(key, "sIn = ", ", fIn", extract = TRUE)[[1]] # extract the fragment of the call related to the scalar inputs
-    if (grepl("\\d", x)) { # does the fragment include input indices?
-      if (grepl("\\(", x)) { # are they grouped in a vector?
-        sIn.4mat <- sIn.pr[, as.numeric(unlist(regmatches(x, gregexpr("[[:digit:]]+", x)))), drop=F]
-      } else if (grepl("drop", x)) {
-        sIn.4mat <- sIn.pr[, as.numeric(unlist(regmatches(x, gregexpr("[[:digit:]]+", x)))), drop=F]
-      } else {
-        v <- as.numeric(unlist(regmatches(x, gregexpr("[[:digit:]]+", x))))
-        sIn.4mat <- sIn.pr[, v[1]:v[2]]
-      }
-
-    } else {
-      sIn.4mat <- sIn.pr
-    }
-
-    # formatting functional inputs ----------------------------------------------------
-    x <- rm_between(key, "fIn = ", ", sOut", extract = TRUE)[[1]] # extract the fragment of the call related to the functional inputs
-    if (grepl("\\d", x)) { # does the fragment include input indices?
-      if (grepl("\\(", x)) { # are they grouped in a vector?
-        fIn.4mat <- fIn.pr[[as.numeric(unlist(regmatches(x, gregexpr("[[:digit:]]+", x))))]]
-      } else {
-        fIn.4mat <- fIn.pr[as.numeric(rm_between(x, "[", "]", extract = TRUE)[[1]])]
-      }
-    } else {
-      fIn.4mat <- fIn.pr
-    }
-
-  } else if (s.on) { # there are only scalar inputs active
-    # formatting scalar inputs ----------------------------------------------------
-    x <- rm_between(key, "sIn = ", ", sOut", extract = TRUE)[[1]] # extract the fragment of the call related to the scalar inputs
-    if (grepl("\\d", x)) { # does the fragment include input indices?
-      if (grepl("\\(", x)) { # are they grouped in a vector?
-        sIn.4mat <- sIn.pr[, as.numeric(unlist(regmatches(x, gregexpr("[[:digit:]]+", x)))), drop=F]
-      } else if (grepl("drop", x)) {
-        sIn.4mat <- sIn.pr[, as.numeric(unlist(regmatches(x, gregexpr("[[:digit:]]+", x)))), drop=F]
-      } else {
-        v <- as.numeric(unlist(regmatches(x, gregexpr("[[:digit:]]+", x))))
-        sIn.4mat <- sIn.pr[, v[1]:v[2]]
-      }
-
-    } else {
-      sIn.4mat <- sIn.pr
-    }
-
-  } else if (f.on) { # there are only functional inputs active
-    # formatting functional inputs ----------------------------------------------------
-    x <- rm_between(key, "fIn = ", ", sOut", extract = TRUE)[[1]] # extract the fragment of the call related to the functional inputs
-    if (grepl("\\d", x)) { # does the fragment include input indices?
-      if (grepl("\\(", x)) { # are they grouped in a vector?
-        fIn.4mat <- fIn.pr[[as.numeric(unlist(regmatches(x, gregexpr("[[:digit:]]+", x))))]]
-      } else {
-        fIn.4mat <- fIn.pr[as.numeric(rm_between(x, "[", "]", extract = TRUE)[[1]])]
-      }
-    } else {
-      fIn.4mat <- fIn.pr
-    }
-
+  # get sIn and fIn expressions when necessary
+  if (all(s.on, f.on)) { # scalar and functional inputs on
+    xs <- rm_between(key, "sIn = ", ", fIn", extract = TRUE)[[1]]
+    xf <- rm_between(key, "fIn = ", ", sOut", extract = TRUE)[[1]]
+  } else if (s.on) { # only scalar inputs on
+    xs <- rm_between(key, "sIn = ", ", sOut", extract = TRUE)[[1]]
+    xf <- fIn.on <- NULL
+  } else if (f.on) { # only functional inputs on
+    xs <- sIn.on <- NULL
+    xf <- rm_between(key, "fIn = ", ", sOut", extract = TRUE)[[1]]
   } else return(NULL)
 
-  return(list(sIn.pr = sIn.4mat, fIn.pr = fIn.4mat))
+  # prune the scalar inputs based on vector of indices
+  if (!is.null(xs)) {
+    # not all the variables are kept on
+    if (grepl("\\d", xs)) {
+      # separated indices of variables in the form c(1,3,4)
+      if (grepl("\\(", xs)) {
+        s.inds <- as.numeric(unlist(regmatches(xs, gregexpr("[[:digit:]]+", xs))))
+      }
+      # consecutive indices of variables in the form 2:5
+      else if (grepl(":", xs)) {
+        v <- as.numeric(unlist(regmatches(xs, gregexpr("[[:digit:]]+", xs))))
+        s.inds <- v[1]:v[2]
+      }
+      # only one index in the form 4
+      else {
+        s.inds <- as.numeric(unlist(regmatches(xs, gregexpr("[[:digit:]]+", xs))))
+      }
+    }
+    # all the scalar variables are kept on
+    else {
+      s.inds <- 1:ncol(sIn)
+    }
+  }
+
+  # prune the functional inputs based on vector of indices
+  if (!is.null(xf)) {
+    # not all the variables are kept on
+    if (grepl("\\d", xf)) {
+      # separated indices of variables in the form c(1,3,4)
+      if (grepl("\\(", xf)) {
+        f.inds <- as.numeric(unlist(regmatches(xf, gregexpr("[[:digit:]]+", xf))))
+      }
+      # consecutive indices of variables in the form 2:5
+      else if (grepl(":", xf)) {
+        v <- as.numeric(unlist(regmatches(xf, gregexpr("[[:digit:]]+", xf))))
+        f.inds <- v[1]:v[2]
+      }
+      # only one index in the form 4
+      else {
+        f.inds <- as.numeric(unlist(regmatches(xf, gregexpr("[[:digit:]]+", xf))))
+      }
+    }
+    # all the variables are kept on
+    else {
+      f.inds <- 1:length(fIn)
+    }
+  }
+
+  return(list(s.inds = s.inds, f.inds = f.inds))
+}
+# ==========================================================================================================
+
+
+
+# ==========================================================================================================
+# Function to prune the inputs data structures according to some structural parameters delivered by the factory
+# ==========================================================================================================
+#' @title Removal of inactive inputs in a given model structure
+#' @description The \link[funGp]{fgpm_factory} function returns an object of class \code{"\linkS4class{Xfgpm}"}
+#'   with the function call of all the evaluated models stored in the \code{@log.success@args} and
+#'   \code{@log.crashes@args} slots. The \code{get_active_in} function interprets the arguments linked to any
+#'   structural configuration and returns a list with two elements: (i) a \code{matrix} of scalar input
+#'   variables kept active; and (ii) a \code{list} of functional input variables kept active.
+#'
+#' @param sIn sIn an optional matrix of scalar input coordinates with all the orignal scalar input variables.
+#' @param fIn an optional list of functional input coordinates with all the original functional input
+#'   variables.
+#' @param args an object of class \code{"\linkS4class{modelCall}"}, which specifies the model structure for
+#'   which the active inputs should be extracted.
+#'
+#' @return An object of class \code{"list"}, containing the following information extracted from the
+#'   \emph{args} parameter: (i) a \code{matrix} of scalar input variables kept active; and (ii) a \code{list}
+#'   of functional input variables kept active.
+#'
+#' @author José Betancourt, François Bachoc and Thierry Klein
+#'
+#' @references Betancourt, J., Bachoc, F., and Klein, T. (2020),
+#' R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
+#' \emph{RISCOPE project}.
+#' \href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
+#'
+#' @seealso \strong{*} \link[funGp]{which_on} for details how to obtain only on the indices of the active inputs.
+#' @seealso \strong{*} \code{"\linkS4class{modelCall}"} for details on the \emph{args} argument.
+#' @seealso \strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection.
+#' @seealso \strong{*} \code{"\linkS4class{Xfgpm}"} for details on object delivered by \link[funGp]{fgpm_factory}.
+#'
+#' @examples
+#' # extracting the indices of the active inputs in an optimized model________________________
+#' # generating input and output data
+#' set.seed(100)
+#' n.tr <- 32
+#' sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
+#'                    x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
+#'                    x5 = seq(0,1,length = n.tr^(1/5)))
+#' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
+#' sOut <- fgp_BB7(sIn, fIn, n.tr)
+#' \donttest{
+#' # optimizing the model structure with fgpm_factory (~12 seconds)
+#' xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
+#'
+#' # indices of active inputs in the best model
+#' xm@log.success@args[[1]] # the full fgpm call
+#' which_on(sIn, fIn, xm@log.success@args[[1]]) # only the indices extracted bu which_on
+#'
+#' # data structures of active inputs
+#' active <- get_active_in(sIn, fIn, xm@log.success@args[[1]])
+#' active$sIn.on # scalar data structures
+#' active$fIn.on # functional data structures
+#' }
+#' \donttest{
+#' # preparing new data for prediction based on inputs kept active____________________________
+#' # generating input and output data
+#' set.seed(100)
+#' n.tr <- 32
+#' sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
+#'                    x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
+#'                    x5 = seq(0,1,length = n.tr^(1/5)))
+#' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
+#' sOut <- fgp_BB7(sIn, fIn, n.tr)
+#'
+#' # optimizing the model structure with fgpm_factory (~12 seconds)
+#' xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
+#'
+#' # identifying selected model and corresponding arguments in fgpm
+#' opt.model <- xm@model
+#' opt.args <- xm@log.success@args[[1]]
+#'
+#' # generating input data for prediction
+#' n.pr <- 243
+#' sIn.pr <- expand.grid(x1 = seq(0,1,length = n.pr^(1/5)), x2 = seq(0,1,length = n.pr^(1/5)),
+#'                       x3 = seq(0,1,length = n.pr^(1/5)), x4 = seq(0,1,length = n.pr^(1/5)),
+#'                       x5 = seq(0,1,length = n.pr^(1/5)))
+#' fIn.pr <- list(f1 = matrix(runif(n.pr*10), ncol = 10), f2 = matrix(runif(n.pr*22), ncol = 22))
+#'
+#' # prunning data structures for prediction to keep only active inputs
+#' active <- get_active_in(sIn.pr, fIn.pr, opt.args)
+#'
+#' # making predictions
+#' preds <- predict(opt.model, sIn.pr = active$sIn.on, fIn.pr = active$fIn.on)
+#'
+#' # plotting predictions
+#' plotPreds(opt.model, preds = preds)
+#' }
+#'
+#' @importFrom qdapRegex rm_between
+#' @export
+get_active_in <- function (sIn = NULL, fIn = NULL, args) {
+  # get indices of active inputs
+  active <- which_on(sIn, fIn, args)
+
+  # original inputs: hybrid
+  if (all(!is.null(sIn), !is.null(fIn))) {
+    return(list(sIn.on = sIn[,active$s.inds,drop=FALSE], fIn.on = fIn[active$f.inds]))
+  }
+
+  # original inputs: functional
+  else if (!is.null(fIn)) {
+    return(list(sIn.on = NULL, fIn.on = fIn[active$f.inds]))
+  }
+
+  # original inputs: scalar
+  else if (!is.null(fIn)) {
+    return(list(sIn.on = sIn[,active$s.inds,drop=FALSE], fIn.on = NULL))
+  }
 }
 # ==========================================================================================================
