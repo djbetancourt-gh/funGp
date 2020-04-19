@@ -236,6 +236,7 @@ show.Xfgpm <- function(object) {
 #'
 #' @seealso \strong{*} \link[funGp]{plotX} for diagnostic plots for a fgpm_factory output and selected model;
 #' @seealso \strong{*} \link[funGp]{plotEvol} for a plot of the evolution of the model selection algorithm in fgpm_factory;
+#' @seealso \strong{*} \link[funGp]{get_active_in} for post-processing of input data structures following a fgpm_factory call;
 #' @seealso \strong{*} \link[funGp]{predict} for predictions based on a funGp model;
 #' @seealso \strong{*} \link[funGp]{simulate} for simulations based on a funGp model;
 #' @seealso \strong{*} \link[funGp]{update} for post-creation updates on a funGp model.

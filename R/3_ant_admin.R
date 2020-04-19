@@ -895,9 +895,9 @@ format4pred <- function(sIn.pr = NULL, fIn.pr = NULL, args) {
 #'
 #' @seealso \strong{*} \link[funGp]{get_active_in} for details how to obtain the data structures linked to the
 #' active inputs.
-#' @seealso \strong{*} \code{"\linkS4class{modelCall}"} for details on the \emph{args} argument.
+#' @seealso \strong{*} \linkS4class{modelCall} for details on the \emph{args} argument.
 #' @seealso \strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection.
-#' @seealso \strong{*} \code{"\linkS4class{Xfgpm}"} for details on object delivered by \link[funGp]{fgpm_factory}.
+#' @seealso \strong{*} \linkS4class{Xfgpm} for details on object delivered by \link[funGp]{fgpm_factory}.
 #'
 #' @examples
 #' # extracting the indices of the active inputs in an optimized model________________________
@@ -1028,9 +1028,9 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #' \href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
 #'
 #' @seealso \strong{*} \link[funGp]{which_on} for details how to obtain only on the indices of the active inputs.
-#' @seealso \strong{*} \code{"\linkS4class{modelCall}"} for details on the \emph{args} argument.
+#' @seealso \strong{*} \linkS4class{modelCall} for details on the \emph{args} argument.
 #' @seealso \strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection.
-#' @seealso \strong{*} \code{"\linkS4class{Xfgpm}"} for details on object delivered by \link[funGp]{fgpm_factory}.
+#' @seealso \strong{*} \linkS4class{Xfgpm} for details on object delivered by \link[funGp]{fgpm_factory}.
 #'
 #' @examples
 #' # extracting the indices of the active inputs in an optimized model________________________
@@ -1122,6 +1122,89 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #'
 #' # plotting light simulations
 #' plotSims(opt.model, sims_l)
+#' }
+#' \donttest{
+#' # rebuilding of 3 best models using new data_______________________________________________
+#' # NOTE: this example is of higher complexity than the previous ones. We recomend you run
+#' #       the previous examples and understand the @log.success and @log.crashes slots in
+#' #       the Xfgpm object delivered by fgpm_factory.
+#' #
+#' #       In the second example above we showed how to use get_active_in to prune the input
+#' #       data structures for prediction based on the fgpm arguments of the best model found
+#' #       by fgpm_factory. In this new example we generalize that concept by: (i) rebuilding
+#' #       the 3 best models fouond by fgpm_factory using new data, (ii) pruning the input
+#' #       data structures used for prediction with each of the models, and (iii) plotting
+#' #       the predictions made by the three models. The key ingredient here is that the
+#' #       three best models might have different scalar and functional inputs active. The
+#' #       get_active_in function will allow to process the data structures in order to
+#' #       extract only the scalar inputs required to re-build the model and then to make
+#' #       predictions with each model. Check also the funGp manual for further details
+#' #
+#' #       funGp manual: https://hal.archives-ouvertes.fr/hal-02536624
+#'
+#'
+#' # <<<<<<< PART 1: calling fgpm_factory to perform the structural optimization >>>>>>>
+#' #         -------------------------------------------------------------------
+#' # generating input and output data for structural optimization
+#' set.seed(100)
+#' n.tr <- 32
+#' sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
+#'                    x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
+#'                    x5 = seq(0,1,length = n.tr^(1/5)))
+#' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
+#' sOut <- fgp_BB7(sIn, fIn, n.tr)
+#'
+#' # optimizing the model structure with fgpm_factory (~12 seconds)
+#' xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
+#'
+#'
+#' # <<<<<<< PART 2: re-building the three best models found by fgpm_factory >>>>>>>
+#' #         ---------------------------------------------------------------
+#' # recovering the fgpm arguments of the three best models
+#' argStack <- xm@log.success@args[1:3]
+#'
+#' # new data arrived, now we have 243 observations
+#' n.nw <- 243 # more points!
+#' sIn.nw <- expand.grid(x1 = seq(0,1,length = n.nw^(1/5)), x2 = seq(0,1,length = n.nw^(1/5)),
+#'                       x3 = seq(0,1,length = n.nw^(1/5)), x4 = seq(0,1,length = n.nw^(1/5)),
+#'                       x5 = seq(0,1,length = n.nw^(1/5)))
+#' fIn.nw <- list(f1 = matrix(runif(n.nw*10), ncol = 10), f2 = matrix(runif(n.nw*22), ncol = 22))
+#' sOut.nw <- fgp_BB7(sIn.nw, fIn.nw, n.nw)
+#'
+#' # re-building the three best models based on the new data (compact code with all 3 calls)
+#' modStack <- lapply(1:3, function(i) eval(parse(text = argStack[[i]]@string)[[1]]))
+#'
+#'
+#' # <<<<<<< PART 3: making predictions from the three best models found by fgpm_factory >>>>>>>
+#' #         ---------------------------------------------------------------------------
+#' # generating input data for prediction
+#' n.pr <- 32
+#' sIn.pr <- expand.grid(x1 = seq(0,1,length = n.pr^(1/5)), x2 = seq(0,1,length = n.pr^(1/5)),
+#'                       x3 = seq(0,1,length = n.pr^(1/5)), x4 = seq(0,1,length = n.pr^(1/5)),
+#'                       x5 = seq(0,1,length = n.pr^(1/5)))
+#' fIn.pr <- list(f1 = matrix(runif(n.pr*10), ncol = 10), matrix(runif(n.pr*22), ncol = 22))
+#'
+#' # making predictions based on the three best models (compact code with all 3 calls)
+#' preds <- do.call(cbind, Map(function(model, args) {
+#'   active <- get_active_in(sIn.pr, fIn.pr, args)
+#'   predict(model, sIn.pr = active$sIn.on, fIn.pr = active$fIn.on)$mean
+#' }, modStack, argStack))
+#'
+#'
+#' # <<<<<<< PART 4: plotting predictions from the three best models found by fgpm_factory >>>>>>>
+#' #         -----------------------------------------------------------------------------
+#' # plotting predictions made by the three models
+#' require(plyr) # for conciseness in plotting the three models
+#' plot(1, xlim = c(1,nrow(preds)), ylim = range(preds), xaxt = "n",
+#'      xlab = "Prediction point index", ylab = "Output",
+#'      main = "Predictions with best 3 structural configurations")
+#' axis(1, 1:nrow(preds))
+#' l_ply(seq_len(n.pr), function(i) lines(rep(i,2), range(preds[i,1:3]), col = "grey35", lty = 3))
+#' points(preds[,1], pch = 21, bg = "black")
+#' points(preds[,2], pch = 23, bg = "red")
+#' points(preds[,3], pch = 24, bg = "green")
+#' legend("bottomleft", legend = c("Model 1", "Model 2", "Model 3"),
+#'        pch = c(21, 23, 24), pt.bg = c("black", "red", "green"), inset = c(.02,.08))
 #' }
 #'
 #' @importFrom qdapRegex rm_between

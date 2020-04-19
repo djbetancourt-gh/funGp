@@ -60,11 +60,11 @@ R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs 
 \strong{*} \link[funGp]{get_active_in} for details how to obtain the data structures linked to the
 active inputs.
 
-\strong{*} \code{"\linkS4class{modelCall}"} for details on the \emph{args} argument.
+\strong{*} \linkS4class{modelCall} for details on the \emph{args} argument.
 
 \strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection.
 
-\strong{*} \code{"\linkS4class{Xfgpm}"} for details on object delivered by \link[funGp]{fgpm_factory}.
+\strong{*} \linkS4class{Xfgpm} for details on object delivered by \link[funGp]{fgpm_factory}.
 }
 \author{
 José Betancourt, François Bachoc and Thierry Klein
