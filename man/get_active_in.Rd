@@ -2,7 +2,7 @@
 % Please edit documentation in R/3_ant_admin.R
 \name{get_active_in}
 \alias{get_active_in}
-\title{Removal of inactive inputs in a given model structure}
+\title{Extraction of active inputs in a given model structure}
 \usage{
 get_active_in(sIn = NULL, fIn = NULL, args)
 }
@@ -52,7 +52,7 @@ active$fIn.on # functional data structures
 }
 \donttest{
 # preparing new data for prediction based on inputs kept active____________________________
-# generating input and output data
+# generating input and output data for structural optimization
 set.seed(100)
 n.tr <- 32
 sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
@@ -64,25 +64,59 @@ sOut <- fgp_BB7(sIn, fIn, n.tr)
 # optimizing the model structure with fgpm_factory (~12 seconds)
 xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
 
-# identifying selected model and corresponding arguments in fgpm
+# identifying selected model and corresponding fgpm arguments
 opt.model <- xm@model
 opt.args <- xm@log.success@args[[1]]
 
-# generating input data for prediction
+# generating new input data for prediction
 n.pr <- 243
 sIn.pr <- expand.grid(x1 = seq(0,1,length = n.pr^(1/5)), x2 = seq(0,1,length = n.pr^(1/5)),
                       x3 = seq(0,1,length = n.pr^(1/5)), x4 = seq(0,1,length = n.pr^(1/5)),
                       x5 = seq(0,1,length = n.pr^(1/5)))
 fIn.pr <- list(f1 = matrix(runif(n.pr*10), ncol = 10), f2 = matrix(runif(n.pr*22), ncol = 22))
 
-# prunning data structures for prediction to keep only active inputs
+# prunning data structures for prediction to keep only active inputs!!
 active <- get_active_in(sIn.pr, fIn.pr, opt.args)
 
 # making predictions
 preds <- predict(opt.model, sIn.pr = active$sIn.on, fIn.pr = active$fIn.on)
 
 # plotting predictions
-plotPreds(opt.model, preds = preds)
+plotPreds(opt.model, preds)
+}
+\donttest{
+# preparing new data for simulation based on inputs kept active____________________________
+# generating input and output data for structural optimization
+set.seed(100)
+n.tr <- 32
+sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
+                   x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
+                   x5 = seq(0,1,length = n.tr^(1/5)))
+fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
+sOut <- fgp_BB7(sIn, fIn, n.tr)
+
+# optimizing the model structure with fgpm_factory (~12 seconds)
+xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
+
+# identifying selected model and corresponding fgpm arguments
+opt.model <- xm@model
+opt.args <- xm@log.success@args[[1]]
+
+# generating new input data for simulation
+n.sm <- 243
+sIn.sm <- expand.grid(x1 = seq(0,1,length = n.sm^(1/5)), x2 = seq(0,1,length = n.sm^(1/5)),
+                      x3 = seq(0,1,length = n.sm^(1/5)), x4 = seq(0,1,length = n.sm^(1/5)),
+                      x5 = seq(0,1,length = n.sm^(1/5)))
+fIn.sm <- list(f1 = matrix(runif(n.sm*10), ncol = 10), f2 = matrix(runif(n.sm*22), ncol = 22))
+
+# prunning data structures for simulation to keep only active inputs!!
+active <- get_active_in(sIn.sm, fIn.sm, opt.args)
+
+# making light simulations
+sims_l <- simulate(opt.model, nsim = 10, sIn.sm = sIn.sm, fIn.sm = fIn.sm)
+
+# plotting light simulations
+plotSims(opt.model, sims_l)
 }
 
 }

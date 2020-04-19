@@ -34,7 +34,7 @@ This package was first developed in the frame of the RISCOPE research project, f
 \section{Model selection}{
 
 \itemize{
- \item{\strong{Main methods}}{\cr
+ \item{\strong{Main method}}{\cr
        \link[funGp]{fgpm_factory}: structural parameter optimization
  }
  \item{\strong{Plotters pre-optimization}}{\cr
@@ -44,6 +44,10 @@ This package was first developed in the frame of the RISCOPE research project, f
  \item{\strong{Plotters post-optimization}}{\cr
        \link[funGp]{plotX}: absolute and relative quality of the optimized model \cr
        \link[funGp]{plotEvol}: evolution of the algorithm
+ }
+ \item{\strong{Correction post-optimization of input data structures}}{\cr
+       \link[funGp]{which_on}: indices of active inputs in a model structure delivered by \link[funGp]{fgpm_factory} \cr
+       \link[funGp]{get_active_in}: extraction of active input data based on a model structure delivered by \link[funGp]{fgpm_factory}
  }
 }
 }
