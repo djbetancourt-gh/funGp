@@ -694,6 +694,7 @@ eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str
           argsList <- lapply(sub_result[done], `[[`, 1)
           modelList <- lapply(sub_result[done], `[[`, 2)
           fitnessVec <- sapply(sub_result[done], `[[`, 3)
+          antMat <- t(sapply(sub_result[done], `[[`, 4))
 
           # identify crashes and usable models
           ids.cr <- which(is.na(fitnessVec))
@@ -705,7 +706,8 @@ eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str
             piv <- sample.vec(which(fitnessVec == max(fitnessVec)))
             args <- argsList[[piv]]
             model <- modelList[[piv]]
-            amf <- list(args, model, fitness)
+            ant <- antMat[piv,]
+            amf <- list(args, model, fitness, ant)
           } else {
             amf <- NULL
           }
@@ -734,8 +736,8 @@ eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str
         active <- getActiveIn_ACO(ants[i,], sIn, fIn, base)
 
         # build and validate the model
-          sub_result[[j]] <- fitNtests_ACO(ants[i,], data$sIn.tr, data$fIn.tr, data$sOut.tr, extargs, base,
-                                           ind.vl, data$sIn.vl, data$fIn.vl, data$sOut.vl, active)
+        sub_result[[j]] <- fitNtests_ACO(ants[i,], data$sIn.tr, data$fIn.tr, data$sOut.tr, extargs, base,
+                                         ind.vl, data$sIn.vl, data$fIn.vl, data$sOut.vl, active)
 
         # check if we are still on time
         dt <- difftime(Sys.time(), time.str, units = 'secs')
@@ -746,11 +748,13 @@ eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str
           break
         }
       }
+
       # extract complete evaluations
       done <- which(!sapply(sub_result, is.null))
       argsList <- lapply(sub_result[done], `[[`, 1)
       modelList <- lapply(sub_result[done], `[[`, 2)
       fitnessVec <- sapply(sub_result[done], `[[`, 3)
+      antMat <- t(sapply(sub_result[done], `[[`, 4))
 
       # identify crashes and usable models
       ids.cr <- which(is.na(fitnessVec))
@@ -762,7 +766,8 @@ eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str
         piv <- sample.vec(which(fitnessVec == max(fitnessVec)))
         args <- argsList[[piv]]
         model <- modelList[[piv]]
-        result[[i]] <- list(args, model, fitness)
+        ant <- antMat[piv,]
+        result[[i]] <- list(args, model, fitness, ant)
       } else {
         result[[i]] <- NULL
       }
@@ -790,7 +795,6 @@ eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str
 # ==========================================================================================================
 fitNtests_ACO <- function(ant, sIn, fIn, sOut, extargs, base,
                             ind.vl = NULL, sIn.vl = NULL, fIn.vl = NULL, sOut.vl = NULL, active = NULL) {
-  b.model <- b.args <- NULL
   args <- formatSol_ACO(ant, sIn, fIn, base)
   poterr <- tryCatch(
     {
@@ -809,7 +813,7 @@ fitNtests_ACO <- function(ant, sIn, fIn, sOut, extargs, base,
     model <- poterr
     fitness <- NA
   }
-  return(list(args[-(1:2)], model, fitness))
+  return(list(args[-(1:2)], model, fitness, ant))
 }
 # ==========================================================================================================
 

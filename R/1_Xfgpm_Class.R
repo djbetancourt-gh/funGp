@@ -487,7 +487,6 @@ setSpace <- function(sIn, fIn, ctraints) {
     if (!is.null(f_keepOn)) f.state[f_keepOn] <- 1
 
     # update the set of potential dimensions for functional inputs
-    # browser()
     if (!is.null(f_fixDims)) {
       for (i in ncol(f_fixDims)) {
         f.dims[[f_fixDims[1,i]]] <- f_fixDims[2,i]

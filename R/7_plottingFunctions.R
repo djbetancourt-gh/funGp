@@ -321,7 +321,6 @@ plotPreds.fgpm <- function(preds, sOut.pr, calib, sortp, ...) {
 
   # line plot ____________________________________________________________
   plot.l <- function (tight = FALSE) {
-    # browser()
     # <---> limits
     if (!is.null(lin.gpars$xlim)) xlim <- lin.gpars$xlim else xlim <- c(1, length(y_pre))
     if (!is.null(lin.gpars$ylim)) ylim <- lin.gpars$ylim else ylim <- range(c(ll, ul))
@@ -1269,7 +1268,6 @@ plotEvol.Xfgpm <- function(x.model, ...) {
          lty = c(0, 1, 1, 0), pt.cex = c(1, 1, 1, NA), cex = .85, inset = c(.02,.07))
 
   # arrow parameters in x
-  # browser()
   limscr <- par('usr')[1:2]
   # rcr <- limscr[1] + diff(limscr)*(1-0.02) # right coordinate of legend frame
   win <- par()$pin[1]*(1-0.02) # width of plot in inches (omitting right inset)
