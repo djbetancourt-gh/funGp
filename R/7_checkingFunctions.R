@@ -5,7 +5,6 @@
 # funGp validator
 # ----------------------------------------------------------------------------------------------------------
 checkVal_fgpm <- function(env){
-  # browser()
   if (all(!is.null(env$sIn), !is.null(env$fIn))) { # Hybrid-input case *******************************************
     # consistency in number of points
     if (length(unique(c(nrow(env$sIn), as.numeric(sapply(env$fIn, nrow)), length(env$sOut)))) > 1) {
