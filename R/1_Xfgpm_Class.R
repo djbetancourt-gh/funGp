@@ -617,22 +617,24 @@ getSpacesize <- function(space) {
   k.type <- space$k.type
 
   # count 2 levels for each free scalar input
-  n.s <- 2 * sum(s.state == 0)
+  n.s <- max(2 * sum(s.state == 0),1)
 
   # count for functional inputs
   n.fs <- rep(1, space$df)
-  for (i in 1:space$df) {
-    # count the number of distance types
-    n.fs[i] <- n.fs[i] * length(f.dist[[i]])
+  if (space$df > 0) {
+    for (i in 1:space$df) {
+      # count the number of distance types
+      n.fs[i] <- n.fs[i] * length(f.dist[[i]])
 
-    # count the number of dimensions
-    n.fs[i] <- n.fs[i] * length(f.dims[[i]])
+      # count the number of dimensions
+      n.fs[i] <- n.fs[i] * length(f.dims[[i]])
 
-    # count the number of bases
-    n.fs[i] <- n.fs[i] * length(f.bas[[i]])
+      # count the number of bases
+      n.fs[i] <- n.fs[i] * length(f.bas[[i]])
 
-    # if the input is free, add an extra level for the function inactive
-    if (f.state[i] == 0) n.fs[i] <- n.fs[i] + 1
+      # if the input is free, add an extra level for the function inactive
+      if (f.state[i] == 0) n.fs[i] <- n.fs[i] + 1
+    }
   }
   n.f <- prod(n.fs)
 

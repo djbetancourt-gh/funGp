@@ -121,13 +121,35 @@
       
     </div>
 
-    <div id="fungp-0-1-0" class="section level1">
+    <div id="fungp-0-1-0-2020-04-22" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.0">
-<a href="#fungp-0-1-0" class="anchor"></a>funGp 0.1.0<small> 2020-04-22 </small>
+<a href="#fungp-0-1-0-2020-04-22" class="anchor"></a>funGp 0.1.0 (2020-04-22)<small> 2020-04-22 </small>
 </h1>
 <ul>
 <li>This is the first release of funGp.</li>
 </ul>
+</div>
+    <div id="fungp-0-2-0-2020-11-17" class="section level1">
+<h1 class="page-header" data-toc-text="0.2.0">
+<a href="#fungp-0-2-0-2020-11-17" class="anchor"></a>funGp 0.2.0 (2020-11-17)<small> Unreleased </small>
+</h1>
+<div id="main-functionality-corrections" class="section level2">
+<h2 class="hasAnchor">
+<a href="#main-functionality-corrections" class="anchor"></a>Main functionality corrections</h2>
+<ul>
+<li><p>Fixed incoherence between the sorting order of the list of explored models and their performance statistic, stored at the <code>xm@log.success@sols</code> and <code>xm@log.success@fitness</code> slots of the <code>Xfgpm</code> object delivered by <code><a href="../reference/fgpm_factory.html">fgpm_factory()</a></code>. Now the models in <code>xm@log.success@sols</code> are correctly sorted in decreasing order by performance.</p></li>
+<li><p>Resolved bug causing crash in <code><a href="../reference/fgpm_factory.html">fgpm_factory()</a></code> during structural optimization with only functional inputs, e.g., for the call <code><a href="../reference/fgpm_factory.html">fgpm_factory(fIn = fIn, sOut = sOut)</a></code>. Thanks to Jérémy Rohmer for pointing out the bug.</p></li>
+<li><p>Resolved bug causing crash in <code><a href="../reference/fgpm_factory.html">fgpm_factory()</a></code> during structural optimization with only scalar inputs, e.g., for the call <code><a href="../reference/fgpm_factory.html">fgpm_factory(sIn = sIn, sOut = sOut)</a></code>.</p></li>
+</ul>
+</div>
+<div id="minor-display-changes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#minor-display-changes" class="anchor"></a>Minor display changes</h2>
+<ul>
+<li><p>Iproved display of progress bars for <code><a href="../reference/fgpm.html">fgpm()</a></code> and <code><a href="../reference/fgpm_factory.html">fgpm_factory()</a></code></p></li>
+<li><p>Improved placing of the legend in <code><a href="../reference/plotX-methods.html">plotX()</a></code> to prevent hiding important information</p></li>
+</ul>
+</div>
 </div>
   </div>
 
