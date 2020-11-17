@@ -23,3 +23,7 @@
 * Iproved display of progress bars for `fgpm()` and `fgpm_factory()`
 
 * Improved placing of the legend in `plotX()` to prevent hiding important information
+
+## Minor flow changes
+
+* `format4pred()` deprecated for `get_active_in()`
