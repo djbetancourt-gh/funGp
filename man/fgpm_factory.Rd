@@ -338,6 +338,8 @@ Dubrule, O. (1983),
 
 \strong{*} \link[funGp]{plotEvol} for a plot of the evolution of the model selection algorithm in fgpm_factory;
 
+\strong{*} \link[funGp]{get_active_in} for post-processing of input data structures following a fgpm_factory call;
+
 \strong{*} \link[funGp]{predict} for predictions based on a funGp model;
 
 \strong{*} \link[funGp]{simulate} for simulations based on a funGp model;

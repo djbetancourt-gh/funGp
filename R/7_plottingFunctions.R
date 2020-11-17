@@ -321,7 +321,6 @@ plotPreds.fgpm <- function(preds, sOut.pr, calib, sortp, ...) {
 
   # line plot ____________________________________________________________
   plot.l <- function (tight = FALSE) {
-    # browser()
     # <---> limits
     if (!is.null(lin.gpars$xlim)) xlim <- lin.gpars$xlim else xlim <- c(1, length(y_pre))
     if (!is.null(lin.gpars$ylim)) ylim <- lin.gpars$ylim else ylim <- range(c(ll, ul))
@@ -1059,32 +1058,60 @@ plotX.Xfgpm <- function(x.model, calib, fitp, ...) {
              angle = 25, lwd = 1.5, col = alpha("blue", .7))
     }
     if (legends) {
-      legend("bottomleft", legend = c("Sel. model", "All models", "fitness < 0"),
-             pch = c(24, 21, NA), pt.bg = c("green", "blue", NA), inset = c(.02,.08))
-      legend("bottomleft", legend = c("Sel. model", "All models", "fitness < 0"),
-             pch = c(25, 21, NA), pt.bg = c("green", "blue", NA), inset = c(.02,.08), bg = NA)
+      if (x.model@fitness > .7) {
+        legend("bottomleft", legend = c("Sel. model", "All models", "fitness < 0"),
+               pch = c(24, 21, NA), pt.bg = c("green", "blue", NA), inset = c(.02,.08))
+        legend("bottomleft", legend = c("Sel. model", "All models", "fitness < 0"),
+               pch = c(25, 21, NA), pt.bg = c("green", "blue", NA), inset = c(.02,.08), bg = NA)
 
-      # arrow parameters in x
-      limscr <- par('usr')[1:2]
-      lcr <- limscr[1] + diff(limscr)*(0.02) # left coordinate of legend frame
-      win <- par()$pin[1]*(1-0.02) # width of plot in inches (omitting left inset)
-      pin <- 0.15 # location of point in inches
-      lp <- pin/win # location as percentage of width
-      wcr <- diff(limscr)*(1-0.02) # width of plot in coordinate system
-      xcr <- lcr + wcr*lp # location of point in coordinate
+        # arrow parameters in x
+        limscr <- par('usr')[1:2]
+        lcr <- limscr[1] + diff(limscr)*(0.02) # left coordinate of legend frame
+        win <- par()$pin[1]*(1-0.02) # width of plot in inches (omitting left inset)
+        pin <- 0.15 # location of point in inches
+        lp <- pin/win # location as percentage of width
+        wcr <- diff(limscr)*(1-0.02) # width of plot in coordinate system
+        xcr <- lcr + wcr*lp # location of point in coordinate
 
-      # arrow parameters in y
-      limscr <- par('usr')[3:4]
-      bcr <- limscr[1] + diff(limscr)*(0.08) # bottom coordinate of legend frame
-      hin <- par()$pin[2]*(1-0.08) # height of plot in inches (omitting bottom inset)
-      pin1 <- 0.14 # end location of arrow in inches
-      h <- .12 # arrow height in inches
-      pin2 <- pin1+h # start location of arrow in inches
-      lp1 <- pin1/hin # location 1 as percentage of height
-      lp2 <- pin2/hin # location 2 as percentage of height
-      hcr <- diff(limscr)*(1-0.08) # height of plot in coordinate system
-      ycr1 <- bcr + hcr*lp1 # location 1 in coordinate
-      ycr2 <- bcr + hcr*lp2 # location 1 in coordinate
+        # arrow parameters in y
+        limscr <- par('usr')[3:4]
+        bcr <- limscr[1] + diff(limscr)*(0.08) # bottom coordinate of legend frame
+        hin <- par()$pin[2]*(1-0.08) # height of plot in inches (omitting bottom inset)
+        pin1 <- 0.14 # end location of arrow in inches
+        h <- .12 # arrow height in inches
+        pin2 <- pin1+h # start location of arrow in inches
+        lp1 <- pin1/hin # location 1 as percentage of height
+        lp2 <- pin2/hin # location 2 as percentage of height
+        hcr <- diff(limscr)*(1-0.08) # height of plot in coordinate system
+        ycr1 <- bcr + hcr*lp1 # location 1 in coordinate
+        ycr2 <- bcr + hcr*lp2 # location 1 in coordinate
+
+      } else {
+        legend("topright", legend = c("Sel. model", "All models", "fitness < 0"),
+               pch = c(24, 21, NA), pt.bg = c("green", "blue", NA), inset = c(.02,.08))
+        legend("topright", legend = c("Sel. model", "All models", "fitness < 0"),
+               pch = c(25, 21, NA), pt.bg = c("green", "blue", NA), inset = c(.02,.08), bg = NA)
+
+        # arrow parameters in x
+        limscr <- par('usr')[1:2]
+        win <- par()$pin[1]*(1-0.02) # width of plot in inches (omitting right inset)
+        pin <- win - 1.015 # location of point in inches
+        lp <- pin/win # location as percentage of width
+        wcr <- diff(limscr)*(1-0.02) # width of plot in coordinate system
+        xcr <- limscr[1] + wcr*lp # location of point in coordinate
+
+        # arrow parameters in x
+        limscr <- par('usr')[3:4]
+        hin <- par()$pin[2]*(1-0.08) # height of plot in inches (omitting bottom inset)
+        pin1 <- hin - 0.659 # end location of arrow in inches (distance from top)
+        h <- .12 # arrow height in inches
+        pin2 <- pin1+h # start location of arrow in inches
+        lp1 <- pin1/hin # location 1 as percentage of height
+        lp2 <- pin2/hin # location 2 as percentage of height
+        hcr <- diff(limscr)*(1-0.08) # height of plot in coordinate system
+        ycr1 <- limscr[1] + hcr*lp1 # location 1 in coordinate
+        ycr2 <- limscr[1] + hcr*lp2 # location 1 in coordinate
+      }
 
       # arrow display
       arrows(x0 = xcr, x1 = xcr, y0 = ycr1, y1 = ycr2, length = 0.06, code = 1,
@@ -1269,9 +1296,7 @@ plotEvol.Xfgpm <- function(x.model, ...) {
          lty = c(0, 1, 1, 0), pt.cex = c(1, 1, 1, NA), cex = .85, inset = c(.02,.07))
 
   # arrow parameters in x
-  # browser()
   limscr <- par('usr')[1:2]
-  # rcr <- limscr[1] + diff(limscr)*(1-0.02) # right coordinate of legend frame
   win <- par()$pin[1]*(1-0.02) # width of plot in inches (omitting right inset)
   pin <- win - 1.24 # location of point in inches
   lp <- pin/win # location as percentage of width

@@ -103,7 +103,6 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, phero, base, extargs, time.st
     }
 
     # compute fitness of each ant
-    fitness <- rep(0, n.pop)
     if (is.null(ind.vl)) {
       res <- eval_loocv_ACO(sIn, fIn, sOut, extargs, base, ants, time.str, time.lim, pbars, par.clust)
     } else {
@@ -115,6 +114,7 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, phero, base, extargs, time.st
     argsList <- lapply(res[done], `[[`, 1)
     modelList <- lapply(res[done], `[[`, 2)
     fitness <- sapply(res[done], `[[`, 3)
+    ants <- t(sapply(res[done], `[[`, 4))
 
     # identify crashes and usable models
     ids.cr <- which(is.na(fitness))
@@ -134,7 +134,14 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, phero, base, extargs, time.st
     phero <- globalUpd_ACO(elite$ants.up, elite$fitness.up, phero, rho.g, tao0)
 
     # save best ant, fitness, agrs and model
-    if (fitness[elite$b.ind[1]] > b.fitness) {
+    if (c.gen > 1) {
+      if (fitness[elite$b.ind[1]] > b.fitness) {
+        b.ant <- ants[elite$b.ind[1],]
+        b.fitness <- fitness[elite$b.ind[1]]
+        b.args <- argsList[ids.ok[elite$b.ind[1]]][[1]]
+        b.model <- modelList[ids.ok[elite$b.ind[1]]][[1]]
+      }
+    } else {
       b.ant <- ants[elite$b.ind[1],]
       b.fitness <- fitness[elite$b.ind[1]]
       b.args <- argsList[ids.ok[elite$b.ind[1]]][[1]]
@@ -323,23 +330,33 @@ globalUpd_ACO <- function(b.ants, b.fitness, phero, rho.g, tao0) {
               phero[[c.lay]][o,d] <- (1 - rho.g) * phero[[c.lay]][o,d] + rho.g * max(b.fitness[i],tao0) # pheromone update
 
             } else if (grepl("State F", names(phero)[c.lay])) { # if a functional input has been activated
-              if (c.ant[(c.lay-1)] == -1) { # if we come from an inactive functional input
-                for (o in 1:nrow(phero[[c.lay]])) {
-                  phero[[c.lay]][o,d] <- (1 - rho.g) * phero[[c.lay]][o,d] + rho.g * max(b.fitness[i],tao0) # pheromone update
-                }
+              if (c.lay == 1) {
+                phero[[c.lay]][o,d] <- (1 - rho.g) * phero[[c.lay]][o,d] + rho.g * max(b.fitness[i],tao0) # pheromone update
 
               } else {
-                phero[[c.lay]][o,d] <- (1 - rho.g) * phero[[c.lay]][o,d] + rho.g * max(b.fitness[i],tao0) # pheromone update
+                if (c.ant[(c.lay-1)] == -1) { # if we come from an inactive functional input
+                  for (o in 1:nrow(phero[[c.lay]])) {
+                    phero[[c.lay]][o,d] <- (1 - rho.g) * phero[[c.lay]][o,d] + rho.g * max(b.fitness[i],tao0) # pheromone update
+                  }
+
+                } else {
+                  phero[[c.lay]][o,d] <- (1 - rho.g) * phero[[c.lay]][o,d] + rho.g * max(b.fitness[i],tao0) # pheromone update
+                }
               }
 
             } else { # current level does not have anything to do with the state of an input
-              if (c.ant[(c.lay-1)] == -1) { # if we come from an inactive functional input
-                for (o in 1:nrow(phero[[c.lay]])) {
-                  phero[[c.lay]][o,d] <- (1 - rho.g) * phero[[c.lay]][o,d] + rho.g * max(b.fitness[i],tao0) # pheromone update
-                }
+              if (c.lay == 1) {
+                phero[[c.lay]][o,d] <- (1 - rho.g) * phero[[c.lay]][o,d] + rho.g * max(b.fitness[i],tao0) # pheromone update
 
               } else {
-                phero[[c.lay]][o,d] <- (1 - rho.g) * phero[[c.lay]][o,d] + rho.g * max(b.fitness[i],tao0) # pheromone update
+                if (c.ant[(c.lay-1)] == -1) { # if we come from an inactive functional input
+                  for (o in 1:nrow(phero[[c.lay]])) {
+                    phero[[c.lay]][o,d] <- (1 - rho.g) * phero[[c.lay]][o,d] + rho.g * max(b.fitness[i],tao0) # pheromone update
+                  }
+
+                } else {
+                  phero[[c.lay]][o,d] <- (1 - rho.g) * phero[[c.lay]][o,d] + rho.g * max(b.fitness[i],tao0) # pheromone update
+                }
               }
             }
             c.lev <- d # current level update

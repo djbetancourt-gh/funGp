@@ -236,6 +236,7 @@ show.Xfgpm <- function(object) {
 #'
 #' @seealso \strong{*} \link[funGp]{plotX} for diagnostic plots for a fgpm_factory output and selected model;
 #' @seealso \strong{*} \link[funGp]{plotEvol} for a plot of the evolution of the model selection algorithm in fgpm_factory;
+#' @seealso \strong{*} \link[funGp]{get_active_in} for post-processing of input data structures following a fgpm_factory call;
 #' @seealso \strong{*} \link[funGp]{predict} for predictions based on a funGp model;
 #' @seealso \strong{*} \link[funGp]{simulate} for simulations based on a funGp model;
 #' @seealso \strong{*} \link[funGp]{update} for post-creation updates on a funGp model.
@@ -486,7 +487,6 @@ setSpace <- function(sIn, fIn, ctraints) {
     if (!is.null(f_keepOn)) f.state[f_keepOn] <- 1
 
     # update the set of potential dimensions for functional inputs
-    # browser()
     if (!is.null(f_fixDims)) {
       for (i in ncol(f_fixDims)) {
         f.dims[[f_fixDims[1,i]]] <- f_fixDims[2,i]
@@ -617,22 +617,24 @@ getSpacesize <- function(space) {
   k.type <- space$k.type
 
   # count 2 levels for each free scalar input
-  n.s <- 2 * sum(s.state == 0)
+  n.s <- max(2 * sum(s.state == 0),1)
 
   # count for functional inputs
   n.fs <- rep(1, space$df)
-  for (i in 1:space$df) {
-    # count the number of distance types
-    n.fs[i] <- n.fs[i] * length(f.dist[[i]])
+  if (space$df > 0) {
+    for (i in 1:space$df) {
+      # count the number of distance types
+      n.fs[i] <- n.fs[i] * length(f.dist[[i]])
 
-    # count the number of dimensions
-    n.fs[i] <- n.fs[i] * length(f.dims[[i]])
+      # count the number of dimensions
+      n.fs[i] <- n.fs[i] * length(f.dims[[i]])
 
-    # count the number of bases
-    n.fs[i] <- n.fs[i] * length(f.bas[[i]])
+      # count the number of bases
+      n.fs[i] <- n.fs[i] * length(f.bas[[i]])
 
-    # if the input is free, add an extra level for the function inactive
-    if (f.state[i] == 0) n.fs[i] <- n.fs[i] + 1
+      # if the input is free, add an extra level for the function inactive
+      if (f.state[i] == 0) n.fs[i] <- n.fs[i] + 1
+    }
   }
   n.f <- prod(n.fs)
 

@@ -571,7 +571,6 @@ show.fgpm <- function(model) {
   cat(paste("\n\n* Scalar inputs: ", model@ds, "\n", sep = ""))
   cat(paste("* Functional inputs: ", model@df, "", sep = ""))
   if (model@df > 0) {
-    # browser()
     np <- min(model@df, 8)
     G <- cbind(paste("F", 1:np, sep = ""), model@f_dims, model@f_proj@pdims, model@f_proj@basType, model@kern@f_disType)
     colnames(G) <- c("Input", "Orig. dim", "Proj. dim", "Basis", "Distance")

@@ -27,10 +27,10 @@ An object of class \code{"list"}, containing the input data structures with only
   specified by \emph{args}.
 }
 \description{
-This function prepared input data structures according to the active inputs specified by a
-  \code{"\linkS4class{modelCall}"} object. This function is intended to easily adapt the data structures
-  to the requirements of a specific model delivered by the model factory function
-  \link[funGp]{fgpm_factory}.
+\strong{Deprecated function, use \link[funGp]{get_active_in} instead.}\cr This function prepared
+  input data structures according to the active inputs specified by a \code{"\linkS4class{modelCall}"}
+  object. This function is intended to easily adapt the data structures to the requirements of a specific
+  model delivered by the model factory function \link[funGp]{fgpm_factory}.
 }
 \references{
 Betancourt, J., Bachoc, F., and Klein, T. (2020),
@@ -39,6 +39,8 @@ R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs 
 \href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
 }
 \seealso{
+\strong{*} \link[funGp]{get_active_in} for the substitute of this function in future releases;
+
 \strong{*} \link[funGp]{predict} for predictions based on a funGp model;
 
 \strong{*} \link[funGp]{fgpm} for creation of a funGp model;
