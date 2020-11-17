@@ -1,16 +1,16 @@
 ## Resubmission
 This is a resubmission. In this version we have:
 
-* Added the Value field previously missing in the documentation
-  of some exported methods, e.g., in decay.Rd.
+* Improved the display of progress bars for the fgpm() and
+  fgpm_factory() functions.
+
+* Corrected two functionality bugs concerning particular uses of
+  fgpm() and fgpm_factory().
   
-* Replaced cat(..) with message(..) and also added the boolean
-  param 'trace' in some functions in order to allow the user to
-  easily suppress messages printed to console,
-  e.g., in 3_training_S.R.
+* Corrected a mistake in the ordering of a data structure delivered
+  by fgpm_factory().
   
-* Added the boolean pbars param in relevant functions to allow
-  easy suppression of progress bars.
+* Improved the display of the legend in plotX().
 
 ## Test environments
 * local Linux install, R 3.6.3
@@ -21,23 +21,7 @@ This is a resubmission. In this version we have:
 Also checked with --run-donttest
 
 ## R CMD check results
-There were no ERRORs or WARNINGs. 
-
-There were 2 NOTEs:
-
-* New submission
-
-This is indeed the first submission of this package.
-
-* Possibly mis-spelled words in DESCRIPTION:
-  Betancourt (20:2)
-  Metamodeling (19:2)
-  al (20:16)
-  et (20:13)
-
-"Betancourt"" is a name, "Metamodeling"" is a valid word used
-in computer experiments, "et" and "al" make part of the
-reference.
+There were no ERRORs, WARNINGs or NOTEs.
 
 ## Downstream dependencies
 There are currently no downstream dependencies for this package.
