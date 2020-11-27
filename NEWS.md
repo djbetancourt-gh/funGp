@@ -1,4 +1,4 @@
-# funGp 0.2.1 (2020-11-18)
+# funGp 0.2.1 (2020-11-24)
 
 * Minor change to resolve a `check` `NOTE` related to the declaration in `Imports` of the `plyr`
   package.

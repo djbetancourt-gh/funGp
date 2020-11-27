@@ -1,16 +1,9 @@
 ## Resubmission
-This is a resubmission. In this version we have:
+This is a resubmission. Please excuse submitting two updates so close
+together. In this version we have:
 
-* Improved the display of progress bars for the fgpm() and
-  fgpm_factory() functions.
-
-* Corrected two functionality bugs concerning particular uses of
-  fgpm() and fgpm_factory().
-  
-* Corrected a mistake in the ordering of a data structure delivered
-  by fgpm_factory().
-  
-* Improved the display of the legend in plotX().
+* Removed the check NOTE displayed for version 0.2.0 about an issue
+  with the Imports.
 
 ## Test environments
 * local Linux install, R 3.6.3
