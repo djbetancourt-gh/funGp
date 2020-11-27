@@ -1,6 +1,7 @@
-# funGp 0.1.0 (2020-04-22)
+# funGp 0.2.1 (2020-11-24)
 
-* This is the first release of funGp.
+* Minor change to resolve a `check` `NOTE` related to the declaration in `Imports` of the `plyr`
+  package.
 
 # funGp 0.2.0 (2020-11-17)
 
@@ -27,3 +28,7 @@
 ## Minor flow changes
 
 * `format4pred()` deprecated for `get_active_in()`
+
+# funGp 0.1.0 (2020-04-22)
+
+* This is the first release of funGp.

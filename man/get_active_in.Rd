@@ -189,12 +189,11 @@ preds <- do.call(cbind, Map(function(model, args) {
 # <<<<<<< PART 4: plotting predictions from the three best models found by fgpm_factory >>>>>>>
 #         -----------------------------------------------------------------------------
 # plotting predictions made by the three models
-require(plyr) # for conciseness in plotting the three models
 plot(1, xlim = c(1,nrow(preds)), ylim = range(preds), xaxt = "n",
      xlab = "Prediction point index", ylab = "Output",
      main = "Predictions with best 3 structural configurations")
 axis(1, 1:nrow(preds))
-l_ply(seq_len(n.pr), function(i) lines(rep(i,2), range(preds[i,1:3]), col = "grey35", lty = 3))
+for (i in seq_len(n.pr)) {lines(rep(i,2), range(preds[i,1:3]), col = "grey35", lty = 3)}
 points(preds[,1], pch = 21, bg = "black")
 points(preds[,2], pch = 23, bg = "red")
 points(preds[,3], pch = 24, bg = "green")
