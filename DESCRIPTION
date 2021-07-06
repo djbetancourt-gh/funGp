@@ -27,7 +27,7 @@ URL: https://djbetancourt-gh.github.io/funGp/
 Imports: methods, foreach, knitr, scales, qdapRegex, microbenchmark, doFuture, future, progressr
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Collate: 
     '0_funGp_Doc.R'
     '0_show_Doc.R'

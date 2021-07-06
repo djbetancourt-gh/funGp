@@ -42,7 +42,7 @@ sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr
                    x5 = seq(0,1,length = n.tr^(1/5)))
 fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
 sOut <- fgp_BB7(sIn, fIn, n.tr)
-\donttest{
+\dontrun{
 # optimizing the model structure with fgpm_factory (~5 seconds)
 xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
 

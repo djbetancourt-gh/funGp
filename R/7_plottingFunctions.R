@@ -461,7 +461,7 @@ plotPreds.fgpm <- function(preds, sOut.pr, calib, sortp, ...) {
     par(mar = c(5.1, 4.1, 4.1, 2.1), mfrow = c(1,1))
     plot.l()
   }
-  assign("last.warning", NULL, envir = baseenv())
+  #assign("last.warning", NULL, envir = baseenv())
 }
 # ==========================================================================================================
 
@@ -891,7 +891,7 @@ decay2probs <- function(k, pmax = NULL, tao0 = .1, delta = 2, dispr = 1.4, doplo
 #'                    x5 = seq(0,1,length = n.tr^(1/5)))
 #' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
 #' sOut <- fgp_BB7(sIn, fIn, n.tr)
-#' \donttest{
+#' \dontrun{
 #' # optimizing the model structure with fgpm_factory (~5 seconds)
 #' xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
 #'
@@ -954,7 +954,7 @@ if(!isGeneric("plotX")) {setGeneric("plotX", function(x.model, ...) standardGene
 #'                    x5 = seq(0,1,length = n.tr^(1/5)))
 #' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
 #' sOut <- fgp_BB7(sIn, fIn, n.tr)
-#' \donttest{
+#' \dontrun{
 #' # optimizing the model structure with fgpm_factory (~5 seconds)
 #' xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
 #'
@@ -1166,7 +1166,7 @@ plotX.Xfgpm <- function(x.model, calib, fitp, ...) {
 #'                    x5 = seq(0,1,length = n.tr^(1/5)))
 #' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
 #' sOut <- fgp_BB7(sIn, fIn, n.tr)
-#' \donttest{
+#' \dontrun{
 #' # optimizing the model structure with fgpm_factory (~5 seconds)
 #' xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
 #'
@@ -1226,7 +1226,7 @@ if(!isGeneric("plotEvol")) {setGeneric("plotEvol", function(x.model, ...) standa
 #'                    x5 = seq(0,1,length = n.tr^(1/5)))
 #' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
 #' sOut <- fgp_BB7(sIn, fIn, n.tr)
-#' \donttest{
+#' \dontrun{
 #' # optimizing the model structure with fgpm_factory (~5 seconds)
 #' xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
 #'

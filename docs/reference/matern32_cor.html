@@ -54,6 +54,8 @@
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -65,9 +67,15 @@
 
 
 
+  
+
+  
+
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -127,7 +135,7 @@
     <p>Applies the Matern 5/2 correlation function to a list of distance matrices using corresponding length-scale parameters.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>matern32_cor</span>(<span class='no'>Ms</span>, <span class='no'>thetas</span>)</pre>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>matern32_cor</span><span class='op'>(</span><span class='va'>Ms</span>, <span class='va'>thetas</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -146,6 +154,9 @@ between the observation coordinates, with n the number of input coordinates.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A correlation matrix of dimension n times n computed from the Matern 3/2 correlation function.</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>José Betancourt, François Bachoc and Thierry Klein</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -158,11 +169,11 @@ between the observation coordinates, with n the number of input coordinates.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Jose Betancourt, François Bachoc, Thierry Klein.</p>
+  <p><p>Developed by Jose Betancourt, François Bachoc, Thierry Klein.</p></p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p></p>
 </div>
 
       </footer>
@@ -170,6 +181,8 @@ between the observation coordinates, with n the number of input coordinates.</p>
 
   
 
+
+  
 
   </body>
 </html>

@@ -53,6 +53,8 @@
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -64,9 +66,15 @@
 
 
 
+  
+
+  
+
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-news">
       <header>
       <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -121,53 +129,40 @@
       
     </div>
 
-    <div id="fungp-0-2-1-2020-11-24" class="section level1">
+    <div id="fungp-021-2020-11-24" class="section level1">
 <h1 class="page-header" data-toc-text="0.2.1">
-<a href="#fungp-0-2-1-2020-11-24" class="anchor"></a>funGp 0.2.1 (2020-11-24)<small> Unreleased </small>
-</h1>
-<ul>
-<li>Minor change to resolve a <code>check</code> <code>NOTE</code> related to the declaration in <code>Imports</code> of the <code>plyr</code> package.</li>
-</ul>
-</div>
-    <div id="fungp-0-2-0-2020-11-17" class="section level1">
+<a href="#fungp-021-2020-11-24" class="anchor" aria-hidden="true"></a>funGp 0.2.1 (2020-11-24)<small> 2020-11-24 </small></h1>
+<ul><li>Minor change to resolve a <code>check</code> <code>NOTE</code> related to the declaration in <code>Imports</code> of the <code>plyr</code> package.</li>
+</ul></div>
+    <div id="fungp-020-2020-11-17" class="section level1">
 <h1 class="page-header" data-toc-text="0.2.0">
-<a href="#fungp-0-2-0-2020-11-17" class="anchor"></a>funGp 0.2.0 (2020-11-17)<small> 2020-11-17 </small>
-</h1>
+<a href="#fungp-020-2020-11-17" class="anchor" aria-hidden="true"></a>funGp 0.2.0 (2020-11-17)<small> 2020-11-17 </small></h1>
 <div id="main-functionality-corrections" class="section level2">
 <h2 class="hasAnchor">
-<a href="#main-functionality-corrections" class="anchor"></a>Main functionality corrections</h2>
-<ul>
-<li><p>Fixed incoherence between the sorting order of the list of explored models and their performance statistic, stored at the <code>xm@log.success@sols</code> and <code>xm@log.success@fitness</code> slots of the <code>Xfgpm</code> object delivered by <code><a href="../reference/fgpm_factory.html">fgpm_factory()</a></code>. Now the models in <code>xm@log.success@sols</code> are correctly sorted in decreasing order by performance.</p></li>
-<li><p>Resolved bug causing crash in <code><a href="../reference/fgpm_factory.html">fgpm_factory()</a></code> during structural optimization with only functional inputs, e.g., for the call <code><a href="../reference/fgpm_factory.html">fgpm_factory(fIn = fIn, sOut = sOut)</a></code>. Thanks to Jérémy Rohmer for pointing out the bug.</p></li>
-<li><p>Resolved bug causing crash in <code><a href="../reference/fgpm_factory.html">fgpm_factory()</a></code> during structural optimization with only scalar inputs, e.g., for the call <code><a href="../reference/fgpm_factory.html">fgpm_factory(sIn = sIn, sOut = sOut)</a></code>.</p></li>
-</ul>
-</div>
+<a href="#main-functionality-corrections" class="anchor" aria-hidden="true"></a>Main functionality corrections</h2>
+<ul><li><p>Fixed incoherence between the sorting order of the list of explored models and their performance statistic, stored at the <code>xm@log.success@sols</code> and <code>xm@log.success@fitness</code> slots of the <code>Xfgpm</code> object delivered by <code><a href="../reference/fgpm_factory.html">fgpm_factory()</a></code>. Now the models in <code>xm@log.success@sols</code> are correctly sorted in decreasing order by performance.</p></li>
+<li><p>Resolved bug causing crash in <code><a href="../reference/fgpm_factory.html">fgpm_factory()</a></code> during structural optimization with only functional inputs, e.g., for the call <code>fgpm_factory(fIn = fIn, sOut = sOut)</code>. Thanks to Jérémy Rohmer for pointing out the bug.</p></li>
+<li><p>Resolved bug causing crash in <code><a href="../reference/fgpm_factory.html">fgpm_factory()</a></code> during structural optimization with only scalar inputs, e.g., for the call <code>fgpm_factory(sIn = sIn, sOut = sOut)</code>.</p></li>
+</ul></div>
 <div id="minor-display-changes" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-display-changes" class="anchor"></a>Minor display changes</h2>
-<ul>
-<li><p>Iproved display of progress bars for <code><a href="../reference/fgpm.html">fgpm()</a></code> and <code><a href="../reference/fgpm_factory.html">fgpm_factory()</a></code></p></li>
+<a href="#minor-display-changes" class="anchor" aria-hidden="true"></a>Minor display changes</h2>
+<ul><li><p>Iproved display of progress bars for <code><a href="../reference/fgpm.html">fgpm()</a></code> and <code><a href="../reference/fgpm_factory.html">fgpm_factory()</a></code></p></li>
 <li><p>Improved placing of the legend in <code><a href="../reference/plotX-methods.html">plotX()</a></code> to prevent hiding important information</p></li>
-</ul>
-</div>
+</ul></div>
 <div id="minor-flow-changes" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-flow-changes" class="anchor"></a>Minor flow changes</h2>
-<ul>
-<li>
+<a href="#minor-flow-changes" class="anchor" aria-hidden="true"></a>Minor flow changes</h2>
+<ul><li>
 <code><a href="../reference/package-deprecated.html">format4pred()</a></code> deprecated for <code><a href="../reference/get_active_in.html">get_active_in()</a></code>
 </li>
-</ul>
+</ul></div>
 </div>
-</div>
-    <div id="fungp-0-1-0-2020-04-22" class="section level1">
+    <div id="fungp-010-2020-04-22" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.0">
-<a href="#fungp-0-1-0-2020-04-22" class="anchor"></a>funGp 0.1.0 (2020-04-22)<small> 2020-04-22 </small>
-</h1>
-<ul>
-<li>This is the first release of funGp.</li>
-</ul>
-</div>
+<a href="#fungp-010-2020-04-22" class="anchor" aria-hidden="true"></a>funGp 0.1.0 (2020-04-22)<small> 2020-04-22 </small></h1>
+<ul><li>This is the first release of funGp.</li>
+</ul></div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -181,11 +176,11 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Jose Betancourt, François Bachoc, Thierry Klein.</p>
+  <p><p>Developed by Jose Betancourt, François Bachoc, Thierry Klein.</p></p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p></p>
 </div>
 
       </footer>
@@ -193,6 +188,8 @@
 
   
 
+
+  
 
   </body>
 </html>

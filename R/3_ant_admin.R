@@ -913,7 +913,7 @@ format4pred <- function(sIn.pr = NULL, fIn.pr = NULL, args) {
 #'                    x5 = seq(0,1,length = n.tr^(1/5)))
 #' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
 #' sOut <- fgp_BB7(sIn, fIn, n.tr)
-#' \donttest{
+#' \dontrun{
 #' # optimizing the model structure with fgpm_factory (~12 seconds)
 #' xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
 #'
@@ -1046,7 +1046,7 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #'                    x5 = seq(0,1,length = n.tr^(1/5)))
 #' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
 #' sOut <- fgp_BB7(sIn, fIn, n.tr)
-#' \donttest{
+#' \dontrun{
 #' # optimizing the model structure with fgpm_factory (~12 seconds)
 #' xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
 #'
@@ -1059,7 +1059,7 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #' active$sIn.on # scalar data structures
 #' active$fIn.on # functional data structures
 #' }
-#' \donttest{
+#' \dontrun{
 #' # preparing new data for prediction based on inputs kept active____________________________
 #' # generating input and output data for structural optimization
 #' set.seed(100)
@@ -1093,7 +1093,7 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #' # plotting predictions
 #' plotPreds(opt.model, preds)
 #' }
-#' \donttest{
+#' \dontrun{
 #' # preparing new data for simulation based on inputs kept active____________________________
 #' # generating input and output data for structural optimization
 #' set.seed(100)
@@ -1127,7 +1127,7 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #' # plotting light simulations
 #' plotSims(opt.model, sims_l)
 #' }
-#' \donttest{
+#' \dontrun{
 #' # rebuilding of 3 best models using new data_______________________________________________
 #' # NOTE: this example is of higher complexity than the previous ones. We recomend you run
 #' #       the previous examples and understand the @log.success and @log.crashes slots in

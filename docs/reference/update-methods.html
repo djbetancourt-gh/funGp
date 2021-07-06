@@ -56,6 +56,8 @@
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -67,9 +69,15 @@
 
 
 
+  
+
+  
+
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -131,27 +139,27 @@
   and substitution of data points, as well as substitution and re-estimation of hyperparameters.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>update</span>(<span class='no'>object</span>, <span class='no'>...</span>)
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>update</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S4 method for fgpm</span>
-<span class='fu'>update</span>(
-  <span class='no'>object</span>,
-  <span class='kw'>sIn.nw</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>fIn.nw</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>sOut.nw</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>sIn.sb</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>fIn.sb</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>sOut.sb</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>ind.sb</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>ind.dl</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>var.sb</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>ls_s.sb</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>ls_f.sb</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>var.re</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>ls_s.re</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>ls_f.re</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='no'>...</span>
-)</pre>
+<span class='fu'>update</span><span class='op'>(</span>
+  <span class='va'>object</span>,
+  sIn.nw <span class='op'>=</span> <span class='cn'>NULL</span>,
+  fIn.nw <span class='op'>=</span> <span class='cn'>NULL</span>,
+  sOut.nw <span class='op'>=</span> <span class='cn'>NULL</span>,
+  sIn.sb <span class='op'>=</span> <span class='cn'>NULL</span>,
+  fIn.sb <span class='op'>=</span> <span class='cn'>NULL</span>,
+  sOut.sb <span class='op'>=</span> <span class='cn'>NULL</span>,
+  ind.sb <span class='op'>=</span> <span class='cn'>NULL</span>,
+  ind.dl <span class='op'>=</span> <span class='cn'>NULL</span>,
+  var.sb <span class='op'>=</span> <span class='cn'>NULL</span>,
+  ls_s.sb <span class='op'>=</span> <span class='cn'>NULL</span>,
+  ls_f.sb <span class='op'>=</span> <span class='cn'>NULL</span>,
+  var.re <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  ls_s.re <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  ls_f.re <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -275,91 +283,96 @@ the model be fully up to date.</p>
     <div class='dont-index'><p><strong>*</strong> <a href='fgpm.html'>fgpm</a> for creation of a funGp model;</p>
 <p><strong>*</strong> <a href='predict-methods.html'>predict</a> for predictions based on a funGp model;</p>
 <p><strong>*</strong> <a href='simulate-methods.html'>simulate</a> for simulations based on a funGp model;</p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>José Betancourt, François Bachoc and Thierry Klein</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># deletion and addition of data points_____________________________________________________</span>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='co'># deletion and addition of data points_____________________________________________________</span>
 <span class='co'># building the model</span>
-<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>100</span>)
-<span class='no'>n.tr</span> <span class='kw'>&lt;-</span> <span class='fl'>25</span>
-<span class='no'>sIn</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/expand.grid.html'>expand.grid</a></span>(<span class='kw'>x1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='kw'>length</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span>(<span class='no'>n.tr</span>)), <span class='kw'>x2</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='kw'>length</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span>(<span class='no'>n.tr</span>)))
-<span class='no'>fIn</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>f1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span>(<span class='no'>n.tr</span>*<span class='fl'>10</span>), <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>10</span>), <span class='kw'>f2</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span>(<span class='no'>n.tr</span>*<span class='fl'>22</span>), <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>22</span>))
-<span class='no'>sOut</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fgp_BB3.html'>fgp_BB3</a></span>(<span class='no'>sIn</span>, <span class='no'>fIn</span>, <span class='no'>n.tr</span>)
-<span class='no'>m1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fgpm.html'>fgpm</a></span>(<span class='kw'>sIn</span> <span class='kw'>=</span> <span class='no'>sIn</span>, <span class='kw'>fIn</span> <span class='kw'>=</span> <span class='no'>fIn</span>, <span class='kw'>sOut</span> <span class='kw'>=</span> <span class='no'>sOut</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>100</span><span class='op'>)</span>
+<span class='va'>n.tr</span> <span class='op'>&lt;-</span> <span class='fl'>25</span>
+<span class='va'>sIn</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/expand.grid.html'>expand.grid</a></span><span class='op'>(</span>x1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>1</span>,length <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>n.tr</span><span class='op'>)</span><span class='op'>)</span>, x2 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>1</span>,length <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>n.tr</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>fIn</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>f1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='va'>n.tr</span><span class='op'>*</span><span class='fl'>10</span><span class='op'>)</span>, ncol <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>, f2 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='va'>n.tr</span><span class='op'>*</span><span class='fl'>22</span><span class='op'>)</span>, ncol <span class='op'>=</span> <span class='fl'>22</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>sOut</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fgp_BB3.html'>fgp_BB3</a></span><span class='op'>(</span><span class='va'>sIn</span>, <span class='va'>fIn</span>, <span class='va'>n.tr</span><span class='op'>)</span>
+<span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fgpm.html'>fgpm</a></span><span class='op'>(</span>sIn <span class='op'>=</span> <span class='va'>sIn</span>, fIn <span class='op'>=</span> <span class='va'>fIn</span>, sOut <span class='op'>=</span> <span class='va'>sOut</span><span class='op'>)</span>
 
 <span class='co'># deleting two points</span>
-<span class='no'>ind.dl</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span>(<span class='fl'>1</span>:<span class='no'>m1</span>@<span class='kw'>n.tot</span>, <span class='fl'>2</span>)
-<span class='no'>m1up</span> <span class='kw'>&lt;-</span> <span class='fu'>update</span>(<span class='no'>m1</span>, <span class='kw'>ind.dl</span> <span class='kw'>=</span> <span class='no'>ind.dl</span>)
+<span class='va'>ind.dl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='va'>m1</span><span class='op'>@</span><span class='va'>n.tot</span>, <span class='fl'>2</span><span class='op'>)</span>
+<span class='va'>m1up</span> <span class='op'>&lt;-</span> <span class='fu'>update</span><span class='op'>(</span><span class='va'>m1</span>, ind.dl <span class='op'>=</span> <span class='va'>ind.dl</span><span class='op'>)</span>
 
 <span class='co'># adding five points</span>
-<span class='no'>n.nw</span> <span class='kw'>&lt;-</span> <span class='fl'>5</span>
-<span class='no'>sIn.nw</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span>(<span class='no'>n.nw</span> * <span class='no'>m1</span>@<span class='kw'>ds</span>), <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='no'>n.nw</span>)
-<span class='no'>fIn.nw</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>f1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span>(<span class='no'>n.nw</span>*<span class='fl'>10</span>), <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>10</span>), <span class='kw'>f2</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span>(<span class='no'>n.nw</span>*<span class='fl'>22</span>), <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>22</span>))
-<span class='no'>sOut.nw</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fgp_BB3.html'>fgp_BB3</a></span>(<span class='no'>sIn.nw</span>, <span class='no'>fIn.nw</span>, <span class='no'>n.nw</span>)
-<span class='no'>m1up</span> <span class='kw'>&lt;-</span> <span class='fu'>update</span>(<span class='no'>m1</span>, <span class='kw'>sIn.nw</span> <span class='kw'>=</span> <span class='no'>sIn.nw</span>, <span class='kw'>fIn.nw</span> <span class='kw'>=</span> <span class='no'>fIn.nw</span>, <span class='kw'>sOut.nw</span> <span class='kw'>=</span> <span class='no'>sOut.nw</span>)
+<span class='va'>n.nw</span> <span class='op'>&lt;-</span> <span class='fl'>5</span>
+<span class='va'>sIn.nw</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='va'>n.nw</span> <span class='op'>*</span> <span class='va'>m1</span><span class='op'>@</span><span class='va'>ds</span><span class='op'>)</span>, nrow <span class='op'>=</span> <span class='va'>n.nw</span><span class='op'>)</span>
+<span class='va'>fIn.nw</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>f1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='va'>n.nw</span><span class='op'>*</span><span class='fl'>10</span><span class='op'>)</span>, ncol <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>, f2 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='va'>n.nw</span><span class='op'>*</span><span class='fl'>22</span><span class='op'>)</span>, ncol <span class='op'>=</span> <span class='fl'>22</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>sOut.nw</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fgp_BB3.html'>fgp_BB3</a></span><span class='op'>(</span><span class='va'>sIn.nw</span>, <span class='va'>fIn.nw</span>, <span class='va'>n.nw</span><span class='op'>)</span>
+<span class='va'>m1up</span> <span class='op'>&lt;-</span> <span class='fu'>update</span><span class='op'>(</span><span class='va'>m1</span>, sIn.nw <span class='op'>=</span> <span class='va'>sIn.nw</span>, fIn.nw <span class='op'>=</span> <span class='va'>fIn.nw</span>, sOut.nw <span class='op'>=</span> <span class='va'>sOut.nw</span><span class='op'>)</span>
 
 
 <span class='co'># substitution of data points______________________________________________________________</span>
 <span class='co'># building the model</span>
-<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>100</span>)
-<span class='no'>n.tr</span> <span class='kw'>&lt;-</span> <span class='fl'>25</span>
-<span class='no'>sIn</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/expand.grid.html'>expand.grid</a></span>(<span class='kw'>x1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='kw'>length</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span>(<span class='no'>n.tr</span>)), <span class='kw'>x2</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='kw'>length</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span>(<span class='no'>n.tr</span>)))
-<span class='no'>fIn</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>f1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span>(<span class='no'>n.tr</span>*<span class='fl'>10</span>), <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>10</span>), <span class='kw'>f2</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span>(<span class='no'>n.tr</span>*<span class='fl'>22</span>), <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>22</span>))
-<span class='no'>sOut</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fgp_BB3.html'>fgp_BB3</a></span>(<span class='no'>sIn</span>, <span class='no'>fIn</span>, <span class='no'>n.tr</span>)
-<span class='no'>m1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fgpm.html'>fgpm</a></span>(<span class='kw'>sIn</span> <span class='kw'>=</span> <span class='no'>sIn</span>, <span class='kw'>fIn</span> <span class='kw'>=</span> <span class='no'>fIn</span>, <span class='kw'>sOut</span> <span class='kw'>=</span> <span class='no'>sOut</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>100</span><span class='op'>)</span>
+<span class='va'>n.tr</span> <span class='op'>&lt;-</span> <span class='fl'>25</span>
+<span class='va'>sIn</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/expand.grid.html'>expand.grid</a></span><span class='op'>(</span>x1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>1</span>,length <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>n.tr</span><span class='op'>)</span><span class='op'>)</span>, x2 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>1</span>,length <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>n.tr</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>fIn</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>f1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='va'>n.tr</span><span class='op'>*</span><span class='fl'>10</span><span class='op'>)</span>, ncol <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>, f2 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='va'>n.tr</span><span class='op'>*</span><span class='fl'>22</span><span class='op'>)</span>, ncol <span class='op'>=</span> <span class='fl'>22</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>sOut</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fgp_BB3.html'>fgp_BB3</a></span><span class='op'>(</span><span class='va'>sIn</span>, <span class='va'>fIn</span>, <span class='va'>n.tr</span><span class='op'>)</span>
+<span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fgpm.html'>fgpm</a></span><span class='op'>(</span>sIn <span class='op'>=</span> <span class='va'>sIn</span>, fIn <span class='op'>=</span> <span class='va'>fIn</span>, sOut <span class='op'>=</span> <span class='va'>sOut</span><span class='op'>)</span>
 
 <span class='co'># generating substituting input data for updating</span>
-<span class='no'>n.sb</span> <span class='kw'>&lt;-</span> <span class='fl'>2</span>
-<span class='no'>sIn.sb</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span>(<span class='no'>n.sb</span> * <span class='no'>m1</span>@<span class='kw'>ds</span>), <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='no'>n.sb</span>)
-<span class='no'>fIn.sb</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>f1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span>(<span class='no'>n.sb</span>*<span class='fl'>10</span>), <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>10</span>), <span class='kw'>f2</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span>(<span class='no'>n.sb</span>*<span class='fl'>22</span>), <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>22</span>))
+<span class='va'>n.sb</span> <span class='op'>&lt;-</span> <span class='fl'>2</span>
+<span class='va'>sIn.sb</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='va'>n.sb</span> <span class='op'>*</span> <span class='va'>m1</span><span class='op'>@</span><span class='va'>ds</span><span class='op'>)</span>, nrow <span class='op'>=</span> <span class='va'>n.sb</span><span class='op'>)</span>
+<span class='va'>fIn.sb</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>f1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='va'>n.sb</span><span class='op'>*</span><span class='fl'>10</span><span class='op'>)</span>, ncol <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>, f2 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='va'>n.sb</span><span class='op'>*</span><span class='fl'>22</span><span class='op'>)</span>, ncol <span class='op'>=</span> <span class='fl'>22</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># generating substituting output data for updating</span>
-<span class='no'>sOut.sb</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fgp_BB3.html'>fgp_BB3</a></span>(<span class='no'>sIn.sb</span>, <span class='no'>fIn.sb</span>, <span class='no'>n.sb</span>)
+<span class='va'>sOut.sb</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fgp_BB3.html'>fgp_BB3</a></span><span class='op'>(</span><span class='va'>sIn.sb</span>, <span class='va'>fIn.sb</span>, <span class='va'>n.sb</span><span class='op'>)</span>
 
 <span class='co'># generating indices for substitution</span>
-<span class='no'>ind.sb</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span>(<span class='fl'>1</span>:(<span class='no'>m1</span>@<span class='kw'>n.tot</span>), <span class='no'>n.sb</span>)
+<span class='va'>ind.sb</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='op'>(</span><span class='va'>m1</span><span class='op'>@</span><span class='va'>n.tot</span><span class='op'>)</span>, <span class='va'>n.sb</span><span class='op'>)</span>
 
 <span class='co'># updating all, the scalar inputs, functional inputs and the output</span>
-<span class='no'>m1up</span> <span class='kw'>&lt;-</span> <span class='fu'>update</span>(<span class='no'>m1</span>, <span class='kw'>sIn.sb</span> <span class='kw'>=</span> <span class='no'>sIn.sb</span>, <span class='kw'>fIn.sb</span> <span class='kw'>=</span> <span class='no'>fIn.sb</span>, <span class='kw'>sOut.sb</span> <span class='kw'>=</span> <span class='no'>sOut.sb</span>, <span class='kw'>ind.sb</span> <span class='kw'>=</span> <span class='no'>ind.sb</span>)
+<span class='va'>m1up</span> <span class='op'>&lt;-</span> <span class='fu'>update</span><span class='op'>(</span><span class='va'>m1</span>, sIn.sb <span class='op'>=</span> <span class='va'>sIn.sb</span>, fIn.sb <span class='op'>=</span> <span class='va'>fIn.sb</span>, sOut.sb <span class='op'>=</span> <span class='va'>sOut.sb</span>, ind.sb <span class='op'>=</span> <span class='va'>ind.sb</span><span class='op'>)</span>
 
 <span class='co'># updating only some of the data structures</span>
-<span class='no'>m1up1</span> <span class='kw'>&lt;-</span> <span class='fu'>update</span>(<span class='no'>m1</span>, <span class='kw'>sIn.sb</span> <span class='kw'>=</span> <span class='no'>sIn.sb</span>, <span class='kw'>ind.sb</span> <span class='kw'>=</span> <span class='no'>ind.sb</span>) <span class='co'># only the scalar inputs</span>
-<span class='no'>m1up2</span> <span class='kw'>&lt;-</span> <span class='fu'>update</span>(<span class='no'>m1</span>, <span class='kw'>sOut.sb</span> <span class='kw'>=</span> <span class='no'>sOut.sb</span>, <span class='kw'>ind.sb</span> <span class='kw'>=</span> <span class='no'>ind.sb</span>) <span class='co'># only the output</span>
-<span class='no'>m1up3</span> <span class='kw'>&lt;-</span> <span class='fu'>update</span>(<span class='no'>m1</span>, <span class='kw'>sIn.sb</span> <span class='kw'>=</span> <span class='no'>sIn.sb</span>, <span class='kw'>sOut.sb</span> <span class='kw'>=</span> <span class='no'>sOut.sb</span>, <span class='kw'>ind.sb</span> <span class='kw'>=</span> <span class='no'>ind.sb</span>) <span class='co'># the scalar inputs</span>
+<span class='va'>m1up1</span> <span class='op'>&lt;-</span> <span class='fu'>update</span><span class='op'>(</span><span class='va'>m1</span>, sIn.sb <span class='op'>=</span> <span class='va'>sIn.sb</span>, ind.sb <span class='op'>=</span> <span class='va'>ind.sb</span><span class='op'>)</span> <span class='co'># only the scalar inputs</span>
+<span class='va'>m1up2</span> <span class='op'>&lt;-</span> <span class='fu'>update</span><span class='op'>(</span><span class='va'>m1</span>, sOut.sb <span class='op'>=</span> <span class='va'>sOut.sb</span>, ind.sb <span class='op'>=</span> <span class='va'>ind.sb</span><span class='op'>)</span> <span class='co'># only the output</span>
+<span class='va'>m1up3</span> <span class='op'>&lt;-</span> <span class='fu'>update</span><span class='op'>(</span><span class='va'>m1</span>, sIn.sb <span class='op'>=</span> <span class='va'>sIn.sb</span>, sOut.sb <span class='op'>=</span> <span class='va'>sOut.sb</span>, ind.sb <span class='op'>=</span> <span class='va'>ind.sb</span><span class='op'>)</span> <span class='co'># the scalar inputs</span>
                                                                          <span class='co'># and the output</span>
 
 
 <span class='co'># substitution of hyperparameters__________________________________________________________</span>
 <span class='co'># building the model</span>
-<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>100</span>)
-<span class='no'>n.tr</span> <span class='kw'>&lt;-</span> <span class='fl'>25</span>
-<span class='no'>sIn</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/expand.grid.html'>expand.grid</a></span>(<span class='kw'>x1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='kw'>length</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span>(<span class='no'>n.tr</span>)), <span class='kw'>x2</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='kw'>length</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span>(<span class='no'>n.tr</span>)))
-<span class='no'>fIn</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>f1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span>(<span class='no'>n.tr</span>*<span class='fl'>10</span>), <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>10</span>), <span class='kw'>f2</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span>(<span class='no'>n.tr</span>*<span class='fl'>22</span>), <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>22</span>))
-<span class='no'>sOut</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fgp_BB3.html'>fgp_BB3</a></span>(<span class='no'>sIn</span>, <span class='no'>fIn</span>, <span class='no'>n.tr</span>)
-<span class='no'>m1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fgpm.html'>fgpm</a></span>(<span class='kw'>sIn</span> <span class='kw'>=</span> <span class='no'>sIn</span>, <span class='kw'>fIn</span> <span class='kw'>=</span> <span class='no'>fIn</span>, <span class='kw'>sOut</span> <span class='kw'>=</span> <span class='no'>sOut</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>100</span><span class='op'>)</span>
+<span class='va'>n.tr</span> <span class='op'>&lt;-</span> <span class='fl'>25</span>
+<span class='va'>sIn</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/expand.grid.html'>expand.grid</a></span><span class='op'>(</span>x1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>1</span>,length <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>n.tr</span><span class='op'>)</span><span class='op'>)</span>, x2 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>1</span>,length <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>n.tr</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>fIn</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>f1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='va'>n.tr</span><span class='op'>*</span><span class='fl'>10</span><span class='op'>)</span>, ncol <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>, f2 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='va'>n.tr</span><span class='op'>*</span><span class='fl'>22</span><span class='op'>)</span>, ncol <span class='op'>=</span> <span class='fl'>22</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>sOut</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fgp_BB3.html'>fgp_BB3</a></span><span class='op'>(</span><span class='va'>sIn</span>, <span class='va'>fIn</span>, <span class='va'>n.tr</span><span class='op'>)</span>
+<span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fgpm.html'>fgpm</a></span><span class='op'>(</span>sIn <span class='op'>=</span> <span class='va'>sIn</span>, fIn <span class='op'>=</span> <span class='va'>fIn</span>, sOut <span class='op'>=</span> <span class='va'>sOut</span><span class='op'>)</span>
 
 <span class='co'># defining hyperparameters for substitution</span>
-<span class='no'>var.sb</span> <span class='kw'>&lt;-</span> <span class='fl'>3</span>
-<span class='no'>ls_s.sb</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2.44</span>, <span class='fl'>1.15</span>)
-<span class='no'>ls_f.sb</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>5.83</span>, <span class='fl'>4.12</span>)
+<span class='va'>var.sb</span> <span class='op'>&lt;-</span> <span class='fl'>3</span>
+<span class='va'>ls_s.sb</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2.44</span>, <span class='fl'>1.15</span><span class='op'>)</span>
+<span class='va'>ls_f.sb</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>5.83</span>, <span class='fl'>4.12</span><span class='op'>)</span>
 
 <span class='co'># updating the model</span>
-<span class='no'>m1up</span> <span class='kw'>&lt;-</span> <span class='fu'>update</span>(<span class='no'>m1</span>, <span class='kw'>var.sb</span> <span class='kw'>=</span> <span class='no'>var.sb</span>, <span class='kw'>ls_s.sb</span> <span class='kw'>=</span> <span class='no'>ls_s.sb</span>, <span class='kw'>ls_f.sb</span> <span class='kw'>=</span> <span class='no'>ls_f.sb</span>)
+<span class='va'>m1up</span> <span class='op'>&lt;-</span> <span class='fu'>update</span><span class='op'>(</span><span class='va'>m1</span>, var.sb <span class='op'>=</span> <span class='va'>var.sb</span>, ls_s.sb <span class='op'>=</span> <span class='va'>ls_s.sb</span>, ls_f.sb <span class='op'>=</span> <span class='va'>ls_f.sb</span><span class='op'>)</span>
 
 
 <span class='co'># re-estimation of hyperparameters_________________________________________________________</span>
 <span class='co'># building the model</span>
-<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>100</span>)
-<span class='no'>n.tr</span> <span class='kw'>&lt;-</span> <span class='fl'>25</span>
-<span class='no'>sIn</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/expand.grid.html'>expand.grid</a></span>(<span class='kw'>x1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='kw'>length</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span>(<span class='no'>n.tr</span>)), <span class='kw'>x2</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='kw'>length</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span>(<span class='no'>n.tr</span>)))
-<span class='no'>fIn</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>f1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span>(<span class='no'>n.tr</span>*<span class='fl'>10</span>), <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>10</span>), <span class='kw'>f2</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span>(<span class='no'>n.tr</span>*<span class='fl'>22</span>), <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>22</span>))
-<span class='no'>sOut</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fgp_BB3.html'>fgp_BB3</a></span>(<span class='no'>sIn</span>, <span class='no'>fIn</span>, <span class='no'>n.tr</span>)
-<span class='no'>m1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fgpm.html'>fgpm</a></span>(<span class='kw'>sIn</span> <span class='kw'>=</span> <span class='no'>sIn</span>, <span class='kw'>fIn</span> <span class='kw'>=</span> <span class='no'>fIn</span>, <span class='kw'>sOut</span> <span class='kw'>=</span> <span class='no'>sOut</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>100</span><span class='op'>)</span>
+<span class='va'>n.tr</span> <span class='op'>&lt;-</span> <span class='fl'>25</span>
+<span class='va'>sIn</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/expand.grid.html'>expand.grid</a></span><span class='op'>(</span>x1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>1</span>,length <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>n.tr</span><span class='op'>)</span><span class='op'>)</span>, x2 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>1</span>,length <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>n.tr</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>fIn</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>f1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='va'>n.tr</span><span class='op'>*</span><span class='fl'>10</span><span class='op'>)</span>, ncol <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>, f2 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='va'>n.tr</span><span class='op'>*</span><span class='fl'>22</span><span class='op'>)</span>, ncol <span class='op'>=</span> <span class='fl'>22</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>sOut</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fgp_BB3.html'>fgp_BB3</a></span><span class='op'>(</span><span class='va'>sIn</span>, <span class='va'>fIn</span>, <span class='va'>n.tr</span><span class='op'>)</span>
+<span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fgpm.html'>fgpm</a></span><span class='op'>(</span>sIn <span class='op'>=</span> <span class='va'>sIn</span>, fIn <span class='op'>=</span> <span class='va'>fIn</span>, sOut <span class='op'>=</span> <span class='va'>sOut</span><span class='op'>)</span>
 
 <span class='co'># re-estimating the hyperparameters</span>
-<span class='no'>m1up</span> <span class='kw'>&lt;-</span> <span class='fu'>update</span>(<span class='no'>m1</span>, <span class='kw'>var.re</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='co'># only the variance</span>
-<span class='no'>m1up</span> <span class='kw'>&lt;-</span> <span class='fu'>update</span>(<span class='no'>m1</span>, <span class='kw'>ls_s.re</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='co'># only the scalar length-scale parameters</span>
-<span class='no'>m1up</span> <span class='kw'>&lt;-</span> <span class='fu'>update</span>(<span class='no'>m1</span>, <span class='kw'>ls_s.re</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>ls_f.re</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='co'># all length-scale parameters</span>
-<span class='no'>m1up</span> <span class='kw'>&lt;-</span> <span class='fu'>update</span>(<span class='no'>m1</span>, <span class='kw'>var.re</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>ls_s.re</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>ls_f.re</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='co'># all hyperparameters</span></pre>
+<span class='va'>m1up</span> <span class='op'>&lt;-</span> <span class='fu'>update</span><span class='op'>(</span><span class='va'>m1</span>, var.re <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='co'># only the variance</span>
+<span class='va'>m1up</span> <span class='op'>&lt;-</span> <span class='fu'>update</span><span class='op'>(</span><span class='va'>m1</span>, ls_s.re <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='co'># only the scalar length-scale parameters</span>
+<span class='va'>m1up</span> <span class='op'>&lt;-</span> <span class='fu'>update</span><span class='op'>(</span><span class='va'>m1</span>, ls_s.re <span class='op'>=</span> <span class='cn'>TRUE</span>, ls_f.re <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='co'># all length-scale parameters</span>
+<span class='va'>m1up</span> <span class='op'>&lt;-</span> <span class='fu'>update</span><span class='op'>(</span><span class='va'>m1</span>, var.re <span class='op'>=</span> <span class='cn'>TRUE</span>, ls_s.re <span class='op'>=</span> <span class='cn'>TRUE</span>, ls_f.re <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='co'># all hyperparameters</span>
+
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -371,11 +384,11 @@ the model be fully up to date.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Jose Betancourt, François Bachoc, Thierry Klein.</p>
+  <p><p>Developed by Jose Betancourt, François Bachoc, Thierry Klein.</p></p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p></p>
 </div>
 
       </footer>
@@ -383,6 +396,8 @@ the model be fully up to date.</p>
 
   
 
+
+  
 
   </body>
 </html>

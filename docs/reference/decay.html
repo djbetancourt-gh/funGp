@@ -61,6 +61,8 @@
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -72,9 +74,15 @@
 
 
 
+  
+
+  
+
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -141,15 +149,15 @@
   manual</a> of the package.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>decay</span>(
-  <span class='no'>k</span>,
-  <span class='kw'>pmax</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>tao0</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,
-  <span class='kw'>delta</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-  <span class='kw'>dispr</span> <span class='kw'>=</span> <span class='fl'>1.4</span>,
-  <span class='kw'>doplot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>deliver</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
-)</pre>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>decay</span><span class='op'>(</span>
+  <span class='va'>k</span>,
+  pmax <span class='op'>=</span> <span class='cn'>NULL</span>,
+  tao0 <span class='op'>=</span> <span class='fl'>0.1</span>,
+  delta <span class='op'>=</span> <span class='fl'>2</span>,
+  dispr <span class='op'>=</span> <span class='fl'>1.4</span>,
+  doplot <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  deliver <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -209,33 +217,38 @@ not specified, it takes the value of k.</p></td>
 
     <div class='dont-index'><p><strong>*</strong> decay for the function to generate the initial probability load;</p>
 <p><strong>*</strong> <a href='fgpm_factory.html'>fgpm_factory</a> for heuristic funGp model selection.</p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>José Betancourt, François Bachoc and Thierry Klein</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># using default decay arguments____________________________________________________________</span>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='co'># using default decay arguments____________________________________________________________</span>
 <span class='co'># input of dimension 15 projected maximum in dimension 15</span>
-<span class='fu'>decay</span>(<span class='fl'>15</span>)
+<span class='fu'>decay</span><span class='op'>(</span><span class='fl'>15</span><span class='op'>)</span>
 
 <span class='co'># input of dimension 15 projected maximum in dimension 8</span>
-<span class='fu'>decay</span>(<span class='fl'>15</span>, <span class='fl'>8</span>)
+<span class='fu'>decay</span><span class='op'>(</span><span class='fl'>15</span>, <span class='fl'>8</span><span class='op'>)</span>
 
 
 <span class='co'># playing with decay arguments_____________________________________________________________</span>
 <span class='co'># input of dimension 15 projected maximum in dimension 15</span>
-<span class='fu'>decay</span>(<span class='fl'>15</span>)
+<span class='fu'>decay</span><span class='op'>(</span><span class='fl'>15</span><span class='op'>)</span>
 
 <span class='co'># using a larger value of tao0</span>
-<span class='fu'>decay</span>(<span class='fl'>15</span>, <span class='kw'>tao0</span> <span class='kw'>=</span> <span class='fl'>.3</span>)
+<span class='fu'>decay</span><span class='op'>(</span><span class='fl'>15</span>, tao0 <span class='op'>=</span> <span class='fl'>.3</span><span class='op'>)</span>
 
 <span class='co'># using a larger value of tao0, keeping it fixed up to higher dimensions</span>
-<span class='fu'>decay</span>(<span class='fl'>15</span>, <span class='kw'>tao0</span> <span class='kw'>=</span> <span class='fl'>.3</span>, <span class='kw'>delta</span> <span class='kw'>=</span> <span class='fl'>5</span>)
+<span class='fu'>decay</span><span class='op'>(</span><span class='fl'>15</span>, tao0 <span class='op'>=</span> <span class='fl'>.3</span>, delta <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span>
 
 <span class='co'># using a larger value of tao0, keeping it fixed up to higher dimensions, with slower decay</span>
-<span class='fu'>decay</span>(<span class='fl'>15</span>, <span class='kw'>tao0</span> <span class='kw'>=</span> <span class='fl'>.3</span>, <span class='kw'>delta</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>dispr</span> <span class='kw'>=</span> <span class='fl'>5.2</span>)
+<span class='fu'>decay</span><span class='op'>(</span><span class='fl'>15</span>, tao0 <span class='op'>=</span> <span class='fl'>.3</span>, delta <span class='op'>=</span> <span class='fl'>5</span>, dispr <span class='op'>=</span> <span class='fl'>5.2</span><span class='op'>)</span>
 
 
 <span class='co'># requesting pheromone values______________________________________________________________</span>
 <span class='co'># input of dimension 15 projected maximum in dimension 15</span>
-<span class='fu'>decay</span>(<span class='fl'>15</span>, <span class='kw'>deliver</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+<span class='fu'>decay</span><span class='op'>(</span><span class='fl'>15</span>, deliver <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -247,11 +260,11 @@ not specified, it takes the value of k.</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Jose Betancourt, François Bachoc, Thierry Klein.</p>
+  <p><p>Developed by Jose Betancourt, François Bachoc, Thierry Klein.</p></p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p></p>
 </div>
 
       </footer>
@@ -259,6 +272,8 @@ not specified, it takes the value of k.</p></td>
 
   
 
+
+  
 
   </body>
 </html>

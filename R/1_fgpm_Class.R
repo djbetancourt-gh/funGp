@@ -299,7 +299,7 @@ setClass("fgpm",
 #' # printing the model
 #' m1 # equivalent to show(m1)
 #'
-#' \donttest{
+#' \dontrun{
 #' # multistart and parallelization in fgpm___________________________________________________
 #' # generating input and output data
 #' set.seed(100)
