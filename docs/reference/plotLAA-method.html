@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Analytic black-boxes for the exploration of the funGp package — black-boxes • funGp</title>
+<title>Leave-one-out calibration plot for a funGp model — plotLAA,fgpm-method • funGp</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,10 @@
 
 
 
-<meta property="og:title" content="Analytic black-boxes for the exploration of the funGp package — black-boxes" />
-<meta property="og:description" content="Set of black-box analytic functions for the discovering and testing of funGp functionalities." />
+<meta property="og:title" content="Leave-one-out calibration plot for a funGp model — plotLAA,fgpm-method" />
+<meta property="og:description" content="This method provides a diagnostic plot for the validation of a funGp Gaussian process model.
+  It displays a calibration plot based on the leave-one-out predictions of the output at the points
+  used to train the model." />
 <meta property="og:image" content="/docs/ghub.png" />
 <meta property="og:image:alt" content="funGp" />
 
@@ -126,113 +128,21 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Analytic black-boxes for the exploration of the funGp package</h1>
+    <h1>Leave-one-out calibration plot for a funGp model</h1>
     
-    <div class="hidden name"><code>black-boxes.Rd</code></div>
+    <div class="hidden name"><code>plotLAA-method.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Set of black-box analytic functions for the discovering and testing of funGp functionalities.</p>
+    <p>This method provides a diagnostic plot for the validation of a funGp Gaussian process model.
+  It displays a calibration plot based on the leave-one-out predictions of the output at the points
+  used to train the model.</p>
     </div>
 
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='co'># S4 method for fgpm</span>
+<span class='fu'><a href='plotLAA.html'>plotLAA</a></span><span class='op'>(</span><span class='va'>model</span>, <span class='va'>...</span><span class='op'>)</span></code></pre></div>
 
 
-    <h2 class="hasAnchor" id="usage"><a class="anchor" href="#usage"></a>Usage</h2>
-
-    
-
-<pre><code>
-## Own analytical function 1
-## -------------------------
-## x1 * sin(x2) + x1 * mean(f1) - x2^2 * diff(range(f2))
-fgp_BB1(sIn, fIn, n.tr)
-
-
-## Own analytical function 2
-## -------------------------
-## x1 * sin(x2) + mean(exp(x1 * t1) * f1) - x2^2 * mean(f2^2 * t2)
-fgp_BB2(sIn, fIn, n.tr)
-
-
-## First analytical example in Muehlenstaedt, Fruth &amp; Roustant (2016)
-## ------------------------------------------------------------------
-## x1 + 2 * x2 + 4 * mean(t1 * f1) + mean(f2)
-fgp_BB3(sIn, fIn, n.tr)
-
-
-## Second analytical example in preprint of Muehlenstaedt, Fruth &amp; Roustant (2016)
-## -------------------------------------------------------------------------------
-## a = (x2 - (5/(4*pi^2)) * x1^2 + (5/pi) * x1 - 6)^2
-## b = 10 * (1 - (1/(8*pi))) * cos(x1)
-## c = 10
-## d = (4/3) * pi * (42 * mean(f1*(1-t1)) + pi * (((x1+5)/5) + 15) * mean(t2*f2))
-## a + b + c + d
-fgp_BB4(sIn, fIn, n.tr)
-
-
-## Second analytical example in final version of Muehlenstaedt, Fruth &amp; Roustant (2016)
-## ------------------------------------------------------------------------------------
-## a = (x2 - (5/(4*pi^2)) * x1^2 + (5/pi) * x1 - 6)^2
-## b = 10 * (1 - (1/(8*pi))) * cos(x1)
-## c = 10
-## d &lt;- (4/3) * pi * (42 * mean(15*f1*(1-t1)-5) + pi * (((x1+5)/5) + 15) * mean(15*t2*f2))
-## a + b + c + d
-fgp_BB5(sIn, fIn, n.tr)
-
-
-## Inspired by the analytical example in Nanty, Helbert, Marrel, Pérot, Prieur (2016)
-## ----------------------------------------------------------------------------------
-## 2 * x1^2 + 2 * mean(f1 + t1) + 2 * mean(f2 + t2) + max(f2) + x2
-fgp_BB6(sIn, fIn, n.tr)
-
-
-## Inspired by the second analytical example in final version of Muehlenstaedt et al (2016)
-## ----------------------------------------------------------------------------------------
-## a = (x2 + 4*x3 - (5/(4*pi^2)) * x1^2 + (5/pi) * x1 - 6)^2
-## b = 10 * (1 - (1/(8*pi))) * cos(x1) * x2^2 * x5^3
-## c = 10
-## d &lt;- (4/3) * pi * (42 * sin(x4) * mean(15*f1*(1-t1)-5) +
-                                          pi * (((x1*x5+5)/5) + 15) * mean(15*t2*f2))
-## a + b + c + d
-fgp_BB7(sIn, fIn, n.tr)
-</code></pre>
-
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-
-    
-
-<p><strong>*</strong><em>sIn</em>: Object of class <code>"matrix"</code>. The scalar input points. Variables are arranged
-  by columns and coordinates by rows. <br /><br />
-<strong>*</strong><em>fIn</em>: Object of class <code>"list"</code>. The functional input points. Each element of the
-  list contains a functional input in the form of a matrix. In each matrix, curves representing
-  functional coordinates are arranged by rows. <br /><br />
-<strong>*</strong><em>n.tr</em>: Object of class <code>"numeric"</code>. The number of input points provided and
-  correspondingly, the number of observations to produce.</p>
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    
-
-<p>An object of class <code>"matrix"</code> with the values of the output at the specified input coordinates.</p>
-    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
-
-    
-
-<p>The functions listed above were used to validate the functionality and stability of this package.
-Several tests involving <a href='funGp-package.html'>all main functions, plotters and getters</a> were run
-for scalar-input, functional-input and hybrid-input models. In all cases, the output of the functions
-were correct from the statistical and programmatic perspectives. For an example on the kind of tests
-performed, the interested user is referred to
-<a href='https://hal.archives-ouvertes.fr/hal-02536624'>the introductory funGp manual</a>.</p>
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
-
-    <p>Muehlenstaedt, T., Fruth, J., and Roustant, O. (2017),
-"Computer experiments with functional inputs and scalar outputs by a norm-based approach".
-<em>Statistics and Computing</em>, <strong>27</strong>, 1083-1097.
-<a href='https://link.springer.com/article/10.1007/s11222-016-9672-z'>[SC]</a></p>
-<p>Nanty, S., Helbert, C., Marrel, A., Pérot, N., and Prieur, C. (2016),
-"Sampling, metamodeling, and sensitivity analysis of numerical simulators with functional stochastic inputs".
-<em>SIAM/ASA Journal on Uncertainty Quantification</em>, <strong>4</strong>(1), 636-659.
-<a href='https://epubs.siam.org/doi/10.1137/15M1033319'>[SA-JUQ]</a></p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

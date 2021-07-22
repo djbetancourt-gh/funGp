@@ -90,7 +90,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">funGp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
       </span>
     </div>
 
@@ -292,7 +292,7 @@ R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs 
 <a href='https://hal.archives-ouvertes.fr/hal-02536624'>[HAL]</a></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><strong>*</strong> <a href='plotLOO-methods.html'>plotLOO</a> for diagnostic plot of a funGp model;</p>
+    <div class='dont-index'><p><strong>*</strong> <a href='plotLOO.html'>plotLOO</a> for diagnostic plot of a funGp model;</p>
 <p><strong>*</strong> <a href='predict-methods.html'>predict</a> for predictions based on a funGp model;</p>
 <p><strong>*</strong> <a href='simulate-methods.html'>simulate</a> for simulations based on a funGp model;</p>
 <p><strong>*</strong> <a href='update-methods.html'>update</a> for post-creation updates on a funGp model;</p>
@@ -322,9 +322,9 @@ R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs 
 <span class='va'>msf</span> <span class='op'>&lt;-</span> <span class='fu'>fgpm</span><span class='op'>(</span>sIn <span class='op'>=</span> <span class='va'>sIn</span>, fIn <span class='op'>=</span> <span class='va'>fIn</span>, sOut <span class='op'>=</span> <span class='va'>sOut</span><span class='op'>)</span>
 
 <span class='co'># plotting the three models</span>
-<span class='fu'><a href='plotLOO-methods.html'>plotLOO</a></span><span class='op'>(</span><span class='va'>ms</span><span class='op'>)</span>
-<span class='fu'><a href='plotLOO-methods.html'>plotLOO</a></span><span class='op'>(</span><span class='va'>mf</span><span class='op'>)</span>
-<span class='fu'><a href='plotLOO-methods.html'>plotLOO</a></span><span class='op'>(</span><span class='va'>msf</span><span class='op'>)</span>
+<span class='fu'><a href='plotLOO.html'>plotLOO</a></span><span class='op'>(</span><span class='va'>ms</span><span class='op'>)</span>
+<span class='fu'><a href='plotLOO.html'>plotLOO</a></span><span class='op'>(</span><span class='va'>mf</span><span class='op'>)</span>
+<span class='fu'><a href='plotLOO.html'>plotLOO</a></span><span class='op'>(</span><span class='va'>msf</span><span class='op'>)</span>
 
 <span class='co'># printing the three models</span>
 <span class='va'>ms</span> <span class='co'># equivalent to show(ms)</span>
@@ -368,7 +368,7 @@ R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs 
 <span class='va'>m1.preds</span> <span class='op'>&lt;-</span> <span class='fu'><a href='predict-methods.html'>predict</a></span><span class='op'>(</span><span class='va'>m1</span>, sIn.pr <span class='op'>=</span> <span class='va'>sIn.pr</span>, fIn.pr <span class='op'>=</span> <span class='va'>fIn.pr</span><span class='op'>)</span>
 
 <span class='co'># plotting predictions</span>
-<span class='fu'><a href='plotPreds-methods.html'>plotPreds</a></span><span class='op'>(</span><span class='va'>m1</span>, preds <span class='op'>=</span> <span class='va'>m1.preds</span><span class='op'>)</span>
+<span class='fu'><a href='plotPreds.html'>plotPreds</a></span><span class='op'>(</span><span class='va'>m1</span>, preds <span class='op'>=</span> <span class='va'>m1.preds</span><span class='op'>)</span>
 
 
 <span class='co'># simulating from a funGp model____________________________________________________________</span>
@@ -390,7 +390,7 @@ R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs 
 <span class='va'>m1.sims</span> <span class='op'>&lt;-</span> <span class='fu'><a href='simulate-methods.html'>simulate</a></span><span class='op'>(</span><span class='va'>m1</span>, nsim <span class='op'>=</span> <span class='fl'>10</span>, sIn.sm <span class='op'>=</span> <span class='va'>sIn.sm</span>, fIn.sm <span class='op'>=</span> <span class='va'>fIn.sm</span><span class='op'>)</span>
 
 <span class='co'># plotting simulations</span>
-<span class='fu'><a href='plotSims-methods.html'>plotSims</a></span><span class='op'>(</span><span class='va'>m1</span>, <span class='va'>m1.sims</span><span class='op'>)</span>
+<span class='fu'><a href='plotSims.html'>plotSims</a></span><span class='op'>(</span><span class='va'>m1</span>, <span class='va'>m1.sims</span><span class='op'>)</span>
 
 
 <span class='co'># creating funGp model using custom fgpm arguments_________________________________________</span>
@@ -414,7 +414,7 @@ R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs 
            f_pdims <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>5</span><span class='op'>)</span>, f_basType <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='cn'>NA</span>, <span class='st'>"B-splines"</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># plotting the model</span>
-<span class='fu'><a href='plotLOO-methods.html'>plotLOO</a></span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span>
+<span class='fu'><a href='plotLOO.html'>plotLOO</a></span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span>
 
 <span class='co'># printing the model</span>
 <span class='va'>m1</span> <span class='co'># equivalent to show(m1)</span>

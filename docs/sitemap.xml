@@ -91,31 +91,64 @@
     <loc>/reference/plotEvol-generic.html</loc>
   </url>
   <url>
+    <loc>/reference/plotEvol-method.html</loc>
+  </url>
+  <url>
     <loc>/reference/plotEvol-methods.html</loc>
+  </url>
+  <url>
+    <loc>/reference/plotEvol.html</loc>
+  </url>
+  <url>
+    <loc>/reference/plotLAA-method.html</loc>
+  </url>
+  <url>
+    <loc>/reference/plotLAA.html</loc>
   </url>
   <url>
     <loc>/reference/plotLOO-generic.html</loc>
   </url>
   <url>
+    <loc>/reference/plotLOO-method.html</loc>
+  </url>
+  <url>
     <loc>/reference/plotLOO-methods.html</loc>
+  </url>
+  <url>
+    <loc>/reference/plotLOO.html</loc>
   </url>
   <url>
     <loc>/reference/plotPreds-generic.html</loc>
   </url>
   <url>
+    <loc>/reference/plotPreds-method.html</loc>
+  </url>
+  <url>
     <loc>/reference/plotPreds-methods.html</loc>
+  </url>
+  <url>
+    <loc>/reference/plotPreds.html</loc>
   </url>
   <url>
     <loc>/reference/plotSims-generic.html</loc>
   </url>
   <url>
+    <loc>/reference/plotSims-method.html</loc>
+  </url>
+  <url>
     <loc>/reference/plotSims-methods.html</loc>
+  </url>
+  <url>
+    <loc>/reference/plotSims.html</loc>
   </url>
   <url>
     <loc>/reference/plotX-generic.html</loc>
   </url>
   <url>
     <loc>/reference/plotX-methods.html</loc>
+  </url>
+  <url>
+    <loc>/reference/plotX.html</loc>
   </url>
   <url>
     <loc>/reference/predict-methods.html</loc>

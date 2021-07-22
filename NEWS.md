@@ -1,3 +1,7 @@
+# funGp 0.2.2 (2021-07-06)
+
+* Minor change to resolve a `check` issue evoked by CRAN
+
 # funGp 0.2.1 (2020-11-24)
 
 * Minor change to resolve a `check` `NOTE` related to the declaration in `Imports` of the `plyr`

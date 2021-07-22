@@ -93,7 +93,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">funGp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
       </span>
     </div>
 
@@ -240,7 +240,7 @@ R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs 
 <span class='va'>preds</span> <span class='op'>&lt;-</span> <span class='fu'><a href='predict-methods.html'>predict</a></span><span class='op'>(</span><span class='va'>opt.model</span>, sIn.pr <span class='op'>=</span> <span class='va'>active</span><span class='op'>$</span><span class='va'>sIn.on</span>, fIn.pr <span class='op'>=</span> <span class='va'>active</span><span class='op'>$</span><span class='va'>fIn.on</span><span class='op'>)</span>
 
 <span class='co'># plotting predictions</span>
-<span class='fu'><a href='plotPreds-methods.html'>plotPreds</a></span><span class='op'>(</span><span class='va'>opt.model</span>, <span class='va'>preds</span><span class='op'>)</span>
+<span class='fu'><a href='plotPreds.html'>plotPreds</a></span><span class='op'>(</span><span class='va'>opt.model</span>, <span class='va'>preds</span><span class='op'>)</span>
 <span class='op'>}</span>
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='co'># preparing new data for simulation based on inputs kept active____________________________</span>
@@ -274,7 +274,7 @@ R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs 
 <span class='va'>sims_l</span> <span class='op'>&lt;-</span> <span class='fu'><a href='simulate-methods.html'>simulate</a></span><span class='op'>(</span><span class='va'>opt.model</span>, nsim <span class='op'>=</span> <span class='fl'>10</span>, sIn.sm <span class='op'>=</span> <span class='va'>sIn.sm</span>, fIn.sm <span class='op'>=</span> <span class='va'>fIn.sm</span><span class='op'>)</span>
 
 <span class='co'># plotting light simulations</span>
-<span class='fu'><a href='plotSims-methods.html'>plotSims</a></span><span class='op'>(</span><span class='va'>opt.model</span>, <span class='va'>sims_l</span><span class='op'>)</span>
+<span class='fu'><a href='plotSims.html'>plotSims</a></span><span class='op'>(</span><span class='va'>opt.model</span>, <span class='va'>sims_l</span><span class='op'>)</span>
 <span class='op'>}</span>
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='co'># rebuilding of 3 best models using new data_______________________________________________</span>

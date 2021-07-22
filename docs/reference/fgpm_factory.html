@@ -97,7 +97,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">funGp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
       </span>
     </div>
 
@@ -333,8 +333,8 @@ R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs 
 <a href='https://link.springer.com/article/10.1007/BF01033232'>[MG]</a></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><strong>*</strong> <a href='plotX-methods.html'>plotX</a> for diagnostic plots for a fgpm_factory output and selected model;</p>
-<p><strong>*</strong> <a href='plotEvol-methods.html'>plotEvol</a> for a plot of the evolution of the model selection algorithm in fgpm_factory;</p>
+    <div class='dont-index'><p><strong>*</strong> <a href='plotX.html'>plotX</a> for diagnostic plots for a fgpm_factory output and selected model;</p>
+<p><strong>*</strong> <a href='plotEvol.html'>plotEvol</a> for a plot of the evolution of the model selection algorithm in fgpm_factory;</p>
 <p><strong>*</strong> <a href='get_active_in.html'>get_active_in</a> for post-processing of input data structures following a fgpm_factory call;</p>
 <p><strong>*</strong> <a href='predict-methods.html'>predict</a> for predictions based on a funGp model;</p>
 <p><strong>*</strong> <a href='simulate-methods.html'>simulate</a> for simulations based on a funGp model;</p>
@@ -356,18 +356,18 @@ R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs 
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='co'># optimizing the model structure with fgpm_factory (~12 seconds)</span>
 <span class='va'>xm</span> <span class='op'>&lt;-</span> <span class='fu'>fgpm_factory</span><span class='op'>(</span>sIn <span class='op'>=</span> <span class='va'>sIn</span>, fIn <span class='op'>=</span> <span class='va'>fIn</span>, sOut <span class='op'>=</span> <span class='va'>sOut</span><span class='op'>)</span>
-<span class='fu'><a href='plotLOO-methods.html'>plotLOO</a></span><span class='op'>(</span><span class='va'>xm</span><span class='op'>@</span><span class='va'>model</span><span class='op'>)</span> <span class='co'># plotting the model</span>
+<span class='fu'><a href='plotLOO.html'>plotLOO</a></span><span class='op'>(</span><span class='va'>xm</span><span class='op'>@</span><span class='va'>model</span><span class='op'>)</span> <span class='co'># plotting the model</span>
 
 <span class='co'># building the model with the default fgpm arguments to compare</span>
 <span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fgpm.html'>fgpm</a></span><span class='op'>(</span>sIn <span class='op'>=</span> <span class='va'>sIn</span>, fIn <span class='op'>=</span> <span class='va'>fIn</span>, sOut <span class='op'>=</span> <span class='va'>sOut</span><span class='op'>)</span>
-<span class='fu'><a href='plotLOO-methods.html'>plotLOO</a></span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span> <span class='co'># plotting the model</span>
+<span class='fu'><a href='plotLOO.html'>plotLOO</a></span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span> <span class='co'># plotting the model</span>
 
 <span class='co'># assessing the quality of the model</span>
 <span class='co'># in the absolute and also w.r.t. the other explored models</span>
-<span class='fu'><a href='plotX-methods.html'>plotX</a></span><span class='op'>(</span><span class='va'>xm</span><span class='op'>)</span>
+<span class='fu'><a href='plotX.html'>plotX</a></span><span class='op'>(</span><span class='va'>xm</span><span class='op'>)</span>
 
 <span class='co'># checking the evolution of the algorithm</span>
-<span class='fu'><a href='plotEvol-methods.html'>plotEvol</a></span><span class='op'>(</span><span class='va'>xm</span><span class='op'>)</span>
+<span class='fu'><a href='plotEvol.html'>plotEvol</a></span><span class='op'>(</span><span class='va'>xm</span><span class='op'>)</span>
 <span class='op'>}</span>
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='co'># improving performance with more iterations_______________________________________________</span>
@@ -387,8 +387,8 @@ R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs 
 <span class='va'>xm25</span> <span class='op'>&lt;-</span> <span class='fu'>fgpm_factory</span><span class='op'>(</span>sIn <span class='op'>=</span> <span class='va'>sIn</span>, fIn <span class='op'>=</span> <span class='va'>fIn</span>, sOut <span class='op'>=</span> <span class='va'>sOut</span>, setup <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>n.iter <span class='op'>=</span> <span class='fl'>25</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># plotting both models</span>
-<span class='fu'><a href='plotLOO-methods.html'>plotLOO</a></span><span class='op'>(</span><span class='va'>xm15</span><span class='op'>@</span><span class='va'>model</span><span class='op'>)</span>
-<span class='fu'><a href='plotLOO-methods.html'>plotLOO</a></span><span class='op'>(</span><span class='va'>xm25</span><span class='op'>@</span><span class='va'>model</span><span class='op'>)</span>
+<span class='fu'><a href='plotLOO.html'>plotLOO</a></span><span class='op'>(</span><span class='va'>xm15</span><span class='op'>@</span><span class='va'>model</span><span class='op'>)</span>
+<span class='fu'><a href='plotLOO.html'>plotLOO</a></span><span class='op'>(</span><span class='va'>xm25</span><span class='op'>@</span><span class='va'>model</span><span class='op'>)</span>
 <span class='op'>}</span>
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='co'># custom solution space____________________________________________________________________</span>

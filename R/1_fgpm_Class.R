@@ -555,8 +555,8 @@ fgpm <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
 # ==========================================================================================================
 # Printing of a funGp model
 # ==========================================================================================================
-#' @rdname show-methods
 #' @importFrom knitr kable
+#' @rdname show-methods
 #' @aliases show,fgpm-method
 setMethod("show", "fgpm", function(object) show.fgpm(model = object))
 

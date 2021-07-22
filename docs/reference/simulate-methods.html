@@ -90,7 +90,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">funGp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
       </span>
     </div>
 
@@ -211,9 +211,9 @@ limits of the 95% confidence intervals at the simulation points. Default is "lig
   simulation points.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><strong>*</strong> <a href='plotSims-methods.html'>plotSims</a> for the simulations plot of a funGp model;</p>
+    <div class='dont-index'><p><strong>*</strong> <a href='plotSims.html'>plotSims</a> for the simulations plot of a funGp model;</p>
 <p><strong>*</strong> <a href='predict-methods.html'>predict</a> for predictions based on a funGp model;</p>
-<p><strong>*</strong> <a href='plotPreds-methods.html'>plotPreds</a> for the predictions plot of a funGp model.</p></div>
+<p><strong>*</strong> <a href='plotPreds.html'>plotPreds</a> for the predictions plot of a funGp model.</p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>José Betancourt, François Bachoc and Thierry Klein</p>
@@ -238,7 +238,7 @@ limits of the 95% confidence intervals at the simulation points. Default is "lig
 <span class='va'>m1.sims_l</span> <span class='op'>&lt;-</span> <span class='fu'>simulate</span><span class='op'>(</span><span class='va'>m1</span>, nsim <span class='op'>=</span> <span class='fl'>10</span>, sIn.sm <span class='op'>=</span> <span class='va'>sIn.sm</span>, fIn.sm <span class='op'>=</span> <span class='va'>fIn.sm</span><span class='op'>)</span>
 
 <span class='co'># plotting light simulations</span>
-<span class='fu'><a href='plotSims-methods.html'>plotSims</a></span><span class='op'>(</span><span class='va'>m1</span>, <span class='va'>m1.sims_l</span><span class='op'>)</span>
+<span class='fu'><a href='plotSims.html'>plotSims</a></span><span class='op'>(</span><span class='va'>m1</span>, <span class='va'>m1.sims_l</span><span class='op'>)</span>
 
 
 <span class='co'># full simulations ________________________________________________________________________</span>
@@ -265,10 +265,10 @@ limits of the 95% confidence intervals at the simulation points. Default is "lig
 <span class='co'># upper95  100   -none- numeric</span>
 
 <span class='co'># plotting full simulations in full mode</span>
-<span class='fu'><a href='plotSims-methods.html'>plotSims</a></span><span class='op'>(</span><span class='va'>m1</span>, <span class='va'>m1.sims_f</span><span class='op'>)</span>
+<span class='fu'><a href='plotSims.html'>plotSims</a></span><span class='op'>(</span><span class='va'>m1</span>, <span class='va'>m1.sims_f</span><span class='op'>)</span>
 
 <span class='co'># plotting full simulations in light mode</span>
-<span class='fu'><a href='plotSims-methods.html'>plotSims</a></span><span class='op'>(</span><span class='va'>m1</span>, <span class='va'>m1.sims_f</span>, detail <span class='op'>=</span> <span class='st'>"light"</span><span class='op'>)</span>
+<span class='fu'><a href='plotSims.html'>plotSims</a></span><span class='op'>(</span><span class='va'>m1</span>, <span class='va'>m1.sims_f</span>, detail <span class='op'>=</span> <span class='st'>"light"</span><span class='op'>)</span>
 
 </code></pre></div>
   </div>

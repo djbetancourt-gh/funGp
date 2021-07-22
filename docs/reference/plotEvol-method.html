@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plot for the evolution of model selection algorithm — plotEvol-generic • funGp</title>
+<title>Plot for the evolution of model selection algorithm in funGp — plotEvol,Xfgpm-method • funGp</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,21 @@
 
 
 
-<meta property="og:title" content="Plot for the evolution of model selection algorithm — plotEvol-generic" />
-<meta property="og:description" content="This method displays the evolution of an iterative algorithm for model selection." />
+<meta property="og:title" content="Plot for the evolution of model selection algorithm in funGp — plotEvol,Xfgpm-method" />
+<meta property="og:description" content="This method displays the evolution of the quality of the configurations evaluated along
+  the iterations, by the model selection algorithm in the fgpm_factory function. For
+  each iteration, the performance statistic of all the evaluated models is printed, along with the
+  corresponding median of the group. The plot also includes the global maximum, which corresponds
+  to the best performance statistic obtained up to the current iteration. In this plot, it is
+  typical to have some points falling relatively far from the maximum, even after multiple
+  iterations. This happens mainly because we have multiple categorical features, whose alteration
+  might change the performance statistic in a nonsmooth way. On the other hand, the points that fall
+  bellow zero usually correspond to models whose hyperparameters were hard to optimize. This occurs
+  sporadically during the log-likelihood optimization for Gaussian processes, due to the
+  non-linearity of the objective function. As long as the maximum keeps improving and the median
+  remains close to it, none of the two aforementioned phenomena is matter for worries. Both of them
+  respond to the mechanism of exploration implemented in the algorithm, which makes it able to
+  progressively move towards better model configurations." />
 <meta property="og:image" content="/docs/ghub.png" />
 <meta property="og:image:alt" content="funGp" />
 
@@ -126,41 +139,69 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Plot for the evolution of model selection algorithm</h1>
+    <h1>Plot for the evolution of model selection algorithm in funGp</h1>
     
-    <div class="hidden name"><code>plotEvol-generic.Rd</code></div>
+    <div class="hidden name"><code>plotEvol-method.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This method displays the evolution of an iterative algorithm for model selection.</p>
+    <p>This method displays the evolution of the quality of the configurations evaluated along
+  the iterations, by the model selection algorithm in the <a href='fgpm_factory.html'>fgpm_factory</a> function. For
+  each iteration, the performance statistic of all the evaluated models is printed, along with the
+  corresponding median of the group. The plot also includes the global maximum, which corresponds
+  to the best performance statistic obtained up to the current iteration. In this plot, it is
+  typical to have some points falling relatively far from the maximum, even after multiple
+  iterations. This happens mainly because we have multiple categorical features, whose alteration
+  might change the performance statistic in a nonsmooth way. On the other hand, the points that fall
+  bellow zero usually correspond to models whose hyperparameters were hard to optimize. This occurs
+  sporadically during the log-likelihood optimization for Gaussian processes, due to the
+  non-linearity of the objective function. As long as the maximum keeps improving and the median
+  remains close to it, none of the two aforementioned phenomena is matter for worries. Both of them
+  respond to the mechanism of exploration implemented in the algorithm, which makes it able to
+  progressively move towards better model configurations.</p>
     </div>
 
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='co'># S4 method for Xfgpm</span>
+<span class='fu'><a href='plotEvol.html'>plotEvol</a></span><span class='op'>(</span><span class='va'>x.model</span>, <span class='va'>...</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x.model</th>
-      <td><p>an object containing the data structures returned by the model selection algorithm.</p></td>
+      <td><p>an object of class <a href='Xfgpm-class.html'>Xfgpm</a> containing the output of the model selection
+algorithm in <a href='fgpm_factory.html'>fgpm_factory</a>.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>additional arguments affecting the plot.</p></td>
+      <td><p>additional arguments affecting the plot. The following typical graphics parameters are
+valid entries: <em>xlim</em>, <em>ylim</em>, <em>xlab</em>, <em>ylab</em>, <em>main</em>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>None.</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Betancourt, J., Bachoc, F., and Klein, T., and Gamboa, F. (2020),
+Technical Report: "Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression. Ref. D3.b (WP3.2)".
+<em>RISCOPE project</em>.
+<a href='https://hal.archives-ouvertes.fr/hal-02532713'>[HAL]</a></p>
+<p>Betancourt, J., Bachoc, F., and Klein, T. (2020),
+R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
+<em>RISCOPE project</em>.
+<a href='https://hal.archives-ouvertes.fr/hal-02536624'>[HAL]</a></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><strong>*</strong> <a href='plotEvol-methods.html'>plotEvol</a> for a plot on the evolution of the model selection algorithm
-  in fgpm_factory.</p></div>
+    <div class='dont-index'><p><strong>*</strong> <a href='fgpm_factory.html'>fgpm_factory</a> for structural optimization of funGp models;</p>
+<p><strong>*</strong> <a href='plotX.html'>plotX</a> for diagnostic plots for a fgpm_factory output and selected model.</p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>José Betancourt, François Bachoc and Thierry Klein</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='kw'><a href='https://rdrr.io/r/base/library.html'>require</a></span><span class='op'>(</span><span class='va'><a href='https://djbetancourt-gh.github.io/funGp/'>funGp</a></span><span class='op'>)</span> <span class='co'># a package with a plotEvol method implemented</span>
-
-<span class='co'># generating input and output data</span>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='co'># generating input and output data</span>
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>100</span><span class='op'>)</span>
 <span class='va'>n.tr</span> <span class='op'>&lt;-</span> <span class='fl'>2</span><span class='op'>^</span><span class='fl'>5</span>
 <span class='va'>sIn</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/expand.grid.html'>expand.grid</a></span><span class='op'>(</span>x1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>1</span>,length <span class='op'>=</span> <span class='va'>n.tr</span><span class='op'>^</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>/</span><span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span>, x2 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>1</span>,length <span class='op'>=</span> <span class='va'>n.tr</span><span class='op'>^</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>/</span><span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span>,
@@ -172,8 +213,8 @@
 <span class='co'># optimizing the model structure with fgpm_factory (~5 seconds)</span>
 <span class='va'>xm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fgpm_factory.html'>fgpm_factory</a></span><span class='op'>(</span>sIn <span class='op'>=</span> <span class='va'>sIn</span>, fIn <span class='op'>=</span> <span class='va'>fIn</span>, sOut <span class='op'>=</span> <span class='va'>sOut</span><span class='op'>)</span>
 
-<span class='co'># assessing the evolution of the algorihtm</span>
-<span class='fu'><a href='plotEvol-methods.html'>plotEvol</a></span><span class='op'>(</span><span class='va'>xm</span><span class='op'>)</span>
+<span class='co'># assessing the evolution of the algorithm</span>
+<span class='fu'><a href='plotEvol.html'>plotEvol</a></span><span class='op'>(</span><span class='va'>xm</span><span class='op'>)</span>
 <span class='op'>}</span>
 
 </code></pre></div>
