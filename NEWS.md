@@ -1,4 +1,4 @@
-# funGp 0.2.2 (2021-07-06)
+# funGp 0.2.2 (2021-07-21)
 
 * Minor change to resolve a `check` issue evoked by CRAN
 
