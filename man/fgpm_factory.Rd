@@ -158,7 +158,7 @@ sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr
                    x5 = seq(0,1,length = n.tr^(1/5)))
 fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
 sOut <- fgp_BB7(sIn, fIn, n.tr)
-\donttest{
+\dontrun{
 # optimizing the model structure with fgpm_factory (~12 seconds)
 xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
 plotLOO(xm@model) # plotting the model
@@ -174,7 +174,7 @@ plotX(xm)
 # checking the evolution of the algorithm
 plotEvol(xm)
 }
-\donttest{
+\dontrun{
 # improving performance with more iterations_______________________________________________
 # generating input and output data
 set.seed(100)
@@ -195,7 +195,7 @@ xm25 <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, setup = list(n.iter = 25
 plotLOO(xm15@model)
 plotLOO(xm25@model)
 }
-\donttest{
+\dontrun{
 # custom solution space____________________________________________________________________
 # generating input and output data
 set.seed(100)
@@ -221,7 +221,7 @@ xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, ctraints = myctr)
 # verifying constraints with the log of some successfully built models
 cbind(xm@log.success@sols, "Q2" = xm@log.success@fitness)
 }
-\donttest{
+\dontrun{
 # custom heuristic parameters______________________________________________________________
 # generating input and output data
 set.seed(100)
@@ -242,7 +242,7 @@ xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, setup = mysup)
 # verifying heuristic setup through the details of the Xfgpm object
 unlist(xm@details$param)
 }
-\donttest{
+\dontrun{
 # stopping condition based on time_________________________________________________________
 # generating input and output data
 set.seed(100)
@@ -262,7 +262,7 @@ mytlim <- 60
 # calling the funGp factory with time limit (~60 seconds)
 xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, setup = mysup, time.lim = mytlim)
 }
-\donttest{
+\dontrun{
 # passing fgpm arguments through fgpm_factory______________________________________________
 # generating input and output data
 set.seed(100)
@@ -284,7 +284,7 @@ xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut,
 #       runs with 1e-8, which is enough in most cases.
 xm@log.crashes
 }
-\donttest{
+\dontrun{
 # parallelization in the model factory_____________________________________________________
 # generating input and output data
 set.seed(100)

@@ -67,6 +67,8 @@ Plotters
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -78,9 +80,15 @@ Plotters
 
 
 
+  
+
+  
+
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -94,7 +102,7 @@ Plotters
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">funGp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
       </span>
     </div>
 
@@ -146,9 +154,9 @@ Plotters
        <a href='simulate-methods.html'>simulate</a>: random sampling from a funGp Gaussian process model <br />
        <a href='update-methods.html'>update</a>: modification of data and hyperparameters of a funGp model</p></li>
 <li><p><strong>Plotters</strong><br />
-       <a href='plotLOO-methods.html'>plotLOO</a>: leave-one-out diagnostic plot for a funGp model <br />
-       <a href='plotPreds-methods.html'>plotPreds</a>: plot for predictions of a funGp model <br />
-       <a href='plotSims-methods.html'>plotSims</a>: plot for simulations of a funGp model</p></li>
+       <a href='plotLOO.html'>plotLOO</a>: leave-one-out diagnostic plot for a funGp model <br />
+       <a href='plotPreds.html'>plotPreds</a>: plot for predictions of a funGp model <br />
+       <a href='plotSims.html'>plotSims</a>: plot for simulations of a funGp model</p></li>
 </ul>
 
     </div>
@@ -159,7 +167,7 @@ Plotters
 
     
 
-<dl'>
+<dl>
 <dt><code>howCalled</code></dt><dd><p>Object of class <code>"<a href='modelCall-class.html'>modelCall</a>"</code>. User call reminder.</p></dd>
 
 <dt><code>type</code></dt><dd><p>Object of class <code>"character"</code>. Type of model based on type of inputs. To be set from
@@ -212,6 +220,9 @@ hand, \(LInvY = L^(-1) * sOut\).</p></dd>
  </a></p></li>
 </ul>
 
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>José Betancourt, François Bachoc and Thierry Klein</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -224,11 +235,11 @@ hand, \(LInvY = L^(-1) * sOut\).</p></dd>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Jose Betancourt, François Bachoc, Thierry Klein.</p>
+  <p><p>Developed by Jose Betancourt, François Bachoc, Thierry Klein.</p></p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p></p>
 </div>
 
       </footer>
@@ -236,6 +247,8 @@ hand, \(LInvY = L^(-1) * sOut\).</p></dd>
 
   
 
+
+  
 
   </body>
 </html>

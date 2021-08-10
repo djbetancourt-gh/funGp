@@ -28,6 +28,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
@@ -40,7 +42,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">funGp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
       </span>
     </div>
 
@@ -75,84 +77,93 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
-<p><img src="https://drive.google.com/thumbnail?id=1GsHPb5GnE0YS7b7nRpHqXyFKeHuLw3hF" alt="funGp"></p>
+<div class="figure">
+<img src="https://drive.google.com/thumbnail?id=1GsHPb5GnE0YS7b7nRpHqXyFKeHuLw3hF" alt=""><p class="caption"><strong>funGp</strong></p>
+</div>
 <div id="gaussian-process-models-for-scalar-and-functional-inputs" class="section level2">
 <h2 class="hasAnchor">
-<a href="#gaussian-process-models-for-scalar-and-functional-inputs" class="anchor"></a>Gaussian Process Models for Scalar and Functional Inputs</h2>
-<p><strong>Description:</strong> funGp is a regression package based on Gaussian process models. It allows inputs to be either scalar, functional (represented as vectors), or a combination of both. A dimension reduction functionality is implemented in order aid keeping the model light while keeping enough information about the inputs for the model to predict well. Moreover, funGp offers a model selection feature which allows to tune different characteristics of the model such as the active scalar and functional inputs, the type of kernel function and the family of basis function used for the projection of the inputs. This is an extension of the work presented in Betancourt et al. (2020).</p>
-<p><strong>Main functionalities</strong> <br> 🔹 Creation of regression models <br> 🔹 Output estimation at unobserved input points <br> 🔹 Random sampling from a Gaussian process model <br> 🔹 Heuristic optimization of model structure <br></p>
-<p><strong>Note:</strong> funGp was first developed in the frame of the RISCOPE research project, funded by the French Agence Nationale de la Recherche (ANR) for the period 2017-2021 (ANR project No. 16CE04-0011, <a href="https://perso.math.univ-toulouse.fr/riscope/">RISCOPE.fr</a>), and certified by SAFE Cluster.</p>
+<a href="#gaussian-process-models-for-scalar-and-functional-inputs" class="anchor" aria-hidden="true"></a>Gaussian Process Models for Scalar and Functional Inputs</h2>
+<p><strong>Description:</strong> funGp is a regression package based on Gaussian process models. It allows inputs to be either scalar, functional (represented as vectors), or a combination of both. A dimension reduction functionality is implemented in order aid keeping the model light while keeping enough information about the inputs for the model to predict well. Moreover, funGp offers a model selection feature which allows to tune different characteristics of the model such as the active scalar and functional inputs, the type of kernel function and the family of basis function used for the projection of the inputs. This is an extension of the work presented in Betancourt et al. (2020).</p>
+<p><strong>Main functionalities</strong> <br><span class="emoji" data-emoji="small_blue_diamond">🔹</span> Creation of regression models <br><span class="emoji" data-emoji="small_blue_diamond">🔹</span> Output estimation at unobserved input points <br><span class="emoji" data-emoji="small_blue_diamond">🔹</span> Random sampling from a Gaussian process model <br><span class="emoji" data-emoji="small_blue_diamond">🔹</span> Heuristic optimization of model structure <br></p>
+<p><strong>Note:</strong> funGp was first developed in the frame of the RISCOPE research project, funded by the French Agence Nationale de la Recherche (ANR) for the period 2017-2021 (ANR project No. 16CE04-0011, <a href="https://perso.math.univ-toulouse.fr/riscope/" class="external-link">RISCOPE.fr</a>), and certified by SAFE Cluster.</p>
 <p>This project is licensed under the GPL-3 License. <br><br></p>
 <p><strong>Installation</strong></p>
-<div class="sourceCode"><pre class="sourceCode R"><code class="sourceCode r"><span class="co"># Install release version from CRAN</span>
-<span class="kw">install.packages</span>(<span class="st">"funGp"</span>)
-
-<span class="co"># Install release version from GitHub</span>
-<span class="co"># way 1</span>
-<span class="kw">library</span>(devtools)
-<span class="kw">install_github</span>(<span class="st">"djbetancourt-gh/funGp"</span>, <span class="dt">dependencies =</span> <span class="ot">TRUE</span>)
-
-<span class="co"># way 2</span>
-<span class="kw">library</span>(githubinstall)
-<span class="kw">githubinstall</span>(<span class="st">"funGp"</span>, <span class="dt">dependencies =</span> <span class="ot">TRUE</span>)
-
-
-<span class="co"># Install development version from GitHub</span>
-<span class="co"># way 1</span>
-<span class="kw">library</span>(devtools)
-<span class="kw">install_github</span>(<span class="st">"djbetancourt-gh/funGp@develop"</span>, <span class="dt">dependencies =</span> <span class="ot">TRUE</span>)
-
-<span class="co"># way 2</span>
-<span class="kw">library</span>(githubinstall)
-<span class="kw">githubinstall</span>(<span class="st">"funGp@develop"</span>, <span class="dt">dependencies =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install release version from CRAN</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"funGp"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Install release version from GitHub</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># way 1</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(devtools)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">install_github</span>(<span class="st">"djbetancourt-gh/funGp"</span>, <span class="at">dependencies =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># way 2</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(githubinstall)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">githubinstall</span>(<span class="st">"funGp"</span>, <span class="at">dependencies =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Install development version from GitHub</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># way 1</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(devtools)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">install_github</span>(<span class="st">"djbetancourt-gh/funGp@develop"</span>, <span class="at">dependencies =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># way 2</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(githubinstall)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">githubinstall</span>(<span class="st">"funGp@develop"</span>, <span class="at">dependencies =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <p><br></p>
-<p><strong>Manual</strong> 📖 <br><a href="https://hal.archives-ouvertes.fr/hal-02536624">Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour</a> <br><br></p>
-<p><strong>Authors:</strong> José Betancourt 🔧 (IMT, ENAC), François Bachoc (IMT) and Thierry Klein (IMT, ENAC).</p>
+<p><strong>Manual</strong> <span class="emoji" data-emoji="book">📖</span> <br><a href="https://hal.archives-ouvertes.fr/hal-02536624" class="external-link">Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour</a> <br><br></p>
+<p><strong>Authors:</strong> José Betancourt <span class="emoji" data-emoji="wrench">🔧</span> (IMT, ENAC), François Bachoc (IMT) and Thierry Klein (IMT, ENAC).</p>
 <p><strong>Contributors:</strong> Déborah Idier (BRGM) and Jérémy Rohmer (BRGM).</p>
-<p>🔧 maintainer - <a href="mailto:%20djbetancourt@uninorte.edu.co">djbetancourt@uninorte.edu.co</a> <br><br></p>
+<p><span class="emoji" data-emoji="wrench">🔧</span> maintainer - <a href="mailto:%20djbetancourt@uninorte.edu.co">djbetancourt@uninorte.edu.co</a> <br><br></p>
 <p><strong>Acknowledgments:</strong> we are grateful to Yves Deville from Alpestat for his advice on the documentation of R packages and to Juliette Garcia from ENAC for her assistance on the stabilization of the Ant Colony algorithm for structural parameter optimization. <br><br></p>
 <p><strong>References</strong> <br></p>
-<p>Betancourt, J., Bachoc, F., Klein, T., Idier, D., Pedreros, R., and Rohmer, J. (2020), “Gaussian process metamodeling of functional-input code for coastal flood hazard assessment”. <em>Reliability Engineering &amp; System Safety</em>, <strong>198</strong>, 106870. [<a href="https://www.sciencedirect.com/science/article/abs/pii/S0951832019301693">RESS</a>] - [<a href="https://hal.archives-ouvertes.fr/hal-01998724">HAL</a>]</p>
-<p>Betancourt, J., Bachoc, F., Klein, T., and Gamboa, F. (2020), Technical Report: “Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression. Ref. D3.b (WP3.2)”. <em>RISCOPE project</em>. [<a href="https://hal.archives-ouvertes.fr/hal-02532713">HAL</a>]</p>
-<p>Betancourt, J., Bachoc, F., and Klein, T. (2020), R Package Manual: “Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour”. <em>RISCOPE project</em>. [<a href="https://hal.archives-ouvertes.fr/hal-02536624">HAL</a>]</p>
+<p>Betancourt, J., Bachoc, F., Klein, T., Idier, D., Pedreros, R., and Rohmer, J. (2020), “Gaussian process metamodeling of functional-input code for coastal flood hazard assessment”. <em>Reliability Engineering &amp; System Safety</em>, <strong>198</strong>, 106870. [<a href="https://www.sciencedirect.com/science/article/abs/pii/S0951832019301693" class="external-link">RESS</a>] - [<a href="https://hal.archives-ouvertes.fr/hal-01998724" class="external-link">HAL</a>]</p>
+<p>Betancourt, J., Bachoc, F., Klein, T., and Gamboa, F. (2020), Technical Report: “Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression. Ref. D3.b (WP3.2)”. <em>RISCOPE project</em>. [<a href="https://hal.archives-ouvertes.fr/hal-02532713" class="external-link">HAL</a>]</p>
+<p>Betancourt, J., Bachoc, F., and Klein, T. (2020), R Package Manual: “Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour”. <em>RISCOPE project</em>. [<a href="https://hal.archives-ouvertes.fr/hal-02536624" class="external-link">HAL</a>]</p>
 </div>
 
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
 <li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=funGp">https://​cloud.r-project.org/​package=funGp</a>
 </li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a></li>
 </ul>
 </div>
+
+
 <div class="developers">
-<h2>Developers</h2>
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Jose Betancourt <br><small class="roles"> Maintainer, author </small>  </li>
 <li>François Bachoc <br><small class="roles"> Author </small>  </li>
 <li>Thierry Klein <br><small class="roles"> Author </small>  </li>
-<li><a href="authors.html">All authors...</a></li>
+<li><a href="authors.html">More on authors...</a></li>
 </ul>
 </div>
+
+
 
   </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Jose Betancourt, François Bachoc, Thierry Klein.</p>
+  <p></p>
+<p>Developed by Jose Betancourt, François Bachoc, Thierry Klein.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p>
 </div>
 
       </footer>
@@ -160,6 +171,8 @@
 
   
 
+
+  
 
   </body>
 </html>

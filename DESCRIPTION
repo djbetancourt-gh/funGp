@@ -1,7 +1,7 @@
 Package: funGp
 Type: Package
 Title: Gaussian Process Models for Scalar and Functional Inputs
-Version: 0.2.1
+Version: 0.2.2
 Authors@R: c(
     person("Jose", "Betancourt", email = "djbetancourt@uninorte.edu.co", role = c("cre", "aut")),
     person("François", "Bachoc", email = "francois.bachoc@math.univ-toulouse.fr", role = "aut"),
@@ -27,7 +27,7 @@ URL: https://djbetancourt-gh.github.io/funGp/
 Imports: methods, foreach, knitr, scales, qdapRegex, microbenchmark, doFuture, future, progressr
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Collate: 
     '0_funGp_Doc.R'
     '0_show_Doc.R'

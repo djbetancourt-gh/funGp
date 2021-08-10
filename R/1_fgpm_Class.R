@@ -299,7 +299,7 @@ setClass("fgpm",
 #' # printing the model
 #' m1 # equivalent to show(m1)
 #'
-#' \donttest{
+#' \dontrun{
 #' # multistart and parallelization in fgpm___________________________________________________
 #' # generating input and output data
 #' set.seed(100)
@@ -555,8 +555,8 @@ fgpm <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
 # ==========================================================================================================
 # Printing of a funGp model
 # ==========================================================================================================
-#' @rdname show-methods
 #' @importFrom knitr kable
+#' @rdname show-methods
 #' @aliases show,fgpm-method
 setMethod("show", "fgpm", function(object) show.fgpm(model = object))
 

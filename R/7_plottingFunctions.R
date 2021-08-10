@@ -1,4 +1,196 @@
 # ==========================================================================================================
+# Testing something
+# ==========================================================================================================
+# @name num
+# @rdname num-methods
+# @exportMethod num
+# @param object The generic for num.
+# @param ... Further arguments for methods.
+# setGeneric(name = "num",
+#            def = function(object, ...) standardGeneric("num")
+# )
+
+# No need to document or export this function. There is no need to
+# name it as it is (which can lead to S3 problems). It coule be named
+# 'predict_apk' , 'predictApk' or anything else.
+# num.fgpm <- function(object, bar,  ...) {
+#   print("I'm an apk prediction!")
+# }
+
+# @title Prediction Method for the fgpm Class
+# @name num
+# @rdname num-methods
+# @aliases num,apk-method
+# @param bar Not used but remind that methods usually have more arguments than the generic,
+# these being dependent on the class.
+# @examples
+# myApk <- fgpm()
+# num(myApk)
+# setMethod("num", "fgpm",
+#           num.fgpm)
+
+# Method num.
+# @name num
+# @rdname num-methods
+# @exportMethod num
+# setGeneric("num", function(x) standardGeneric("num"))
+
+# @param x and this is method.
+# @rdname num-methods
+# @aliases num,ANY-method
+# setMethod("num", "ANY", function(x) x@num)
+
+
+
+# @title LAA regression
+# @description This is alternative to LOO just to test.
+#
+# @param model a model object for which the LAA calibration plot is to be made.
+# @param ... additional arguments affecting the plot.
+#
+# @return None.
+#
+# @seealso \strong{*} \link[funGp]{predict} for the diagnostic plot of a funGp model.
+#
+# @examples
+# # generating input and output data for training
+# set.seed(100)
+#
+# @name plotLAA-generic
+# @rdname plotLAA-generic
+# @exportMethod plotLAA
+# setGeneric("plotLAA", function(model, ...) standardGeneric("plotLAA"))
+
+# @title LAA test
+# @description This is an LAA test.
+#
+# @param model an object of class \linkS4class{fgpm} corresponding to the funGp model to validate.
+# @param ... additional arguments affecting the plot. The following typical graphics parameters are
+#   valid entries: \emph{xlim}, \emph{ylim}, \emph{xlab}, \emph{ylab}, \emph{main}.
+#
+# @return None.
+#
+# @author José Betancourt, François Bachoc and Thierry Klein
+#
+# @seealso \strong{*} \link[funGp]{fgpm} for the construction of funGp models;
+# @seealso \strong{*} \link[funGp]{plotPreds} for prediction plots;
+# @seealso \strong{*} \link[funGp]{plotSims} for simulation plots.
+#
+# @examples
+# # generating input and output data for training
+# set.seed(100)
+#
+# @name plotLAA
+# @rdname plotLAA-methods
+# @importFrom graphics lines plot
+# @aliases plotLAA,fgpm-method
+# setMethod("plotLAA", "fgpm", function(model, ...) {
+#   plotLAA.fgpm(model = model, ...)
+# })
+
+# plotLAA.fgpm <- function(model, ...) {
+#   # recover observed output
+#   y_obs <- model@sOut
+#
+#   # compute loocv predictions
+#   R <- tcrossprod(model@preMats$L)/model@kern@varHyp + diag(model@nugget, nrow = model@n.tr, ncol = model@n.tr)
+#   Rinv <- solve(R)
+#   y_pre <- y_obs - diag(Rinv)^(-1) * Rinv %*% y_obs
+#
+#   # compute LOO statistic
+#   q2 <- format(getFitness(model), digits = 3, nsmall = 3)
+#
+#   # recover graphic parameters if provided
+#   gpars <- list(...)
+#   if (!is.null(gpars$xlim)) xlim <- gpars$xlim else xlim <- range(c(y_obs, y_pre))
+#   if (!is.null(gpars$ylim)) ylim <- gpars$ylim else ylim <- range(c(y_obs, y_pre))
+#   if (!is.null(gpars$pch)) pch <- gpars$pch else pch <- 21
+#   if (!is.null(gpars$pt.col)) pt.col <- gpars$pt.col else pt.col <- "red"
+#   if (!is.null(gpars$pt.bg)) pt.bg <- gpars$pt.bg else pt.bg <- "red"
+#   if (!is.null(gpars$pt.cex)) pt.cex <- gpars$pt.cex else pt.cex <- 1
+#   if (!is.null(gpars$line)) line <- gpars$line else line <- "blue"
+#   if (!is.null(gpars$xlab)) xlab <- gpars$xlab else xlab <- "Observed"
+#   if (!is.null(gpars$ylab)) ylab <- gpars$ylab else ylab <- "Predicted"
+#   if (!is.null(gpars$main)) main <- gpars$main else main <- "Model diagnostic by leave-one-out cross-validation"
+#
+#   # save current par state
+#   opar <- par('mar', 'mfrow')
+#   on.exit(par(opar))
+#
+#   # set up layout
+#   par(mar = c(5.1, 4.1, 4.1, 2.1), mfrow = c(1,1))
+#
+#   # plot
+#   plot(y_obs, y_pre, xlim = xlim, ylim = ylim, pch = pch, col = pt.col, bg = pt.bg, cex = pt.cex,
+#        main = main, xlab = xlab, ylab = ylab)
+#   lnlims <- range(c(xlim, ylim))
+#   lines(lnlims, lnlims, col = line)
+#   legend("topleft", legend = paste("Q2loocv =", q2),
+#          xjust = 0.5, yjust = 0.5, x.intersp = -0.5, y.intersp = 0.3,
+#          adj = c(0, 0.5), inset = c(.02,.05))
+# }
+
+
+
+
+# @title Leave-one-out calibration plot for a funGp model
+# @description This method provides a diagnostic plot for the validation of a funGp Gaussian process model.
+#   It displays a calibration plot based on the leave-one-out predictions of the output at the points
+#   used to train the model.
+#
+# @param model an object of class \linkS4class{fgpm} corresponding to the funGp model to validate.
+# @param ... additional arguments affecting the plot. The following typical graphics parameters are
+#   valid entries: \emph{xlim}, \emph{ylim}, \emph{xlab}, \emph{ylab}, \emph{main}.
+# @export
+# @docType methods
+# @rdname plotLAA-methods
+# setGeneric("plotLAA", function(model, ...) standardGeneric("plotLAA"))
+
+# @rdname plotLAA-methods
+# @aliases plotLAA,fgpm,ANY-method
+# setMethod("plotLAA", "fgpm", function(model, ...) {
+#   plotLAA.fgpm(model = model, ...)
+# })
+#
+# plotLAA.fgpm <- function(model, ...) {
+#   print("hello buddy")
+# }
+
+
+
+
+
+#' @title Leave-one-out calibration plot for a funGp model
+#' @description This method provides a diagnostic plot for the validation of a funGp Gaussian process model.
+#'   It displays a calibration plot based on the leave-one-out predictions of the output at the points
+#'   used to train the model.
+#'
+#' @param model an object of class \linkS4class{fgpm} corresponding to the funGp model to validate.
+#' @param ... additional arguments affecting the plot. The following typical graphics parameters are
+#'   valid entries: \emph{xlim}, \emph{ylim}, \emph{xlab}, \emph{ylab}, \emph{main}.
+#' @rdname plotLAA
+#' @export
+setGeneric("plotLAA", function(model, ...) standardGeneric("plotLAA"))
+
+#' @title Leave-one-out calibration plot for a funGp model
+#' @description This method provides a diagnostic plot for the validation of a funGp Gaussian process model.
+#'   It displays a calibration plot based on the leave-one-out predictions of the output at the points
+#'   used to train the model.
+#' @rdname plotLAA-method
+#' @keywords internal
+setMethod("plotLAA", "fgpm", function(model, ...) {
+  plotLAA.fgpm(model = model, ...)
+})
+
+plotLAA.fgpm <- function(model, ...) {
+  print("hello buddy")
+}
+
+
+
+
+
+# ==========================================================================================================
 # Diagnostic calibration plot for funGp models
 # ==========================================================================================================
 #' @title Leave-one-out calibration plot for regression models
@@ -29,10 +221,10 @@
 #' # plotting the model
 #' plotLOO(m1)
 #'
-#' @name plotLOO-generic
-#' @rdname plotLOO-generic
-#' @exportMethod plotLOO
-if(!isGeneric("plotLOO")) {setGeneric("plotLOO", function(model, ...) standardGeneric("plotLOO"))}
+#' @name plotLOO
+#' @export
+#' @keywords internal
+setGeneric("plotLOO", function(model, ...) standardGeneric("plotLOO"))
 
 #' @title Leave-one-out calibration plot for a funGp model
 #' @description This method provides a diagnostic plot for the validation of a funGp Gaussian process model.
@@ -65,10 +257,7 @@ if(!isGeneric("plotLOO")) {setGeneric("plotLOO", function(model, ...) standardGe
 #' # plotting the model
 #' plotLOO(m1)
 #'
-#' @name plotLOO
-#' @rdname plotLOO-methods
-#' @importFrom graphics lines plot
-#' @aliases plotLOO,fgpm-method
+#' @rdname plotLOO-method
 setMethod("plotLOO", "fgpm", function(model, ...) {
   plotLOO.fgpm(model = model, ...)
 })
@@ -126,8 +315,6 @@ plotLOO.fgpm <- function(model, ...) {
 #'   plot might be constituted differently, depending on the type of model at hand.
 #'
 #' @param model a model object for which the plot is to be made.
-#' @param preds data structure containing predictions. Depending on the type of model and the data structure
-#'   used, it might also contain, for instance, the confidence bands at the prediction points.
 #' @param ... additional arguments affecting the plot.
 #'
 #' @return None.
@@ -154,10 +341,10 @@ plotLOO.fgpm <- function(model, ...) {
 #' # plotting predictions
 #' plotPreds(m1, preds = m1.preds)
 #'
-#' @name plotPreds-generic
-#' @rdname plotPreds-generic
-#' @exportMethod plotPreds
-if(!isGeneric("plotPreds")) {setGeneric("plotPreds", function(model, preds, ...) standardGeneric("plotPreds"))}
+#' @name plotPreds
+#' @export
+#' @keywords internal
+setGeneric("plotPreds", function(model, ...) standardGeneric("plotPreds"))
 
 #' @title Plot for predictions of a funGp model
 #' @description This method displays the predicted output values delivered by a funGp Gaussian process model.
@@ -241,14 +428,12 @@ if(!isGeneric("plotPreds")) {setGeneric("plotPreds", function(model, preds, ...)
 #' # only sorted output plot
 #' plotPreds(m1, m1.preds, sOut.pr, calib = FALSE)
 #'
-#' @name plotPreds
-#' @rdname plotPreds-methods
 #' @importFrom graphics lines plot polygon layout legend par mtext
-#' @aliases plotPreds,fgpm-method
+#' @rdname plotPreds-method
 setMethod("plotPreds", "fgpm",
           function(model, preds, sOut.pr = NULL, calib = TRUE, sortp = TRUE, ...) {
             plotPreds.fgpm(preds = preds, sOut.pr = sOut.pr,
-                            calib = calib, sortp = sortp, ...)
+                           calib = calib, sortp = sortp, ...)
           })
 
 plotPreds.fgpm <- function(preds, sOut.pr, calib, sortp, ...) {
@@ -461,7 +646,6 @@ plotPreds.fgpm <- function(preds, sOut.pr, calib, sortp, ...) {
     par(mar = c(5.1, 4.1, 4.1, 2.1), mfrow = c(1,1))
     plot.l()
   }
-  assign("last.warning", NULL, envir = baseenv())
 }
 # ==========================================================================================================
 
@@ -503,10 +687,10 @@ plotPreds.fgpm <- function(preds, sOut.pr, calib, sortp, ...) {
 #' # plotting simulations
 #' plotSims(m1, m1.sims)
 #'
-#' @name plotSims-generic
-#' @rdname plotSims-generic
-#' @exportMethod plotSims
-if(!isGeneric("plotSims")) {setGeneric("plotSims", function(model, sims, ...) standardGeneric("plotSims"))}
+#' @name plotSims
+#' @export
+#' @keywords internal
+setGeneric("plotSims", function(model, sims, ...) standardGeneric("plotSims"))
 
 #' @title Plot for simulations from a funGp model
 #' @description This method displays the simulated output values delivered by a funGp Gaussian process model.
@@ -577,10 +761,8 @@ if(!isGeneric("plotSims")) {setGeneric("plotSims", function(model, sims, ...) st
 #' # plotting full simulations in light mode
 #' plotSims(m1, m1.sims, detail = "light")
 #'
-#' @name plotSims
-#' @rdname plotSims-methods
 #' @importFrom graphics lines plot layout legend par matplot axis
-#' @aliases plotSims,fgpm-method
+#' @rdname plotSims-method
 setMethod("plotSims", "fgpm",
           function(model, sims, detail = "full", ...) {
             plotSims.fgpm(sims = sims, detail = detail)
@@ -891,7 +1073,7 @@ decay2probs <- function(k, pmax = NULL, tao0 = .1, delta = 2, dispr = 1.4, doplo
 #'                    x5 = seq(0,1,length = n.tr^(1/5)))
 #' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
 #' sOut <- fgp_BB7(sIn, fIn, n.tr)
-#' \donttest{
+#' \dontrun{
 #' # optimizing the model structure with fgpm_factory (~5 seconds)
 #' xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
 #'
@@ -899,10 +1081,10 @@ decay2probs <- function(k, pmax = NULL, tao0 = .1, delta = 2, dispr = 1.4, doplo
 #' plotX(xm)
 #' }
 #'
-#' @name plotX-generic
-#' @rdname plotX-generic
-#' @exportMethod plotX
-if(!isGeneric("plotX")) {setGeneric("plotX", function(x.model, ...) standardGeneric("plotX"))}
+#' @name plotX
+#' @export
+#' @keywords internal
+setGeneric("plotX", function(x.model, ...) standardGeneric("plotX"))
 
 #' @title Diagnostic plots for funGp factory output
 #' @description This method provides two plots for assessing the quality of the output delivered by the
@@ -954,7 +1136,7 @@ if(!isGeneric("plotX")) {setGeneric("plotX", function(x.model, ...) standardGene
 #'                    x5 = seq(0,1,length = n.tr^(1/5)))
 #' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
 #' sOut <- fgp_BB7(sIn, fIn, n.tr)
-#' \donttest{
+#' \dontrun{
 #' # optimizing the model structure with fgpm_factory (~5 seconds)
 #' xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
 #'
@@ -966,11 +1148,9 @@ if(!isGeneric("plotX")) {setGeneric("plotX", function(x.model, ...) standardGene
 #'           fitp.gpars = list(main = "Relative quality", legends = FALSE))
 #' }
 #'
-#' @name plotX
-#' @rdname plotX-methods
 #' @importFrom graphics lines points plot layout legend par arrows abline axis
 #' @importFrom scales alpha
-#' @aliases plotX,Xfgpm-method
+#' @rdname plotSims-method
 setMethod("plotX", "Xfgpm",
           function(x.model, calib = TRUE, fitp = TRUE, ...) {
             plotX.Xfgpm(x.model = x.model, calib = calib, fitp = fitp, ...)
@@ -1166,7 +1346,7 @@ plotX.Xfgpm <- function(x.model, calib, fitp, ...) {
 #'                    x5 = seq(0,1,length = n.tr^(1/5)))
 #' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
 #' sOut <- fgp_BB7(sIn, fIn, n.tr)
-#' \donttest{
+#' \dontrun{
 #' # optimizing the model structure with fgpm_factory (~5 seconds)
 #' xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
 #'
@@ -1174,10 +1354,10 @@ plotX.Xfgpm <- function(x.model, calib, fitp, ...) {
 #' plotEvol(xm)
 #' }
 #'
-#' @name plotEvol-generic
-#' @rdname plotEvol-generic
-#' @exportMethod plotEvol
-if(!isGeneric("plotEvol")) {setGeneric("plotEvol", function(x.model, ...) standardGeneric("plotEvol"))}
+#' @name plotEvol
+#' @export
+#' @keywords internal
+setGeneric("plotEvol", function(x.model, ...) standardGeneric("plotEvol"))
 
 #' @title Plot for the evolution of model selection algorithm in funGp
 #' @description This method displays the evolution of the quality of the configurations evaluated along
@@ -1226,7 +1406,7 @@ if(!isGeneric("plotEvol")) {setGeneric("plotEvol", function(x.model, ...) standa
 #'                    x5 = seq(0,1,length = n.tr^(1/5)))
 #' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
 #' sOut <- fgp_BB7(sIn, fIn, n.tr)
-#' \donttest{
+#' \dontrun{
 #' # optimizing the model structure with fgpm_factory (~5 seconds)
 #' xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
 #'
@@ -1234,12 +1414,10 @@ if(!isGeneric("plotEvol")) {setGeneric("plotEvol", function(x.model, ...) standa
 #' plotEvol(xm)
 #' }
 #'
-#' @name plotEvol
-#' @rdname plotEvol-methods
 #' @importFrom graphics lines points plot layout legend par arrows axis
 #' @importFrom scales alpha
 #' @importFrom stats median
-#' @aliases plotEvol,Xfgpm-method
+#' @rdname plotEvol-method
 setMethod("plotEvol", "Xfgpm",
           function(x.model, ...) {
             plotEvol.Xfgpm(x.model = x.model, ...)
