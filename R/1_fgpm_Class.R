@@ -635,9 +635,9 @@ show.fgpm <- function(model) {
       cat("\n Some length-scale parameters were not printed. Consider\n checking 'model@kern@s_lsHyps'\n")
   }
   if (model@df > 0) {
-    cat(paste(rep("_", 58), collapse = ""))
+    cat(paste(rep("_", 58), collapse = ""), "\n")
   } else {
-    cat(paste(rep("_", 24), collapse = ""))
+    cat(paste(rep("_", 24), collapse = ""), "\n")
   }
 }
 # ==========================================================================================================

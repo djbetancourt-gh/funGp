@@ -11,6 +11,7 @@
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #'
+#' @importFrom methods show
 #' @name show
 #' @rdname show-methods
 #' @importFrom methods show
