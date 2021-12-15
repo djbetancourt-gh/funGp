@@ -1306,4 +1306,54 @@ plotEvol.Xfgpm <- function(x.model, ...) {
   arrows(x0 = xcr, x1 = xcr, y0 = ycr1, y1 = ycr2, length = 0.06, code = 1,
          angle = 25, lwd = 1.5, col = alpha(col.arr, .7))
 }
-# ==========================================================================================================
+## ==============================================================================
+## plot generic 
+## ==============================================================================
+##' @name plot
+##' @rdname plot-methods
+##' @exportMethod plot
+setGeneric(name = "plot", def = function(x, y, ...) standardGeneric("plot"))
+
+## ==============================================================================
+## plot method
+## ==============================================================================
+##' @description Plot an object with class \code{"Xfgpm"}.
+##'
+##' @title Plot a \code{Xfgpm} object
+##' @param x the \code{Xfgpm} object to plot.
+##' @param y not used.
+##' @param which character giving the type of plot wanted. When the
+##'     value is \code{"evol"} the method \code{\link{plotEvol}} is
+##'     used; when the value is \code{"diag"} the method
+##'     \code{\link{plotX}} is used.
+##' @param calib logical. If \code{TRUE}
+##' @param fitp logical. If \code{TRUE}.
+##' @param ... Other graphical parameters to be passed to
+##'     \code{plotEvol} or \code{plotX} such as \code{main} of
+##'     \code{xlab}. When \code{which} is \code{"diag"} and both
+##'     \code{calib} and \code{fitp} are \code{TRUE}, the graphical
+##'     should be enclosed into a list and passed with the formal name
+##'     \code{calib.gpars} or \code{fitp.gpars}.
+##'  
+##' @return Nothing.
+##' @note This method is provided only. See \code{\link{plotEvol}} and
+##'     \code{\link{plotX}} methods.
+##'
+##' @export
+##' @rdname plot-methods
+##' @aliases plot,Xfgpm-method
+setMethod("plot", "Xfgpm",
+          function(x, y = NULL, which = c("evol", "diag"),
+              calib = TRUE, fitp = TRUE, ...) {
+                  which <- match.arg(which)
+                  if (which == "evol") {
+                      if (!missing(calib) || ! missing(fitp)) {
+                          warning("the formal arguments 'calib' and 'fitp' are ",
+                                  "used only when 'which' is \"diag\"")
+                      }
+                      plotEvol.Xfgpm(x.model = x,  ...) 
+                  } else if (which == "diag") {
+                      plotX(x.model = x, calib = calib, fitp = fitp, ...)
+                  }
+              })
+ 

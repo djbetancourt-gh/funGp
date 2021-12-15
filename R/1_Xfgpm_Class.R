@@ -78,11 +78,11 @@ setClass("Xfgpm",
 setMethod("show", "Xfgpm", function(object) show.Xfgpm(object))
 
 show.Xfgpm <- function(object) {
-  cat("Structural optimization_________________\n\n")
+  cat("Structural optimization_________________\n")
 
   cat(paste("stat:", object@stat, "\n"))
   cat(paste("value:", format(object@fitness, digits = 3, nsmall = 4), "\n"))
-  cat(paste("n.explored:", object@n.explored, "\n\n"))
+  cat(paste("n.explored:", object@n.explored, "\n"))
 
   cat("For selected structure: object@structure\n")
   cat("For log of success: object@log.success\n")
@@ -746,4 +746,36 @@ printSpace <- function(ds, df, space) {
   }
   cat("\n")
 }
-# ==========================================================================================================
+
+## =============================================================================
+## summary method
+## =============================================================================
+##' Display a summary of the structure for up to \code{n} \code{fgpm}
+##' objects visited during the ACO optimization.
+##' 
+##' @title Summary Method
+##' @param object an \code{Xfgpm} object.
+##' @param n maximal number of lines (\code{fgpm} objects) to show.
+##' @param ... Not used yet.
+##' @return an object inheriting from \code{data.frame}.
+##' 
+##' @method summary Xfgpm
+##' @rdname summary-methods
+##' @aliases summary,Xfgpm-method
+##' @export
+setMethod("summary", "Xfgpm",
+          function(object, n = 24) {
+              summary.Xfgpm(object = object, n = n)
+          })
+
+summary.Xfgpm <- function(object, n = 24, ...) {
+    df <- formatShort(object@log.success@sols)
+    df <- cbind(df,
+                "Q2" = sprintf("%5.3f", object@log.success@fitness))
+    n <- pmin(n, nrow(df))
+    df <- df[1L:n, , drop = FALSE]
+    class(df) <- c("summary.Xfgpm", "data.frame")
+    df
+}
+
+

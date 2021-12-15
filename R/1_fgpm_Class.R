@@ -568,7 +568,7 @@ show.fgpm <- function(model) {
     cat(paste("\n", mainTxt, paste(rep("_", 2), collapse = ""), sep = ""))
   }
 
-  cat(paste("\n\n* Scalar inputs: ", model@ds, "\n", sep = ""))
+  cat(paste("\n* Scalar inputs: ", model@ds, "\n", sep = ""))
   cat(paste("* Functional inputs: ", model@df, "", sep = ""))
   if (model@df > 0) {
     np <- min(model@df, 8)
@@ -581,7 +581,7 @@ show.fgpm <- function(model) {
   }
 
   cat(paste("\n* Total data points: ", model@n.tot, "\n", sep = ""))
-  cat(paste("* Trained with: ", model@n.tr, "\n\n", sep = ""))
+  cat(paste("* Trained with: ", model@n.tr, "\n", sep = ""))
 
   cat(paste("* Kernel type: ", model@kern@kerType, "\n", sep = ""))
   cat("* Hyperparameters:\n")
@@ -1354,7 +1354,7 @@ update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb,
   if (length(cptasks) > 0) { # list of complete tasks if there is any
     cat("--------------\n")
     cat("Update summary\n")
-    cat("--------------\n\n")
+    cat("--------------\n")
 
     cat("* Complete tasks:\n")
     ct <- tasknames[cptasks]
@@ -1387,4 +1387,9 @@ update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb,
 
   return(modelup)
 }
-# ==========================================================================================================
+# ==============================================================================
+# summary method. Simple copy of 'show', at least for now.
+# ==============================================================================
+#' @rdname summary-methods
+#' @aliases summary,fgpm-method
+setMethod("summary", "fgpm", function(object) show(object))

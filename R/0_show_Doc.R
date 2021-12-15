@@ -15,5 +15,5 @@
 #' @name show
 #' @rdname show-methods
 #' @importFrom methods show
-if(!isGeneric("show")) {setGeneric(name = "show", def = function(object) standardGeneric("show"))}
+NULL
 # ==========================================================================================================

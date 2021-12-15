@@ -49,7 +49,7 @@ show.fgpKern <- function(kernel) {
   mainTxt <- "Kernel structure"
   cat(paste("\n", mainTxt, paste(rep("_", 13), collapse = ""), sep = ""))
 
-  cat(paste("\n\n* Kernel type: ", kernel@kerType, "\n", sep = ""))
+  cat(paste("\n* Kernel type: ", kernel@kerType, "\n", sep = ""))
   if (ds > 0)
     cat("* Scalar distance: L2_byindex\n")
 

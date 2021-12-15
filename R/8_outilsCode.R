@@ -119,4 +119,52 @@ show.factoryCall <- function (x, ...) {
   print(x, quote = FALSE, ...)
   invisible(if (copy) ox else x)
 }
-# ==========================================================================================================
+
+## ============================================================================
+##' Abbreviate the column names and the column content of a data frame
+##' describing the structure of \code{Xfgpm} object.
+##'
+##' @note This function is not exported. It could work with a
+##'     character matrix rather than a data frame. Mind that the input
+##'     names of a \code{Xfgpm} object are implicitely assumed to be
+##'     "X1", "X2", ... for the scalar inputs and "F1", "F2",
+##'     ... while the matrix \code{sIn} and the list \code{fIn} given
+##'     at the creation time may have different names!
+##' 
+##' @title Put the "summary" table for a \code{Xfgpm} object in a
+##'     shorter format using suitable abbreviations.
+##'
+##' @param structData A data frame with character columns describing
+##'     the structural parameters of a \code{Xfgpm} object: state of
+##'     the variables (active or not), kernel used, ...
+##'
+##' @return A data frame with character columns corresponding to
+##'     abbreviated versions of the content of \code{data}.
+##' 
+##' @author Yves
+##' 
+formatShort <- function(structData) {
+    nms <- colnames(structData)
+    for (i in 1:ncol(structData)) {
+        if (grepl("state", tolower(nms[i]))) {
+            nms[i] <- gsub("State_", "", nms[i])
+            structData[ , i] <- gsub("On", "x",  structData[ , i])
+            structData[ , i] <- gsub("Off", " ",  structData[ , i])
+        } else if (grepl("dist", tolower(nms[i]))) {
+            nms[i] <- gsub("Distance_", "D_", nms[i])
+            structData[ , i] <- gsub("L2_byindex", "idx",  structData[ , i])
+            structData[ , i] <- gsub("L2_bygroup", "grp",  structData[ , i])
+        } else if (grepl("basis", tolower(nms[i]))) {
+            nms[i] <- gsub("Prj_basis_", "Bas_", nms[i])
+            structData[ , i] <- gsub("B-splines", "Bspl",  structData[ , i])
+        } else if (grepl("dim", tolower(nms[i]))) {
+            nms[i] <- gsub("Prj_basis_", "bas_", nms[i])
+        } else if (grepl("kernel", tolower(nms[i]))) {
+            nms[i] <- "Kern"
+            structData[ , i] <- gsub("matern3_2", "mat32",  structData[ , i])
+            structData[ , i] <- gsub("matern5_2", "mat52",  structData[ , i])
+        }
+    }
+    names(structData) <- nms
+    structData
+}
