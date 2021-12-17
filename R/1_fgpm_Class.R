@@ -786,8 +786,8 @@ predict.fgpm <- function(model, sIn.pr, fIn.pr, detail = "light") {
 
   ## Added by Yves
   L <- check_new_inputs(object = model, newsIn = sIn.pr, newfIn = fIn.pr)
-  sIn.pr <- L$newsIn
-  fIn.pr <- L$newfIn
+  ## sIn.pr <- L$newsIn
+  ## fIn.pr <- L$newfIn
   ## End added by Yves
 
   nugget <- model@nugget
@@ -978,8 +978,8 @@ simulate.fgpm <- function(model, nsim, seed, sIn.sm, fIn.sm, nugget.sm = 10^-8, 
 
   ## Added by Yves
   L <- check_new_inputs(object = model, newsIn = sIn.sm, newfIn = fIn.sm)
-  sIn.sm <- L$newsIn
-  fIn.sm <- L$newfIn
+  ## sIn.sm <- L$newsIn
+  ## fIn.sm <- L$newfIn
   ## End added by Yves
 
 
