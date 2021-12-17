@@ -530,3 +530,164 @@ check_duplicates_S <- function(sBench, sCand, oCand, iCand){
 
   return(ind.dp)
 }
+
+# ------------------------------------------------------------------------------
+#
+#
+#  check_new_inputs
+# ------------------------------------------------------------------------------
+##' Check the consistency of provided data describing some scalar and
+##' functional inputs, possibly in relation with a \code{fgpm}
+##' object. This function is to be used when predicting and simulating
+##' from a \code{fgpm} object or to create such an object.
+##'
+##' Note that when passed to \code{newsIn} or \code{newfIn}, any
+##' object with length zero will be accepted to specify
+##' "no inputs". So a logical or character vector of length zero can
+##' be accepted, resulting either in a matrix with zero columns
+##' (scalar inputs) or a list with length zero (functional
+##' inputs). Also note that numeric vectors are not accepted as
+##' one-column matrices for the functional inputs because a functional
+##' input should have at least one "time". So some care is needed when
+##' a \code{fgpm} object is programmatically created if a dimension
+##' reduction is used possibly ending in a one-dimensional central
+##' space: the dimension should not be dropped.
+##'
+##' @title Check the consistency of inputs
+##'
+##' @param object Optional \code{fgpm} object. If missing, the
+##'     function will only check the consistency between \code{newsIn}
+##'     and \code{newfIn} as required when creating a new \code{fgpm}
+##'     object. If \code{object} is given it must be of class
+##'     \code{fgpm} and the consistency of \code{newsIn} and
+##'     \code{newfIn} with this object is further checked.
+##' @param newsIn A numeric matrix of scalar inputs or an object with
+##'     length zero (such as \code{NULL}) if no scalar inputs are to
+##'     be used.
+##' @param newfIn A list describing the functional inputs or an object
+##'     with length zero (such as \code{NULL}) if no functional inputs
+##'     are to be used. If some functional inputs are used, the
+##'     elements of \code{newfIn} must be numeric matrices with the
+##'     same number of rows.
+##'
+##' @return A list with the following elements
+##' \itemize{
+##'    \item{n }{The number of observations.}
+##'    \item{newsIn }{ The checked and possibly corrected matrix of
+##'       scalar inputs. This will always be a numeric matrix with \code{n}
+##'       rows, possibly with zero columns.}
+##'    \item{newfIn }{The checked and possibly corrected list of functional
+##'       inputs. This can be a list with zero elements, but if there are
+##'       some elements all will be numeric matrices with the same number
+##'       of columns.}
+##' }
+##' So the "official" way to query about the number of scalar and functional
+##' inputs is to use \code{ncol(res$newsIn)} and \code{length(res$newfIn)}
+##' where \code{res} is the returned object.
+##'
+##' @section Caution: There should be at least one input. Should/could
+##'     the function also check for names? \bold{This function is
+##'     exported only on a temporary basis}, to make the help and
+##'     examples visible.
+##'
+##' @export
+##'
+##' @examples
+##' ## works
+##' check_new_inputs(newsIn = runif(4))
+##' check_new_inputs(newsIn = runif(4),
+##'                  newfIn = list(matrix(runif(24), nrow = 4, ncol = 6)))
+##' check_new_inputs(newsIn = matrix(runif(8), nrow = 4, ncol = 2),
+##'                  newfIn = list(matrix(runif(24), nrow = 4, ncol = 6)))
+##' check_new_inputs(newfIn = list(matrix(runif(24), nrow = 4, ncol = 6)))
+##'
+##' ## errors in the functional part
+##' try(check_new_inputs(newsIn = runif(4), newfIn = runif(4)))
+##' try(check_new_inputs(newsIn = runif(4), newfIn = list(runif(4))))
+##' try(check_new_inputs(newsIn = runif(4),
+##'                      newfIn = list(matrix(runif(5), nrow = 5, ncol = 1))))
+##' try(check_new_inputs(newsIn = letters[1:5],
+##'                      newfIn = list(matrix(runif(5), nrow = 5, ncol = 1))))
+##' try(check_new_inputs(newsIn = runif(5),
+##'                      newfIn = list(matrix(letters[1:5], nrow = 5, ncol = 1))))
+##' ## Make some test 'fgpm' objects as in 'example("fgpm")'
+##' set.seed(100); n.tr <- 25
+##' sIn <- expand.grid(x1 = seq(0, 1, length = sqrt(n.tr)),
+##'                    x2 = seq(0, 1, length = sqrt(n.tr)))
+##' fIn <- list(f1 = matrix(runif(n.tr * 10), ncol = 10),
+##'             f2 = matrix(runif(n.tr * 22), ncol = 22))
+##' sOut <- fgp_BB3(sIn, fIn, n.tr)
+##' ms <- fgpm(sIn = sIn, sOut = sOut)
+##' mf <- fgpm(fIn = fIn, sOut = sOut)
+##' msf <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut)
+##' ## check with the inputs used at creation.
+##' res_s <- check_new_inputs(object = ms, newsIn = sIn)
+##' res_f <- check_new_inputs(object = mf, newfIn = fIn)
+##' res_sf <- check_new_inputs(object = msf, newsIn = sIn, newfIn = fIn)
+##'
+check_new_inputs <- function(object, newsIn = NULL, newfIn = NULL) {
+
+    ## We have to guess the number 'n' of observations, which in
+    ## general may require inspecting 'newsIn' AND 'newfIn'. So
+    ## temporary values 'ns' and 'nf' are used.
+
+    ## Check 'newsIn', allowing for a numeric vector
+    if (!length(newsIn)) {
+        newsIn <- matrix(numeric(0), ncol = 0)
+        nFroms <- NA
+    } else {
+        if (is.data.frame(newsIn)) {
+            warning("coerce 'newsIn' from \"data.frame\" into \"matrix\". ",
+                    "The order of the columns matter!")
+            newsIn <- as.matrix(newsIn)
+        }
+        if (!is.numeric(newsIn)) stop("'newsIn' must be numeric")
+        newsIn <- as.matrix(newsIn)
+        nFroms <- nrow(newsIn)
+    }
+
+    ## Check 'newfIn' Begin with the case of an object with length 0
+    ## which covers the case when 'newfIn' is NULL
+    if (!length(newfIn)) {
+        newfIn <- list()
+        nFromf <- NA
+    } else {
+        if (!is.list(newfIn) || !all(sapply(newfIn, is.matrix)) ||
+            !all(sapply(newfIn, is.numeric)) ||
+            (length(unique(sapply(newfIn, nrow))) != 1))
+            stop("'newfIn' must be a list of numeric matrices with the same ",
+                 "number of rows")
+        nFromf <- nrow(newfIn[[1]])
+    }
+
+    ## Check 'newfIn' Begin with the case of an object with length 0
+    ## which covers the case when 'newfIn' is NULL
+    if (!is.na(nFroms) && !is.na(nFromf)) {
+        if (nFroms != nFromf)
+            stop("'newsIn' and 'newfIn' mismatch. Please check the ",
+                 "numbers of rows.")
+        n <- nFroms
+    } else {
+        n <- min(c(nFroms, nFromf), na.rm = TRUE)
+        ## force the number of rows of 'newsIn' (note that `nrow<-`
+        ## does not exist)
+        if (!ncol(newsIn)) dim(newsIn) <- c(n , 0)
+    }
+
+    ## Now check the consistency of 'newsIn' and 'newfIn' with 'object' if
+    ## needed.
+    if (!missing(object)) {
+        if (!inherits(object, "fgpm"))
+            stop("'object' must inherit from \"fgpm\"")
+
+        if (object@ds != ncol(newsIn)) {
+            stop("'object' requires ", object@ds, "scalar inputs")
+        }
+        if (object@df != length(newfIn)) {
+            stop("'object' requires 'object@df' functional inputs")
+        }
+    }
+
+    list(n = n, newsIn = newsIn, newfIn = newfIn)
+
+}

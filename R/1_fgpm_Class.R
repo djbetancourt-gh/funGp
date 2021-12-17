@@ -783,6 +783,13 @@ setMethod("predict", "fgpm",
           })
 
 predict.fgpm <- function(model, sIn.pr, fIn.pr, detail = "light") {
+
+  ## Added by Yves
+  L <- check_new_inputs(object = model, newsIn = sIn.pr, newfIn = fIn.pr)
+  sIn.pr <- L$newsIn
+  fIn.pr <- L$newfIn
+  ## End added by Yves
+
   nugget <- model@nugget
 
   # check validity of user inputs
@@ -968,6 +975,13 @@ setMethod("simulate", "fgpm",
 simulate.fgpm <- function(model, nsim, seed, sIn.sm, fIn.sm, nugget.sm = 10^-8, detail) {
   # check validity of user inputs
   checkVal_pred_and_sim(as.list(environment()))
+
+  ## Added by Yves
+  L <- check_new_inputs(object = model, newsIn = sIn.sm, newfIn = fIn.sm)
+  sIn.sm <- L$newsIn
+  fIn.sm <- L$newfIn
+  ## End added by Yves
+
 
   # check which type of model it is
   if (all(model@ds > 0, model@df > 0)) { # Hybrid-input case *******************************************
