@@ -637,12 +637,11 @@ check_new_inputs <- function(object, newsIn = NULL, newfIn = NULL) {
         nFroms <- NA
     } else {
         if (is.data.frame(newsIn)) {
-            warning("coerce 'newsIn' from \"data.frame\" into \"matrix\". ",
-                    "The order of the columns matter!")
-            newsIn <- as.matrix(newsIn)
+            ## warning("coerce 'newsIn' from \"data.frame\" into \"matrix\". ",
+            ##         "The order of the columns matter!")
         }
-        if (!is.numeric(newsIn)) stop("'newsIn' must be numeric")
         newsIn <- as.matrix(newsIn)
+        if (!is.numeric(newsIn)) stop("'newsIn' must be numeric")
         nFroms <- nrow(newsIn)
     }
 
