@@ -139,7 +139,7 @@ optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, n
         }
         if (pbars) {
           setTxtProgressBar(pb, i)
-          cat("\n")
+          ## cat("\n")
         }
       }
       if (pbars) close(pb)
@@ -158,7 +158,7 @@ optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, n
             o <- optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
                        lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
                        sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
-            cat("\n")
+            ## cat("\n")
           } else {
             o <- quiet(optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
                              lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),

@@ -111,7 +111,7 @@ optimHypers_F <- function(spoints, n.starts, bnds, fMs, sOut, kerType, varfun, n
       # set up progress bar
       if (pbars) {
         pb <- txtProgressBar(min = 0, max = n.starts, style = 3)
-        cat("\n")
+        ## cat("\n")
       }
 
       optOutList <- list()
@@ -136,7 +136,7 @@ optimHypers_F <- function(spoints, n.starts, bnds, fMs, sOut, kerType, varfun, n
         }
         if (pbars) {
           setTxtProgressBar(pb, i)
-          cat("\n")
+          ## cat("\n")
         }
       }
       if (pbars) close(pb)
@@ -155,7 +155,7 @@ optimHypers_F <- function(spoints, n.starts, bnds, fMs, sOut, kerType, varfun, n
             o <- optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_F, method = "L-BFGS-B",
                        lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
                        fMs = fMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
-            cat("\n")
+            ## cat("\n")
           } else {
             o <- quiet(optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_F, method = "L-BFGS-B",
                              lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),

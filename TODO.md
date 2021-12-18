@@ -22,6 +22,11 @@ Checks
 
 -   **(x)** Add a `plot` method for the class `"Xfgpm"`.
 
+-   For the plot method that produce two plots on a same graphic, add an
+    extra argument `horiz` to allow the user to chose the the way in
+    which the plots are set. This will be useful for repports or
+    articles such as the JSS.
+
 -   Add `autoplot` methods allowing to get \*\*ggplot2\* graphics.
 
 Class `"Xfgpm"`
