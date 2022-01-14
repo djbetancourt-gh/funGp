@@ -37,9 +37,9 @@
     and the functional inputs separately in order to avoid having a
     table which is too wide.
 
-## S3 classes `"predict.fgpm"` and `"simulat.fgpm"`
+## S3 classes `"predict.fgpm"` and `"simulate.fgpm"`
 
 -   Set the S3 class ot the output of the `predict` and `simulate`
     methods to `"predict.fgpm"` and `"simulate.fgpm"` both inheriting
     from `"list"`. This allows to write (S3) plot methods without
-    breaking the inherited standard behaviours (in \`print, …).
+    breaking the inherited standard behaviours (in `print`, …).
