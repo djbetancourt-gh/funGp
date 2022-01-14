@@ -909,6 +909,12 @@ setGeneric("plotX", function(x.model, ...) standardGeneric("plotX"))
 #'   in the display. Default is TRUE.
 #' @param fitp a boolean indicating whether scatter plot of the quality of all explored models should be
 #'   included in the display. Default is TRUE.
+#'
+#' @param horiz logical. If \code{TRUE} and if both \code{calib} and
+#'     \code{fitp} the two subplots corresponding to the calibration
+#'     and the fit quality are displayer horizontally (on a same row)
+#'     rather than vertically as in the default behaviour.
+#' 
 #' @param ... additional arguments affecting the display. Since this method allows to generate two plots
 #'   from a single function call, the extra arguments for each plot should be included in a list. For the
 #'   calibration plot, the list should be called \emph{calib.gpars}. For the plot of the fitness of
@@ -960,12 +966,16 @@ setGeneric("plotX", function(x.model, ...) standardGeneric("plotX"))
 #' @importFrom scales alpha
 #' @rdname plotSims-method
 setMethod("plotX", "Xfgpm",
-          function(x.model, calib = TRUE, fitp = TRUE, ...) {
-            plotX.Xfgpm(x.model = x.model, calib = calib, fitp = fitp, ...)
+          function(x.model, calib = TRUE, fitp = TRUE, horiz = FALSE, ...) {
+              plotX.Xfgpm(x.model = x.model, calib = calib, fitp = fitp,
+                          horiz = horiz, ...)
           })
 
-plotX.Xfgpm <- function(x.model, calib, fitp, ...) {
-  # recover graphic parameters if provided
+plotX.Xfgpm <- function(x.model, calib = TRUE, fitp= TRUE, horiz = FALSE, ...) {
+
+    cat("XXX horiz = ", horiz, "\n")
+    
+    ## recover graphic parameters if provided
   gpars <- list(...)
   cal.gpars <- gpars$calib.gpars
   fit.gpars <- gpars$fitp.gpars
@@ -976,7 +986,8 @@ plotX.Xfgpm <- function(x.model, calib, fitp, ...) {
     y_obs <- model@sOut
 
     # compute loocv predictions
-    R <- tcrossprod(model@preMats$L)/model@kern@varHyp + diag(model@nugget, nrow = model@n.tr, ncol = model@n.tr)
+      R <- tcrossprod(model@preMats$L)/model@kern@varHyp +
+          diag(model@nugget, nrow = model@n.tr, ncol = model@n.tr)
     Rinv <- solve(R)
     y_pre <- y_obs - diag(Rinv)^(-1) * Rinv %*% y_obs
 
@@ -1009,7 +1020,7 @@ plotX.Xfgpm <- function(x.model, calib, fitp, ...) {
     if (legends) {
       legend("topleft", legend = paste("Q2loocv =", q2),
              xjust = 0.5, yjust = 0.5, x.intersp = -0.5, y.intersp = 0.3,
-             adj = c(0, 0.5), inset = c(.02,.05))
+             adj = c(0, 0.5), inset = c(.02, .05))
     }
   }
   # ______________________________________________________________________
@@ -1111,19 +1122,20 @@ plotX.Xfgpm <- function(x.model, calib, fitp, ...) {
   # save current par state
   opar <- par('mar', 'mfrow')
   on.exit(par(opar))
-
+    
   # plot
-  if (all(calib, fitp)) {
-    par(mar = c(3.1, 4.1, 2.5, 2.1), mfrow = c(2,1))
-    plot.c(x.model@model)
-    plot.f(T)
-  } else if (calib) {
-    par(mar = c(5.1, 4.1, 4.1, 2.1), mfrow = c(1,1))
-    plot.c(x.model@model)
-  } else if (fitp) {
-    par(mar = c(5.1, 4.1, 4.1, 2.1), mfrow = c(1,1))
-    plot.f(F)
-  }
+    if (all(calib, fitp)) {
+        if (!horiz) par(mar = c(3.1, 4.1, 2.5, 2.1), mfrow = c(2, 1))
+        else par(mar = c(3.1, 4.1, 2.5, 2.1), mfcol = c(1, 2))
+        plot.c(x.model@model)
+        plot.f(T)
+    } else if (calib) {
+        par(mar = c(5.1, 4.1, 4.1, 2.1), mfrow = c(1,1))
+        plot.c(x.model@model)
+    } else if (fitp) {
+        par(mar = c(5.1, 4.1, 4.1, 2.1), mfrow = c(1,1))
+        plot.f(F)
+    }
 }
 # ==========================================================================================================
 
@@ -1306,6 +1318,7 @@ plotEvol.Xfgpm <- function(x.model, ...) {
   arrows(x0 = xcr, x1 = xcr, y0 = ycr1, y1 = ycr2, length = 0.06, code = 1,
          angle = 25, lwd = 1.5, col = alpha(col.arr, .7))
 }
+
 ## ==============================================================================
 ## plot generic 
 ## ==============================================================================
@@ -1315,19 +1328,93 @@ plotEvol.Xfgpm <- function(x.model, ...) {
 setGeneric(name = "plot", def = function(x, y, ...) standardGeneric("plot"))
 
 ## ==============================================================================
-## plot method
+## plot method, class "fgpm"
 ## ==============================================================================
-##' @description Plot an object with class \code{"Xfgpm"}.
+##' Plot the Leave-One-Out (LOO) calibration 
 ##'
-##' @title Plot a \code{Xfgpm} object
+##' @description This method provides a diagnostic plot for the
+##'     validation of regression models. It displays a calibration plot
+##'     based on the leave-one-out predictions of the output at the
+##'     points used to train the model.
+##'
+##' @title Plot Method for the Class \code{"fgpm"}
+##' 
+##' @param x A \code{fgpm} object.
+##' @param y Not used.
+##' @param ... Graphical parameters. These currently include
+##' \itemize{
+##'    \item{\code{xlim}, \code{ylim}}{ to set the limits of the axes.}
+##'    \item{\code{pch}, \code{pt.col}, \code{pt.bg}, \code{pt.cex}}{ to set the symbol used
+##'        for the points and the related properties.}
+##'    \item{\code{line}}{ to set the color used for the line.}
+##'    \item{\code{xlab}, \code{ylab},\code{main}}{ to set the labels of the axes
+##'          and the main title.} See \bold{Examples}.
+##' }
+##' @return Nothing.
+##' @export
+##' @method plot fgpm
+##' @examples
+##' # generating input and output data for training
+##' set.seed(100)
+##' n.tr <- 25
+##' sIn <- expand.grid(x1 = seq(0,1,length = sqrt(n.tr)), x2 = seq(0, 1, length = sqrt(n.tr)))
+##' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
+##' sOut <- fgp_BB3(sIn, fIn, n.tr)
+##'
+##' # building the model
+##' m1 <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut)
+##'
+##' # plotting the model
+##' plot(m1)
+##' # change some graphical parameters if wanted
+##' plot(m1, line = "SpringGreen3" ,
+##'      pch = 21, pt.col = "orangered", pt.bg = "gold",
+##'      main = "LOO cross-validation")
+##'
+setMethod("plot", "fgpm",
+          function(x, y = NULL, ...) {
+               plotLOO(model = x, ...)
+          })
+
+## ==============================================================================
+## plot method, class "Xfgpm"
+## ==============================================================================
+##' @description Plot an object with class \code{"Xfgpm"} representing
+##'     a collection of functional GP models corresponding to
+##'     different structural parameters.
+##'
+##' Two types of graphics can be shown depending on the choice of
+##' \code{which}. The choice \code{which = "evolution"} is used to
+##' asses the quality of the fitted \code{fgpm} models on the basis of
+##' Leave-One-Out cross-validation.  The choice \code{which = "diag"}
+##' is used to display diagnostics. Two types of diagnostic plots are
+##' provided by default, but each can be discarded if wanted.
+##'
+##' @title Plot Method for the class \code{"Xfgpm"}
+##' 
 ##' @param x the \code{Xfgpm} object to plot.
+##'
 ##' @param y not used.
+##' 
 ##' @param which character giving the type of plot wanted. When the
 ##'     value is \code{"evol"} the method \code{\link{plotEvol}} is
 ##'     used; when the value is \code{"diag"} the method
-##'     \code{\link{plotX}} is used.
-##' @param calib logical. If \code{TRUE}
-##' @param fitp logical. If \code{TRUE}.
+##'     \code{\link{plotX}} is used. See \bold{Examples}.
+##'
+##' @param calib logical. If \code{TRUE} the calibration plot of the
+##'     selected model will be included in the display in its
+##'     "diagnostic" part if \code{which} is set to \code{"diag"}.
+##'
+##' @param fitp logical. If \code{TRUE} a scatter plot of the quality
+##'     of all explored models will be included in the display in its
+##'     "diagnostic" part if \code{which} is set to \code{"diag"}.
+##'
+##' @param horiz logical. Used only when \code{which} is \code{"diag"}
+##'     and when both \code{calib} and \code{fitp} are \code{TRUE}. If
+##'     \code{horiz} is \code{TRUE} the two subplots are displayed in
+##'     horizontally (on a same row) rather than vertically which is
+##'     the default.
+##' 
 ##' @param ... Other graphical parameters to be passed to
 ##'     \code{plotEvol} or \code{plotX} such as \code{main} of
 ##'     \code{xlab}. When \code{which} is \code{"diag"} and both
@@ -1336,15 +1423,37 @@ setGeneric(name = "plot", def = function(x, y, ...) standardGeneric("plot"))
 ##'     \code{calib.gpars} or \code{fitp.gpars}.
 ##'  
 ##' @return Nothing.
-##' @note This method is provided only. See \code{\link{plotEvol}} and
+##' 
+##' @note This method is provided only XXXY. See \code{\link{plotEvol}} and
 ##'     \code{\link{plotX}} methods.
 ##'
 ##' @export
-##' @rdname plot-methods
-##' @aliases plot,Xfgpm-method
+##' @method plot Xfgpm
+##' 
+##' @examples
+##' # generating input and output data
+##' set.seed(100)
+##' n.tr <- 2^5
+##' x1 <- x2 <- x3 <- x4 <- x5 <- seq(0, 1, length = n.tr^(1/5))
+##' sIn <- expand.grid(x1 = x1, x2 = x2, x3 = x3, x4 = x4, x5 = x5)
+##' fIn <- list(f1 = matrix(runif(n.tr * 10), ncol = 10),
+##'             f2 = matrix(runif(n.tr * 22), ncol = 22))
+##' sOut <- fgp_BB7(sIn, fIn, n.tr)
+##' \dontrun{
+##' # optimizing the model structure with 'fgpm_factory' (~5 seconds)
+##' xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
+##' # assessing the quality of the model - absolute and w.r.t. the other explored models
+##' plot(xm, which = "evol")
+##' # Diagnostics (two subplots)
+##' plot(xm, which = "diag")
+##' plot(xm, which = "diag", horiz = TRUE)
+##' # Diagnostics (one plot)
+##' plot(xm, which = "diag", fitp = FALSE)
+##' plot(xm, which = "diag", calib = FALSE)
+##' }
 setMethod("plot", "Xfgpm",
           function(x, y = NULL, which = c("evol", "diag"),
-              calib = TRUE, fitp = TRUE, ...) {
+              calib = TRUE, fitp = TRUE, horiz = FALSE, ...) {
                   which <- match.arg(which)
                   if (which == "evol") {
                       if (!missing(calib) || ! missing(fitp)) {
@@ -1353,7 +1462,114 @@ setMethod("plot", "Xfgpm",
                       }
                       plotEvol.Xfgpm(x.model = x,  ...) 
                   } else if (which == "diag") {
-                      plotX(x.model = x, calib = calib, fitp = fitp, ...)
+                      plotX.Xfgpm(x.model = x, calib = calib, fitp = fitp,
+                                 horiz = horiz, ...)
                   }
               })
- 
+
+## ==============================================================================
+## plot method, S3 class "predict.fgpm"
+## ==============================================================================
+##' @title Plot method for the predictions of a funGp model
+##' 
+##' @description This method displays the predicted output values
+##'     delivered by a funGp Gaussian process model.
+##' 
+##' @param x an object with S3 class \code{"predict.gfgpm"}. This is a
+##'     list containing the predictions and confidence bands as
+##'     delivered by the \link[funGp]{predict} method for the S3 class
+##'     \code{"fgpm"}..
+##'
+##' @param y Not used.
+##' 
+##' @param sOut.pr an optional vector (or 1-column matrix) containing
+##'     the true values of the scalar output at the prediction
+##'     points. If provided, the method will display two figures: (i) a
+##'     calibration plot with true vs predicted output values, and (ii)
+##'     a plot including the true and predicted output along with the
+##'     confidence bands, sorted according to the increasing order of
+##'     the true output. If not provided, only the second plot will be
+##'     made, and the predictions will be arranged according to the
+##'     increasing order of the predicted output.
+##'
+##' @param calib an optional boolean indicating if the calibration plot
+##'     should be displayed. Ignored if \code{sOut.pr} is not
+##'     provided. Default is \code{TRUE}.
+##'
+##' @param sortp an optional boolean indicating if the plot of sorted
+##'     output should be displayed. Default is TRUE.
+##'
+##' @param ... additional arguments affecting the display. Since this
+##'     method allows to generate two plots from a single function
+##'     call, the extra arguments for each plot should be included in a
+##'     list. For the calibration plot, the list should be called
+##'     \emph{calib.gpars}. For the plot of the output in increasing
+##'     order, the list should be called \emph{sortp.gpars}. The
+##'     following typical graphics parameters are valid entries of both
+##'     lists: \emph{xlim}, \emph{ylim}, \emph{xlab}, \emph{ylab},
+##'     \emph{main}. The boolean argument \emph{legends} can also be
+##'     included in any of the two lists in order to control the
+##'     display of legends in the corresponding plot.
+##'
+##' @export
+##' @method plot predict.fgpm
+##' 
+##' @return None.
+##'
+##' @author José Betancourt, François Bachoc and Thierry Klein
+##'
+##' @examples
+##' # plotting predictions without the true output values______________________________________
+##' # building the model
+##' set.seed(100)
+##' n.tr <- 25
+##' sIn <- expand.grid(x1 = seq(0,1,length = sqrt(n.tr)), x2 = seq(0,1,length = sqrt(n.tr)))
+##' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
+##' sOut <- fgp_BB3(sIn, fIn, n.tr)
+##' m1 <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut)
+##'
+##' # making predictions
+##' n.pr <- 100
+##' sIn.pr <- as.matrix(expand.grid(x1 = seq(0,1,length = sqrt(n.pr)),
+##'                                 x2 = seq(0,1,length = sqrt(n.pr))))
+##' fIn.pr <- list(f1 = matrix(runif(n.pr * 10), ncol = 10),
+##'                f2 = matrix(runif(n.pr * 22), ncol = 22))
+##' m1.preds <- predict(m1, sIn.pr = sIn.pr, fIn.pr = fIn.pr)
+##'
+##' # plotting predictions
+##' plotPreds(m1, preds = m1.preds)
+##'
+##' # plotting predictions and true output values______________________________________________
+##' # building the model
+##' set.seed(100)
+##' n.tr <- 25
+##' sIn <- expand.grid(x1 = seq(0, 1, length = sqrt(n.tr)), x2 = seq(0, 1, length = sqrt(n.tr)))
+##' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
+##' sOut <- fgp_BB3(sIn, fIn, n.tr)
+##' m1 <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut)
+##'
+##' # making predictions
+##' n.pr <- 100
+##' sIn.pr <- as.matrix(expand.grid(x1 = seq(0,1,length = sqrt(n.pr)),
+##'                                 x2 = seq(0,1,length = sqrt(n.pr))))
+##' fIn.pr <- list(f1 = matrix(runif(n.pr*10), ncol = 10), matrix(runif(n.pr*22), ncol = 22))
+##' m1.preds <- predict(m1, sIn.pr = sIn.pr, fIn.pr = fIn.pr)
+##'
+##' # generating output data for validation
+##' sOut.pr <- fgp_BB3(sIn.pr, fIn.pr, n.pr)
+##'
+##' # plotting predictions
+##' plotPreds(m1, m1.preds, sOut.pr)
+##'
+##' # only calibration plot
+##' plot(m1.preds, sOut.pr = sOut.pr, sortp = FALSE)
+##'
+##' # only sorted output plot
+##' plot(m1.preds, sOut.pr = sOut.pr, calib = FALSE)
+##' 
+plot.predict.fgpm <- function(x, y = NULL, sOut.pr = NULL,
+                              calib = TRUE, sortp = TRUE, ...) {
+    
+    plotPreds.fgpm(preds = x, sOut.pr = sOut.pr, calib = calib, sortp = sortp, ...) 
+    
+}

@@ -857,8 +857,15 @@ predict.fgpm <- function(model, sIn.pr, fIn.pr, detail = "light") {
   # 4.  * upper95 ............ array (n.pr) .............. upper bounds of 95% confidence intervals
   # 5.  * K.pp ............... matrix (n.pr x n.pr) ...... conditional covariance matrix
   # 6.  * K.tp ............... matrix (n.tr x n.pr) ...... training vs prediction cross covariance matrix
-  # _______________________________________________________________________________________________________
-  return(preds)
+                                        # _______________________________________________________________________________________________________
+
+    preds$mean <- drop(preds$mean)
+    preds$sd <- drop(preds$sd)
+    preds$lower95 <- drop(preds$lower95)
+    preds$upper95 <- drop(preds$upper95)
+    
+    class(preds) <- c("predict.fgpm", "list")
+    return(preds)
 }
 # ==========================================================================================================
 

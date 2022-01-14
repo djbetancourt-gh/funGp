@@ -21,14 +21,14 @@ output:
 
 ## `plot` methods
 
-- Add a `plot` method for the class `"fgpm"`.
+- **(x)** Add a `plot` method for the class `"fgpm"`.
 
 - **(x)** Add a `plot` method for the class `"Xfgpm"`.
 
-- For the plot method that produce two plots on a same graphic, add an
-  extra argument `horiz` to allow the user to chose the the way in
-  which the plots are set. This will be useful for repports or
-  articles such as the JSS.
+- For the plot methods that produce two plots on a same graphic, add
+  an extra argument `horiz` to allow the user to chose the the way in
+  which the plots are set. This will be useful for reports or articles
+  such as the JSS.
 
 - Add `autoplot` methods allowing to get **ggplot2* graphics.
 
@@ -40,6 +40,13 @@ output:
   specify the model to be re-created: by its number?
 
 - Improve the `summary` method. Should work correctly even when there 
-  are may inputs. Maybe add options to provide details on the scalar 
+  are many inputs. Maybe add options to provide details on the scalar 
   and the functional inputs separately in order to avoid having a table
   which is too wide.
+
+## S3 classes `"predict.fgpm"` and `"simulat.fgpm"`
+
+- Set the S3 class ot the output of the `predict` and `simulate`
+  methods to `"predict.fgpm"` and `"simulate.fgpm"` both inheriting
+  from `"list"`. This allows to write (S3) plot methods without
+  breaking the inherited standard behaviours (in `print, ...).

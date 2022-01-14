@@ -1,36 +1,31 @@
-TODO
-====
+# TODO
 
-Checks
-------
+## Checks
 
 -   **(x)** Check that the dimensions/the content of the data given as
     inputs for the `predict` and the `simulate` methods are consistent
     with the content of the object used to predict or simulate from.
 
-`summary` methods
------------------
+## `summary` methods
 
 -   **(x)** Add a `summary` method for the class `"fgpm"`.
 
 -   **(x)** Add a `summary` method for the class `"Xfgpm"`.
 
-`plot` methods
---------------
+## `plot` methods
 
--   Add a `plot` method for the class `"fgpm"`.
+-   **(x)** Add a `plot` method for the class `"fgpm"`.
 
 -   **(x)** Add a `plot` method for the class `"Xfgpm"`.
 
--   For the plot method that produce two plots on a same graphic, add an
-    extra argument `horiz` to allow the user to chose the the way in
-    which the plots are set. This will be useful for repports or
-    articles such as the JSS.
+-   For the plot methods that produce two plots on a same graphic, add
+    an extra argument `horiz` to allow the user to chose the the way in
+    which the plots are set. This will be useful for reports or articles
+    such as the JSS.
 
 -   Add `autoplot` methods allowing to get \*\*ggplot2\* graphics.
 
-Class `"Xfgpm"`
----------------
+## Class `"Xfgpm"`
 
 -   Store a copy of `sIn` and `sOut` as two new slots of the class. This
     will help at recreating any `fgpm` model visited from the data used
@@ -38,6 +33,13 @@ Class `"Xfgpm"`
     the model to be re-created: by its number?
 
 -   Improve the `summary` method. Should work correctly even when there
-    are may inputs. Maybe add options to provide details on the scalar
+    are many inputs. Maybe add options to provide details on the scalar
     and the functional inputs separately in order to avoid having a
     table which is too wide.
+
+## S3 classes `"predict.fgpm"` and `"simulat.fgpm"`
+
+-   Set the S3 class ot the output of the `predict` and `simulate`
+    methods to `"predict.fgpm"` and `"simulate.fgpm"` both inheriting
+    from `"list"`. This allows to write (S3) plot methods without
+    breaking the inherited standard behaviours (in \`print, …).
