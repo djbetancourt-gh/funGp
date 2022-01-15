@@ -2,12 +2,9 @@
 % Please edit documentation in R/7_plottingFunctions.R
 \name{plotSims,fgpm-method}
 \alias{plotSims,fgpm-method}
-\alias{plotX,Xfgpm-method}
 \title{Plot for simulations from a funGp model}
 \usage{
 \S4method{plotSims}{fgpm}(model, sims, detail = "full", ...)
-
-\S4method{plotX}{Xfgpm}(x.model, calib = TRUE, fitp = TRUE, ...)
 }
 \arguments{
 \item{model}{a \linkS4class{fgpm} object for which the plot is to be made.}
@@ -22,38 +19,16 @@ simulation points. This argument will only be used if full simulations (includin
 bands) are provided, otherwise it will be dropped. See \link[funGp]{simulate} for more details on the
 generation of light and full simulations.}
 
-\item{...}{additional arguments affecting the display. Since this method allows to generate two plots
-from a single function call, the extra arguments for each plot should be included in a list. For the
-calibration plot, the list should be called \emph{calib.gpars}. For the plot of the fitness of
-explored models, the list should be called \emph{fitp.gpars}. The following typical graphics parameters
-are valid entries of both lists: \emph{xlim}, \emph{ylim}, \emph{xlab}, \emph{ylab}, \emph{main}. The
-boolean argument legends can also be included in any of the two lists in order to control the display
-of legends in the corresponding plot.}
-
-\item{x.model}{an object of class \linkS4class{Xfgpm} containing the output of the model selection
-algorithm in \link[funGp]{fgpm_factory}.}
-
-\item{calib}{a boolean indicating whether the calibration plot of the selected model should be included
-in the display. Default is TRUE.}
-
-\item{fitp}{a boolean indicating whether scatter plot of the quality of all explored models should be
-included in the display. Default is TRUE.}
+\item{...}{additional arguments affecting the display. The following typical graphics parameters are valid
+entries: \emph{xlim}, \emph{ylim}, \emph{xlab}, \emph{ylab}, \emph{main}. The boolean argument
+\emph{legends} can also be included in any of the two lists in order to control the display of legends
+in the corresponding plot.}
 }
 \value{
-None.
-
 None.
 }
 \description{
 This method displays the simulated output values delivered by a funGp Gaussian process model.
-
-This method provides two plots for assessing the quality of the output delivered by the
-  model selection algorithm in the \link[funGp]{fgpm_factory} function. The first one is a calibration
-  plot similar to the one offered for \linkS4class{fgpm} objects by the \link[funGp]{plotLOO} function.
-  This plot allows to validate the absolute quality of the selected model. The second one displays the
-  performance statistic of all the models successfully evaluated by the model selection algorithm. This
-  provides a notion of the relative quality of the selected model with respect to the other models that
-  can be made using the same data.
 }
 \examples{
 # plotting light simulations_______________________________________________________________
@@ -98,37 +73,6 @@ plotSims(m1, m1.sims)
 # plotting full simulations in light mode
 plotSims(m1, m1.sims, detail = "light")
 
-# generating input and output data
-set.seed(100)
-n.tr <- 2^5
-sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
-                   x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
-                   x5 = seq(0,1,length = n.tr^(1/5)))
-fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
-sOut <- fgp_BB7(sIn, fIn, n.tr)
-\dontrun{
-# optimizing the model structure with fgpm_factory (~5 seconds)
-xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
-
-# assessing the quality of the model - absolute and w.r.t. the other explored models
-plotX(xm)
-
-# customizing some graphical parameters
-plotX(xm, calib.gpars = list(xlim = c(800,1000), ylim = c(600,1200)),
-          fitp.gpars = list(main = "Relative quality", legends = FALSE))
-}
-
-}
-\references{
-Betancourt, J., Bachoc, F., Klein, T., and Gamboa, F. (2020),
-Technical Report: "Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression. Ref. B3D-WP3.2".
-\emph{RISCOPE project}.
-\href{https://hal.archives-ouvertes.fr/hal-02532713}{[HAL]}
-
-Betancourt, J., Bachoc, F., and Klein, T. (2020),
-R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
-\emph{RISCOPE project}.
-\href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
 }
 \seealso{
 \strong{*} \link[funGp]{fgpm} for the construction of funGp models;
@@ -138,14 +82,7 @@ R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs 
 \strong{*} \link[funGp]{predict} for predictions based on a funGp model;
 
 \strong{*} \link[funGp]{plotPreds} for prediction plots.
-
-\strong{*} \link[funGp]{fgpm_factory} for structural optimization of funGp models;
-
-\strong{*} \link[funGp]{plotEvol} for a plot on the evolution of the model selection algorithm
-  in fgpm_factory.
 }
 \author{
-José Betancourt, François Bachoc and Thierry Klein
-
 José Betancourt, François Bachoc and Thierry Klein
 }

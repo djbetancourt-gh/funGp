@@ -1,7 +1,8 @@
-# TODO
+# TODO or not TODO
 
-**(x)** is used for tasks that are completed. **(WIP)** is used for
-tasks that are in progress.
+-   **(x)** is used for tasks that are completed,
+-   **(WIP)** is used for tasks that are in progress,
+-   **(?)** Idea to be discussed.
 
 ## Checks
 
@@ -26,14 +27,18 @@ tasks that are in progress.
     the the way in which the plots are set. This will be useful for
     reports or articles such as the JSS.
 
--   Add `autoplot` methods allowing to get \*\*ggplot2\* graphics.
+-   Add an `horiz` argument in the `plot`method for the S3 class
+    `"predict.fgpm"`and in the `plotPred` method/function.
+
+-   **(?)** Add `autoplot` methods allowing to get \*\*ggplot2\*
+    graphics.
 
 ## Class `"Xfgpm"`
 
--   Store a copy of `sIn` and `sOut` as two new slots of the class. This
-    will help at recreating any `fgpm` model visited from the data used
-    in the fit. Maybe write a new function for that aim? How to specify
-    the model to be re-created: by its number?
+-   **(?)** Store a copy of `sIn` and `sOut` as two new slots of the
+    class. This will help at recreating any `fgpm` model visited from
+    the data used in the fit. Maybe write a new function for that aim?
+    How to specify the model to be re-created: by its number?
 
 -   Improve the `summary` method. Should work correctly even when there
     are many inputs. Maybe add options to provide details on the scalar
@@ -49,11 +54,22 @@ tasks that are in progress.
 
 ## Simplifications
 
--   Should we still export the methods `plotSims`, `plotPred`.
+-   **(?)** Should we still export the methods `plotSims`, `plotPred`.
 
--   Rename the formal arguments of the `predict` and `simulate` methods
-    for the class `"fgpm"` to use the same formal names? Could be for
-    instance `sIn.new` and `fIn.new` or even simply `sIn`and `fIn`.
+-   **(?)** Rename the formal arguments of the `predict` and `simulate`
+    methods for the class `"fgpm"` to use the same formal names? Could
+    be for instance `sIn.new` and `fIn.new` or even simply `sIn`and
+    `fIn`.
+
+## Tests
+
+-   **(?)** Add tests to make sure that the checks on the size of
+    objects actually do what we expect.
+
+## Clean and fix
+
+-   Read again carefully the doc for the new functions and methods. Find
+    the `"XXXY"` code that shows something that still requires work.
 
 ## NEWS
 

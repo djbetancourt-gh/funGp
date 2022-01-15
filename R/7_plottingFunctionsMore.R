@@ -24,7 +24,7 @@ setGeneric(name = "plot", def = function(x, y, ...) standardGeneric("plot"))
 ##'     based on the leave-one-out predictions of the output at the
 ##'     points used to train the model.
 ##'
-##' @title Plot Method for the Class \code{"fgpm"}
+##' @title Plot method for the class \code{"fgpm"}
 ##' 
 ##' @param x A \code{fgpm} object.
 ##' @param y Not used.
@@ -75,12 +75,13 @@ setMethod("plot", "fgpm",
 ##'
 ##' Two types of graphics can be shown depending on the choice of
 ##' \code{which}. The choice \code{which = "evolution"} is used to
-##' asses the quality of the fitted \code{fgpm} models on the basis of
-##' Leave-One-Out cross-validation.  The choice \code{which = "diag"}
-##' is used to display diagnostics. Two types of diagnostic plots are
-##' provided by default, but each can be discarded if wanted.
+##' assess the quality of the fitted \code{fgpm} models on the basis
+##' of Leave-One-Out cross-validation.  The choice \code{which =
+##' "diag"} is used to display diagnostics. Two types of diagnostic
+##' plots are shown as sub-plots by default, but each can be discarded
+##' if wanted.
 ##'
-##' @title Plot Method for the class \code{"Xfgpm"}
+##' @title Plot method for the class \code{"Xfgpm"}
 ##' 
 ##' @param x the \code{Xfgpm} object to plot.
 ##'
