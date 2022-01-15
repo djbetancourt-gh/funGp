@@ -7,6 +7,10 @@ output:
 		
 # TODO		
 		
+**(x)** is used for tasks that are completed.  **(WIP)** is used for
+tasks that are in progress.
+		
+		
 ## Checks
 
 - **(x)** Check that the dimensions/the content of the data given as
@@ -25,10 +29,13 @@ output:
 
 - **(x)** Add a `plot` method for the class `"Xfgpm"`.
 
-- For the plot methods that produce two plots on a same graphic, add
+- **(x)** For the plot methods that produce two plots on a same graphic, add
   an extra argument `horiz` to allow the user to chose the the way in
   which the plots are set. This will be useful for reports or articles
   such as the JSS.
+  
+- Add an `horiz` argument in the `plot`method for the S3 class
+  `"predict.fgpm"`and in the  `plotPred` method/function.
 
 - Add `autoplot` methods allowing to get **ggplot2* graphics.
 
@@ -46,7 +53,31 @@ output:
 
 ## S3 classes `"predict.fgpm"` and `"simulate.fgpm"`
 
-- Set the S3 class ot the output of the `predict` and `simulate`
-  methods to `"predict.fgpm"` and `"simulate.fgpm"` both inheriting
-  from `"list"`. This allows to write (S3) plot methods without
-  breaking the inherited standard behaviours (in `print`, ...).
+- **(x)** Set the S3 class ot the output of the `predict` and
+  `simulate` methods to `"predict.fgpm"` and `"simulate.fgpm"` both
+  inheriting from `"list"`. This allows to write (S3) plot methods
+  without breaking the inherited standard behaviours (in `print`,
+  ...).
+
+## Simplifications
+
+- Should we still export the methods `plotSims`, `plotPred`.
+
+- Rename the formal arguments of the `predict` and `simulate` methods
+  for the class `"fgpm"` to use the same formal names? Could be for
+  instance `sIn.new` and `fIn.new` or even simply `sIn`and `fIn`.
+
+## Tests
+
+- Add tests to make sure that the checks on the size of objects
+  actually do what we expect.
+
+## NEWS
+
+Try
+
+```{r}
+library(funGp)
+example(plot.predict.fgpm)
+example(plt.simulate.fgpm)
+```

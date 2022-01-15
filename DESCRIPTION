@@ -55,4 +55,5 @@ Collate:
     '7_dimRedFunctions.R'
     '7_distanceFunctions.R'
     '7_plottingFunctions.R'
+    '7_plottingFunctionsMore.R'
     '8_outilsStats.R'

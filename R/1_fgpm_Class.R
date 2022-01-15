@@ -1042,7 +1042,10 @@ simulate.fgpm <- function(model, nsim, seed, sIn.sm, fIn.sm, nugget.sm = 10^-8, 
 
   # if detail == 'full', confidence intervals at simulation points are provided,
   # else the sims list is dropped to a matrix with the observations only
-  if (detail == "full") {
+    if (detail == "full") {
+        sims$mean <- drop(sims$mean)
+        sims$sd <- drop(sims$sd)
+        
     # compute confidence intervals
     sims$lower95 <- sims$mean - qnorm(0.975) * sims$sd
     sims$upper95 <- sims$mean + qnorm(0.975) * sims$sd
@@ -1059,6 +1062,12 @@ simulate.fgpm <- function(model, nsim, seed, sIn.sm, fIn.sm, nugget.sm = 10^-8, 
   # 4.  * lower95 ............ array (n.sm) .............. lower bounds of 95% confidence intervals
   # 5.  * upper95 ............ array (n.sm) .............. upper bounds of 95% confidence intervals
   # _______________________________________________________________________________________________________
+
+   
+    class(sims) <- c("simulate.fgpm", "list")
+    return(sims)
+
+    
   return(sims)
 }
 # ==========================================================================================================
