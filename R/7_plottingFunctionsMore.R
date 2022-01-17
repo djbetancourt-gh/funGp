@@ -162,7 +162,7 @@ setMethod("plot", "Xfgpm",
 ## ==============================================================================
 ## plot method, S3 class "predict.fgpm"
 ## ==============================================================================
-##' @title Plot method for the predictions of a \code{funGp} model
+##' @title Plot method for the predictions of a \code{fgpm} model
 ##' 
 ##' @description This method displays the predicted output values
 ##'     delivered by a funGp Gaussian process model.

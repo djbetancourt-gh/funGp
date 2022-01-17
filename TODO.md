@@ -22,7 +22,7 @@
 
 -   **(x)** Add a `plot` method for the class `"Xfgpm"`.
 
--   **(x)** For the plot methods that produce two plots on a same
+-   **(WIP)** For the plot methods that produce two plots on a same
     graphic, add an extra argument `horiz` to allow the user to chose
     the the way in which the plots are set. This will be useful for
     reports or articles such as the JSS.
@@ -54,12 +54,19 @@
 
 ## Simplifications
 
--   **(?)** Should we still export the methods `plotSims`, `plotPred`.
+-   **(?)** Should we still export the methods `plotSims`, `plotPred`, …
+    ? As a compromise we could continue to export the functions, but no
+    longer turn them into S4 generics and methods because e.g.,
+    `plotEvol` is unlikely to be mnemonic for the user or to be used in
+    some other package.
 
 -   **(?)** Rename the formal arguments of the `predict` and `simulate`
     methods for the class `"fgpm"` to use the same formal names? Could
     be for instance `sIn.new` and `fIn.new` or even simply `sIn`and
-    `fIn`.
+    `fIn`, since it is clear that this must be “new” values.
+
+-   **(?)** Rename `fgpm_factory` into `Xfgpm` to conform to the R rule:
+    the creator of a class has the same name as the class itself.
 
 ## Tests
 

@@ -51,6 +51,12 @@ evaluated by the algorithm.}
 
 \item{\code{details}}{Object of class \code{"list"}. Further information about the parameters of the ant colony
 optimization algorithm and the evolution of the fitness along the iterations.}
+
+\item{\code{sIn}}{An object of class \code{"matrix"} containing a copy of
+the provided the scalar inputs.}
+
+\item{\code{fIn}}{An object of class \code{"matrix"} containing a copy of
+the provided functional inputs.}
 }}
 
 \section{Useful material}{

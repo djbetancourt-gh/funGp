@@ -2,7 +2,7 @@
 % Please edit documentation in R/7_plottingFunctionsMore.R
 \name{plot.predict.fgpm}
 \alias{plot.predict.fgpm}
-\title{Plot method for the predictions of a \code{funGp} model}
+\title{Plot method for the predictions of a \code{fgpm} model}
 \usage{
 \method{plot}{predict.fgpm}(x, y = NULL, sOut.pr = NULL, calib = TRUE, sortp = TRUE, ...)
 }

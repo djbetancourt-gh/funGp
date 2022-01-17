@@ -1,4 +1,4 @@
-# ==========================================================================================================
+ls# ==========================================================================================================
 # S4 class for funGp model selection data structures
 # ==========================================================================================================
 #' @title S4 class for funGp model selection data structures
@@ -36,7 +36,11 @@
 #'   evaluated by the algorithm.
 #' @slot details Object of class \code{"list"}. Further information about the parameters of the ant colony
 #'   optimization algorithm and the evolution of the fitness along the iterations.
-#'
+#' @slot sIn An object of class \code{"matrix"} containing a copy of
+#'     the provided the scalar inputs.
+#' @slot fIn An object of class \code{"matrix"} containing a copy of
+#'     the provided functional inputs.
+#' 
 #' @section Useful material:
 #' \itemize{
 #'  \item{\strong{Manual}}{
@@ -64,7 +68,9 @@ setClass("Xfgpm",
            log.crashes = "antsLog",        # search method
            n.solspace = "numeric",         # search method
            n.explored = "numeric",         # search method
-           details = "list"                # search method
+           details = "list",               # search method
+           sIn = "matrix",
+           fIn = "list"
          ),
          validity = function(object) {TRUE})
 
@@ -439,9 +445,11 @@ fgpm_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, ind.vl = NULL,
   X.model@log.crashes <- opt$log.cra
   X.model@n.solspace <- getSpacesize(solspace$sp.user)
   X.model@n.explored <- nrow(opt$log.suc@sols)
-  X.model@details <- opt$all.details
-
-  return(X.model)
+    X.model@details <- opt$all.details
+    ## XXXY warn if these are not matrices, but data frames?
+    X.model@sIn <- as.matrix(sIn)
+    X.model@fIn <- fIn
+    return(X.model)
 }
 # ==========================================================================================================
 
@@ -769,13 +777,105 @@ setMethod("summary", "Xfgpm",
           })
 
 summary.Xfgpm <- function(object, n = 24, ...) {
-    df <- formatShort(object@log.success@sols)
-    df <- cbind(df,
-                "Q2" = sprintf("%5.3f", object@log.success@fitness))
-    n <- pmin(n, nrow(df))
-    df <- df[1L:n, , drop = FALSE]
-    class(df) <- c("summary.Xfgpm", "data.frame")
-    df
+
+    ds <- ncol(object@sIn)
+    df <- length(object@fIn)
+    n <- pmin(n, nrow(object@log.success@sols))
+    
+    ## =========================================================================
+    ## When the number of variables is small enough, the structural
+    ## parameters can be displayed in a single data frame. With more variables
+    ## we split the content in two data frames (daf): one daf for  
+    ## =========================================================================
+    
+    if (4 * ds + 22 * df < 80) {
+        daf <- formatShort(object@log.success@sols)
+        daf <- cbind(daf,
+                     "Q2" = sprintf("%5.3f", object@log.success@fitness))
+        n <- pmin(n, nrow(daf))
+        daf <- daf[1L:n, , drop = FALSE]
+        daf <- list("Inputs and details" = daf) 
+    } else {
+        fullDf <- object@log.success@sols
+        nms <- colnames(fullDf)
+        ## extract columns corresponding to the states
+        indStateScal <-  grep("State_X[0-9]*", names(fullDf))
+        indStateFun <-  grep("State_F[0-9]*", names(fullDf))
+        indKernel <-  grep("Kernel", names(fullDf))
+        activeDf <- formatShort(fullDf[ , c(indStateScal, indStateFun, indKernel),
+                                       drop = FALSE])
+        activeDf <- cbind(activeDf,
+                          "Q2" = sprintf("%5.3f", object@log.success@fitness))
+        indDf <-  grep("_F[0-9]*", names(fullDf))
+        funDf <- formatShort(fullDf[ , c(indDf, indKernel), drop = FALSE])
+        funDf <- cbind(funDf,
+                       "Q2" = sprintf("%5.3f", object@log.success@fitness))
+        daf <- list("State of inputs" = activeDf,
+                    "Details for functional inputs " = funDf) 
+    }
+    
+    class(daf) <- c("summary.Xfgpm", "list")
+    daf
 }
 
+## =============================================================================
+## print method
+## =============================================================================
+##' @method print summary.Xfgpm
+##' @export
+print.summary.Xfgpm <- function(x, ...) {
+    for (i in seq_along(x)) {
+        cat(names(x)[i], "\n")
+        print(x[[i]])
+    }   
+}
 
+## XXXY make S4 generic ???
+##' Refit a \code{fgpm} model in a \code{Xfgpm} object.
+##' 
+##' @title Refit a \code{fgpm} model in a \code{Xfgpm} object
+##'
+##' @param x a \code{Xfgpm} object.
+##' @param i an integer giving the index of the model to refit. The
+##'     models are in decreasing fit quality as assessed by the
+##'     Leave-One-Out \eqn{Q^2}{Q2}.
+##'
+##' @section Caution: While the syntax may suggest that the function
+##'     \emph{extracts} a fitted \code{fgpm} model, this not true. The
+##'     \code{fgpm} model is refitted using the call that was used
+##'     when this model was assessed. The refitted \code{fgpm} model
+##'     keeps the same structual parameters as the one assessed
+##'     (active variables, kernel, ...), but since the optimization
+##'     uses random initial values, the optimized hyper-parameters may
+##'     differ from those of the corresponding \code{fgpm} in the
+##'     \code{Xfgpm} object \code{x}. As a result, the model can be
+##'     different and show a different LOO performance.
+##'
+##' @note The slot \code{@model} returns the best \code{fgpm} as
+##'     assessed in a \code{Xfgm} model \code{x}. So this model can be
+##'     expected to be close to the same as \code{x[[1]]}. Yet due to
+##'     the refit, the two models \code{x@model} and \code{x[[1]]} can
+##'     differ, see the explanations in the \bold{Caution} section.
+##' 
+##' @export
+##' @method [[ Xfgpm
+##'
+##' 
+setMethod("[[", "Xfgpm",
+          function(x, i) {
+              if (i > length(x@log.success@args)) {
+                  stop("'i' must be less or equal the number of 'fgpm' ",
+                       "models fitted in 'x'")
+              }
+              ## copy the the inputs 'sIn' and 'fIn' stored in the
+              ## object 'x' into the current environnement. This is
+              ## necessary because these objects may have change in
+              ## the global environment.
+              sIn <- x@sIn
+              fIn <- x@fIn
+              text <- x@log.success@args[[i]]@string
+              ## text <- gsub("= sIn", "= x@sIn", text)
+              ## text <- gsub("= fIn", "= x@fIn", text)
+              ## cat("XXX", text, "\n")
+              eval(parse(text = text)[[1]])
+          })
