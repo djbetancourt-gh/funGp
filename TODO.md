@@ -73,10 +73,22 @@
 -   **(?)** Add tests to make sure that the checks on the size of
     objects actually do what we expect.
 
-## Clean and fix
+## New functions
+
+-   Add a function `model_def` (or other name) that takes `Xfgpm` object
+    and returns a parsed code for one or several model. Bys using `eval`
+    on this It could also return a list of model definitions. Then
+    `eval(model_def[[4]])` would rebuild the 4-th model. Using `fIn` and
+    `sIn` in the current env?
+
+## Package documentation
 
 -   Read again carefully the doc for the new functions and methods. Find
     the `"XXXY"` code that shows something that still requires work.
+
+-   In the examples the output provided as comments should be removed,
+    because this is an unusual practice in R. This behaviour is for
+    vignettes. Some examples can be made simpler.
 
 ## NEWS
 
