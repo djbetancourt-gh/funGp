@@ -1,4 +1,4 @@
-ls# ==========================================================================================================
+# ==========================================================================================================
 # S4 class for funGp model selection data structures
 # ==========================================================================================================
 #' @title S4 class for funGp model selection data structures
@@ -40,7 +40,7 @@ ls# ============================================================================
 #'     the provided the scalar inputs.
 #' @slot fIn An object of class \code{"matrix"} containing a copy of
 #'     the provided functional inputs.
-#' 
+#' @slot sOut An object of class \code{"matrix"} containing a copy of the provided output.
 #' @section Useful material:
 #' \itemize{
 #'  \item{\strong{Manual}}{
@@ -70,7 +70,8 @@ setClass("Xfgpm",
            n.explored = "numeric",         # search method
            details = "list",               # search method
            sIn = "matrix",
-           fIn = "list"
+           fIn = "list",
+           sOut = "matrix"
          ),
          validity = function(object) {TRUE})
 
@@ -449,6 +450,7 @@ fgpm_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, ind.vl = NULL,
     ## XXXY warn if these are not matrices, but data frames?
     X.model@sIn <- as.matrix(sIn)
     X.model@fIn <- fIn
+    X.model@sOut <- as.matrix(sOut)
     return(X.model)
 }
 # ==========================================================================================================
@@ -830,12 +832,15 @@ print.summary.Xfgpm <- function(x, ...) {
     }   
 }
 
-## XXXY make S4 generic ???
-##' Refit a \code{fgpm} model in a \code{Xfgpm} object.
+## =============================================================================
+## Re fit a fgpm model
+## =============================================================================
+##' Refit a \code{fgpm} model as described in a \code{Xfgpm} object.
 ##' 
 ##' @title Refit a \code{fgpm} model in a \code{Xfgpm} object
 ##'
 ##' @param x a \code{Xfgpm} object.
+##' 
 ##' @param i an integer giving the index of the model to refit. The
 ##'     models are in decreasing fit quality as assessed by the
 ##'     Leave-One-Out \eqn{Q^2}{Q2}.
@@ -860,6 +865,10 @@ print.summary.Xfgpm <- function(x, ...) {
 ##' @export
 ##' @method [[ Xfgpm
 ##'
+##' @seealso The \code{\link{modelDef}} function to extract the
+##'     definition of a `fgpm` model e.g., to evaluate it using new
+##'     data `sIn` `fIn`, `sOut`.
+##'
 ##' 
 setMethod("[[", "Xfgpm",
           function(x, i) {
@@ -869,13 +878,78 @@ setMethod("[[", "Xfgpm",
               }
               ## copy the the inputs 'sIn' and 'fIn' stored in the
               ## object 'x' into the current environnement. This is
-              ## necessary because these objects may have change in
+              ## necessary because these objects may have changed in
               ## the global environment.
               sIn <- x@sIn
               fIn <- x@fIn
+              sOut <- x@sOut
               text <- x@log.success@args[[i]]@string
               ## text <- gsub("= sIn", "= x@sIn", text)
               ## text <- gsub("= fIn", "= x@fIn", text)
               ## cat("XXX", text, "\n")
               eval(parse(text = text)[[1]])
           })
+
+## =============================================================================
+## Retrieve a fgpm model from a Xfgpm object
+## =============================================================================
+
+##' Retrieve the \code{fgpm} model with index (or rank) \code{i} from
+##' within a \code{Xfgpm} object. By evaluating this code in an
+##' environment containing suitable objects \code{sIn}, \code{fIn} and
+##' \code{sOut} we can re-create a \code{fgpm} object.
+##'
+##' The models are sorted by decreasing quality so \code{i = 1} extracts
+##' the definition of the best model.
+##' 
+##' @title Retrieve a \code{fgpm} from within a \code{Xfgpm} object
+##' 
+##' @param object A \code{Xfgpm} object as created by
+##' \code{\link{fgpm_factory}}.
+##' 
+##' @param ind The index (or rank) of the model in \code{object}.
+##'
+##' @return A parsed R code defining the \code{fgpm} model.
+##'
+##' @note Remind that the models are sorted by decreasing quality so
+##'     \code{i = 1} extracts the definition of the best model.
+##'
+##' @seealso the \code{\link{[[,Xfgpm-method}} that can also be used
+##'     to re-create a \code{fgpm} object using \emph{the same data}
+##'     as that used to create the \code{Xfgpm} object in
+##'     \code{object}.
+##' 
+##' @export
+##' 
+##' @examples
+##' set.seed(100)
+##' n.tr <- 32
+##' x1 <- x2 <- x3 <- x4 <- x5 <- seq(0, 1, length = n.tr^(1/5))
+##'
+##' sIn <- as.matrix(expand.grid(x1 = x1, x2 = x2, x3 = x3, x4 = x4, x5 = x5))
+##' fIn <- list(f1 = matrix(runif(n.tr * 10), ncol = 10),
+##'             f2 = matrix(runif(n.tr * 22), ncol = 22))
+##' sOut <- fgp_BB7(sIn, fIn, n.tr)
+##' xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
+##' 
+##' ## 'xm@model' is the best 'fgpm' model in 'xm'
+##' plot(xm@model)
+##' modelDef(xm, i = 1)
+##'
+##' ## Define new data 
+##' n.new <- 3^5
+##' x1 <- x2 <- x3 <- x4 <- x5 <- seq(0, 1, length = n.new^(1/5))
+##'
+##' ## replace the data objects from which the model is created 
+##' sIn <- as.matrix(expand.grid(x1 = x1, x2 = x2, x3 = x3, x4 = x4, x5 = x5))
+##' fIn <- list(f1 = matrix(runif(n.new * 10), ncol = 10),
+##'             f2 = matrix(runif(n.new * 22), ncol = 22))
+##' sOut <- fgp_BB7(sIn, fIn, n.new)
+##' ## Now evaluate the definition. Since the objects 'sIn' and 'fIn'
+##' ## have been replaced by new values, the perfomance will differ.
+##' fgpm.new <- eval(modelDef(xm, i = 1))
+##' plot(fgpm.new, main = "Re-created 'fgpm' model with different data")
+##' plot(xm[[1]], main = "Re-created 'fgpm' model with the same data")
+modelDef <- function(object, ind) {
+    parse(text = object@log.success@args[[ind]]@string[[1]])
+}

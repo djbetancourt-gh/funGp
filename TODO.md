@@ -90,6 +90,22 @@
     because this is an unusual practice in R. This behaviour is for
     vignettes. Some examples can be made simpler.
 
+-   In the examples the `plot` methods should be used in place of
+    `plotLOO`, `plotPreds`, … Similarly `summary` can be useful.
+
+## modelDef
+
+-   Find out why the class `"modelCall"` (with no method other than
+    `show` exists. Maybe then rename `modelDef` into `modelCall`?
+
+-   Make the **Examples** section faster to run (using `dontrun`?) and
+    improve the example which leads to a much smaller Q2 when evaluated
+    on the new data.
+
+## Misc
+
+-   No longer export `formatShort`.
+
 ## NEWS
 
 Try

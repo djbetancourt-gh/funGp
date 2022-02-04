@@ -57,6 +57,8 @@ the provided the scalar inputs.}
 
 \item{\code{fIn}}{An object of class \code{"matrix"} containing a copy of
 the provided functional inputs.}
+
+\item{\code{sOut}}{An object of class \code{"matrix"} containing a copy of the provided output.}
 }}
 
 \section{Useful material}{
