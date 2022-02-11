@@ -3,9 +3,9 @@
 \docType{methods}
 \name{black-boxes}
 \alias{black-boxes}
-\title{Analytic black-boxes for the exploration of the funGp package}
+\title{Analytic models for the exploration of the funGp package}
 \description{
-Set of black-box analytic functions for the discovering and testing of funGp functionalities.
+Set of analytic functionsthat takes functional variables as inputs. Since they run quickly, they can be used for testing of funGp functionalities as if they were black box computer models. They cover different situations (number of scalar inputs and complexity of the inputs-output mathematical relationship.
 }
 \section{Usage}{
 

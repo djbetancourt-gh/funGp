@@ -971,14 +971,13 @@ setMethod("plotX", "Xfgpm",
                           horiz = horiz, ...)
           })
 
-plotX.Xfgpm <- function(x.model, calib = TRUE, fitp= TRUE, horiz = FALSE, ...) {
-
-    cat("XXX horiz = ", horiz, "\n")
+plotX.Xfgpm <- function(x.model, calib = TRUE, fitp = TRUE,
+                        horiz = FALSE, ...) {
     
     ## recover graphic parameters if provided
-  gpars <- list(...)
-  cal.gpars <- gpars$calib.gpars
-  fit.gpars <- gpars$fitp.gpars
+    gpars <- list(...)
+    cal.gpars <- gpars$calib.gpars
+    fit.gpars <- gpars$fitp.gpars
 
   # loocv calibration plot _______________________________________________
   plot.c <- function(model) {

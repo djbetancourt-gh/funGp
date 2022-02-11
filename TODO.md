@@ -35,15 +35,19 @@
 
 ## Class `"Xfgpm"`
 
--   **(?)** Store a copy of `sIn` and `sOut` as two new slots of the
-    class. This will help at recreating any `fgpm` model visited from
-    the data used in the fit. Maybe write a new function for that aim?
-    How to specify the model to be re-created: by its number?
+-   **(x)** Store a copy of `sIn`, `fIn` and `sOut` as three new slots
+    of the class. This will help at recreating any `fgpm` model visited
+    from the data used in the fit. Maybe write a new function for that
+    aim? How to specify the model to be re-created: by its number?
 
--   Improve the `summary` method. Should work correctly even when there
-    are many inputs. Maybe add options to provide details on the scalar
-    and the functional inputs separately in order to avoid having a
-    table which is too wide.
+-   **(x)** Improve the `summary` method. Should work correctly even
+    when there are many inputs. Maybe add options to provide details on
+    the scalar and the functional inputs separately in order to avoid
+    having a table which is too wide.
+
+-   **(x)** When an object is created by using `fgpm_factory`, the
+    progression bars whould be displayed only in an interactive session
+    i.e., where `interactive()` is `TRUE`.
 
 ## S3 classes `"predict.fgpm"` and `"simulate.fgpm"`
 
@@ -196,8 +200,8 @@ Try
     ## plt.p.> # generating output data for validation
     ## plt.p.> sOut.pr <- fgp_BB3(sIn.pr, fIn.pr, n.pr)
     ## 
-    ## plt.p.> # plotting predictions
-    ## plt.p.> plotPreds(m1, m1.preds, sOut.pr)
+    ## plt.p.> # plotting predictions. Note that the 2-nd argument is 'y'
+    ## plt.p.> plot(m1.preds, sOut.pr)
 
 ![](TODO_files/figure-markdown_strict/unnamed-chunk-1-2.png)
 

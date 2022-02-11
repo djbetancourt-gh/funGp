@@ -12,9 +12,7 @@ list containing the predictions and confidence bands as
 created by the \link[funGp]{predict,fgpm-method} method for the S3 class
 \code{"fgpm"}..}
 
-\item{y}{Not used.}
-
-\item{sOut.pr}{an optional vector (or 1-column matrix) containing
+\item{y}{an optional vector (or 1-column matrix) containing
 the true values of the scalar output at the prediction
 points. If provided, the method will display two figures: (i) a
 calibration plot with true vs predicted output values, and (ii)
@@ -24,8 +22,10 @@ the true output. If not provided, only the second plot will be
 made, and the predictions will be arranged according to the
 increasing order of the predicted output.}
 
-\item{calib}{an optional boolean indicating if the calibration plot
-should be displayed. Ignored if \code{sOut.pr} is not
+\item{sOut.pr}{alias of \code{y}, used for compatibility reasons.}
+
+\item{calib}{an optional boolean indicating if the calibration
+plot should be displayed. Ignored if \code{sOut.pr} is not
 provided. Default is \code{TRUE}.}
 
 \item{sortp}{an optional boolean indicating if the plot of sorted
@@ -95,8 +95,8 @@ m1.preds <- predict(m1, sIn.pr = sIn.pr, fIn.pr = fIn.pr)
 # generating output data for validation
 sOut.pr <- fgp_BB3(sIn.pr, fIn.pr, n.pr)
 
-# plotting predictions
-plotPreds(m1, m1.preds, sOut.pr)
+# plotting predictions. Note that the 2-nd argument is 'y'
+plot(m1.preds, sOut.pr)
 
 # only calibration plot
 plot(m1.preds, sOut.pr = sOut.pr, sortp = FALSE)

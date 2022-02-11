@@ -212,7 +212,7 @@ show.Xfgpm <- function(object) {
 #' @param par.clust an optional parallel processing cluster created with the \code{\link[parallel]{makeCluster}}
 #'   function of the \link[=parallel]{parallel package}. If not provided, structural configurations are evaluated in
 #'   sequence.
-#' @param pbars an optional boolean indicating if progress bars should be displayed. Default is TRUE.
+#' @param pbars an optional boolean indicating if progress bars should be displayed.
 #'
 #' @return An object of class \linkS4class{Xfgpm} containing the data structures linked to the structural optimization
 #'   of a funGp model. It includes as the main component, an object of class \linkS4class{fgpm} corresponding to the
@@ -416,7 +416,7 @@ show.Xfgpm <- function(object) {
 fgpm_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, ind.vl = NULL,
                           ctraints = list(), setup = list(), time.lim = Inf,
                           nugget = 1e-8, n.starts = 1, n.presample = 20,
-                          par.clust = NULL, pbars = TRUE) {
+                          par.clust = NULL, pbars = interactive()) {
 
   # launch timer
   time.str <- Sys.time()
@@ -808,12 +808,15 @@ summary.Xfgpm <- function(object, n = 24, ...) {
                                        drop = FALSE])
         activeDf <- cbind(activeDf,
                           "Q2" = sprintf("%5.3f", object@log.success@fitness))
+        activeDf <- activeDf[1L:n, , drop = FALSE]
+        
         indDf <-  grep("_F[0-9]*", names(fullDf))
         funDf <- formatShort(fullDf[ , c(indDf, indKernel), drop = FALSE])
         funDf <- cbind(funDf,
                        "Q2" = sprintf("%5.3f", object@log.success@fitness))
+        funDf <- funDf[1L:n, , drop = FALSE]
         daf <- list("State of inputs" = activeDf,
-                    "Details for functional inputs " = funDf) 
+                 "Details for functional inputs " = funDf) 
     }
     
     class(daf) <- c("summary.Xfgpm", "list")
