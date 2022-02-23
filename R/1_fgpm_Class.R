@@ -202,14 +202,14 @@ setClass("fgpm",
 #' msf <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut)
 #'
 #' # plotting the three models
-#' plotLOO(ms)
-#' plotLOO(mf)
-#' plotLOO(msf)
+#' plot(ms)
+#' plot(mf)
+#' plot(msf)
 #'
 #' # printing the three models
-#' ms # equivalent to show(ms)
-#' mf # equivalent to show(mf)
-#' msf # equivalent to show(msf)
+#' summary(ms) # equivalent to show(ms)
+#' summary(mf) # equivalent to show(mf)
+#' summary(msf) # equivalent to show(msf)
 #'
 #'
 #' # recovering useful information from a funGp model_________________________________________
@@ -248,7 +248,7 @@ setClass("fgpm",
 #' m1.preds <- predict(m1, sIn.pr = sIn.pr, fIn.pr = fIn.pr)
 #'
 #' # plotting predictions
-#' plotPreds(m1, preds = m1.preds)
+#' plot(m1, preds = m1.preds)
 #'
 #'
 #' # simulating from a funGp model____________________________________________________________
@@ -270,7 +270,7 @@ setClass("fgpm",
 #' m1.sims <- simulate(m1, nsim = 10, sIn.sm = sIn.sm, fIn.sm = fIn.sm)
 #'
 #' # plotting simulations
-#' plotSims(m1, m1.sims)
+#' plot(m1.sims)
 #'
 #'
 #' # creating funGp model using custom fgpm arguments_________________________________________
@@ -294,7 +294,7 @@ setClass("fgpm",
 #'            f_pdims = c(0,5), f_basType = c(NA, "B-splines"))
 #'
 #' # plotting the model
-#' plotLOO(m1)
+#' plot(m1)
 #'
 #' # printing the model
 #' m1 # equivalent to show(m1)
