@@ -220,3 +220,4 @@ Try
     example(plt.simulate.fgpm)
 
     ## Warning in example(plt.simulate.fgpm): no help found for 'plt.simulate.fgpm'
+    ##FB test git 24/02/2022
