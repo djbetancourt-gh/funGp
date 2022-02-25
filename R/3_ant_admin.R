@@ -905,8 +905,7 @@ format4pred <- function(sIn.pr = NULL, fIn.pr = NULL, args) {
 #'
 #' @examples
 #' # extracting the indices of the active inputs in an optimized model________________________
-#' # load precalculated Xfgpm objects
-#' data("precalculated_Xfgpm_objects")
+#' # Use precalculated Xfgpm object named xm
 #' # active inputs in the best model
 #' xm@log.success@args[[1]] # the full fgpm call
 #' set.seed(100)
@@ -1032,8 +1031,7 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #' @seealso \strong{*} \linkS4class{Xfgpm} for details on object delivered by \link[funGp]{fgpm_factory}.
 #'
 #' @examples
-#' # load precalculated Xfgpm objects
-#' data("precalculated_Xfgpm_objects")
+#' # Use precalculated Xfgpm object named xm
 #' # indices of active inputs in the best model
 #' xm@log.success@args[[1]] # the full fgpm call
 #' set.seed(100)
