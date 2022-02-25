@@ -13,9 +13,9 @@
 #'        \link[funGp]{update}: modification of data and hyperparameters of a funGp model
 #'  }
 #'  \item{\strong{Plotters}}{\cr
-#'        \link[funGp]{plotLOO}: leave-one-out diagnostic plot for a funGp model \cr
-#'        \link[funGp]{plotPreds}: plot for predictions of a funGp model \cr
-#'        \link[funGp]{plotSims}: plot for simulations of a funGp model
+#'         \link[funGp]{plot,fgpm-method}: validation plot for a \code{fgpm} model \cr
+#'        \link[funGp]{plot.predict.fgpm}: plot of predictions based on a \code{fgpm} model \cr
+#'        \link[funGp]{plot.simulate.fgpm}: plot of simulations based on a \code{fgpm} model
 #'  }
 #' }
 #'
