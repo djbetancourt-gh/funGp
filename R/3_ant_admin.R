@@ -909,6 +909,12 @@ format4pred <- function(sIn.pr = NULL, fIn.pr = NULL, args) {
 #' data("precalculated_Xfgpm_objects")
 #' # active inputs in the best model
 #' xm@log.success@args[[1]] # the full fgpm call
+#' set.seed(100)
+#' n.tr <- 32
+#' sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
+#' x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
+#' x5 = seq(0,1,length = n.tr^(1/5)))
+#' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
 #' which_on(sIn, fIn, xm@log.success@args[[1]]) # only the indices extracted bu which_on
 #'
 #' @importFrom qdapRegex rm_between
@@ -1030,6 +1036,12 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #' data("precalculated_Xfgpm_objects")
 #' # indices of active inputs in the best model
 #' xm@log.success@args[[1]] # the full fgpm call
+#' set.seed(100)
+#' n.tr <- 32
+#' sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
+#' x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
+#' x5 = seq(0,1,length = n.tr^(1/5)))
+#' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
 #' which_on(sIn, fIn, xm@log.success@args[[1]]) # only the indices extracted bu which_on
 #'
 #' # data structures of active inputs
