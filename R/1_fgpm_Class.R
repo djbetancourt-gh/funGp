@@ -318,7 +318,7 @@ setClass("fgpm",
 #' # NOTE: in order to provide progress bars for the monitoring of time consuming processes
 #' #       ran in parallel, funGp relies on the doFuture and future packages. Parallel processes
 #' #       suddenly interrupted by the user tend to leave corrupt connections. This problem is
-#' #       originated outside funGp, which limits our control over it. On section 4.1 of the
+#' #       originated outside funGp, which limits our control over it. On section 4.1 of the manual
 #' #       of funGp, we provide a temporary solution to the issue and we remain attentive in
 #' #       case it appears a more elegant way to handle it or a manner to suppress it.
 #' #
