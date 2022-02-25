@@ -643,13 +643,13 @@ plotSims.fgpm <- function(sims, detail, ...) {
 #'   \href{https://hal.archives-ouvertes.fr/hal-02536624}{
 #'   manual} of the package.
 #'
-#' @param k a number indicating the dimension of the functional input under analysis.
-#' @param pmax an optional number specifying the hypothetical maximum projection dimension of this input. The
+#' @param k A number indicating the dimension of the functional input under analysis.
+#' @param pmax An optional number specifying the hypothetical maximum projection dimension of this input. The
 #'   user will be able to set this value later in the call to \link[funGp]{fgpm_factory} as a constraint. If
 #'   not specified, it takes the value of k.
-#' @param tao0 explained in the description of \emph{dispr}.
-#' @param delta explained in the description of \emph{dispr}.
-#' @param dispr the arguments \emph{tao0}, \emph{delta} and \emph{dispr}, are optional numbers specifying the
+#' @param tao0 Explained in the description of \emph{dispr}.
+#' @param delta Explained in the description of \emph{dispr}.
+#' @param dispr The arguments \emph{tao0}, \emph{delta} and \emph{dispr}, are optional numbers specifying the
 #'   loss function that determines the initial pheromone load on the links pointing out to projection
 #'   dimensions. Such a function is defined as
 #'
@@ -660,14 +660,14 @@ plotSims.fgpm <- function(sims, detail, ...) {
 #'   should preserve the maximum pheromone load; \emph{dispr} determines how fast the pheromone load drops
 #'   in dimensions further than \eqn{delta + 1}. If \emph{pmax} = \emph{k}, then the dimension 0,
 #'   representing no projection, receives a pheromone load identical to that of dimension \emph{k}. This, in
-#'   order to represent the fact that both, the representation of the function in its original dimension or
+#'   order to represent the fact that both the representation of the function in its original dimension or
 #'   a projection in a space of the same dimension, are equally heavy for the model. The default values of
 #'   \emph{tao0}, \emph{delta} and \emph{dispr}, are 0.1, 2 and 1.4, respectively, which match the default
 #'   values used by the \link[funGp]{fgpm_factory} function. Check
 #'   \href{https://hal.archives-ouvertes.fr/hal-02532713}{this technical
 #'   report} for more details.
-#' @param doplot an optional boolean indicating if the pheromone loads should be plotted. Default = TRUE.
-#' @param deliver an optional boolean indicating if the pheromone loads should be returned. Default = FALSE.
+#' @param doplot An optional boolean indicating if the pheromone loads should be plotted. Default = TRUE.
+#' @param deliver An optional boolean indicating if the pheromone loads should be returned. Default = FALSE.
 #'
 #' @return If deliver is TRUE, an object of class \code{"numeric"} containing the initial pheromone values
 #'   corresponding to the specified projection dimensions. Otherwise, the function plots the pheromones and
@@ -675,7 +675,7 @@ plotSims.fgpm <- function(sims, detail, ...) {
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #'
-#' @seealso \strong{*} \link[funGp]{decay} for the function to generate the initial probability load;
+#' @seealso \strong{*} \link[funGp]{decay2probs} for the function to generate the initial probability load;
 #' @seealso \strong{*} \link[funGp]{fgpm_factory} for heuristic funGp model selection.
 #'
 #' @examples
@@ -753,13 +753,13 @@ decay <- function(k, pmax = NULL, tao0 = .1, delta = 2, dispr = 1.4, doplot = TR
 #'   \href{https://hal.archives-ouvertes.fr/hal-02536624}{
 #'   manual} of the package.
 #'
-#' @param k a number indicating the dimension of the functional input under analysis.
-#' @param pmax an optional number specifying the hypothetical maximum projection dimension of this input. The
+#' @param k A number indicating the dimension of the functional input under analysis.
+#' @param pmax An optional number specifying the hypothetical maximum projection dimension of this input. The
 #'   user will be able to set this value later in the call to \link[funGp]{fgpm_factory} as a constraint. If
 #'   not specified, it takes the value of k.
-#' @param tao0 explained in the description of \emph{dispr}.
-#' @param delta explained in the description of \emph{dispr}.
-#' @param dispr the arguments \emph{tao0}, \emph{delta} and \emph{dispr}, are optional numbers specifying the
+#' @param tao0 Explained in the description of \emph{dispr}.
+#' @param delta Explained in the description of \emph{dispr}.
+#' @param dispr The arguments \emph{tao0}, \emph{delta} and \emph{dispr}, are optional numbers specifying the
 #'   loss function that determines the initial pheromone load on the links pointing out to projection
 #'   dimensions. Such a function is defined as
 #'
@@ -770,7 +770,7 @@ decay <- function(k, pmax = NULL, tao0 = .1, delta = 2, dispr = 1.4, doplot = TR
 #'   should preserve the maximum pheromone load; \emph{dispr} determines how fast the pheromone load drops
 #'   in dimensions further than \eqn{delta + 1}. If \emph{pmax} = \emph{k}, then the dimension 0,
 #'   representing no projection, receives a pheromone load identical to that of dimension \emph{k}. This, in
-#'   order to represent the fact that both, the representation of the function in its original dimension or
+#'   order to represent the fact that both the representation of the function in its original dimension or
 #'   a projection in a space of the same dimension, are equally heavy for the model. In order to obtain the
 #'   probability loads, the initial pheromone values are normalized to sum 1. Note that the normalization
 #'   makes the value of tao0 become irrelevant in the initial probability load. This does not mean that the
@@ -783,8 +783,8 @@ decay <- function(k, pmax = NULL, tao0 = .1, delta = 2, dispr = 1.4, doplot = TR
 #'   values used by the \link[funGp]{fgpm_factory} function. Check
 #'   \href{https://hal.archives-ouvertes.fr/hal-02532713}{this technical
 #'   report} for more details.
-#' @param doplot an optional boolean indicating if the probability loads should be plotted. Default = TRUE.
-#' @param deliver an optional boolean indicating if the probability loads should be returned. Default = FALSE.
+#' @param doplot An optional boolean indicating if the probability loads should be plotted. Default = TRUE.
+#' @param deliver An optional boolean indicating if the probability loads should be returned. Default = FALSE.
 #'
 #' @return If deliver is TRUE, an object of class \code{"numeric"} containing the normalized initial pheromone values
 #'   corresponding to the specified projection dimensions. Otherwise, the function plots the normalized
