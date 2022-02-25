@@ -266,6 +266,13 @@ show.Xfgpm <- function(object) {
 #' print(xm@log.crashes)
 #'          
 #' # building the model with the default fgpm arguments to compare
+#' set.seed(100)
+#' n.tr <- 32
+#' x1 <- x2 <- x3 <- x4 <- x5 <- seq(0,1,length = n.tr^(1/5))
+#' sIn <- expand.grid(x1 = x1, x2 = x2, x3 = x3, x4 = x4, x5 = x5)
+#' fIn <- list(f1 = matrix(runif(n.tr * 10), ncol = 10),
+#' f2 <- matrix(runif(n.tr * 22), ncol = 22))
+#' sOut <- fgp_BB7(sIn, fIn, n.tr)
 #' m1 <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut)
 #' plot(m1) # plotting the model
 #'

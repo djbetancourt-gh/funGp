@@ -57,3 +57,4 @@ Collate:
     '7_plottingFunctions.R'
     '7_plottingFunctionsMore.R'
     '8_outilsStats.R'
+    'precalculated_Xfgpm_objects.R'

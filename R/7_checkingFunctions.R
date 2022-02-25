@@ -680,7 +680,7 @@ check_new_inputs <- function(object, newsIn = NULL, newfIn = NULL) {
             stop("'object' must inherit from \"fgpm\"")
 
         if (object@ds != ncol(newsIn)) {
-            stop("'object' requires ", object@ds, "scalar inputs")
+            stop("'object' requires ", object@ds, " scalar inputs")
         }
         if (object@df != length(newfIn)) {
             stop("'object' requires 'object@df' functional inputs")

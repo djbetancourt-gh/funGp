@@ -5,7 +5,7 @@
 \alias{antsLog-class}
 \title{S4 class for log of models explored by ant colony in funGp}
 \description{
-Register of model structures and their performance statistic, if available.
+Register of model structures and their performance statistics, if available.
 }
 \section{Slots}{
 
@@ -15,7 +15,7 @@ column is linked to one structural parameter of the model such as the state of o
 active) or the type of kernel function.}
 
 \item{\code{args}}{Object of class \code{"list"}. Compendium of model structures represented by objects of class
-\code{"\linkS4class{modelCall}"}}
+\code{"\linkS4class{modelCall}"}.}
 
 \item{\code{fitness}}{Object of class \code{"numeric"}. Performance statistic of each model, if available.}
 }}
