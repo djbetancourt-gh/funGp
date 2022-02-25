@@ -116,7 +116,7 @@ plotLOO.fgpm <- function(model, ...) {
 
 
 # ==========================================================================================================
-# Plot of predictions in increasing order with condifence bands
+# Plot of predictions in increasing order with confidence bands
 # ==========================================================================================================
 #' @title Plot for predictions of regression models
 #' @description This method displays the predicted output values delivered by some regression model. The
@@ -914,7 +914,7 @@ setGeneric("plotX", function(x.model, ...) standardGeneric("plotX"))
 #'     \code{fitp} the two subplots corresponding to the calibration
 #'     and the fit quality are displayer horizontally (on a same row)
 #'     rather than vertically as in the default behaviour.
-#' 
+#'
 #' @param ... additional arguments affecting the display. Since this method allows to generate two plots
 #'   from a single function call, the extra arguments for each plot should be included in a list. For the
 #'   calibration plot, the list should be called \emph{calib.gpars}. For the plot of the fitness of
@@ -973,7 +973,7 @@ setMethod("plotX", "Xfgpm",
 
 plotX.Xfgpm <- function(x.model, calib = TRUE, fitp = TRUE,
                         horiz = FALSE, ...) {
-    
+
     ## recover graphic parameters if provided
     gpars <- list(...)
     cal.gpars <- gpars$calib.gpars
@@ -1121,7 +1121,7 @@ plotX.Xfgpm <- function(x.model, calib = TRUE, fitp = TRUE,
   # save current par state
   opar <- par('mar', 'mfrow')
   on.exit(par(opar))
-    
+
   # plot
     if (all(calib, fitp)) {
         if (!horiz) par(mar = c(3.1, 4.1, 2.5, 2.1), mfrow = c(2, 1))

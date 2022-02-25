@@ -11,7 +11,7 @@
 #'        \link[funGp]{update}: modification of data and hyperparameters of a funGp model
 #'  }
 #'  \item{\strong{Plotters}}{\cr
-#'        \code{\link[funGp]{plot,fgpm-method}}: validation plot for a \code{fgpm} model \cr
+#'        \link[funGp]{plot,fgpm-method}: validation plot for a \code{fgpm} model \cr
 #'        \link[funGp]{plot.predict.fgpm}: plot of predictions based on a \code{fgpm} model \cr
 #'        \link[funGp]{plot.simulate.fgpm}: plot of simulations based on a \code{fgpm} model
 #'  }
@@ -27,8 +27,11 @@
 #'        \link[funGp]{decay2probs}: normalized initial pheromones
 #'  }
 #'  \item{\strong{Plotters post-optimization}}{\cr
+#'        \link[funGp]{plot,Xfgpm-method}: call to \link[funGp]{plotEvol} with \code{which = "evolution"}
+#'        or to \link[funGp]{plotX} with \code{which = "diag"} \cr
+#'        \link[funGp]{plotEvol}: evolution of the algorithm \cr
 #'        \link[funGp]{plotX}: absolute and relative quality of the optimized model \cr
-#'        \link[funGp]{plotEvol}: evolution of the algorithm
+#'
 #'  }
 #'  \item{\strong{Correction post-optimization of input data structures}}{\cr
 #'        \link[funGp]{which_on}: indices of active inputs in a model
