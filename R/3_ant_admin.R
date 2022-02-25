@@ -1057,7 +1057,7 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #'                       x5 = seq(0,1,length = n.pr^(1/5)))
 #' fIn.pr <- list(f1 = matrix(runif(n.pr*10), ncol = 10), f2 = matrix(runif(n.pr*22), ncol = 22))
 #'
-#' # prunning data structures for prediction to keep only active inputs!!
+#' # pruning data structures for prediction to keep only active inputs!!
 #' active <- get_active_in(sIn.pr, fIn.pr, opt.args)
 #'
 #' # making predictions
@@ -1073,11 +1073,12 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #'
 #' # generating new input data for simulation
 #' n.sm <- 243
-#' sIn.sm <- expand.grid(x1 = seq(0,1,length = n.sm^(1/5)), x2 = seq(0,1,length = n.sm^(1/5)),
-#'                       x3 = seq(0,1,length = n.sm^(1/5)), x4 = seq(0,1,length = n.sm^(1/5)))
+#' sIn.sm <- expand.grid(x1 = seq(0,1,length = n.pr^(1/5)), x2 = seq(0,1,length = n.pr^(1/5)),
+#'                       x3 = seq(0,1,length = n.pr^(1/5)), x4 = seq(0,1,length = n.pr^(1/5)),
+#'                       x5 = seq(0,1,length = n.pr^(1/5)))
 #' fIn.sm <- list(f1 = matrix(runif(n.sm*10), ncol = 10), f2 = matrix(runif(n.sm*22), ncol = 22))
 #'
-#' # prunning data structures for simulation to keep only active inputs!!
+#' # pruning data structures for simulation to keep only active inputs!!
 #' active <- get_active_in(sIn.sm, fIn.sm, opt.args)
 #'
 #' # making light simulations
