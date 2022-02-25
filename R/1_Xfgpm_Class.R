@@ -113,15 +113,15 @@ show.Xfgpm <- function(object) {
 #'   funGp might evolve in the future to include improvements in the current algorithm or alternative
 #'   solution methods.
 #'
-#' @param sIn an optional matrix of scalar input values to train the model. Each column must match an input
+#' @param sIn An optional matrix of scalar input values to train the model. Each column must match an input
 #'   variable and each row a training point. Either scalar input coordinates (sIn), functional input
 #'   coordinates (fIn), or both must be provided.
-#' @param fIn an optional list of functional input values to train the model. Each element of the list must
-#'   be a matrix containing to the set of curves corresponding to one functional input. Either scalar input
+#' @param fIn An optional list of functional input values to train the model. Each element of the list must
+#'   be a matrix containing the set of curves corresponding to one functional input. Either scalar input
 #'   coordinates (sIn), functional input coordinates (fIn), or both must be provided.
-#' @param sOut a vector (or 1-column matrix) containing the values of the scalar output at the specified
+#' @param sOut A vector (or 1-column matrix) containing the values of the scalar output at the specified
 #'   input points.
-#' @param ind.vl an optional numerical matrix specifying which points in the three structures above should be
+#' @param ind.vl An optional numerical matrix specifying which points in the three structures above should be
 #'   used for training and which for validation. If provided, the optimization will be conducted in terms of
 #'   the hold-out Q2, which comes from training the model with a subset of the points, and then estimate the
 #'   prediction error in the remaining points. In that case, each column of \emph{ind.vl} will be interpreted
@@ -130,10 +130,10 @@ show.Xfgpm <- function(object) {
 #'   used for each model configuration explored. If not provided, the optimization will be conducted in terms
 #'   of the leave-one-out cross-validation Q2, which for a total number of n observations, comes from training
 #'   the model n times, each using n-1 points for training and the remaining one for validation. This procedure
-#'   is typically costly due to the large number of hyperparameters optimizations that should be conducted,
+#'   is typically costly due to the large number of hyperparameter optimizations that should be conducted,
 #'   nonetheless, fgpm_factory implements the virtual equations introduced by Dubrule (1983) for Gaussian
-#'   processes, which require a single hyperparameters optimization. See the reference below for more details.
-#' @param ctraints an optional list specifying the constraints of the structural optimization problem. Valid
+#'   processes, which require a single hyperparameter optimization. See the reference below for more details.
+#' @param ctraints An optional list specifying the constraints of the structural optimization problem. Valid
 #'   entries for this list are: \cr\cr
 #'   \strong{*}\emph{s_keepOn}: a numerical array indicating the scalar inputs that should remain active in the
 #'     model. It should contain the index of the columns of sIn corresponding to the inputs to keep active. \cr\cr
@@ -166,12 +166,12 @@ show.Xfgpm <- function(object) {
 #'     values should be taken from the possibilities offered by the \link[funGp]{fgpm} function for the argument
 #'     \emph{kerType} therein. Valid choices at this time are "gauss", "matern5_2" and "matern3_2". If not
 #'     provided, all the available kernel functions will be tried.
-#' @param setup an optional list indicating the value for some parameters of the structural optimization
+#' @param setup An optional list indicating the value for some parameters of the structural optimization
 #'   algorithm. The ant colony optimization algorithm available at this time allows the following entries: \cr\cr
 #'   \strong{Initial pheromone load}\cr\cr
 #'     \strong{*}\emph{tao0}: a number indicating the initial pheromone load on links pointing out to the
 #'       selection of a distance type, a projection basis or a kernel type. Default is 0.1. \cr\cr
-#'     \strong{*}\emph{dop.s}: a number controlling how likely is to activate a scalar input. It operates on a
+#'     \strong{*}\emph{dop.s}: a number controlling how likely it is to activate a scalar input. It operates on a
 #'       relation of the type \eqn{A  = dop.s * I}, where \emph{A} is the initial pheromone load of links
 #'       pointing out to the activation of scalar inputs and \emph{I} is the initial pheromone load of links
 #'       pointing out to their inactivation. Default is 1. \cr\cr
@@ -180,9 +180,9 @@ show.Xfgpm <- function(object) {
 #'       function that determines the initial pheromone values on the links connecting the L2_byindex distance
 #'       with the projection dimension. Default are 2 and 1.4, respectively. \cr\cr
 #'   \strong{Local pheromone update}\cr\cr
-#'     \strong{*}\emph{rho.l}: a number specifying the pheromone evaporation rate. Default is 0.1 \cr\cr
+#'     \strong{*}\emph{rho.l}: a number specifying the pheromone evaporation rate. Default is 0.1. \cr\cr
 #'   \strong{Global pheromone update}\cr\cr
-#'     \strong{*}\emph{u.gbest}: a boolean indicating if at each iterations, the pheromone load on the links
+#'     \strong{*}\emph{u.gbest}: a boolean indicating if at each iteration, the pheromone load on the links
 #'       of the best ant of the whole trial should be reinforced. Default is FALSE. \cr\cr
 #'     \strong{*}\emph{n.ibest}: a number indicating how many top ants of each iteration should be used for
 #'       pheromone reinforcement. Default is 1. \cr\cr
@@ -196,23 +196,23 @@ show.Xfgpm <- function(object) {
 #'       the ant through the link with higher pheromone load; the second rule works based on probabilities which
 #'       are proportional to the pheromone load on the feasible links. The ants will randomly chose one of the two
 #'       rules at each time. They will opt for rule 1 with probability \emph{q0}. Default is 0.95.
-#' @param time.lim an optional number specifying a time limit in seconds to be used as stopping condition for the
+#' @param time.lim An optional number specifying a time limit in seconds to be used as stopping condition for the
 #'   structural optimization.
-#' @param nugget an optional variance value standing for the homogeneous nugget effect. A tiny nugget might help
+#' @param nugget An optional variance value standing for the homogeneous nugget effect. A tiny nugget might help
 #'   to overcome numerical problems related to the ill-conditioning of the covariance matrix. Default is 1e-8.
-#' @param n.starts an optional integer indicating the number of initial points to use for the optimization of the
+#' @param n.starts An optional integer indicating the number of initial points to use for the optimization of the
 #'   hyperparameters. A parallel processing cluster can be exploited in order to speed up the evaluation of
 #'   multiple initial points. More details in the description of the argument par.clust below. Default is 1.
-#' @param n.presample an optional integer indicating the number of points to be tested in order to select the
+#' @param n.presample An optional integer indicating the number of points to be tested in order to select the
 #'   n.starts initial points. The n.presample points will be randomly sampled from the hyper-rectangle defined by: \cr \cr
 #'   1e-10 \eqn{\le} \code{ls_s.hyp[i]} \eqn{\le} 2*max(\code{sMs[[i]]}), for i in 1 to the number of scalar inputs, \cr
 #'   1e-10 \eqn{\le} \code{ls_f.hyp[i]} \eqn{\le} 2*max(\code{fMs[[i]]}), for i in 1 to the number of functional inputs, \cr \cr
 #'   with  sMs and fMs the lists of distance matrices for the scalar and functional inputs, respectively. The value of
 #'   n.starts will be assigned to n.presample if this last is smaller. Default is 20.
-#' @param par.clust an optional parallel processing cluster created with the \code{\link[parallel]{makeCluster}}
+#' @param par.clust An optional parallel processing cluster created with the \code{\link[parallel]{makeCluster}}
 #'   function of the \link[=parallel]{parallel package}. If not provided, structural configurations are evaluated in
 #'   sequence.
-#' @param pbars an optional boolean indicating if progress bars should be displayed.
+#' @param pbars An optional boolean indicating if progress bars should be displayed.
 #'
 #' @return An object of class \linkS4class{Xfgpm} containing the data structures linked to the structural optimization
 #'   of a funGp model. It includes as the main component, an object of class \linkS4class{fgpm} corresponding to the
@@ -241,8 +241,12 @@ show.Xfgpm <- function(object) {
 #' \emph{Journal of the International Association for Mathematical Geology}, \strong{15},  687-699.
 #' \href{https://link.springer.com/article/10.1007/BF01033232}{[MG]}
 #'
-#' @seealso \strong{*} \link[funGp]{plotX} for diagnostic plots for a fgpm_factory output and selected model;
+#'
+#'
+#' @seealso \strong{*} \link[funGp]{plot,Xfgpm-method} for a call to \link[funGp]{plotEvol} with \code{which = "evolution"}
+#'        or to \link[funGp]{plotX} with \code{which = "diag"};
 #' @seealso \strong{*} \link[funGp]{plotEvol} for a plot of the evolution of the model selection algorithm in fgpm_factory;
+#' @seealso \strong{*} \link[funGp]{plotX} for diagnostic plots for a fgpm_factory output and selected model;
 #' @seealso \strong{*} \link[funGp]{get_active_in} for post-processing of input data structures following a fgpm_factory call;
 #' @seealso \strong{*} \link[funGp]{predict} for predictions based on a funGp model;
 #' @seealso \strong{*} \link[funGp]{simulate} for simulations based on a funGp model;
@@ -258,13 +262,13 @@ show.Xfgpm <- function(object) {
 #'
 #' # checking the evolution of the algorithm
 #' plot(xm, which="evol")
-#' 
-#' # Summary the tested configurations
-#' summary(xm) 
-#'          
-#' # checking the log of crashed iterations          
+#'
+#' # Summary of the tested configurations
+#' summary(xm)
+#'
+#' # checking the log of crashed iterations
 #' print(xm@log.crashes)
-#'          
+#'
 #' # building the model with the default fgpm arguments to compare
 #' set.seed(100)
 #' n.tr <- 32
@@ -277,23 +281,23 @@ show.Xfgpm <- function(object) {
 #' plot(m1) # plotting the model
 #'
 #' # improving performance with more iterations_______________________________________________
-#' plot(xm25, which="evol")  
-#' plot(xm25, which="diag") 
-#'          
+#' plot(xm25, which="evol")
+#' plot(xm25, which="diag")
+#'
 #' # custom solution space____________________________________________________________________
-#' plot(xmc, which="evol")  
-#' plot(xmc, which="diag")  
+#' plot(xmc, which="evol")
+#' plot(xmc, which="diag")
 #'
 #' # verifying constraints with the log of some successfully built models
 #' summary(xmc)
-#' 
+#'
 #' # custom heuristic parameters______________________________________________________________
 #' # verifying heuristic setup through the details of the Xfgpm object
 #' unlist(xmh@details$param)
-#' 
+#'
 #' # stopping condition based on time_________________________________________________________
 #' summary(xms)
-#'          
+#'
 #' \dontrun{
 #' # parallelization in the model factory_____________________________________________________
 #' # generating input and output data
@@ -313,7 +317,7 @@ show.Xfgpm <- function(object) {
 #' # NOTE: in order to provide progress bars for the monitoring of time consuming processes
 #' #       ran in parallel, funGp relies on the doFuture and future packages. Parallel processes
 #' #       suddenly interrupted by the user tend to leave corrupt connections. This problem is
-#' #       originated outside funGp, which limits our control over it. On section 4.1 of the
+#' #       originated outside funGp, which limits our control over it. On section 4.1 of the manual
 #' #       of funGp, we provide a temporary solution to the issue and we remain attentive in
 #' #       case it appears a more elegant way to handle it or a manner to suppress it.
 #' #
@@ -672,13 +676,13 @@ printSpace <- function(ds, df, space) {
 ## =============================================================================
 ##' Display a summary of the structure for up to \code{n} \code{fgpm}
 ##' objects visited during the ACO optimization.
-##' 
+##'
 ##' @title Summary Method
 ##' @param object an \code{Xfgpm} object.
 ##' @param n maximal number of lines (\code{fgpm} objects) to show.
 ##' @param ... Not used yet.
 ##' @return an object inheriting from \code{data.frame}.
-##' 
+##'
 ##' @method summary Xfgpm
 ##' @rdname summary-methods
 ##' @aliases summary,Xfgpm-method
@@ -693,20 +697,20 @@ summary.Xfgpm <- function(object, n = 24, ...) {
     ds <- ncol(object@sIn)
     df <- length(object@fIn)
     n <- pmin(n, nrow(object@log.success@sols))
-    
+
     ## =========================================================================
     ## When the number of variables is small enough, the structural
     ## parameters can be displayed in a single data frame. With more variables
-    ## we split the content in two data frames (daf): one daf for  
+    ## we split the content in two data frames (daf): one daf for
     ## =========================================================================
-    
+
     if (4 * ds + 22 * df < 80) {
         daf <- formatShort(object@log.success@sols)
         daf <- cbind(daf,
                      "Q2" = sprintf("%5.3f", object@log.success@fitness))
         n <- pmin(n, nrow(daf))
         daf <- daf[1L:n, , drop = FALSE]
-        daf <- list("Inputs and details" = daf) 
+        daf <- list("Inputs and details" = daf)
     } else {
         fullDf <- object@log.success@sols
         nms <- colnames(fullDf)
@@ -719,16 +723,16 @@ summary.Xfgpm <- function(object, n = 24, ...) {
         activeDf <- cbind(activeDf,
                           "Q2" = sprintf("%5.3f", object@log.success@fitness))
         activeDf <- activeDf[1L:n, , drop = FALSE]
-        
+
         indDf <-  grep("_F[0-9]*", names(fullDf))
         funDf <- formatShort(fullDf[ , c(indDf, indKernel), drop = FALSE])
         funDf <- cbind(funDf,
                        "Q2" = sprintf("%5.3f", object@log.success@fitness))
         funDf <- funDf[1L:n, , drop = FALSE]
         daf <- list("State of inputs" = activeDf,
-                 "Details for functional inputs " = funDf) 
+                 "Details for functional inputs " = funDf)
     }
-    
+
     class(daf) <- c("summary.Xfgpm", "list")
     daf
 }
@@ -742,18 +746,18 @@ print.summary.Xfgpm <- function(x, ...) {
     for (i in seq_along(x)) {
         cat(names(x)[i], "\n")
         print(x[[i]])
-    }   
+    }
 }
 
 ## =============================================================================
 ## Re fit a fgpm model
 ## =============================================================================
 ##' Refit a \code{fgpm} model as described in a \code{Xfgpm} object.
-##' 
+##'
 ##' @title Refit a \code{fgpm} model in a \code{Xfgpm} object
 ##'
 ##' @param x a \code{Xfgpm} object.
-##' 
+##'
 ##' @param i an integer giving the index of the model to refit. The
 ##'     models are in decreasing fit quality as assessed by the
 ##'     Leave-One-Out \eqn{Q^2}{Q2}.
@@ -774,7 +778,7 @@ print.summary.Xfgpm <- function(x, ...) {
 ##'     expected to be close to the same as \code{x[[1]]}. Yet due to
 ##'     the refit, the two models \code{x@model} and \code{x[[1]]} can
 ##'     differ, see the explanations in the \bold{Caution} section.
-##' 
+##'
 ##' @export
 ##' @method [[ Xfgpm
 ##'
@@ -782,7 +786,7 @@ print.summary.Xfgpm <- function(x, ...) {
 ##'     definition of a `fgpm` model e.g., to evaluate it using new
 ##'     data `sIn` `fIn`, `sOut`.
 ##'
-##' 
+##'
 setMethod("[[", "Xfgpm",
           function(x, i) {
               if (i > length(x@log.success@args)) {
@@ -814,12 +818,12 @@ setMethod("[[", "Xfgpm",
 ##'
 ##' The models are sorted by decreasing quality so \code{i = 1} extracts
 ##' the definition of the best model.
-##' 
+##'
 ##' @title Retrieve a \code{fgpm} from within a \code{Xfgpm} object
-##' 
+##'
 ##' @param object A \code{Xfgpm} object as created by
 ##' \code{\link{fgpm_factory}}.
-##' 
+##'
 ##' @param ind The index (or rank) of the model in \code{object}.
 ##'
 ##' @return A parsed R code defining the \code{fgpm} model.
@@ -831,9 +835,9 @@ setMethod("[[", "Xfgpm",
 ##'     to re-create a \code{fgpm} object using \emph{the same data}
 ##'     as that used to create the \code{Xfgpm} object in
 ##'     \code{object}.
-##' 
+##'
 ##' @export
-##' 
+##'
 ##' @examples
 ##' set.seed(100)
 ##' n.tr <- 32
@@ -844,16 +848,16 @@ setMethod("[[", "Xfgpm",
 ##'             f2 = matrix(runif(n.tr * 22), ncol = 22))
 ##' sOut <- fgp_BB7(sIn, fIn, n.tr)
 ##' xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
-##' 
+##'
 ##' ## 'xm@model' is the best 'fgpm' model in 'xm'
 ##' plot(xm@model)
 ##' modelDef(xm, i = 1)
 ##'
-##' ## Define new data 
+##' ## Define new data
 ##' n.new <- 3^5
 ##' x1 <- x2 <- x3 <- x4 <- x5 <- seq(0, 1, length = n.new^(1/5))
 ##'
-##' ## replace the data objects from which the model is created 
+##' ## replace the data objects from which the model is created
 ##' sIn <- as.matrix(expand.grid(x1 = x1, x2 = x2, x3 = x3, x4 = x4, x5 = x5))
 ##' fIn <- list(f1 = matrix(runif(n.new * 10), ncol = 10),
 ##'             f2 = matrix(runif(n.new * 22), ncol = 22))
