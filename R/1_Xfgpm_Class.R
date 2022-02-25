@@ -250,8 +250,14 @@ show.Xfgpm <- function(object) {
 #' plot(xm, which="diag")
 #'
 #' # checking the evolution of the algorithm
-#' plot(xm, which="evol")          
-#'
+#' plot(xm, which="evol")
+#' 
+#' # Summary the tested configurations
+#' summary(xm) 
+#'          
+#' # checking the log of crashed iterations          
+#' print(xm@log.crashes)
+#'          
 #' # building the model with the default fgpm arguments to compare
 #' m1 <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut)
 #' plot(m1) # plotting the model
