@@ -2,13 +2,13 @@
 # S4 class for the log of fgpm_factory optimizations using the ACO algorithm
 # ==========================================================================================================
 #' @title S4 class for log of models explored by ant colony in funGp
-#' @description Register of model structures and their performance statistic, if available.
+#' @description Register of model structures and their performance statistics, if available.
 #'
 #' @slot sols Object of class \code{"data.frame"}. Compendium of model structures arranged by rows. Each
 #'   column is linked to one structural parameter of the model such as the state of one variable (inactive,
 #'   active) or the type of kernel function.
 #' @slot args Object of class \code{"list"}. Compendium of model structures represented by objects of class
-#'   \code{"\linkS4class{modelCall}"}
+#'   \code{"\linkS4class{modelCall}"}.
 #' @slot fitness Object of class \code{"numeric"}. Performance statistic of each model, if available.
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
@@ -1051,7 +1051,7 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #' # identifying selected model and corresponding fgpm arguments
 #' opt.model <- xm@model
 #' opt.args <- xm@log.success@args[[1]]
-#' 
+#'
 #' # generating new input data for prediction
 #' n.pr <- 243
 #' sIn.pr <- expand.grid(x1 = seq(0,1,length = n.pr^(1/5)), x2 = seq(0,1,length = n.pr^(1/5)),
@@ -1067,8 +1067,8 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #'
 #' # plotting predictions
 #' plot(opt.model, preds)
-#' 
-#' 
+#'
+#'
 #' # preparing new data for simulation based on inputs kept active____________________________
 #' opt.model <- xm@model
 #' opt.args <- xm@log.success@args[[1]]
@@ -1088,7 +1088,7 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #'
 #' # plotting light simulations
 #' plot(sims_l)
-#' 
+#'
 #' \dontrun{
 #' # rebuilding of 3 best models using new data_______________________________________________
 #' # NOTE: this example is of higher complexity than the previous ones. We recomend you run
