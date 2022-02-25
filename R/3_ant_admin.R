@@ -1064,7 +1064,7 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #' preds <- predict(opt.model, sIn.pr = active$sIn.on, fIn.pr = active$fIn.on)
 #'
 #' # plotting predictions
-#' plot(opt.model, preds)
+#' plot(preds)
 #'
 #'
 #' # preparing new data for simulation based on inputs kept active____________________________
