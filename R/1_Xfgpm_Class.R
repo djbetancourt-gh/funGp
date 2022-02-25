@@ -281,28 +281,6 @@ show.Xfgpm <- function(object) {
 #' summary(xms)
 #'          
 #' \dontrun{
-#' # passing fgpm arguments through fgpm_factory______________________________________________
-#' # generating input and output data
-#' set.seed(100)
-#' n.tr <- 32
-#' sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
-#'                    x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
-#'                    x5 = seq(0,1,length = n.tr^(1/5)))
-#' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
-#' sOut <- fgp_BB7(sIn, fIn, n.tr)
-#'
-#' # calling the funGp factory with custom fgpm parameters (~25 seconds)
-#' xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut,
-#'                    nugget = 0, n.starts = 3, n.presample = 12)
-#'
-#' # NOTE: in the run above, some models crash. This happens because we set the nugget to 0
-#' #       and some input points become duplicates when some variables are removed from
-#' #       the model. We strongly recommend to always run fgpm_factory with at least a
-#' #       small nugget in order to prevent loss of configurations. By default fgpm_factory
-#' #       runs with 1e-8, which is enough in most cases.
-#' xm@log.crashes
-#' }
-#' \dontrun{
 #' # parallelization in the model factory_____________________________________________________
 #' # generating input and output data
 #' set.seed(100)
