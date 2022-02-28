@@ -83,33 +83,33 @@ setMethod("plot", "fgpm",
 ##'
 ##' @title Plot method for the class \code{"Xfgpm"}
 ##'
-##' @param x the \code{Xfgpm} object to plot.
+##' @param x The \code{Xfgpm} object to plot.
 ##'
-##' @param y not used.
+##' @param y Not used.
 ##'
-##' @param which character giving the type of plot wanted. When the
+##' @param which Character giving the type of plot wanted. When the
 ##'     value is \code{"evol"} the method \code{\link{plotEvol}} is
 ##'     used; when the value is \code{"diag"} the method
 ##'     \code{\link{plotX}} is used. See \bold{Examples}.
 ##'
-##' @param calib logical. If \code{TRUE} the calibration plot of the
+##' @param calib Logical. If \code{TRUE} the calibration plot of the
 ##'     selected model will be included in the display in its
 ##'     "diagnostic" part if \code{which} is set to \code{"diag"}.
 ##'
-##' @param fitp logical. If \code{TRUE} a scatter plot of the quality
+##' @param fitp Logical. If \code{TRUE} a scatter plot of the quality
 ##'     of all explored models will be included in the display in its
 ##'     "diagnostic" part if \code{which} is set to \code{"diag"}.
 ##'
-##' @param horiz logical. Used only when \code{which} is \code{"diag"}
+##' @param horiz Logical. Used only when \code{which} is \code{"diag"}
 ##'     and when both \code{calib} and \code{fitp} are \code{TRUE}. If
-##'     \code{horiz} is \code{TRUE} the two subplots are displayed in
+##'     \code{horiz} is \code{TRUE} the two subplots are displayed
 ##'     horizontally (on a same row) rather than vertically which is
 ##'     the default.
 ##'
 ##' @param ... Other graphical parameters to be passed to
 ##'     \code{plotEvol} or \code{plotX} such as \code{main} of
 ##'     \code{xlab}. When \code{which} is \code{"diag"} and both
-##'     \code{calib} and \code{fitp} are \code{TRUE}, the graphical
+##'     \code{calib} and \code{fitp} are \code{TRUE}, the graphical parameters
 ##'     should be enclosed into a list and passed with the formal name
 ##'     \code{calib.gpars} or \code{fitp.gpars}.
 ##'
