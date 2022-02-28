@@ -1008,10 +1008,10 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #'   structural configuration and returns a list with two elements: (i) a \code{matrix} of scalar input
 #'   variables kept active; and (ii) a \code{list} of functional input variables kept active.
 #'
-#' @param sIn sIn an optional matrix of scalar input coordinates with all the orignal scalar input variables.
-#' @param fIn an optional list of functional input coordinates with all the original functional input
+#' @param sIn An optional matrix of scalar input coordinates with all the orignal scalar input variables.
+#' @param fIn An optional list of functional input coordinates with all the original functional input
 #'   variables.
-#' @param args an object of class \code{"\linkS4class{modelCall}"}, which specifies the model structure for
+#' @param args An object of class \code{"\linkS4class{modelCall}"}, which specifies the model structure for
 #'   which the active inputs should be extracted.
 #'
 #' @return An object of class \code{"list"}, containing the following information extracted from the
@@ -1125,8 +1125,11 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #' fIn.nw <- list(f1 = matrix(runif(n.nw*10), ncol = 10), f2 = matrix(runif(n.nw*22), ncol = 22))
 #' sOut.nw <- fgp_BB7(sIn.nw, fIn.nw, n.nw)
 #'
+#' # the second best model
+#' modelDef(xm,2)
 #' # re-building the three best models based on the new data (compact code with all 3 calls)
-#' modStack <- lapply(1:3, function(i) eval(parse(text = argStack[[i]]@string)[[1]]))
+#' newEnv <- list(sIn = sIn.nw, fIn = fIn.nw, sOut = sOut.nw)
+#' modStack <- lapply(1:3, function(i) eval(parse(text =  modelDef(xm,i)), env = newEnv))
 #'
 #'
 #' # <<<<<<< PART 3: making predictions from the three best models found by fgpm_factory >>>>>>>
