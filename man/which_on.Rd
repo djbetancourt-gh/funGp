@@ -32,22 +32,17 @@ The \link[funGp]{fgpm_factory} function returns an object of class \code{"\linkS
 }
 \examples{
 # extracting the indices of the active inputs in an optimized model________________________
-# generating input and output data
+# load precalculated Xfgpm objects
+data("precalculated_Xfgpm_objects")
+# active inputs in the best model
+xm@log.success@args[[1]] # the full fgpm call
 set.seed(100)
 n.tr <- 32
 sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
-                   x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
-                   x5 = seq(0,1,length = n.tr^(1/5)))
+x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
+x5 = seq(0,1,length = n.tr^(1/5)))
 fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
-sOut <- fgp_BB7(sIn, fIn, n.tr)
-\dontrun{
-# optimizing the model structure with fgpm_factory (~12 seconds)
-xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
-
-# active inputs in the best model
-xm@log.success@args[[1]] # the full fgpm call
 which_on(sIn, fIn, xm@log.success@args[[1]]) # only the indices extracted bu which_on
-}
 
 }
 \references{

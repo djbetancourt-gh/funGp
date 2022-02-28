@@ -7,7 +7,7 @@
 ## ******************************************************************************
 
 ## ==============================================================================
-## plot generic. Left undocumented by omitting the title 
+## plot generic. Left undocumented by omitting the title
 ## ==============================================================================
 ##' @name plot
 ##' @rdname plot-methods
@@ -17,7 +17,7 @@ setGeneric(name = "plot", def = function(x, y, ...) standardGeneric("plot"))
 ## ==============================================================================
 ## plot method, class "fgpm"
 ## ==============================================================================
-##' Plot the Leave-One-Out (LOO) calibration 
+##' Plot the Leave-One-Out (LOO) calibration
 ##'
 ##' @description This method provides a diagnostic plot for the
 ##'     validation of regression models. It displays a calibration plot
@@ -25,7 +25,7 @@ setGeneric(name = "plot", def = function(x, y, ...) standardGeneric("plot"))
 ##'     points used to train the model.
 ##'
 ##' @title Plot method for the class \code{"fgpm"}
-##' 
+##'
 ##' @param x A \code{fgpm} object.
 ##' @param y Not used.
 ##' @param ... Graphical parameters. These currently include
@@ -82,11 +82,11 @@ setMethod("plot", "fgpm",
 ##' if wanted.
 ##'
 ##' @title Plot method for the class \code{"Xfgpm"}
-##' 
+##'
 ##' @param x the \code{Xfgpm} object to plot.
 ##'
 ##' @param y not used.
-##' 
+##'
 ##' @param which character giving the type of plot wanted. When the
 ##'     value is \code{"evol"} the method \code{\link{plotEvol}} is
 ##'     used; when the value is \code{"diag"} the method
@@ -105,22 +105,22 @@ setMethod("plot", "fgpm",
 ##'     \code{horiz} is \code{TRUE} the two subplots are displayed in
 ##'     horizontally (on a same row) rather than vertically which is
 ##'     the default.
-##' 
+##'
 ##' @param ... Other graphical parameters to be passed to
 ##'     \code{plotEvol} or \code{plotX} such as \code{main} of
 ##'     \code{xlab}. When \code{which} is \code{"diag"} and both
 ##'     \code{calib} and \code{fitp} are \code{TRUE}, the graphical
 ##'     should be enclosed into a list and passed with the formal name
 ##'     \code{calib.gpars} or \code{fitp.gpars}.
-##'  
+##'
 ##' @return Nothing.
-##' 
+##'
 ##' @note This method is provided only XXXY. See \code{\link{plotEvol}} and
 ##'     \code{\link{plotX}} methods.
 ##'
 ##' @export
 ##' @method plot Xfgpm
-##' 
+##'
 ##' @examples
 ##' # generating input and output data
 ##' set.seed(100)
@@ -152,7 +152,7 @@ setMethod("plot", "Xfgpm",
                           warning("the formal arguments 'calib' and 'fitp' are ",
                                   "used only when 'which' is \"diag\"")
                       }
-                      plotEvol.Xfgpm(x.model = x,  ...) 
+                      plotEvol.Xfgpm(x.model = x,  ...)
                   } else if (which == "diag") {
                       plotX.Xfgpm(x.model = x, calib = calib, fitp = fitp,
                                  horiz = horiz, ...)
@@ -163,10 +163,10 @@ setMethod("plot", "Xfgpm",
 ## plot method, S3 class "predict.fgpm"
 ## ==============================================================================
 ##' @title Plot method for the predictions of a \code{fgpm} model
-##' 
+##'
 ##' @description This method displays the predicted output values
 ##'     delivered by a funGp Gaussian process model.
-##' 
+##'
 ##' @param x an object with S3 class \code{"predict.gfgpm"}. This is a
 ##'     list containing the predictions and confidence bands as
 ##'     created by the \link[funGp]{predict,fgpm-method} method for the S3 class
@@ -181,7 +181,7 @@ setMethod("plot", "Xfgpm",
 ##'     the true output. If not provided, only the second plot will be
 ##'     made, and the predictions will be arranged according to the
 ##'     increasing order of the predicted output.
-##' 
+##'
 ##' @param sOut.pr alias of \code{y}, used for compatibility reasons.
 ##'
 ##' @param calib an optional boolean indicating if the calibration
@@ -205,7 +205,7 @@ setMethod("plot", "Xfgpm",
 ##'
 ##' @export
 ##' @method plot predict.fgpm
-##' 
+##'
 ##' @return None.
 ##'
 ##' @author José Betancourt, François Bachoc and Thierry Klein
@@ -231,7 +231,7 @@ setMethod("plot", "Xfgpm",
 ##' m1.preds <- predict(m1, sIn.pr = sIn.pr, fIn.pr = fIn.pr)
 ##'
 ##' # plotting predictions
-##' plotPreds(m1, preds = m1.preds)
+##' plot(m1.preds)
 ##'
 ##' # plotting predictions and true output values_______________________________
 ##' # building the model
@@ -263,7 +263,7 @@ setMethod("plot", "Xfgpm",
 ##'
 ##' # only sorted output plot
 ##' plot(m1.preds, sOut.pr = sOut.pr, calib = FALSE)
-##' 
+##'
 plot.predict.fgpm <- function(x, y = NULL, sOut.pr = NULL,
                               calib = TRUE, sortp = TRUE, ...) {
 
@@ -274,25 +274,25 @@ plot.predict.fgpm <- function(x, y = NULL, sOut.pr = NULL,
         }
         sOut.pr <- y
     }
-    
+
     plotPreds.fgpm(preds = x, sOut.pr = sOut.pr, calib = calib,
-                   sortp = sortp, ...) 
-    
+                   sortp = sortp, ...)
+
 }
 
 # ==============================================================================
 ## plot method, S3 class "simulate.fgpm"
 ## ==============================================================================
 ##' @title Plot method for the simulations of a \code{fgpm} model
-##' 
+##'
 ##' @description This method displays the simulated output values
 ##'     delivered by a funGp Gaussian process model.
 ##'
 ##' @param x an object with S3 class \code{simulate.fgpm} as created
-##'     by the \link[funGp]{simulate,fgpm-method} met method.  
+##'     by the \link[funGp]{simulate,fgpm-method} met method.
 ##'
 ##' @param y Not used.
-##' 
+##'
 ##' @param detail an optional character string specifying the data
 ##'     elements that should be included in the plot, to be chosen
 ##'     between \code{"light"} and \code{"full"}. A \emph{light} plot
@@ -303,7 +303,7 @@ plot.predict.fgpm <- function(x, y = NULL, sOut.pr = NULL,
 ##'     confidence bands) are provided, otherwise it will be
 ##'     ignored. See \link[funGp]{simulate} for more details on the
 ##'     generation of light and full simulations.
-##' 
+##'
 ##' @param ... additional arguments affecting the display. The
 ##'     following typical graphics parameters are valid entries:
 ##'     \emph{xlim}, \emph{ylim}, \emph{xlab}, \emph{ylab},
@@ -317,7 +317,7 @@ plot.predict.fgpm <- function(x, y = NULL, sOut.pr = NULL,
 ##'
 ##' @export
 ##' @method plot simulate.fgpm
-##' 
+##'
 ##' @examples
 ##' # plotting light simulations________________________________________________
 ##' # building the model
@@ -369,7 +369,7 @@ plot.predict.fgpm <- function(x, y = NULL, sOut.pr = NULL,
 ##' plot(simsf, detail = "light")
 ##'
 plot.simulate.fgpm <- function(x, y = NULL, detail = NA, ...) {
-  
+
     if (is.na(detail)) {
         if (is.list(x)) detail <- "full"
         else detail <- "light"
@@ -380,10 +380,10 @@ plot.simulate.fgpm <- function(x, y = NULL, detail = NA, ...) {
         } else detail <- detVal[i]
         if ((detail == "full") && !is.list(x)) {
             warning("the value \"full\" for 'detail' can only ",
-                    "be used when `x` is a list") 
+                    "be used when `x` is a list")
             detail <- "light"
         }
     }
-    plotSims.fgpm(sims = x, detail = detail, ...) 
-    
+    plotSims.fgpm(sims = x, detail = detail, ...)
+
 }

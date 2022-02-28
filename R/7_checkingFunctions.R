@@ -570,7 +570,7 @@ check_duplicates_S <- function(sBench, sCand, oCand, iCand){
 ##'     elements of \code{newfIn} must be numeric matrices with the
 ##'     same number of rows.
 ##'
-##' @return A list with the following elements
+##' @return A list with the following elements.
 ##' \itemize{
 ##'    \item{n }{The number of observations.}
 ##'    \item{newsIn }{ The checked and possibly corrected matrix of
@@ -581,7 +581,7 @@ check_duplicates_S <- function(sBench, sCand, oCand, iCand){
 ##'       some elements all will be numeric matrices with the same number
 ##'       of columns.}
 ##' }
-##' So the "official" way to query about the number of scalar and functional
+##' Hence the "official" way to query about the number of scalar and functional
 ##' inputs is to use \code{ncol(res$newsIn)} and \code{length(res$newfIn)}
 ##' where \code{res} is the returned object.
 ##'
@@ -680,7 +680,7 @@ check_new_inputs <- function(object, newsIn = NULL, newfIn = NULL) {
             stop("'object' must inherit from \"fgpm\"")
 
         if (object@ds != ncol(newsIn)) {
-            stop("'object' requires ", object@ds, "scalar inputs")
+            stop("'object' requires ", object@ds, " scalar inputs")
         }
         if (object@df != length(newfIn)) {
             stop("'object' requires 'object@df' functional inputs")

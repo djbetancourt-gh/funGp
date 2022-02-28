@@ -28,42 +28,22 @@ The \link[funGp]{fgpm_factory} function returns an object of class \code{"\linkS
   variables kept active; and (ii) a \code{list} of functional input variables kept active.
 }
 \examples{
-# extracting the indices of the active inputs in an optimized model________________________
-# generating input and output data
+# load precalculated Xfgpm objects
+data("precalculated_Xfgpm_objects")
+# indices of active inputs in the best model
+xm@log.success@args[[1]] # the full fgpm call
 set.seed(100)
 n.tr <- 32
 sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
-                   x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
-                   x5 = seq(0,1,length = n.tr^(1/5)))
+x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
+x5 = seq(0,1,length = n.tr^(1/5)))
 fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
-sOut <- fgp_BB7(sIn, fIn, n.tr)
-\dontrun{
-# optimizing the model structure with fgpm_factory (~12 seconds)
-xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
-
-# indices of active inputs in the best model
-xm@log.success@args[[1]] # the full fgpm call
 which_on(sIn, fIn, xm@log.success@args[[1]]) # only the indices extracted bu which_on
 
 # data structures of active inputs
 active <- get_active_in(sIn, fIn, xm@log.success@args[[1]])
 active$sIn.on # scalar data structures
 active$fIn.on # functional data structures
-}
-\dontrun{
-# preparing new data for prediction based on inputs kept active____________________________
-# generating input and output data for structural optimization
-set.seed(100)
-n.tr <- 32
-sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
-                   x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
-                   x5 = seq(0,1,length = n.tr^(1/5)))
-fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
-sOut <- fgp_BB7(sIn, fIn, n.tr)
-
-# optimizing the model structure with fgpm_factory (~12 seconds)
-xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
-
 # identifying selected model and corresponding fgpm arguments
 opt.model <- xm@model
 opt.args <- xm@log.success@args[[1]]
@@ -82,31 +62,17 @@ active <- get_active_in(sIn.pr, fIn.pr, opt.args)
 preds <- predict(opt.model, sIn.pr = active$sIn.on, fIn.pr = active$fIn.on)
 
 # plotting predictions
-plotPreds(opt.model, preds)
-}
-\dontrun{
+plot(opt.model, preds)
+
+
 # preparing new data for simulation based on inputs kept active____________________________
-# generating input and output data for structural optimization
-set.seed(100)
-n.tr <- 32
-sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
-                   x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
-                   x5 = seq(0,1,length = n.tr^(1/5)))
-fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
-sOut <- fgp_BB7(sIn, fIn, n.tr)
-
-# optimizing the model structure with fgpm_factory (~12 seconds)
-xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
-
-# identifying selected model and corresponding fgpm arguments
 opt.model <- xm@model
 opt.args <- xm@log.success@args[[1]]
 
 # generating new input data for simulation
 n.sm <- 243
 sIn.sm <- expand.grid(x1 = seq(0,1,length = n.sm^(1/5)), x2 = seq(0,1,length = n.sm^(1/5)),
-                      x3 = seq(0,1,length = n.sm^(1/5)), x4 = seq(0,1,length = n.sm^(1/5)),
-                      x5 = seq(0,1,length = n.sm^(1/5)))
+                      x3 = seq(0,1,length = n.sm^(1/5)), x4 = seq(0,1,length = n.sm^(1/5)))
 fIn.sm <- list(f1 = matrix(runif(n.sm*10), ncol = 10), f2 = matrix(runif(n.sm*22), ncol = 22))
 
 # prunning data structures for simulation to keep only active inputs!!
@@ -116,8 +82,8 @@ active <- get_active_in(sIn.sm, fIn.sm, opt.args)
 sims_l <- simulate(opt.model, nsim = 10, sIn.sm = sIn.sm, fIn.sm = fIn.sm)
 
 # plotting light simulations
-plotSims(opt.model, sims_l)
-}
+plot(sims_l)
+
 \dontrun{
 # rebuilding of 3 best models using new data_______________________________________________
 # NOTE: this example is of higher complexity than the previous ones. We recomend you run
@@ -140,18 +106,8 @@ plotSims(opt.model, sims_l)
 
 # <<<<<<< PART 1: calling fgpm_factory to perform the structural optimization >>>>>>>
 #         -------------------------------------------------------------------
-# generating input and output data for structural optimization
-set.seed(100)
-n.tr <- 32
-sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
-                   x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
-                   x5 = seq(0,1,length = n.tr^(1/5)))
-fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
-sOut <- fgp_BB7(sIn, fIn, n.tr)
-
-# optimizing the model structure with fgpm_factory (~12 seconds)
-xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
-
+this part is precalculated and loaded via data("precalculated_Xfgpm_objects")
+summary(xm)
 
 # <<<<<<< PART 2: re-building the three best models found by fgpm_factory >>>>>>>
 #         ---------------------------------------------------------------

@@ -71,7 +71,7 @@ fIn.pr <- list(f1 = matrix(runif(n.pr * 10), ncol = 10),
 m1.preds <- predict(m1, sIn.pr = sIn.pr, fIn.pr = fIn.pr)
 
 # plotting predictions
-plotPreds(m1, preds = m1.preds)
+plot(m1.preds)
 
 # plotting predictions and true output values_______________________________
 # building the model

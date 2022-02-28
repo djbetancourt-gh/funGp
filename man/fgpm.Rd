@@ -131,14 +131,14 @@ mf <- fgpm(fIn = fIn, sOut = sOut)
 msf <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut)
 
 # plotting the three models
-plotLOO(ms)
-plotLOO(mf)
-plotLOO(msf)
+plot(ms)
+plot(mf)
+plot(msf)
 
 # printing the three models
-ms # equivalent to show(ms)
-mf # equivalent to show(mf)
-msf # equivalent to show(msf)
+summary(ms) # equivalent to show(ms)
+summary(mf) # equivalent to show(mf)
+summary(msf) # equivalent to show(msf)
 
 
 # recovering useful information from a funGp model_________________________________________
@@ -177,7 +177,7 @@ fIn.pr <- list(f1 = matrix(runif(n.pr*10), ncol = 10), matrix(runif(n.pr*22), nc
 m1.preds <- predict(m1, sIn.pr = sIn.pr, fIn.pr = fIn.pr)
 
 # plotting predictions
-plotPreds(m1, preds = m1.preds)
+plot(m1, preds = m1.preds)
 
 
 # simulating from a funGp model____________________________________________________________
@@ -199,7 +199,7 @@ fIn.sm <- list(f1 = matrix(runif(n.sm*10), ncol = 10), matrix(runif(n.sm*22), nc
 m1.sims <- simulate(m1, nsim = 10, sIn.sm = sIn.sm, fIn.sm = fIn.sm)
 
 # plotting simulations
-plotSims(m1, m1.sims)
+plot(m1.sims)
 
 
 # creating funGp model using custom fgpm arguments_________________________________________
@@ -223,7 +223,7 @@ m1 <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut,
            f_pdims = c(0,5), f_basType = c(NA, "B-splines"))
 
 # plotting the model
-plotLOO(m1)
+plot(m1)
 
 # printing the model
 m1 # equivalent to show(m1)
