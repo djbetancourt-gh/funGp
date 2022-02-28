@@ -17,7 +17,7 @@ setGeneric(name = "plot", def = function(x, y, ...) standardGeneric("plot"))
 ## ==============================================================================
 ## plot method, class "fgpm"
 ## ==============================================================================
-##' Plot the Leave-One-Out (LOO) calibration
+##' Plot the Leave-One-Out (LOO) calibration.
 ##'
 ##' @description This method provides a diagnostic plot for the
 ##'     validation of regression models. It displays a calibration plot
@@ -34,7 +34,7 @@ setGeneric(name = "plot", def = function(x, y, ...) standardGeneric("plot"))
 ##'    \item{\code{pch}, \code{pt.col}, \code{pt.bg}, \code{pt.cex}}{ to set
 ##'        the symbol used for the points and the related properties.}
 ##'    \item{\code{line}}{ to set the color used for the line.}
-##'    \item{\code{xlab}, \code{ylab},\code{main}}{ to set
+##'    \item{\code{xlab}, \code{ylab}, \code{main}}{ to set
 ##'        the labels of the axes and the main title.} See
 ##'        \bold{Examples}.
 ##' }
