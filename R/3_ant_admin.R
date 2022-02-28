@@ -822,23 +822,23 @@ fitNtests_ACO <- function(ant, sIn, fIn, sOut, extargs, base,
 # ==========================================================================================================
 # Function to prepare input data structures for prediction based on a fgpm arguments
 # ==========================================================================================================
-#' @title Preparation of inputs for predictions based on an fgpm modelCall
-#' @description \strong{Deprecated function, use \link[funGp]{get_active_in} instead.}\cr This function prepared
+#' @title Preparation of inputs for predictions based on a fgpm modelCall
+#' @description \strong{Deprecated function, use \link[funGp]{get_active_in} instead.}\cr This function prepares
 #'   input data structures according to the active inputs specified by a \code{"\linkS4class{modelCall}"}
 #'   object. This function is intended to easily adapt the data structures to the requirements of a specific
 #'   model delivered by the model factory function \link[funGp]{fgpm_factory}.
 #'
-#' @param sIn.pr sIn.pr an optional matrix of scalar input coordinates at which the output values should be
+#' @param sIn.pr An optional matrix of scalar input coordinates at which the output values should be
 #'   predicted. Each column is interpreted as a scalar input variable and each row as a coordinate.
 #'   Either scalar input coordinates (sIn.pr), functional input coordinates (fIn.pr), or both must be provided.
-#'   The \code{"\linkS4class{modelCall}"} object provided through args will lead the extraction of only the
+#'   The \code{"\linkS4class{modelCall}"} object provided through args will lead to the extraction of only the
 #'   active scalar inputs in the model.
-#' @param fIn.pr an optional list of functional input coordinates at which the output values should be
+#' @param fIn.pr An optional list of functional input coordinates at which the output values should be
 #'   predicted. Each element of the list is interpreted as a functional input variable. Every functional input
 #'   variable should be provided as a matrix with one curve per row. Either scalar input coordinates (sIn.pr),
 #'   functional input coordinates (fIn.pr), or both must be provided. The \code{"\linkS4class{modelCall}"}
-#'   object provided through args will lead the extraction of only the active functional inputs in the model.
-#' @param args an object of class \code{"\linkS4class{modelCall}"}, which specifies the set of active
+#'   object provided through args will lead to the extraction of only the active functional inputs in the model.
+#' @param args An object of class \code{"\linkS4class{modelCall}"}, which specifies the set of active
 #'   scalar and functional inputs.
 #'
 #' @return An object of class \code{"list"}, containing the input data structures with only the active inputs
