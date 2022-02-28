@@ -914,7 +914,7 @@ format4pred <- function(sIn.pr = NULL, fIn.pr = NULL, args) {
 #' x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
 #' x5 = seq(0,1,length = n.tr^(1/5)))
 #' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
-#' which_on(sIn, fIn, xm@log.success@args[[1]]) # only the indices extracted bu which_on
+#' which_on(sIn, fIn, xm@log.success@args[[1]]) # only the indices extracted by which_on
 #'
 #' @importFrom qdapRegex rm_between
 #' @export
@@ -1025,7 +1025,7 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #' \emph{RISCOPE project}.
 #' \href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
 #'
-#' @seealso \strong{*} \link[funGp]{which_on} for details how to obtain only on the indices of the active inputs.
+#' @seealso \strong{*} \link[funGp]{which_on} for details on how to obtain only the indices of the active inputs.
 #' @seealso \strong{*} \linkS4class{modelCall} for details on the \emph{args} argument.
 #' @seealso \strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection.
 #' @seealso \strong{*} \linkS4class{Xfgpm} for details on object delivered by \link[funGp]{fgpm_factory}.
@@ -1040,7 +1040,7 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #' x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
 #' x5 = seq(0,1,length = n.tr^(1/5)))
 #' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
-#' which_on(sIn, fIn, xm@log.success@args[[1]]) # only the indices extracted bu which_on
+#' which_on(sIn, fIn, xm@log.success@args[[1]]) # only the indices extracted by which_on
 #'
 #' # data structures of active inputs
 #' active <- get_active_in(sIn, fIn, xm@log.success@args[[1]])
@@ -1082,7 +1082,7 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #' active <- get_active_in(sIn.sm, fIn.sm, opt.args)
 #'
 #' # making light simulations
-#' sims_l <- simulate(opt.model, nsim = 10, sIn.sm = sIn.sm, fIn.sm = fIn.sm)
+#' sims_l <- simulate(opt.model, nsim = 10, sIn.sm = active$sIn.on, fIn.sm = active$fIn.on)
 #'
 #' # plotting light simulations
 #' plot(sims_l)
@@ -1096,7 +1096,7 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #' #       In the second example above we showed how to use get_active_in to prune the input
 #' #       data structures for prediction based on the fgpm arguments of the best model found
 #' #       by fgpm_factory. In this new example we generalize that concept by: (i) rebuilding
-#' #       the 3 best models fouond by fgpm_factory using new data, (ii) pruning the input
+#' #       the 3 best models found by fgpm_factory using new data, (ii) pruning the input
 #' #       data structures used for prediction with each of the models, and (iii) plotting
 #' #       the predictions made by the three models. The key ingredient here is that the
 #' #       three best models might have different scalar and functional inputs active. The
@@ -1109,7 +1109,7 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #'
 #' # <<<<<<< PART 1: calling fgpm_factory to perform the structural optimization >>>>>>>
 #' #         -------------------------------------------------------------------
-#' this part is precalculated and loaded via data("precalculated_Xfgpm_objects")
+#' # this part is precalculated and loaded via data("precalculated_Xfgpm_objects")
 #' summary(xm)
 #'
 #' # <<<<<<< PART 2: re-building the three best models found by fgpm_factory >>>>>>>
