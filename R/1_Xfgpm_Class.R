@@ -253,8 +253,7 @@ show.Xfgpm <- function(object) {
 #' @seealso \strong{*} \link[funGp]{update} for post-creation updates on a funGp model.
 #'
 #' @examples
-#' # calling data with precalculated Xfgpm objects_________________________________________
-#' data("precalculated_Xfgpm_objects")
+#' # Data with precalculated Xfgpm objects are already available
 #' # Optimized model structure for fgp_BB7 black-box function with standard parameters
 #' # assessing the quality of the model
 #' # in the absolute and also w.r.t. the other explored models
