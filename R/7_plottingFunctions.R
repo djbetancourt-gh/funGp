@@ -895,7 +895,7 @@ decay2probs <- function(k, pmax = NULL, tao0 = .1, delta = 2, dispr = 1.4, doplo
 setGeneric("plotX", function(x.model, ...) standardGeneric("plotX"))
 
 #' @title Diagnostic plots for funGp factory output
-#' @description This method provides two plots for assessing the quality of the output delivered by the
+#' @description \bold{Should not be exported and content is copied to plot-Xfgpm.} This method provides two plots for assessing the quality of the output delivered by the
 #'   model selection algorithm in the \link[funGp]{fgpm_factory} function. The first one is a calibration
 #'   plot similar to the one offered for \linkS4class{fgpm} objects by the \link[funGp]{plotLOO} function.
 #'   This plot allows to validate the absolute quality of the selected model. The second one displays the
@@ -903,19 +903,19 @@ setGeneric("plotX", function(x.model, ...) standardGeneric("plotX"))
 #'   provides a notion of the relative quality of the selected model with respect to the other models that
 #'   can be made using the same data.
 #'
-#' @param x.model an object of class \linkS4class{Xfgpm} containing the output of the model selection
+#' @param x.model An object of class \linkS4class{Xfgpm} containing the output of the model selection
 #'   algorithm in \link[funGp]{fgpm_factory}.
-#' @param calib a boolean indicating whether the calibration plot of the selected model should be included
+#' @param calib A boolean indicating whether the calibration plot of the selected model should be included
 #'   in the display. Default is TRUE.
-#' @param fitp a boolean indicating whether scatter plot of the quality of all explored models should be
+#' @param fitp A boolean indicating whether scatter plot of the quality of all explored models should be
 #'   included in the display. Default is TRUE.
 #'
-#' @param horiz logical. If \code{TRUE} and if both \code{calib} and
+#' @param horiz Logical. If \code{TRUE} and if both \code{calib} and
 #'     \code{fitp} the two subplots corresponding to the calibration
 #'     and the fit quality are displayer horizontally (on a same row)
 #'     rather than vertically as in the default behaviour.
 #'
-#' @param ... additional arguments affecting the display. Since this method allows to generate two plots
+#' @param ... Additional arguments affecting the display. Since this method allows to generate two plots
 #'   from a single function call, the extra arguments for each plot should be included in a list. For the
 #'   calibration plot, the list should be called \emph{calib.gpars}. For the plot of the fitness of
 #'   explored models, the list should be called \emph{fitp.gpars}. The following typical graphics parameters
@@ -1179,7 +1179,8 @@ plotX.Xfgpm <- function(x.model, calib = TRUE, fitp = TRUE,
 setGeneric("plotEvol", function(x.model, ...) standardGeneric("plotEvol"))
 
 #' @title Plot for the evolution of model selection algorithm in funGp
-#' @description This method displays the evolution of the quality of the configurations evaluated along
+#' @description \bold{Should not be exported and content is copied to plot-Xfgpm.}
+#'   This method displays the evolution of the quality of the configurations evaluated along
 #'   the iterations, by the model selection algorithm in the \link[funGp]{fgpm_factory} function. For
 #'   each iteration, the performance statistic of all the evaluated models is printed, along with the
 #'   corresponding median of the group. The plot also includes the global maximum, which corresponds
@@ -1194,9 +1195,9 @@ setGeneric("plotEvol", function(x.model, ...) standardGeneric("plotEvol"))
 #'   respond to the mechanism of exploration implemented in the algorithm, which makes it able to
 #'   progressively move towards better model configurations.
 #'
-#' @param x.model an object of class \linkS4class{Xfgpm} containing the output of the model selection
+#' @param x.model An object of class \linkS4class{Xfgpm} containing the output of the model selection
 #'   algorithm in \link[funGp]{fgpm_factory}.
-#' @param ... additional arguments affecting the plot. The following typical graphics parameters are
+#' @param ... Additional arguments affecting the plot. The following typical graphics parameters are
 #'   valid entries: \emph{xlim}, \emph{ylim}, \emph{xlab}, \emph{ylab}, \emph{main}.
 #'
 #' @return None.
@@ -1214,7 +1215,7 @@ setGeneric("plotEvol", function(x.model, ...) standardGeneric("plotEvol"))
 #' \href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
 #'
 #' @seealso \strong{*} \link[funGp]{fgpm_factory} for structural optimization of funGp models;
-#' @seealso \strong{*} \link[funGp]{plotX} for diagnostic plots for a fgpm_factory output and selected model.
+#' @seealso \strong{*} \link[funGp]{plot,Xfgpm-method} with \code{which = "diag"}.
 #'
 #' @examples
 #' # generating input and output data
