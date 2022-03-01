@@ -155,22 +155,22 @@ plotLOO.fgpm <- function(model, ...) {
 setGeneric("plotPreds", function(model, ...) standardGeneric("plotPreds"))
 
 #' @title Plot for predictions of a funGp model
-#' @description This method displays the predicted output values delivered by a funGp Gaussian process model.
+#' @description \strong{Should not be exported. Replaced by \link[funGp]{plot.predict.fgpm}.}This method displays the predicted output values delivered by a funGp Gaussian process model.
 #'
-#' @param model a \linkS4class{fgpm} object for which the plot is to be made.
-#' @param preds a list containing the predictions and confidence bands. In funGp, this argument is just the
+#' @param model A \linkS4class{fgpm} object for which the plot is to be made.
+#' @param preds A list containing the predictions and confidence bands. In funGp, this argument is just the
 #'   data structure delivered by the \link[funGp]{predict} method.
-#' @param sOut.pr an optional vector (or 1-column matrix) containing the true values of the scalar output at
+#' @param sOut.pr An optional vector (or 1-column matrix) containing the true values of the scalar output at
 #'   the prediction points. If provided, the method will display two figures: (i) a calibration plot with
 #'   true vs predicted output values, and (ii) a plot including the true and predicted output along with the
 #'   confidence bands, sorted according to the increasing order of the true output. If not provided, only
 #'   the second plot will be made, and the predictions will be arranged according to the increasing order of
 #'   the predicted output.
-#' @param calib an optional boolean indicating if the calibration plot should be displayed. Ignored if sOut.pr
+#' @param calib An optional boolean indicating if the calibration plot should be displayed. Ignored if sOut.pr
 #'   is not provided. Default is TRUE.
-#' @param sortp an optional boolean indicating if the plot of sorted output should be displayed. Default is
+#' @param sortp An optional boolean indicating if the plot of sorted output should be displayed. Default is
 #'   TRUE.
-#' @param ... additional arguments affecting the display. Since this method allows to generate two plots from
+#' @param ... Additional arguments affecting the display. Since this method allows to generate two plots from
 #'   a single function call, the extra arguments for each plot should be included in a list. For the
 #'   calibration plot, the list should be called \emph{calib.gpars}. For the plot of the output in increasing
 #'   order, the list should be called \emph{sortp.gpars}. The following typical graphics parameters are valid
@@ -183,9 +183,9 @@ setGeneric("plotPreds", function(model, ...) standardGeneric("plotPreds"))
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #'
 #' @seealso \strong{*} \link[funGp]{fgpm} for the construction of funGp models;
-#' @seealso \strong{*} \link[funGp]{plotLOO} for model diagnostic plots;
+#' @seealso \strong{*} \link[funGp]{plot,fgpm-method} for model diagnostic plots;
 #' @seealso \strong{*} \link[funGp]{simulate} for simulations based on a funGp model;
-#' @seealso \strong{*} \link[funGp]{plotSims} for simulation plots.
+#' @seealso \strong{*} \link[funGp]{plot.simulate.fgpm} for simulation plots.
 #'
 #' @examples
 #' # plotting predictions without the true output values______________________________________

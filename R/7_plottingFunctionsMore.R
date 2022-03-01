@@ -240,6 +240,11 @@ setMethod("plot", "Xfgpm",
 ##'
 ##' @author José Betancourt, François Bachoc and Thierry Klein
 ##'
+##' @seealso \strong{*} \link[funGp]{fgpm} for the construction of funGp models;
+##' @seealso \strong{*} \link[funGp]{plot,fgpm-method} for model diagnostic plots;
+##' @seealso \strong{*} \link[funGp]{simulate} for simulations based on a funGp model;
+##' @seealso \strong{*} \link[funGp]{plot.simulate.fgpm} for simulation plots.
+##'
 ##' @examples
 ##' # plotting predictions without the true output values_______________________
 ##' # building the model
