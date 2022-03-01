@@ -353,6 +353,11 @@ plot.predict.fgpm <- function(x, y = NULL, sOut.pr = NULL,
 ##' @export
 ##' @method plot simulate.fgpm
 ##'
+##' @seealso \strong{*} \link[funGp]{fgpm} for the construction of funGp models;
+##' @seealso \strong{*} \link[funGp]{plot,fgpm-method} for model diagnostic plots;
+##' @seealso \strong{*} \link[funGp]{predict} for predictions based on a funGp model;
+##' @seealso \strong{*} \link[funGp]{plot.predict.fgpm} for prediction plots.
+##'
 ##' @examples
 ##' # plotting light simulations________________________________________________
 ##' # building the model

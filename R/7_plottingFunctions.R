@@ -155,7 +155,7 @@ plotLOO.fgpm <- function(model, ...) {
 setGeneric("plotPreds", function(model, ...) standardGeneric("plotPreds"))
 
 #' @title Plot for predictions of a funGp model
-#' @description \strong{Should not be exported. Replaced by \link[funGp]{plot.predict.fgpm}.}This method displays the predicted output values delivered by a funGp Gaussian process model.
+#' @description \strong{Should not be exported. Replaced by \link[funGp]{plot.predict.fgpm}.} This method displays the predicted output values delivered by a funGp Gaussian process model.
 #'
 #' @param model A \linkS4class{fgpm} object for which the plot is to be made.
 #' @param preds A list containing the predictions and confidence bands. In funGp, this argument is just the
@@ -501,18 +501,18 @@ plotPreds.fgpm <- function(preds, sOut.pr, calib, sortp, ...) {
 setGeneric("plotSims", function(model, sims, ...) standardGeneric("plotSims"))
 
 #' @title Plot for simulations from a funGp model
-#' @description This method displays the simulated output values delivered by a funGp Gaussian process model.
+#' @description \strong{Should not be exported. Replaced by \link[funGp]{plot.simulate.fgpm}.} This method displays the simulated output values delivered by a funGp Gaussian process model.
 #'
-#' @param model a \linkS4class{fgpm} object for which the plot is to be made.
-#' @param sims a list containing the simulated output values. In funGp, this argument is just the data
+#' @param model A \linkS4class{fgpm} object for which the plot is to be made.
+#' @param sims A list containing the simulated output values. In funGp, this argument is just the data
 #'   structure delivered by the \link[funGp]{simulate} method.
-#' @param detail an optional character string specifying the data elements that should be included in the plot,
-#'   to be chosen between "light" and "full". A \emph{light} plot will include only include the simulated
+#' @param detail An optional character string specifying the data elements that should be included in the plot,
+#'   to be chosen between "light" and "full". A \emph{light} plot will include only the simulated
 #'   values, while a a \emph{full} plot will also include the predicted mean and confidence bands at the
 #'   simulation points. This argument will only be used if full simulations (including the mean and confidence
 #'   bands) are provided, otherwise it will be dropped. See \link[funGp]{simulate} for more details on the
 #'   generation of light and full simulations.
-#' @param ... additional arguments affecting the display. The following typical graphics parameters are valid
+#' @param ... Additional arguments affecting the display. The following typical graphics parameters are valid
 #'   entries: \emph{xlim}, \emph{ylim}, \emph{xlab}, \emph{ylab}, \emph{main}. The boolean argument
 #'   \emph{legends} can also be included in any of the two lists in order to control the display of legends
 #'   in the corresponding plot.
@@ -522,9 +522,9 @@ setGeneric("plotSims", function(model, sims, ...) standardGeneric("plotSims"))
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #'
 #' @seealso \strong{*} \link[funGp]{fgpm} for the construction of funGp models;
-#' @seealso \strong{*} \link[funGp]{plotLOO} for model diagnostic plots;
-#' @seealso \strong{*} \link[funGp]{predict} for predictions based on a funGp model;
-#' @seealso \strong{*} \link[funGp]{plotPreds} for prediction plots.
+#' @seealso \strong{*} \link[funGp]{plot,fgpm-method} for model diagnostic plots;
+#' @seealso \strong{*} \link[funGp]{predict} for simulations based on a funGp model;
+#' @seealso \strong{*} \link[funGp]{plot.predict.fgpm} for simulation plots.
 #'
 #' @examples
 #' # plotting light simulations_______________________________________________________________
