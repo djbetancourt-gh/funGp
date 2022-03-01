@@ -197,12 +197,12 @@ setMethod("plot", "Xfgpm",
 ##' @description This method displays the predicted output values
 ##'     delivered by a funGp Gaussian process model.
 ##'
-##' @param x an object with S3 class \code{"predict.gfgpm"}. This is a
+##' @param x An object with S3 class \code{"predict.fgpm"}. This is a
 ##'     list containing the predictions and confidence bands as
-##'     created by the \link[funGp]{predict,fgpm-method} method for the S3 class
-##'     \code{"fgpm"}..
+##'     created by \link[funGp]{predict,fgpm-method} for the S3 class
+##'     \code{"fgpm"}.
 ##'
-##' @param y an optional vector (or 1-column matrix) containing
+##' @param y An optional vector (or 1-column matrix) containing
 ##'     the true values of the scalar output at the prediction
 ##'     points. If provided, the method will display two figures: (i) a
 ##'     calibration plot with true vs predicted output values, and (ii)
@@ -212,16 +212,16 @@ setMethod("plot", "Xfgpm",
 ##'     made, and the predictions will be arranged according to the
 ##'     increasing order of the predicted output.
 ##'
-##' @param sOut.pr alias of \code{y}, used for compatibility reasons.
+##' @param sOut.pr Alias of \code{y}, used for compatibility reasons.
 ##'
-##' @param calib an optional boolean indicating if the calibration
+##' @param calib An optional boolean indicating if the calibration
 ##'     plot should be displayed. Ignored if \code{sOut.pr} is not
 ##'     provided. Default is \code{TRUE}.
 ##'
-##' @param sortp an optional boolean indicating if the plot of sorted
+##' @param sortp An optional boolean indicating if the plot of sorted
 ##'     output should be displayed. Default is TRUE.
 ##'
-##' @param ... additional arguments affecting the display. Since this
+##' @param ... Additional arguments affecting the display. Since this
 ##'     method allows to generate two plots from a single function
 ##'     call, the extra arguments for each plot should be included in a
 ##'     list. For the calibration plot, the list should be called
