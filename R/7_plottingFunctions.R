@@ -6,8 +6,8 @@
 #'   a calibration plot based on the leave-one-out predictions of the output at the points used to train the
 #'   model.
 #'
-#' @param model a model object for which the LOO calibration plot is to be made.
-#' @param ... additional arguments affecting the plot.
+#' @param model A model object for which the LOO calibration plot is to be made.
+#' @param ... Additional arguments affecting the plot.
 #'
 #' @return None.
 #'
@@ -35,12 +35,12 @@
 setGeneric("plotLOO", function(model, ...) standardGeneric("plotLOO"))
 
 #' @title Leave-one-out calibration plot for a funGp model
-#' @description This method provides a diagnostic plot for the validation of a funGp Gaussian process model.
+#' @description \strong{Should not be exported and is replaced by  \link[funGp]{plot,fgpm-method}.} This method provides a diagnostic plot for the validation of a funGp Gaussian process model.
 #'   It displays a calibration plot based on the leave-one-out predictions of the output at the points
 #'   used to train the model.
 #'
-#' @param model an object of class \linkS4class{fgpm} corresponding to the funGp model to validate.
-#' @param ... additional arguments affecting the plot. The following typical graphics parameters are
+#' @param model An object of class \linkS4class{fgpm} corresponding to the funGp model to validate.
+#' @param ... Additional arguments affecting the plot. The following typical graphics parameters are
 #'   valid entries: \emph{xlim}, \emph{ylim}, \emph{xlab}, \emph{ylab}, \emph{main}.
 #'
 #' @return None.
