@@ -48,8 +48,8 @@ setGeneric("plotLOO", function(model, ...) standardGeneric("plotLOO"))
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #'
 #' @seealso \strong{*} \link[funGp]{fgpm} for the construction of funGp models;
-#' @seealso \strong{*} \link[funGp]{plotPreds} for prediction plots;
-#' @seealso \strong{*} \link[funGp]{plotSims} for simulation plots.
+#' @seealso \strong{*} \link[funGp]{plot.predict.fgpm} for prediction plots;
+#' @seealso \strong{*} \link[funGp]{plot.simulate.fgpm} for simulation plots.
 #'
 #' @examples
 #' # generating input and output data for training
