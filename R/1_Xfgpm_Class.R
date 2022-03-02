@@ -37,7 +37,7 @@
 #' @slot details Object of class \code{"list"}. Further information about the parameters of the ant colony
 #'   optimization algorithm and the evolution of the fitness along the iterations.
 #' @slot sIn An object of class \code{"matrix"} containing a copy of
-#'     the provided the scalar inputs.
+#'     the provided scalar inputs.
 #' @slot fIn An object of class \code{"list"} containing a copy of
 #'     the provided functional inputs.
 #' @slot sOut An object of class \code{"matrix"} containing a copy of the provided output.
