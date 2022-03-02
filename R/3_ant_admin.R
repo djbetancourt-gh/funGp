@@ -877,13 +877,13 @@ format4pred <- function(sIn.pr = NULL, fIn.pr = NULL, args) {
 #'   structural configuration and returns a list with two elements: (i) an \code{array} of indices of the scalar
 #'   inputs kept active; and (ii) an \code{array} of indices of the functional inputs kept active.
 #'
-#' @param sIn sIn an optional matrix of scalar input coordinates with all the orignal scalar input variables.
+#' @param sIn An optional matrix of scalar input coordinates with all the orignal scalar input variables.
 #'   This is used only to know the total number of scalar input variables. Any \code{matrix} with as many
 #'   columns as original scalar input variables could be used instead.
-#' @param fIn an optional list of functional input coordinates with all the original functional input
+#' @param fIn An optional list of functional input coordinates with all the original functional input
 #'   variables. This is used only to know the total number of functional input variables. Any \code{list}
 #'   with as many elements as original functional input variables could be used instead.
-#' @param args an object of class \code{"\linkS4class{modelCall}"}, which specifies the model structure for
+#' @param args An object of class \code{"\linkS4class{modelCall}"}, which specifies the model structure for
 #'   which the active inputs should be extracted.
 #'
 #' @return An object of class \code{"list"}, containing the following information extracted from the
@@ -897,7 +897,7 @@ format4pred <- function(sIn.pr = NULL, fIn.pr = NULL, args) {
 #' \emph{RISCOPE project}.
 #' \href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
 #'
-#' @seealso \strong{*} \link[funGp]{get_active_in} for details how to obtain the data structures linked to the
+#' @seealso \strong{*} \link[funGp]{get_active_in} for details on how to obtain the data structures linked to the
 #' active inputs.
 #' @seealso \strong{*} \linkS4class{modelCall} for details on the \emph{args} argument.
 #' @seealso \strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection.
