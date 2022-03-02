@@ -6,7 +6,7 @@
 #'   related to projection of inputs, and structures related to structural optimization of the model,
 #'   respectively.
 #'
-#' @param object either a \linkS4class{fgpm}, \linkS4class{fgpKern}, \linkS4class{fgpProj}, or
+#' @param object Either a \linkS4class{fgpm}, \linkS4class{fgpKern}, \linkS4class{fgpProj}, or
 #'   \linkS4class{Xfgpm} object.
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
