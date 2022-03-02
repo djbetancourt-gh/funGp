@@ -11,8 +11,8 @@
 #'        \link[funGp]{fgpm_factory}: structural optimization of funGp models \cr
 #'  }
 #'  \item{\strong{Plotters}}{\cr
-#'        \link[funGp]{plotX}: diagnostic plots for a fgpm_factory optimization and the selected model \cr
-#'        \link[funGp]{plotEvol}: plot of the evolution of the model selection algorithm in funGp \cr
+#'        \link[funGp]{plot,Xfgpm-method}: plot of the evolution of the algorithm with \code{which = "evolution"}
+#'        or of the absolute and relative quality of the optimized model with \code{which = "diag"}
 #'  }
 #' }
 #'
@@ -38,7 +38,7 @@
 #'   optimization algorithm and the evolution of the fitness along the iterations.
 #' @slot sIn An object of class \code{"matrix"} containing a copy of
 #'     the provided the scalar inputs.
-#' @slot fIn An object of class \code{"matrix"} containing a copy of
+#' @slot fIn An object of class \code{"list"} containing a copy of
 #'     the provided functional inputs.
 #' @slot sOut An object of class \code{"matrix"} containing a copy of the provided output.
 #' @section Useful material:
@@ -677,10 +677,10 @@ printSpace <- function(ds, df, space) {
 ##' objects visited during the ACO optimization.
 ##'
 ##' @title Summary Method
-##' @param object an \code{Xfgpm} object.
-##' @param n maximal number of lines (\code{fgpm} objects) to show.
+##' @param object An \code{Xfgpm} object.
+##' @param n Maximal number of lines (\code{fgpm} objects) to show.
 ##' @param ... Not used yet.
-##' @return an object inheriting from \code{data.frame}.
+##' @return An object inheriting from \code{data.frame}.
 ##'
 ##' @method summary Xfgpm
 ##' @rdname summary-methods
