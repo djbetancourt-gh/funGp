@@ -905,7 +905,7 @@ format4pred <- function(sIn.pr = NULL, fIn.pr = NULL, args) {
 #'
 #' @examples
 #' # extracting the indices of the active inputs in an optimized model________________________
-#' # Use precalculated Xfgpm object named xm
+#' # use precalculated Xfgpm object named xm
 #' # active inputs in the best model
 #' xm@log.success@args[[1]] # the full fgpm call
 #' set.seed(100)
