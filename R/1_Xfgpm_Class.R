@@ -765,7 +765,7 @@ print.summary.Xfgpm <- function(x, ...) {
 ##'     \emph{extracts} a fitted \code{fgpm} model, this not true. The
 ##'     \code{fgpm} model is refitted using the call that was used
 ##'     when this model was assessed. The refitted \code{fgpm} model
-##'     keeps the same structual parameters as the one assessed
+##'     keeps the same structural parameters as the one assessed
 ##'     (active variables, kernel, ...), but since the optimization
 ##'     uses random initial values, the optimized hyper-parameters may
 ##'     differ from those of the corresponding \code{fgpm} in the
