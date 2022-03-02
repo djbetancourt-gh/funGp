@@ -27,10 +27,8 @@
 #'        \link[funGp]{decay2probs}: normalized initial pheromones
 #'  }
 #'  \item{\strong{Plotters post-optimization}}{\cr
-#'        \link[funGp]{plot,Xfgpm-method}: call to \link[funGp]{plotEvol} with \code{which = "evolution"}
-#'        or to \link[funGp]{plotX} with \code{which = "diag"} \cr
-#'        \link[funGp]{plotEvol}: evolution of the algorithm \cr
-#'        \link[funGp]{plotX}: absolute and relative quality of the optimized model \cr
+#'        \link[funGp]{plot,Xfgpm-method}: plot of the evolution of the algorithm with \code{which = "evolution"}
+#'        or of the absolute and relative quality of the optimized model with \code{which = "diag"}
 #'
 #'  }
 #'  \item{\strong{Correction post-optimization of input data structures}}{\cr
