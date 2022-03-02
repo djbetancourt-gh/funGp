@@ -884,40 +884,40 @@ setGeneric(name = "simulate", def = function(object, nsim = 1, seed = NULL, ...)
 #' @description This method enables simulation of Gaussian process values at any given set of points
 #'   based on a pre-built funGp model. Check \code{\link{fgpm}} for information on how to create funGp models.
 #'
-#' @param object an object of class \linkS4class{fgpm} corresponding to the funGp model from which
+#' @param object An object of class \linkS4class{fgpm} corresponding to the funGp model from which
 #'   simulations must be performed.
-#' @param nsim an optional integer indicating the number of samples to produce. Default is 1.
-#' @param seed an optional value interpreted as an integer, that will be used as argument of
+#' @param nsim An optional integer indicating the number of samples to produce. Default is 1.
+#' @param seed An optional value interpreted as an integer, that will be used as argument of
 #'   \code{\link[base]{set.seed}} just before simulating the response values.
-#' @param ... not used.
-#' @param sIn.sm an optional matrix of scalar input coordinates at which the output values should be
+#' @param ... Not used.
+#' @param sIn.sm An optional matrix of scalar input coordinates at which the output values should be
 #'   simulated. Each column is interpreted as a scalar input variable and each row as a coordinate.
 #'   Either scalar input coordinates (sIn.sm), functional input coordinates (fIn.sm), or both must be provided.
-#' @param fIn.sm an optional list of functional input coordinates at which the output values should be
+#' @param fIn.sm An optional list of functional input coordinates at which the output values should be
 #'   simulated. Each element of the list is interpreted as a functional input variable. Every functional input
 #'   variable should be provided as a matrix with one curve per row. Either scalar input coordinates (sIn.sm),
 #'   functional input coordinates (fIn.sm), or both must be provided.
-#' @param nugget.sm an optional number corresponding to a numerical nugget effect. If provided, this number
+#' @param nugget.sm An optional number corresponding to a numerical nugget effect. If provided, this number
 #'   is added to the main diagonal of the simulation covariance matrix in order to prevent numerical
 #'   instabilities during Cholesky decomposition. A small number in the order of 1e-8 is often enough.
 #'   Default is 0.
-#' @param detail an optional character string specifying the extent of information that should be delivered
+#' @param detail An optional character string specifying the extent of information that should be delivered
 #'   by the method, to be chosen between "light" and "full". \emph{Light} simulations produce a matrix of
 #'   simulated output values, with as many rows as requested random samples. \emph{Full} simulations produce a
 #'   list with the matrix of simulated output values, along with the predicted mean, standard deviation and
 #'   limits of the 95\% confidence intervals at the simulation points. Default is "light".
 #'
 #' @return An object containing the data structures linked to simulations. For \emph{light} simulations, the
-#'   output will be a matrix with of simulated output values, with as many rows as requested random samples.
+#'   output will be a matrix of simulated output values, with as many rows as requested random samples.
 #'   For \emph{full} simulations, the output will be a list with the matrix of simulated output values,
 #'   along with the predicted mean, standard deviation and limits of the 95\% confidence intervals at the
 #'   simulation points.
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #'
-#' @seealso \strong{*} \link[funGp]{plotSims} for the simulations plot of a funGp model;
+#' @seealso \strong{*} \link[funGp]{plot.simulate.fgpm} for the simulation plot of a funGp model;
 #' @seealso \strong{*} \link[funGp]{predict} for predictions based on a funGp model;
-#' @seealso \strong{*} \link[funGp]{plotPreds} for the predictions plot of a funGp model.
+#' @seealso \strong{*} \link[funGp]{plot.predict.fgpm} for the prediction plot of a funGp model.
 #'
 #' @examples
 #' # light simulations _______________________________________________________________________
@@ -939,7 +939,7 @@ setGeneric(name = "simulate", def = function(object, nsim = 1, seed = NULL, ...)
 #' m1.sims_l <- simulate(m1, nsim = 10, sIn.sm = sIn.sm, fIn.sm = fIn.sm)
 #'
 #' # plotting light simulations
-#' plotSims(m1, m1.sims_l)
+#' plot(m1.sims_l)
 #'
 #'
 #' # full simulations ________________________________________________________________________
@@ -966,10 +966,10 @@ setGeneric(name = "simulate", def = function(object, nsim = 1, seed = NULL, ...)
 #' # upper95  100   -none- numeric
 #'
 #' # plotting full simulations in full mode
-#' plotSims(m1, m1.sims_f)
+#' plot(m1.sims_f)
 #'
 #' # plotting full simulations in light mode
-#' plotSims(m1, m1.sims_f, detail = "light")
+#' plot(m1.sims_f, detail = "light")
 #'
 #' @rdname simulate-methods
 #' @aliases simulate,fgpm-method
