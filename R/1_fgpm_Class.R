@@ -1083,40 +1083,40 @@ simulate.fgpm <- function(model, nsim, seed, sIn.sm, fIn.sm, nugget.sm = 10^-8, 
 #' @exportMethod update
 setGeneric(name = "update", def = function(object, ...) standardGeneric("update"))
 
-#' @title Easy update of funGp funGp Gaussian process models
+#' @title Easy update of funGp Gaussian process models
 #' @description This method enables the update of data or hyperparameters of a funGp Gaussian process model.
 #'   It corresponds to an object of the class \linkS4class{fgpm}. The method allows addition, subtraction
 #'   and substitution of data points, as well as substitution and re-estimation of hyperparameters.
 #'
-#' @param object an object of class \linkS4class{fgpm} corresponding to the funGp model to update.
-#' @param ... not used.
-#' @param sIn.nw an optional matrix of scalar input values to be added to the model. Each column must match
+#' @param object An object of class \linkS4class{fgpm} corresponding to the funGp model to update.
+#' @param ... Not used.
+#' @param sIn.nw An optional matrix of scalar input values to be added to the model. Each column must match
 #'   an input variable and each row a scalar coordinate.
-#' @param fIn.nw an optional list of functional input values to be added to the model. Each element of the
-#'   list must be a matrix containing to the set of curves corresponding to one functional input.
-#' @param sOut.nw an optional vector (or 1-column matrix) containing the values of the scalar output at the
+#' @param fIn.nw An optional list of functional input values to be added to the model. Each element of the
+#'   list must be a matrix containing the set of curves corresponding to one functional input.
+#' @param sOut.nw An optional vector (or 1-column matrix) containing the values of the scalar output at the
 #'   new input points.
-#' @param sIn.sb an optional matrix of scalar input values to be used as substitutes of other scalar input
+#' @param sIn.sb An optional matrix of scalar input values to be used as substitutes of other scalar input
 #'   values already stored in the model. Each column must match an input variable and each row a coordinate.
-#' @param fIn.sb an optional list of functional input values to be added to the model. Each element of the
-#'   list must be a matrix containing to the set of curves corresponding to one functional input.
-#' @param sOut.sb an optional vector (or 1-column matrix) containing the values of the scalar output at the
+#' @param fIn.sb An optional list of functional input values to be added to the model. Each element of the
+#'   list must be a matrix containing the set of curves corresponding to one functional input.
+#' @param sOut.sb An optional vector (or 1-column matrix) containing the values of the scalar output at the
 #'   substituting input points.
-#' @param ind.sb an optional numeric array indicating the indices of the input and output points stored in
+#' @param ind.sb An optional numeric array indicating the indices of the input and output points stored in
 #'   the model, that should be replaced by the values specified through sIn.sb, fIn.sb and/or, sOut.sb.
-#' @param ind.dl an optional numeric array indicating the indices of the input and output points stored in
+#' @param ind.dl An optional numeric array indicating the indices of the input and output points stored in
 #'   the model that should be deleted.
-#' @param var.sb an optional number indicating the value that should be used to substitute the current
+#' @param var.sb An optional number indicating the value that should be used to substitute the current
 #'   variance parameter of the model.
-#' @param ls_s.sb an optional numerical array indicating the values that should be used to substitute the
+#' @param ls_s.sb An optional numerical array indicating the values that should be used to substitute the
 #'   current length-scale parameters for the scalar inputs of the model.
-#' @param ls_f.sb an optional numerical array indicating the values that should be used to substitute the
+#' @param ls_f.sb An optional numerical array indicating the values that should be used to substitute the
 #'   current length-scale parameters for the functional inputs of the model.
-#' @param var.re an optional boolean indicating whether the variance parameter should be re-estimated.
+#' @param var.re An optional boolean indicating whether the variance parameter should be re-estimated.
 #'   Default is FALSE.
-#' @param ls_s.re an optional boolean indicating whether the length-scale parameters of the scalar inputs
+#' @param ls_s.re An optional boolean indicating whether the length-scale parameters of the scalar inputs
 #'   should be re-estimated. Default is FALSE.
-#' @param ls_f.re an optional boolean indicating whether the length-scale parameters of the functional
+#' @param ls_f.re An optional boolean indicating whether the length-scale parameters of the functional
 #'   inputs should be re-estimated. Default is FALSE.
 #'
 #' @return An object of class \linkS4class{fgpm} representing the updated funGp model.
@@ -1132,7 +1132,7 @@ setGeneric(name = "update", def = function(object, ...) standardGeneric("update"
 #' }
 #'
 #' All the arguments listed above are optional since any of these tasks can be requested without need to
-#' request any of the other tasks. In fact, even most of the arguments can be used even if the other
+#' request any of the other tasks. In fact, most of the arguments can be used even if the other
 #' arguments related to the same task are not. For instance, the re-estimation of the variance can be
 #' requested via var.re without requiring re-estimation of the scalar or functional length-scale
 #' parameters. The only two exceptions are: (i) for data addition, the new output sOut.nw should always
@@ -1150,18 +1150,18 @@ setGeneric(name = "update", def = function(object, ...) standardGeneric("update"
 #' @details
 #' Note that the parameters of the model will not be updated after modifying the model unless explicitly
 #' requested through the var.re, ls_s.re and ls_f.re arguments. If, for instance, some points are added
-#' to the model without requesting parameters re-estimation, the new data will be included in the
+#' to the model without requesting parameter re-estimation, the new data will be included in the
 #' training-training and training-prediction covariance matrices, but the hyperparameters will not
 #' be updated. This allows to make updates in the data that might help to improve predictions,
 #' without the immediate need to perform a training procedure that could be time consuming. At any later
 #' time, the user is allowed to request the re-estimation of the hyperparameters, which will make
-#' the model be fully up to date.
+#' the model fully up to date.
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #'
 #' @seealso \strong{*} \link[funGp]{fgpm} for creation of a funGp model;
 #' @seealso \strong{*} \link[funGp]{predict} for predictions based on a funGp model;
-#' @seealso \strong{*} \link[funGp]{simulate} for simulations based on a funGp model;
+#' @seealso \strong{*} \link[funGp]{simulate} for simulations based on a funGp model.
 #'
 #' @examples
 #' # deletion and addition of data points_____________________________________________________
@@ -1205,14 +1205,14 @@ setGeneric(name = "update", def = function(object, ...) standardGeneric("update"
 #' # generating indices for substitution
 #' ind.sb <- sample(1:(m1@n.tot), n.sb)
 #'
-#' # updating all, the scalar inputs, functional inputs and the output
+#' # updating all, the scalar inputs, functional inputs and the outputs
 #' m1up <- update(m1, sIn.sb = sIn.sb, fIn.sb = fIn.sb, sOut.sb = sOut.sb, ind.sb = ind.sb)
 #'
 #' # updating only some of the data structures
 #' m1up1 <- update(m1, sIn.sb = sIn.sb, ind.sb = ind.sb) # only the scalar inputs
-#' m1up2 <- update(m1, sOut.sb = sOut.sb, ind.sb = ind.sb) # only the output
+#' m1up2 <- update(m1, sOut.sb = sOut.sb, ind.sb = ind.sb) # only the outputs
 #' m1up3 <- update(m1, sIn.sb = sIn.sb, sOut.sb = sOut.sb, ind.sb = ind.sb) # the scalar inputs
-#'                                                                          # and the output
+#'                                                                          # and the outputs
 #'
 #'
 #' # substitution of hyperparameters__________________________________________________________
