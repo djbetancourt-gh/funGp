@@ -657,17 +657,17 @@ setGeneric(name = "predict", def = function(object, ...) standardGeneric("predic
 #' @description This method enables prediction based on a funGp Gaussian process model, at any given set of
 #'   points. Check \code{\link{fgpm}} for information on how to create funGp models.
 #'
-#' @param object an object of class \linkS4class{fgpm} corresponding to the funGp model that should be used
+#' @param object An object of class \linkS4class{fgpm} corresponding to the funGp model that should be used
 #'   to predict the output.
-#' @param ... not used.
-#' @param sIn.pr an optional matrix of scalar input coordinates at which the output values should be
+#' @param ... Not used.
+#' @param sIn.pr An optional matrix of scalar input coordinates at which the output values should be
 #'   predicted. Each column is interpreted as a scalar input variable and each row as a coordinate.
 #'   Either scalar input coordinates (sIn.pr), functional input coordinates (fIn.pr), or both must be provided.
-#' @param fIn.pr an optional list of functional input coordinates at which the output values should be
+#' @param fIn.pr An optional list of functional input coordinates at which the output values should be
 #'   predicted. Each element of the list is interpreted as a functional input variable. Every functional input
 #'   variable should be provided as a matrix with one curve per row. Either scalar input coordinates (sIn.pr),
 #'   functional input coordinates (fIn.pr), or both must be provided.
-#' @param detail an optional character string specifying the extent of information that should be delivered
+#' @param detail An optional character string specifying the extent of information that should be delivered
 #'   by the method, to be chosen between "light" and "full". \emph{Light} predictions produce a list including
 #'   the predicted mean, standard deviation and limits of the 95\% confidence intervals at the prediction
 #'   points. \emph{Full} predictions produce the same information as light ones, in addition to the
@@ -682,9 +682,9 @@ setGeneric(name = "predict", def = function(object, ...) standardGeneric("predic
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #'
-#' @seealso \strong{*} \link[funGp]{plotPreds} for the predictions plot of a funGp model;
+#' @seealso \strong{*} \link[funGp]{plot.predict.fgpm} for the prediction plot of a funGp model;
 #' @seealso \strong{*} \link[funGp]{simulate} for simulations based on a funGp model;
-#' @seealso \strong{*} \link[funGp]{plotSims} for the simulations plot of a funGp model.
+#' @seealso \strong{*} \link[funGp]{plot.simulate.fgpm} for the simulation plot of a funGp model.
 #'
 #' @examples
 #' # light predictions________________________________________________________________________
@@ -716,7 +716,7 @@ setGeneric(name = "predict", def = function(object, ...) standardGeneric("predic
 #' # upper95 100    -none- numeric
 #'
 #' # plotting predictions
-#' plotPreds(m1, preds = m1.preds)
+#' plot(m1.preds)
 #'
 #'
 #' # comparison against true output___________________________________________________________
@@ -739,7 +739,7 @@ setGeneric(name = "predict", def = function(object, ...) standardGeneric("predic
 #' sOut.pr <- fgp_BB3(sIn.pr, fIn.pr, n.pr)
 #'
 #' # plotting predictions along with true output values
-#' plotPreds(m1, m1.preds, sOut.pr)
+#' plot(m1.preds, sOut.pr)
 #'
 #'
 #' # full predictions_________________________________________________________________________
@@ -771,7 +771,7 @@ setGeneric(name = "predict", def = function(object, ...) standardGeneric("predic
 #' # upper95   100  -none- numeric
 #'
 #' # plotting predictions
-#' plotPreds(m1, preds = m1.preds)
+#' plot(m1.preds)
 #'
 #' @rdname predict-methods
 #' @importFrom stats qnorm
