@@ -755,9 +755,9 @@ print.summary.Xfgpm <- function(x, ...) {
 ##'
 ##' @title Refit a \code{fgpm} model in a \code{Xfgpm} object
 ##'
-##' @param x a \code{Xfgpm} object.
+##' @param x A \code{Xfgpm} object.
 ##'
-##' @param i an integer giving the index of the model to refit. The
+##' @param i An integer giving the index of the model to refit. The
 ##'     models are in decreasing fit quality as assessed by the
 ##'     Leave-One-Out \eqn{Q^2}{Q2}.
 ##'
