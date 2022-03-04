@@ -94,7 +94,7 @@ plotPreds(m1, m1.preds, sOut.pr, calib = FALSE)
 
 \strong{*} \link[funGp]{plot,fgpm-method} for model diagnostic plots;
 
-\strong{*} \link[funGp]{simulate} for simulations based on a funGp model;
+\strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a funGp model;
 
 \strong{*} \link[funGp]{plot.simulate.fgpm} for simulation plots.
 }

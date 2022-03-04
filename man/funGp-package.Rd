@@ -20,8 +20,8 @@ This package was first developed in the frame of the RISCOPE research project, f
  \item{\strong{Main methods}}{\cr
        \link[funGp]{fgpm}: creation of funGp regression models \cr
        \link[funGp]{predict}: output estimation at new input points based on a funGp model \cr
-       \link[funGp]{simulate}: random sampling from a funGp Gaussian process model \cr
-       \link[funGp]{update}: modification of data and hyperparameters of a funGp model
+       \link[funGp]{simulate,fgpm-method}: random sampling from a funGp Gaussian process model \cr
+       \link[funGp]{update,fgpm-method}: modification of data and hyperparameters of a funGp model
  }
  \item{\strong{Plotters}}{\cr
        \link[funGp]{plot,fgpm-method}: validation plot for a \code{fgpm} model \cr

@@ -254,9 +254,9 @@ Dubrule, O. (1983),
 
 \strong{*} \link[funGp]{predict} for predictions based on a funGp model;
 
-\strong{*} \link[funGp]{simulate} for simulations based on a funGp model;
+\strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a funGp model;
 
-\strong{*} \link[funGp]{update} for post-creation updates on a funGp model.
+\strong{*} \link[funGp]{update,fgpm-method} for post-creation updates on a funGp model.
 }
 \author{
 José Betancourt, François Bachoc and Thierry Klein

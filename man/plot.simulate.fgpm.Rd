@@ -20,7 +20,7 @@ will include only the simulated values, while a a
 confidence bands at the simulation points. This argument will
 only be used if full simulations (including the mean and
 confidence bands) are provided, otherwise it will be
-ignored. See \link[funGp]{simulate} for more details on the
+ignored. See \link[funGp]{simulate,fgpm-method} for more details on the
 generation of light and full simulations.}
 
 \item{...}{Additional arguments affecting the display. The

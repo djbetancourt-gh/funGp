@@ -133,7 +133,7 @@ plot(m1.preds)
 \seealso{
 \strong{*} \link[funGp]{plot.predict.fgpm} for the prediction plot of a funGp model;
 
-\strong{*} \link[funGp]{simulate} for simulations based on a funGp model;
+\strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a funGp model;
 
 \strong{*} \link[funGp]{plot.simulate.fgpm} for the simulation plot of a funGp model.
 }

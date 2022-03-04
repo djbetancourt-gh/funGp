@@ -244,7 +244,7 @@ setMethod("plot", "Xfgpm",
 ##'
 ##' @seealso \strong{*} \link[funGp]{fgpm} for the construction of funGp models;
 ##' @seealso \strong{*} \link[funGp]{plot,fgpm-method} for model diagnostic plots;
-##' @seealso \strong{*} \link[funGp]{simulate} for simulations based on a funGp model;
+##' @seealso \strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a funGp model;
 ##' @seealso \strong{*} \link[funGp]{plot.simulate.fgpm} for simulation plots.
 ##'
 ##' @examples
@@ -338,7 +338,7 @@ plot.predict.fgpm <- function(x, y = NULL, sOut.pr = NULL,
 ##'     confidence bands at the simulation points. This argument will
 ##'     only be used if full simulations (including the mean and
 ##'     confidence bands) are provided, otherwise it will be
-##'     ignored. See \link[funGp]{simulate} for more details on the
+##'     ignored. See \link[funGp]{simulate,fgpm-method} for more details on the
 ##'     generation of light and full simulations.
 ##'
 ##' @param ... Additional arguments affecting the display. The

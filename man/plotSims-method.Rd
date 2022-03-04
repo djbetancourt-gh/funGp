@@ -10,13 +10,13 @@
 \item{model}{A \linkS4class{fgpm} object for which the plot is to be made.}
 
 \item{sims}{A list containing the simulated output values. In funGp, this argument is just the data
-structure delivered by the \link[funGp]{simulate} method.}
+structure delivered by the \link[funGp]{simulate,fgpm-method} method.}
 
 \item{detail}{An optional character string specifying the data elements that should be included in the plot,
 to be chosen between "light" and "full". A \emph{light} plot will include only the simulated
 values, while a a \emph{full} plot will also include the predicted mean and confidence bands at the
 simulation points. This argument will only be used if full simulations (including the mean and confidence
-bands) are provided, otherwise it will be dropped. See \link[funGp]{simulate} for more details on the
+bands) are provided, otherwise it will be dropped. See \link[funGp]{simulate,fgpm-method} for more details on the
 generation of light and full simulations.}
 
 \item{...}{Additional arguments affecting the display. The following typical graphics parameters are valid

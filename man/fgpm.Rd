@@ -277,9 +277,9 @@ R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs 
 
 \strong{*} \link[funGp]{predict} for predictions based on a funGp model;
 
-\strong{*} \link[funGp]{simulate} for simulations based on a funGp model;
+\strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a funGp model;
 
-\strong{*} \link[funGp]{update} for post-creation updates on a funGp model;
+\strong{*} \link[funGp]{update,fgpm-method} for post-creation updates on a funGp model;
 
 \strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection.
 }

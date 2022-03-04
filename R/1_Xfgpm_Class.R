@@ -83,6 +83,7 @@ setClass("Xfgpm",
 #' @rdname show-methods
 #' @aliases show,Xfgpm-method
 #' @method show Xfgpm
+#' @noRd
 setMethod("show", "Xfgpm", function(object) show.Xfgpm(object))
 
 show.Xfgpm <- function(object) {
@@ -250,8 +251,8 @@ show.Xfgpm <- function(object) {
 #' @seealso \strong{*} \link[funGp]{plotX} for diagnostic plots for a fgpm_factory output and selected model;
 #' @seealso \strong{*} \link[funGp]{get_active_in} for post-processing of input data structures following a fgpm_factory call;
 #' @seealso \strong{*} \link[funGp]{predict} for predictions based on a funGp model;
-#' @seealso \strong{*} \link[funGp]{simulate} for simulations based on a funGp model;
-#' @seealso \strong{*} \link[funGp]{update} for post-creation updates on a funGp model.
+#' @seealso \strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a funGp model;
+#' @seealso \strong{*} \link[funGp]{update,fgpm-method} for post-creation updates on a funGp model.
 #'
 #' @examples
 #' # Data with precalculated Xfgpm objects are already available

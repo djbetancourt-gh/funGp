@@ -8,9 +8,9 @@
 #' \itemize{
 #'  \item{\strong{Main methods}}{\cr
 #'        \link[funGp]{fgpm}: creation of funGp regression models \cr
-#'        \link[funGp]{predict}: output estimation at new input points based on a funGp model \cr
-#'        \link[funGp]{simulate}: random sampling from a funGp Gaussian process model \cr
-#'        \link[funGp]{update}: modification of data and hyperparameters of a funGp model
+#'        \link[funGp]{predict,fgpm-method}: output estimation at new input points based on a funGp model \cr
+#'        \link[funGp]{simulate,fgpm-method}: random sampling from a funGp Gaussian process model \cr
+#'        \link[funGp]{update,fgpm-method}: modification of data and hyperparameters of a funGp model
 #'  }
 #'  \item{\strong{Plotters}}{\cr
 #'         \link[funGp]{plot,fgpm-method}: validation plot for a \code{fgpm} model \cr
@@ -177,8 +177,8 @@ setClass("fgpm",
 #'
 #' @seealso \strong{*} \link[funGp]{plot,fgpm-method}: validation plot for a \code{fgpm} model;
 #' @seealso \strong{*} \link[funGp]{predict} for predictions based on a funGp model;
-#' @seealso \strong{*} \link[funGp]{simulate} for simulations based on a funGp model;
-#' @seealso \strong{*} \link[funGp]{update} for post-creation updates on a funGp model;
+#' @seealso \strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a funGp model;
+#' @seealso \strong{*} \link[funGp]{update,fgpm-method} for post-creation updates on a funGp model;
 #' @seealso \strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection.
 #'
 #' @examples
@@ -558,6 +558,7 @@ fgpm <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
 #' @importFrom knitr kable
 #' @rdname show-methods
 #' @aliases show,fgpm-method
+#' @noRd
 setMethod("show", "fgpm", function(object) show.fgpm(model = object))
 
 show.fgpm <- function(model) {
@@ -683,7 +684,7 @@ setGeneric(name = "predict", def = function(object, ...) standardGeneric("predic
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #'
 #' @seealso \strong{*} \link[funGp]{plot.predict.fgpm} for the prediction plot of a funGp model;
-#' @seealso \strong{*} \link[funGp]{simulate} for simulations based on a funGp model;
+#' @seealso \strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a funGp model;
 #' @seealso \strong{*} \link[funGp]{plot.simulate.fgpm} for the simulation plot of a funGp model.
 #'
 #' @examples
@@ -878,6 +879,7 @@ predict.fgpm <- function(model, sIn.pr, fIn.pr, detail = "light") {
 #' @rdname simulate-methods
 #' @importFrom stats simulate
 #' @exportMethod simulate
+#' @noRd
 setGeneric(name = "simulate", def = function(object, nsim = 1, seed = NULL, ...) standardGeneric("simulate"))
 
 #' @title Random sampling from a funGp Gaussian process model
@@ -1081,6 +1083,7 @@ simulate.fgpm <- function(model, nsim, seed, sIn.sm, fIn.sm, nugget.sm = 10^-8, 
 #' @rdname update-methods
 #' @importFrom stats update
 #' @exportMethod update
+#' @noRd
 setGeneric(name = "update", def = function(object, ...) standardGeneric("update"))
 
 #' @title Easy update of funGp Gaussian process models
@@ -1161,7 +1164,7 @@ setGeneric(name = "update", def = function(object, ...) standardGeneric("update"
 #'
 #' @seealso \strong{*} \link[funGp]{fgpm} for creation of a funGp model;
 #' @seealso \strong{*} \link[funGp]{predict} for predictions based on a funGp model;
-#' @seealso \strong{*} \link[funGp]{simulate} for simulations based on a funGp model.
+#' @seealso \strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a funGp model.
 #'
 #' @examples
 #' # deletion and addition of data points_____________________________________________________
@@ -1417,8 +1420,26 @@ update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb,
 
   return(modelup)
 }
-# ==============================================================================
-# summary method. Simple copy of 'show', at least for now.
-# ==============================================================================
-#' @aliases summary,fgpm-method
-setMethod("summary", "fgpm", function(object) show(object))
+
+## ==============================================================================
+## summary method. Simple copy of 'show', at least for now.
+## ==============================================================================
+
+##' @description Display the structure of a \code{fgpm}
+##'     object and the value of the parameters (variance and length-scales). 
+##'
+##' @title Summary method for \code{fgpm} objects
+##' @param object An \code{fgpm} object.
+##' @param ... Not used yet.
+##' @method summary fgpm
+##' 
+##' @note This method is actually identical to the \code{show} method
+##'     for this class which is called when the name of the object is
+##'     entered in an interactive session.
+##'
+##' @examples
+##' m <- xm@model
+##' class(m)
+##' summary(m)
+##' m
+setMethod("summary", "fgpm", function(object, ...) show(object, ...))
