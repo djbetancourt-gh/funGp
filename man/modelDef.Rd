@@ -44,11 +44,11 @@ xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
 plot(xm@model)
 modelDef(xm, i = 1)
 
-## Define new data 
+## Define new data
 n.new <- 3^5
 x1 <- x2 <- x3 <- x4 <- x5 <- seq(0, 1, length = n.new^(1/5))
 
-## replace the data objects from which the model is created 
+## replace the data objects from which the model is created
 sIn <- as.matrix(expand.grid(x1 = x1, x2 = x2, x3 = x3, x4 = x4, x5 = x5))
 fIn <- list(f1 = matrix(runif(n.new * 10), ncol = 10),
             f2 = matrix(runif(n.new * 22), ncol = 22))

@@ -10,21 +10,21 @@ predict(object, ...)
 \S4method{predict}{fgpm}(object, sIn.pr = NULL, fIn.pr = NULL, detail = "light", ...)
 }
 \arguments{
-\item{object}{an object of class \linkS4class{fgpm} corresponding to the funGp model that should be used
+\item{object}{An object of class \linkS4class{fgpm} corresponding to the funGp model that should be used
 to predict the output.}
 
-\item{...}{not used.}
+\item{...}{Not used.}
 
-\item{sIn.pr}{an optional matrix of scalar input coordinates at which the output values should be
+\item{sIn.pr}{An optional matrix of scalar input coordinates at which the output values should be
 predicted. Each column is interpreted as a scalar input variable and each row as a coordinate.
 Either scalar input coordinates (sIn.pr), functional input coordinates (fIn.pr), or both must be provided.}
 
-\item{fIn.pr}{an optional list of functional input coordinates at which the output values should be
+\item{fIn.pr}{An optional list of functional input coordinates at which the output values should be
 predicted. Each element of the list is interpreted as a functional input variable. Every functional input
 variable should be provided as a matrix with one curve per row. Either scalar input coordinates (sIn.pr),
 functional input coordinates (fIn.pr), or both must be provided.}
 
-\item{detail}{an optional character string specifying the extent of information that should be delivered
+\item{detail}{An optional character string specifying the extent of information that should be delivered
 by the method, to be chosen between "light" and "full". \emph{Light} predictions produce a list including
 the predicted mean, standard deviation and limits of the 95\% confidence intervals at the prediction
 points. \emph{Full} predictions produce the same information as light ones, in addition to the
@@ -72,7 +72,7 @@ summary(m1.preds)
 # upper95 100    -none- numeric
 
 # plotting predictions
-plotPreds(m1, preds = m1.preds)
+plot(m1.preds)
 
 
 # comparison against true output___________________________________________________________
@@ -95,7 +95,7 @@ m1.preds <- predict(m1, sIn.pr = sIn.pr, fIn.pr = fIn.pr)
 sOut.pr <- fgp_BB3(sIn.pr, fIn.pr, n.pr)
 
 # plotting predictions along with true output values
-plotPreds(m1, m1.preds, sOut.pr)
+plot(m1.preds, sOut.pr)
 
 
 # full predictions_________________________________________________________________________
@@ -127,15 +127,15 @@ summary(m1.preds_f)
 # upper95   100  -none- numeric
 
 # plotting predictions
-plotPreds(m1, preds = m1.preds)
+plot(m1.preds)
 
 }
 \seealso{
-\strong{*} \link[funGp]{plotPreds} for the predictions plot of a funGp model;
+\strong{*} \link[funGp]{plot.predict.fgpm} for the prediction plot of a funGp model;
 
 \strong{*} \link[funGp]{simulate} for simulations based on a funGp model;
 
-\strong{*} \link[funGp]{plotSims} for the simulations plot of a funGp model.
+\strong{*} \link[funGp]{plot.simulate.fgpm} for the simulation plot of a funGp model.
 }
 \author{
 José Betancourt, François Bachoc and Thierry Klein

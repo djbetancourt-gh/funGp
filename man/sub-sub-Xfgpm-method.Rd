@@ -7,9 +7,9 @@
 \S4method{[[}{Xfgpm}(x, i)
 }
 \arguments{
-\item{x}{a \code{Xfgpm} object.}
+\item{x}{A \code{Xfgpm} object.}
 
-\item{i}{an integer giving the index of the model to refit. The
+\item{i}{An integer giving the index of the model to refit. The
 models are in decreasing fit quality as assessed by the
 Leave-One-Out \eqn{Q^2}{Q2}.}
 }
@@ -28,7 +28,7 @@ The slot \code{@model} returns the best \code{fgpm} as
     \emph{extracts} a fitted \code{fgpm} model, this not true. The
     \code{fgpm} model is refitted using the call that was used
     when this model was assessed. The refitted \code{fgpm} model
-    keeps the same structual parameters as the one assessed
+    keeps the same structural parameters as the one assessed
     (active variables, kernel, ...), but since the optimization
     uses random initial values, the optimized hyper-parameters may
     differ from those of the corresponding \code{fgpm} in the

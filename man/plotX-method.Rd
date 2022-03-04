@@ -7,21 +7,21 @@
 \S4method{plotX}{Xfgpm}(x.model, calib = TRUE, fitp = TRUE, horiz = FALSE, ...)
 }
 \arguments{
-\item{x.model}{an object of class \linkS4class{Xfgpm} containing the output of the model selection
+\item{x.model}{An object of class \linkS4class{Xfgpm} containing the output of the model selection
 algorithm in \link[funGp]{fgpm_factory}.}
 
-\item{calib}{a boolean indicating whether the calibration plot of the selected model should be included
+\item{calib}{A boolean indicating whether the calibration plot of the selected model should be included
 in the display. Default is TRUE.}
 
-\item{fitp}{a boolean indicating whether scatter plot of the quality of all explored models should be
+\item{fitp}{A boolean indicating whether scatter plot of the quality of all explored models should be
 included in the display. Default is TRUE.}
 
-\item{horiz}{logical. If \code{TRUE} and if both \code{calib} and
+\item{horiz}{Logical. If \code{TRUE} and if both \code{calib} and
 \code{fitp} the two subplots corresponding to the calibration
 and the fit quality are displayer horizontally (on a same row)
 rather than vertically as in the default behaviour.}
 
-\item{...}{additional arguments affecting the display. Since this method allows to generate two plots
+\item{...}{Additional arguments affecting the display. Since this method allows to generate two plots
 from a single function call, the extra arguments for each plot should be included in a list. For the
 calibration plot, the list should be called \emph{calib.gpars}. For the plot of the fitness of
 explored models, the list should be called \emph{fitp.gpars}. The following typical graphics parameters
@@ -33,7 +33,7 @@ of legends in the corresponding plot.}
 None.
 }
 \description{
-This method provides two plots for assessing the quality of the output delivered by the
+\bold{Should not be exported and content is copied to plot-Xfgpm.} This method provides two plots for assessing the quality of the output delivered by the
   model selection algorithm in the \link[funGp]{fgpm_factory} function. The first one is a calibration
   plot similar to the one offered for \linkS4class{fgpm} objects by the \link[funGp]{plotLOO} function.
   This plot allows to validate the absolute quality of the selected model. The second one displays the

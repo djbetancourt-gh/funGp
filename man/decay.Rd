@@ -15,17 +15,17 @@ decay(
 )
 }
 \arguments{
-\item{k}{a number indicating the dimension of the functional input under analysis.}
+\item{k}{A number indicating the dimension of the functional input under analysis.}
 
-\item{pmax}{an optional number specifying the hypothetical maximum projection dimension of this input. The
+\item{pmax}{An optional number specifying the hypothetical maximum projection dimension of this input. The
 user will be able to set this value later in the call to \link[funGp]{fgpm_factory} as a constraint. If
 not specified, it takes the value of k.}
 
-\item{tao0}{explained in the description of \emph{dispr}.}
+\item{tao0}{Explained in the description of \emph{dispr}.}
 
-\item{delta}{explained in the description of \emph{dispr}.}
+\item{delta}{Explained in the description of \emph{dispr}.}
 
-\item{dispr}{the arguments \emph{tao0}, \emph{delta} and \emph{dispr}, are optional numbers specifying the
+\item{dispr}{The arguments \emph{tao0}, \emph{delta} and \emph{dispr}, are optional numbers specifying the
   loss function that determines the initial pheromone load on the links pointing out to projection
   dimensions. Such a function is defined as
 
@@ -36,16 +36,16 @@ not specified, it takes the value of k.}
   should preserve the maximum pheromone load; \emph{dispr} determines how fast the pheromone load drops
   in dimensions further than \eqn{delta + 1}. If \emph{pmax} = \emph{k}, then the dimension 0,
   representing no projection, receives a pheromone load identical to that of dimension \emph{k}. This, in
-  order to represent the fact that both, the representation of the function in its original dimension or
+  order to represent the fact that both the representation of the function in its original dimension or
   a projection in a space of the same dimension, are equally heavy for the model. The default values of
   \emph{tao0}, \emph{delta} and \emph{dispr}, are 0.1, 2 and 1.4, respectively, which match the default
   values used by the \link[funGp]{fgpm_factory} function. Check
   \href{https://hal.archives-ouvertes.fr/hal-02532713}{this technical
   report} for more details.}
 
-\item{doplot}{an optional boolean indicating if the pheromone loads should be plotted. Default = TRUE.}
+\item{doplot}{An optional boolean indicating if the pheromone loads should be plotted. Default = TRUE.}
 
-\item{deliver}{an optional boolean indicating if the pheromone loads should be returned. Default = FALSE.}
+\item{deliver}{An optional boolean indicating if the pheromone loads should be returned. Default = FALSE.}
 }
 \value{
 If deliver is TRUE, an object of class \code{"numeric"} containing the initial pheromone values
@@ -91,7 +91,7 @@ decay(15, deliver = TRUE)
 
 }
 \seealso{
-\strong{*} \link[funGp]{decay} for the function to generate the initial probability load;
+\strong{*} \link[funGp]{decay2probs} for the function to generate the initial probability load;
 
 \strong{*} \link[funGp]{fgpm_factory} for heuristic funGp model selection.
 }

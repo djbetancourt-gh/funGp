@@ -5,7 +5,10 @@
 \alias{black-boxes}
 \title{Analytic models for the exploration of the funGp package}
 \description{
-Set of analytic functionsthat takes functional variables as inputs. Since they run quickly, they can be used for testing of funGp functionalities as if they were black box computer models. They cover different situations (number of scalar inputs and complexity of the inputs-output mathematical relationship.
+Set of analytic functions that take functional variables as inputs.
+Since they run quickly, they can be used for testing of funGp functionalities as if they were
+black box computer models. They cover different situations (number of scalar inputs
+and complexity of the inputs-output mathematical relationship).
 }
 \section{Usage}{
 
@@ -22,7 +25,7 @@ fgp_BB1(sIn, fIn, n.tr)
 fgp_BB2(sIn, fIn, n.tr)
 
 
-## First analytical example in Muehlenstaedt, Fruth & Roustant (2016)
+## First analytical example in Muehlenstaedt, Fruth & Roustant (2017)
 ## ------------------------------------------------------------------
 ## x1 + 2 * x2 + 4 * mean(t1 * f1) + mean(f2)
 fgp_BB3(sIn, fIn, n.tr)
@@ -33,17 +36,19 @@ fgp_BB3(sIn, fIn, n.tr)
 ## a = (x2 - (5/(4*pi^2)) * x1^2 + (5/pi) * x1 - 6)^2
 ## b = 10 * (1 - (1/(8*pi))) * cos(x1)
 ## c = 10
-## d = (4/3) * pi * (42 * mean(f1*(1-t1)) + pi * (((x1+5)/5) + 15) * mean(t2*f2))
+## d = (4/3) * pi * (42 * mean(f1*(1-t1))
+       + pi * (((x1+5)/5) + 15) * mean(t2*f2))
 ## a + b + c + d
 fgp_BB4(sIn, fIn, n.tr)
 
 
-## Second analytical example in final version of Muehlenstaedt, Fruth & Roustant (2016)
+## Second analytical example in final version of Muehlenstaedt, Fruth & Roustant (2017)
 ## ------------------------------------------------------------------------------------
 ## a = (x2 - (5/(4*pi^2)) * x1^2 + (5/pi) * x1 - 6)^2
 ## b = 10 * (1 - (1/(8*pi))) * cos(x1)
 ## c = 10
-## d <- (4/3) * pi * (42 * mean(15*f1*(1-t1)-5) + pi * (((x1+5)/5) + 15) * mean(15*t2*f2))
+## d <- (4/3) * pi * (42 * mean(15*f1*(1-t1)-5)
+        + pi * (((x1+5)/5) + 15) * mean(15*t2*f2))
 ## a + b + c + d
 fgp_BB5(sIn, fIn, n.tr)
 
@@ -54,7 +59,7 @@ fgp_BB5(sIn, fIn, n.tr)
 fgp_BB6(sIn, fIn, n.tr)
 
 
-## Inspired by the second analytical example in final version of Muehlenstaedt et al (2016)
+## Inspired by the second analytical example in final version of Muehlenstaedt et al (2017)
 ## ----------------------------------------------------------------------------------------
 ## a = (x2 + 4*x3 - (5/(4*pi^2)) * x1^2 + (5/pi) * x1 - 6)^2
 ## b = 10 * (1 - (1/(8*pi))) * cos(x1) * x2^2 * x5^3

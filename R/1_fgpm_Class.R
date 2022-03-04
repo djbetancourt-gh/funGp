@@ -1420,6 +1420,5 @@ update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb,
 # ==============================================================================
 # summary method. Simple copy of 'show', at least for now.
 # ==============================================================================
-#' @rdname summary-methods
 #' @aliases summary,fgpm-method
 setMethod("summary", "fgpm", function(object) show(object))

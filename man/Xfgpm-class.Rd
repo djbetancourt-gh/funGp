@@ -14,8 +14,8 @@ trace of an optimization process, conducted to build Gaussian process models of 
        \link[funGp]{fgpm_factory}: structural optimization of funGp models \cr
  }
  \item{\strong{Plotters}}{\cr
-       \link[funGp]{plotX}: diagnostic plots for a fgpm_factory optimization and the selected model \cr
-       \link[funGp]{plotEvol}: plot of the evolution of the model selection algorithm in funGp \cr
+       \link[funGp]{plot,Xfgpm-method}: plot of the evolution of the algorithm with \code{which = "evolution"}
+       or of the absolute and relative quality of the optimized model with \code{which = "diag"}
  }
 }
 }
@@ -53,9 +53,9 @@ evaluated by the algorithm.}
 optimization algorithm and the evolution of the fitness along the iterations.}
 
 \item{\code{sIn}}{An object of class \code{"matrix"} containing a copy of
-the provided the scalar inputs.}
+the provided scalar inputs.}
 
-\item{\code{fIn}}{An object of class \code{"matrix"} containing a copy of
+\item{\code{fIn}}{An object of class \code{"list"} containing a copy of
 the provided functional inputs.}
 
 \item{\code{sOut}}{An object of class \code{"matrix"} containing a copy of the provided output.}

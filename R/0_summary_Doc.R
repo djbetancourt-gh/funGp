@@ -13,6 +13,6 @@
 #'
 #' @name summary
 #' @rdname summary-methods
-#' @exportMethod summary
+#' @noRd
 setGeneric(name = "summary",
            def = function(object, ...) standardGeneric("summary"))

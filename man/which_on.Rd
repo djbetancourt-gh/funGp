@@ -7,15 +7,15 @@
 which_on(sIn = NULL, fIn = NULL, args)
 }
 \arguments{
-\item{sIn}{sIn an optional matrix of scalar input coordinates with all the orignal scalar input variables.
+\item{sIn}{An optional matrix of scalar input coordinates with all the orignal scalar input variables.
 This is used only to know the total number of scalar input variables. Any \code{matrix} with as many
 columns as original scalar input variables could be used instead.}
 
-\item{fIn}{an optional list of functional input coordinates with all the original functional input
+\item{fIn}{An optional list of functional input coordinates with all the original functional input
 variables. This is used only to know the total number of functional input variables. Any \code{list}
 with as many elements as original functional input variables could be used instead.}
 
-\item{args}{an object of class \code{"\linkS4class{modelCall}"}, which specifies the model structure for
+\item{args}{An object of class \code{"\linkS4class{modelCall}"}, which specifies the model structure for
 which the active inputs should be extracted.}
 }
 \value{
@@ -32,8 +32,7 @@ The \link[funGp]{fgpm_factory} function returns an object of class \code{"\linkS
 }
 \examples{
 # extracting the indices of the active inputs in an optimized model________________________
-# load precalculated Xfgpm objects
-data("precalculated_Xfgpm_objects")
+# use precalculated Xfgpm object named xm
 # active inputs in the best model
 xm@log.success@args[[1]] # the full fgpm call
 set.seed(100)
@@ -42,7 +41,7 @@ sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr
 x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
 x5 = seq(0,1,length = n.tr^(1/5)))
 fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
-which_on(sIn, fIn, xm@log.success@args[[1]]) # only the indices extracted bu which_on
+which_on(sIn, fIn, xm@log.success@args[[1]]) # only the indices extracted by which_on
 
 }
 \references{
@@ -52,7 +51,7 @@ R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs 
 \href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
 }
 \seealso{
-\strong{*} \link[funGp]{get_active_in} for details how to obtain the data structures linked to the
+\strong{*} \link[funGp]{get_active_in} for details on how to obtain the data structures linked to the
 active inputs.
 
 \strong{*} \linkS4class{modelCall} for details on the \emph{args} argument.

@@ -7,12 +7,12 @@
 \method{plot}{predict.fgpm}(x, y = NULL, sOut.pr = NULL, calib = TRUE, sortp = TRUE, ...)
 }
 \arguments{
-\item{x}{an object with S3 class \code{"predict.gfgpm"}. This is a
+\item{x}{An object with S3 class \code{"predict.fgpm"}. This is a
 list containing the predictions and confidence bands as
-created by the \link[funGp]{predict,fgpm-method} method for the S3 class
-\code{"fgpm"}..}
+created by \link[funGp]{predict,fgpm-method} for the S3 class
+\code{"fgpm"}.}
 
-\item{y}{an optional vector (or 1-column matrix) containing
+\item{y}{An optional vector (or 1-column matrix) containing
 the true values of the scalar output at the prediction
 points. If provided, the method will display two figures: (i) a
 calibration plot with true vs predicted output values, and (ii)
@@ -22,16 +22,16 @@ the true output. If not provided, only the second plot will be
 made, and the predictions will be arranged according to the
 increasing order of the predicted output.}
 
-\item{sOut.pr}{alias of \code{y}, used for compatibility reasons.}
+\item{sOut.pr}{Alias of \code{y}, used for compatibility reasons.}
 
-\item{calib}{an optional boolean indicating if the calibration
+\item{calib}{An optional boolean indicating if the calibration
 plot should be displayed. Ignored if \code{sOut.pr} is not
 provided. Default is \code{TRUE}.}
 
-\item{sortp}{an optional boolean indicating if the plot of sorted
+\item{sortp}{An optional boolean indicating if the plot of sorted
 output should be displayed. Default is TRUE.}
 
-\item{...}{additional arguments affecting the display. Since this
+\item{...}{Additional arguments affecting the display. Since this
 method allows to generate two plots from a single function
 call, the extra arguments for each plot should be included in a
 list. For the calibration plot, the list should be called
@@ -104,6 +104,15 @@ plot(m1.preds, sOut.pr = sOut.pr, sortp = FALSE)
 # only sorted output plot
 plot(m1.preds, sOut.pr = sOut.pr, calib = FALSE)
 
+}
+\seealso{
+\strong{*} \link[funGp]{fgpm} for the construction of funGp models;
+
+\strong{*} \link[funGp]{plot,fgpm-method} for model diagnostic plots;
+
+\strong{*} \link[funGp]{simulate} for simulations based on a funGp model;
+
+\strong{*} \link[funGp]{plot.simulate.fgpm} for simulation plots.
 }
 \author{
 José Betancourt, François Bachoc and Thierry Klein

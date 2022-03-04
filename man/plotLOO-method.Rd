@@ -7,16 +7,16 @@
 \S4method{plotLOO}{fgpm}(model, ...)
 }
 \arguments{
-\item{model}{an object of class \linkS4class{fgpm} corresponding to the funGp model to validate.}
+\item{model}{An object of class \linkS4class{fgpm} corresponding to the funGp model to validate.}
 
-\item{...}{additional arguments affecting the plot. The following typical graphics parameters are
+\item{...}{Additional arguments affecting the plot. The following typical graphics parameters are
 valid entries: \emph{xlim}, \emph{ylim}, \emph{xlab}, \emph{ylab}, \emph{main}.}
 }
 \value{
 None.
 }
 \description{
-This method provides a diagnostic plot for the validation of a funGp Gaussian process model.
+\strong{Should not be exported and is replaced by  \link[funGp]{plot,fgpm-method}.} This method provides a diagnostic plot for the validation of a funGp Gaussian process model.
   It displays a calibration plot based on the leave-one-out predictions of the output at the points
   used to train the model.
 }
@@ -38,9 +38,9 @@ plotLOO(m1)
 \seealso{
 \strong{*} \link[funGp]{fgpm} for the construction of funGp models;
 
-\strong{*} \link[funGp]{plotPreds} for prediction plots;
+\strong{*} \link[funGp]{plot.predict.fgpm} for prediction plots;
 
-\strong{*} \link[funGp]{plotSims} for simulation plots.
+\strong{*} \link[funGp]{plot.simulate.fgpm} for simulation plots.
 }
 \author{
 José Betancourt, François Bachoc and Thierry Klein

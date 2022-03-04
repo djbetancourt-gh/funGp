@@ -82,6 +82,7 @@ setClass("Xfgpm",
 # ==========================================================================================================
 #' @rdname show-methods
 #' @aliases show,Xfgpm-method
+#' @method show Xfgpm
 setMethod("show", "Xfgpm", function(object) show.Xfgpm(object))
 
 show.Xfgpm <- function(object) {
@@ -673,22 +674,54 @@ printSpace <- function(ds, df, space) {
 ## =============================================================================
 ## summary method
 ## =============================================================================
-##' Display a summary of the structure for up to \code{n} \code{fgpm}
-##' objects visited during the ACO optimization.
+
+##' @description Display a summary of the structure of a \code{Xfgpm}
+##'     object, with a short description of up to \code{n} \code{fgpm}
+##'     objects visited during the ACO optimization.
 ##'
-##' @title Summary Method
+##' @details The displayed information depends on the number of
+##'     candidate inputs, in order to maintain compact tables.  The
+##'     inputs are labelled with integer suffixes, the prefix being
+##'     \code{"X"} for scalar inputs and \code{"F"} for functional
+##'     inputs.
+##'     \itemize{ 
+##'         \item{With a small number of inputs, the list
+##'               contains only one data frame. For each candidate
+##'               input (either scalar or functional) a column with
+##'               the input name indicates if the input
+##'               is active (cross \code{x}) or not (white space)
+##'               in the \code{fgpm} object corresponding to the row. For each
+##'               functional variable also shown are: the distance used \code{D_},
+##'               the dimension \code{Bas_} after dimension reduction,
+##'               the type of basis used \code{B_}. Remind that the
+##'               kernel (\code{Kern}) is the same for all functional
+##'               inputs. Also shown is the value of the Leave-One-Out
+##'               coefficient \code{Q2}.
+##'         }
+##'         \item{With a large number of inputs, the list contains
+##'               two data frames. The first one tells which inputs
+##'               are active among the scalar and functional candidate
+##'               inputs. The second data frame gives more details
+##'               for functional inputs as before.}
+##'       }
+##' 
+##' @title Summary method for \code{Xfgpm} objects
 ##' @param object An \code{Xfgpm} object.
 ##' @param n Maximal number of lines (\code{fgpm} objects) to show.
 ##' @param ... Not used yet.
-##' @return An object inheriting from \code{data.frame}.
+##' 
+##' @return An object inheriting from \code{list}, actually a list
+##'     containing one or two data frames depending on the number of
+##'     inputs. In each data frame, the \code{n} rows provide
+##'     information on the best \code{fgpm} objects visited.
 ##'
 ##' @method summary Xfgpm
-##' @rdname summary-methods
-##' @aliases summary,Xfgpm-method
 ##' @export
+##' @examples
+##' summary(xm)
 setMethod("summary", "Xfgpm",
-          function(object, n = 24) {
-              summary.Xfgpm(object = object, n = n)
+          function(object, n = 24, ...) {
+              summary.Xfgpm(object = object, n = n, ...)
           })
 
 summary.Xfgpm <- function(object, n = 24, ...) {
@@ -698,7 +731,7 @@ summary.Xfgpm <- function(object, n = 24, ...) {
     n <- pmin(n, nrow(object@log.success@sols))
 
     ## =========================================================================
-    ## When the number of variables is small enough, the structural
+    ## When the number of inputs is small enough, the structural
     ## parameters can be displayed in a single data frame. With more variables
     ## we split the content in two data frames (daf): one daf for
     ## =========================================================================

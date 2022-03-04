@@ -25,7 +25,7 @@ elements of \code{newfIn} must be numeric matrices with the
 same number of rows.}
 }
 \value{
-A list with the following elements
+A list with the following elements.
 \itemize{
    \item{n }{The number of observations.}
    \item{newsIn }{ The checked and possibly corrected matrix of
@@ -36,7 +36,7 @@ A list with the following elements
       some elements all will be numeric matrices with the same number
       of columns.}
 }
-So the "official" way to query about the number of scalar and functional
+Hence the "official" way to query about the number of scalar and functional
 inputs is to use \code{ncol(res$newsIn)} and \code{length(res$newfIn)}
 where \code{res} is the returned object.
 }

@@ -7,17 +7,18 @@
 \S4method{plotEvol}{Xfgpm}(x.model, ...)
 }
 \arguments{
-\item{x.model}{an object of class \linkS4class{Xfgpm} containing the output of the model selection
+\item{x.model}{An object of class \linkS4class{Xfgpm} containing the output of the model selection
 algorithm in \link[funGp]{fgpm_factory}.}
 
-\item{...}{additional arguments affecting the plot. The following typical graphics parameters are
+\item{...}{Additional arguments affecting the plot. The following typical graphics parameters are
 valid entries: \emph{xlim}, \emph{ylim}, \emph{xlab}, \emph{ylab}, \emph{main}.}
 }
 \value{
 None.
 }
 \description{
-This method displays the evolution of the quality of the configurations evaluated along
+\bold{Should not be exported and content is copied to plot-Xfgpm.}
+  This method displays the evolution of the quality of the configurations evaluated along
   the iterations, by the model selection algorithm in the \link[funGp]{fgpm_factory} function. For
   each iteration, the performance statistic of all the evaluated models is printed, along with the
   corresponding median of the group. The plot also includes the global maximum, which corresponds
@@ -64,7 +65,7 @@ R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs 
 \seealso{
 \strong{*} \link[funGp]{fgpm_factory} for structural optimization of funGp models;
 
-\strong{*} \link[funGp]{plotX} for diagnostic plots for a fgpm_factory output and selected model.
+\strong{*} \link[funGp]{plot,Xfgpm-method} with \code{which = "diag"}.
 }
 \author{
 José Betancourt, François Bachoc and Thierry Klein

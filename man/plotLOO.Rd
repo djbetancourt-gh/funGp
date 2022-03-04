@@ -7,9 +7,9 @@
 plotLOO(model, ...)
 }
 \arguments{
-\item{model}{a model object for which the LOO calibration plot is to be made.}
+\item{model}{A model object for which the LOO calibration plot is to be made.}
 
-\item{...}{additional arguments affecting the plot.}
+\item{...}{Additional arguments affecting the plot.}
 }
 \value{
 None.

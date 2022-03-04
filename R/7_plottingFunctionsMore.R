@@ -12,6 +12,7 @@
 ##' @name plot
 ##' @rdname plot-methods
 ##' @exportMethod plot
+##' @noRd
 setGeneric(name = "plot", def = function(x, y, ...) standardGeneric("plot"))
 
 ## ==============================================================================
@@ -41,6 +42,7 @@ setGeneric(name = "plot", def = function(x, y, ...) standardGeneric("plot"))
 ##' @return Nothing.
 ##' @export
 ##' @method plot fgpm
+##' 
 ##' @examples
 ##' # generating input and output data for training
 ##' set.seed(100)

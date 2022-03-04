@@ -20,18 +20,18 @@ fgpm_factory(
 )
 }
 \arguments{
-\item{sIn}{an optional matrix of scalar input values to train the model. Each column must match an input
+\item{sIn}{An optional matrix of scalar input values to train the model. Each column must match an input
 variable and each row a training point. Either scalar input coordinates (sIn), functional input
 coordinates (fIn), or both must be provided.}
 
-\item{fIn}{an optional list of functional input values to train the model. Each element of the list must
-be a matrix containing to the set of curves corresponding to one functional input. Either scalar input
+\item{fIn}{An optional list of functional input values to train the model. Each element of the list must
+be a matrix containing the set of curves corresponding to one functional input. Either scalar input
 coordinates (sIn), functional input coordinates (fIn), or both must be provided.}
 
-\item{sOut}{a vector (or 1-column matrix) containing the values of the scalar output at the specified
+\item{sOut}{A vector (or 1-column matrix) containing the values of the scalar output at the specified
 input points.}
 
-\item{ind.vl}{an optional numerical matrix specifying which points in the three structures above should be
+\item{ind.vl}{An optional numerical matrix specifying which points in the three structures above should be
 used for training and which for validation. If provided, the optimization will be conducted in terms of
 the hold-out Q2, which comes from training the model with a subset of the points, and then estimate the
 prediction error in the remaining points. In that case, each column of \emph{ind.vl} will be interpreted
@@ -40,11 +40,11 @@ as one validation set, and the multiple columns will imply replicates. In the si
 used for each model configuration explored. If not provided, the optimization will be conducted in terms
 of the leave-one-out cross-validation Q2, which for a total number of n observations, comes from training
 the model n times, each using n-1 points for training and the remaining one for validation. This procedure
-is typically costly due to the large number of hyperparameters optimizations that should be conducted,
+is typically costly due to the large number of hyperparameter optimizations that should be conducted,
 nonetheless, fgpm_factory implements the virtual equations introduced by Dubrule (1983) for Gaussian
-processes, which require a single hyperparameters optimization. See the reference below for more details.}
+processes, which require a single hyperparameter optimization. See the reference below for more details.}
 
-\item{ctraints}{an optional list specifying the constraints of the structural optimization problem. Valid
+\item{ctraints}{An optional list specifying the constraints of the structural optimization problem. Valid
 entries for this list are: \cr\cr
 \strong{*}\emph{s_keepOn}: a numerical array indicating the scalar inputs that should remain active in the
   model. It should contain the index of the columns of sIn corresponding to the inputs to keep active. \cr\cr
@@ -78,12 +78,12 @@ entries for this list are: \cr\cr
   \emph{kerType} therein. Valid choices at this time are "gauss", "matern5_2" and "matern3_2". If not
   provided, all the available kernel functions will be tried.}
 
-\item{setup}{an optional list indicating the value for some parameters of the structural optimization
+\item{setup}{An optional list indicating the value for some parameters of the structural optimization
 algorithm. The ant colony optimization algorithm available at this time allows the following entries: \cr\cr
 \strong{Initial pheromone load}\cr\cr
   \strong{*}\emph{tao0}: a number indicating the initial pheromone load on links pointing out to the
     selection of a distance type, a projection basis or a kernel type. Default is 0.1. \cr\cr
-  \strong{*}\emph{dop.s}: a number controlling how likely is to activate a scalar input. It operates on a
+  \strong{*}\emph{dop.s}: a number controlling how likely it is to activate a scalar input. It operates on a
     relation of the type \eqn{A  = dop.s * I}, where \emph{A} is the initial pheromone load of links
     pointing out to the activation of scalar inputs and \emph{I} is the initial pheromone load of links
     pointing out to their inactivation. Default is 1. \cr\cr
@@ -92,9 +92,9 @@ algorithm. The ant colony optimization algorithm available at this time allows t
     function that determines the initial pheromone values on the links connecting the L2_byindex distance
     with the projection dimension. Default are 2 and 1.4, respectively. \cr\cr
 \strong{Local pheromone update}\cr\cr
-  \strong{*}\emph{rho.l}: a number specifying the pheromone evaporation rate. Default is 0.1 \cr\cr
+  \strong{*}\emph{rho.l}: a number specifying the pheromone evaporation rate. Default is 0.1. \cr\cr
 \strong{Global pheromone update}\cr\cr
-  \strong{*}\emph{u.gbest}: a boolean indicating if at each iterations, the pheromone load on the links
+  \strong{*}\emph{u.gbest}: a boolean indicating if at each iteration, the pheromone load on the links
     of the best ant of the whole trial should be reinforced. Default is FALSE. \cr\cr
   \strong{*}\emph{n.ibest}: a number indicating how many top ants of each iteration should be used for
     pheromone reinforcement. Default is 1. \cr\cr
@@ -109,28 +109,28 @@ algorithm. The ant colony optimization algorithm available at this time allows t
     are proportional to the pheromone load on the feasible links. The ants will randomly chose one of the two
     rules at each time. They will opt for rule 1 with probability \emph{q0}. Default is 0.95.}
 
-\item{time.lim}{an optional number specifying a time limit in seconds to be used as stopping condition for the
+\item{time.lim}{An optional number specifying a time limit in seconds to be used as stopping condition for the
 structural optimization.}
 
-\item{nugget}{an optional variance value standing for the homogeneous nugget effect. A tiny nugget might help
+\item{nugget}{An optional variance value standing for the homogeneous nugget effect. A tiny nugget might help
 to overcome numerical problems related to the ill-conditioning of the covariance matrix. Default is 1e-8.}
 
-\item{n.starts}{an optional integer indicating the number of initial points to use for the optimization of the
+\item{n.starts}{An optional integer indicating the number of initial points to use for the optimization of the
 hyperparameters. A parallel processing cluster can be exploited in order to speed up the evaluation of
 multiple initial points. More details in the description of the argument par.clust below. Default is 1.}
 
-\item{n.presample}{an optional integer indicating the number of points to be tested in order to select the
+\item{n.presample}{An optional integer indicating the number of points to be tested in order to select the
 n.starts initial points. The n.presample points will be randomly sampled from the hyper-rectangle defined by: \cr \cr
 1e-10 \eqn{\le} \code{ls_s.hyp[i]} \eqn{\le} 2*max(\code{sMs[[i]]}), for i in 1 to the number of scalar inputs, \cr
 1e-10 \eqn{\le} \code{ls_f.hyp[i]} \eqn{\le} 2*max(\code{fMs[[i]]}), for i in 1 to the number of functional inputs, \cr \cr
 with  sMs and fMs the lists of distance matrices for the scalar and functional inputs, respectively. The value of
 n.starts will be assigned to n.presample if this last is smaller. Default is 20.}
 
-\item{par.clust}{an optional parallel processing cluster created with the \code{\link[parallel]{makeCluster}}
+\item{par.clust}{An optional parallel processing cluster created with the \code{\link[parallel]{makeCluster}}
 function of the \link[=parallel]{parallel package}. If not provided, structural configurations are evaluated in
 sequence.}
 
-\item{pbars}{an optional boolean indicating if progress bars should be displayed.}
+\item{pbars}{An optional boolean indicating if progress bars should be displayed.}
 }
 \value{
 An object of class \linkS4class{Xfgpm} containing the data structures linked to the structural optimization
@@ -149,8 +149,7 @@ This function enables the smart exploration of the solution space of potential s
   solution methods.
 }
 \examples{
-# calling data with precalculated Xfgpm objects_________________________________________
-data("precalculated_Xfgpm_objects")
+# Data with precalculated Xfgpm objects are already available
 # Optimized model structure for fgp_BB7 black-box function with standard parameters
 # assessing the quality of the model
 # in the absolute and also w.r.t. the other explored models
@@ -159,12 +158,12 @@ plot(xm, which="diag")
 # checking the evolution of the algorithm
 plot(xm, which="evol")
 
-# Summary the tested configurations
-summary(xm) 
-         
-# checking the log of crashed iterations          
+# Summary of the tested configurations
+summary(xm)
+
+# checking the log of crashed iterations
 print(xm@log.crashes)
-         
+
 # building the model with the default fgpm arguments to compare
 set.seed(100)
 n.tr <- 32
@@ -177,12 +176,12 @@ m1 <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut)
 plot(m1) # plotting the model
 
 # improving performance with more iterations_______________________________________________
-plot(xm25, which="evol")  
-plot(xm25, which="diag") 
-         
+plot(xm25, which="evol")
+plot(xm25, which="diag")
+
 # custom solution space____________________________________________________________________
-plot(xmc, which="evol")  
-plot(xmc, which="diag")  
+plot(xmc, which="evol")
+plot(xmc, which="diag")
 
 # verifying constraints with the log of some successfully built models
 summary(xmc)
@@ -193,7 +192,7 @@ unlist(xmh@details$param)
 
 # stopping condition based on time_________________________________________________________
 summary(xms)
-         
+
 \dontrun{
 # parallelization in the model factory_____________________________________________________
 # generating input and output data
@@ -213,7 +212,7 @@ parallel::stopCluster(cl)
 # NOTE: in order to provide progress bars for the monitoring of time consuming processes
 #       ran in parallel, funGp relies on the doFuture and future packages. Parallel processes
 #       suddenly interrupted by the user tend to leave corrupt connections. This problem is
-#       originated outside funGp, which limits our control over it. On section 4.1 of the
+#       originated outside funGp, which limits our control over it. On section 4.1 of the manual
 #       of funGp, we provide a temporary solution to the issue and we remain attentive in
 #       case it appears a more elegant way to handle it or a manner to suppress it.
 #
@@ -244,9 +243,12 @@ Dubrule, O. (1983),
 \href{https://link.springer.com/article/10.1007/BF01033232}{[MG]}
 }
 \seealso{
-\strong{*} \link[funGp]{plotX} for diagnostic plots for a fgpm_factory output and selected model;
+\strong{*} \link[funGp]{plot,Xfgpm-method} for a call to \link[funGp]{plotEvol} with \code{which = "evolution"}
+       or to \link[funGp]{plotX} with \code{which = "diag"};
 
 \strong{*} \link[funGp]{plotEvol} for a plot of the evolution of the model selection algorithm in fgpm_factory;
+
+\strong{*} \link[funGp]{plotX} for diagnostic plots for a fgpm_factory output and selected model;
 
 \strong{*} \link[funGp]{get_active_in} for post-processing of input data structures following a fgpm_factory call;
 

@@ -7,15 +7,15 @@
 \method{plot}{simulate.fgpm}(x, y = NULL, detail = NA, ...)
 }
 \arguments{
-\item{x}{an object with S3 class \code{simulate.fgpm} as created
-by the \link[funGp]{simulate,fgpm-method} met method.}
+\item{x}{An object with S3 class \code{simulate.fgpm} as created
+by \link[funGp]{simulate,fgpm-method}.}
 
 \item{y}{Not used.}
 
-\item{detail}{an optional character string specifying the data
+\item{detail}{An optional character string specifying the data
 elements that should be included in the plot, to be chosen
 between \code{"light"} and \code{"full"}. A \emph{light} plot
-will include only include the simulated values, while a a
+will include only the simulated values, while a a
 \emph{full} plot will also include the predicted mean and
 confidence bands at the simulation points. This argument will
 only be used if full simulations (including the mean and
@@ -23,7 +23,7 @@ confidence bands) are provided, otherwise it will be
 ignored. See \link[funGp]{simulate} for more details on the
 generation of light and full simulations.}
 
-\item{...}{additional arguments affecting the display. The
+\item{...}{Additional arguments affecting the display. The
 following typical graphics parameters are valid entries:
 \emph{xlim}, \emph{ylim}, \emph{xlab}, \emph{ylab},
 \emph{main}. The boolean argument \emph{legends} can also be
@@ -87,6 +87,15 @@ plot(simsf)
 # plotting full simulations in "light" mode
 plot(simsf, detail = "light")
 
+}
+\seealso{
+\strong{*} \link[funGp]{fgpm} for the construction of funGp models;
+
+\strong{*} \link[funGp]{plot,fgpm-method} for model diagnostic plots;
+
+\strong{*} \link[funGp]{predict} for predictions based on a funGp model;
+
+\strong{*} \link[funGp]{plot.predict.fgpm} for prediction plots.
 }
 \author{
 José Betancourt, François Bachoc and Thierry Klein
