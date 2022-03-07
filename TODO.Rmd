@@ -11,6 +11,7 @@ output:
 - **(WIP)** is used for tasks that are in progress,
 - **(?)** Idea to be discussed.		
 - **()** FB 25/02/2022 test git push
+- **()** FB 07/03/2022 test git push macbook
 		
 ## Checks
 
