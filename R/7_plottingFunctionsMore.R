@@ -42,7 +42,7 @@ setGeneric(name = "plot", def = function(x, y, ...) standardGeneric("plot"))
 ##' @return Nothing.
 ##' @export
 ##' @method plot fgpm
-##' 
+##'
 ##' @examples
 ##' # generating input and output data for training
 ##' set.seed(100)
@@ -171,7 +171,7 @@ setMethod("plot", "fgpm",
 ##' plot(xm, which = "diag", fitp = FALSE)
 ##' plot(xm, which = "diag", calib = FALSE)
 ##' # customizing some graphical parameters
-##' plotX(xm, calib.gpars = list(xlim = c(800,1000), ylim = c(600,1200)),
+##' plot(xm, calib.gpars = list(xlim = c(800,1000), ylim = c(600,1200)),
 ##'      fitp.gpars = list(main = "Relative quality", legends = FALSE))
 ##'
 ##' }
