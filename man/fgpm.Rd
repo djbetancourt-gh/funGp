@@ -177,7 +177,7 @@ fIn.pr <- list(f1 = matrix(runif(n.pr*10), ncol = 10), matrix(runif(n.pr*22), nc
 m1.preds <- predict(m1, sIn.pr = sIn.pr, fIn.pr = fIn.pr)
 
 # plotting predictions
-plot(m1, preds = m1.preds)
+plot(m1.preds)
 
 
 # simulating from a funGp model____________________________________________________________
@@ -275,7 +275,7 @@ R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs 
 \seealso{
 \strong{*} \link[funGp]{plot,fgpm-method}: validation plot for a \code{fgpm} model;
 
-\strong{*} \link[funGp]{predict} for predictions based on a funGp model;
+\strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a funGp model;
 
 \strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a funGp model;
 

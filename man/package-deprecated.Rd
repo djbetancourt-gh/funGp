@@ -41,7 +41,7 @@ R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs 
 \seealso{
 \strong{*} \link[funGp]{get_active_in} for the substitute of this function in future releases;
 
-\strong{*} \link[funGp]{predict} for predictions based on a funGp model;
+\strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a funGp model;
 
 \strong{*} \link[funGp]{fgpm} for creation of a funGp model;
 

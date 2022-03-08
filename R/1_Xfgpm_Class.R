@@ -244,16 +244,18 @@ show.Xfgpm <- function(object) {
 #' \emph{Journal of the International Association for Mathematical Geology}, \strong{15},  687-699.
 #' \href{https://link.springer.com/article/10.1007/BF01033232}{[MG]}
 #'
-#'
-#'
-#' @seealso \strong{*} \link[funGp]{plot,Xfgpm-method} for a call to \link[funGp]{plotEvol} with \code{which = "evolution"}
-#'        or to \link[funGp]{plotX} with \code{which = "diag"};
-#' @seealso \strong{*} \link[funGp]{plotEvol} for a plot of the evolution of the model selection algorithm in fgpm_factory;
-#' @seealso \strong{*} \link[funGp]{plotX} for diagnostic plots for a fgpm_factory output and selected model;
-#' @seealso \strong{*} \link[funGp]{get_active_in} for post-processing of input data structures following a fgpm_factory call;
-#' @seealso \strong{*} \link[funGp]{predict} for predictions based on a funGp model;
-#' @seealso \strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a funGp model;
-#' @seealso \strong{*} \link[funGp]{update,fgpm-method} for post-creation updates on a funGp model.
+#' @seealso \strong{*} \link[funGp]{plot,Xfgpm-method} with
+#'     \code{which = "evolution"} for to visualize the evolution of
+#'     the ACO algorigthm, or with \code{which = "diag"} for a
+#'     diagnostic plot;
+#' @seealso \strong{*} \link[funGp]{get_active_in} for post-processing
+#'     of input data structures following a fgpm_factory call;
+#' @seealso \strong{*} \link[funGp]{predict,fgpm-method} for
+#'     predictions based on a funGp model;
+#' @seealso \strong{*} \link[funGp]{simulate,fgpm-method} for
+#'     simulations based on a funGp model;
+#' @seealso \strong{*} \link[funGp]{update,fgpm-method} for
+#'     post-creation updates on a funGp model.
 #'
 #' @examples
 #' # Data with precalculated Xfgpm objects are already available
@@ -817,10 +819,13 @@ print.summary.Xfgpm <- function(x, ...) {
 ##' @method [[ Xfgpm
 ##'
 ##' @seealso The \code{\link{modelDef}} function to extract the
-##'     definition of a `fgpm` model e.g., to evaluate it using new
-##'     data `sIn` `fIn`, `sOut`.
+##'     definition of a \code{fgpm} model e.g., to evaluate it using new
+##'     data \code{sIn}, \code{fIn} and \code{sOut}.
 ##'
-##'
+##' @examples
+##' ## see `?xm` to see how to recreate the pre-caclulated `Xfgpm` object `xm`. 
+##' xm[[2]]
+##' 
 setMethod("[[", "Xfgpm",
           function(x, i) {
               if (i > length(x@log.success@args)) {
@@ -873,34 +878,36 @@ setMethod("[[", "Xfgpm",
 ##' @export
 ##'
 ##' @examples
-##' set.seed(100)
-##' n.tr <- 32
-##' x1 <- x2 <- x3 <- x4 <- x5 <- seq(0, 1, length = n.tr^(1/5))
-##'
-##' sIn <- as.matrix(expand.grid(x1 = x1, x2 = x2, x3 = x3, x4 = x4, x5 = x5))
-##' fIn <- list(f1 = matrix(runif(n.tr * 10), ncol = 10),
-##'             f2 = matrix(runif(n.tr * 22), ncol = 22))
-##' sOut <- fgp_BB7(sIn, fIn, n.tr)
-##' xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
-##'
+##' ## =========================================================================
+##' ## Using the re-calculated object `xm` to save time. See `?xm` to re-create
+##' ## this object.
+##' ## =========================================================================
+##' 
 ##' ## 'xm@model' is the best 'fgpm' model in 'xm'
 ##' plot(xm@model)
+##'
+##' ## see the R code to use to recreate the model
 ##' modelDef(xm, i = 1)
 ##'
-##' ## Define new data
-##' n.new <- 3^5
-##' x1 <- x2 <- x3 <- x4 <- x5 <- seq(0, 1, length = n.new^(1/5))
+##'\dontrun{
+##'     ## Define new data in a list. Using an environment would also work,
+##'     ## including the global environment, which is the default in  `eval`.
+##'     L <- list()
+##'     set.seed(341)
+##'     n.new <- 3^5
+##'     x1 <- x2 <- x3 <- x4 <- x5 <- seq(0, 1, length = n.new^(1/5))
 ##'
-##' ## replace the data objects from which the model is created
-##' sIn <- as.matrix(expand.grid(x1 = x1, x2 = x2, x3 = x3, x4 = x4, x5 = x5))
-##' fIn <- list(f1 = matrix(runif(n.new * 10), ncol = 10),
-##'             f2 = matrix(runif(n.new * 22), ncol = 22))
-##' sOut <- fgp_BB7(sIn, fIn, n.new)
-##' ## Now evaluate the definition. Since the objects 'sIn' and 'fIn'
-##' ## have been replaced by new values, the perfomance will differ.
-##' fgpm.new <- eval(modelDef(xm, i = 1))
-##' plot(fgpm.new, main = "Re-created 'fgpm' model with different data")
-##' plot(xm[[1]], main = "Re-created 'fgpm' model with the same data")
+##'     ## create the data objects required to fit the model 
+##'     L$sIn <- as.matrix(expand.grid(x1 = x1, x2 = x2, x3 = x3, x4 = x4, x5 = x5))
+##'     L$fIn <- list(f1 = matrix(runif(n.new * 10), ncol = 10),
+##'                    f2 = matrix(runif(n.new * 22), ncol = 22))
+##'     L$sOut <- fgp_BB7(L$sIn, $fIn, n.new)
+##'
+##'     ## Now evaluate 
+##'     fgpm.new <- eval(modelDef(xm, i = 1), envir = L)
+##'     plot(fgpm.new, main = "Re-created 'fgpm' model with different data")
+##'     plot(xm[[1]], main = "Re-created 'fgpm' model with the same data")
+##' }
 modelDef <- function(object, ind) {
     parse(text = object@log.success@args[[ind]]@string[[1]])
 }

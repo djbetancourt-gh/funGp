@@ -36,8 +36,13 @@ The slot \code{@model} returns the best \code{fgpm} as
     different and show a different LOO performance.
 }
 
+\examples{
+## see `?xm` to see how to recreate the pre-caclulated `Xfgpm` object `xm`. 
+xm[[2]]
+
+}
 \seealso{
 The \code{\link{modelDef}} function to extract the
-    definition of a `fgpm` model e.g., to evaluate it using new
-    data `sIn` `fIn`, `sOut`.
+    definition of a \code{fgpm} model e.g., to evaluate it using new
+    data \code{sIn}, \code{fIn} and \code{sOut}.
 }

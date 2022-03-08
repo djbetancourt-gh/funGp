@@ -852,7 +852,7 @@ fitNtests_ACO <- function(ant, sIn, fIn, sOut, extargs, base,
 #' \href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
 #'
 #' @seealso \strong{*} \link[funGp]{get_active_in} for the substitute of this function in future releases;
-#' @seealso \strong{*} \link[funGp]{predict} for predictions based on a funGp model;
+#' @seealso \strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a funGp model;
 #' @seealso \strong{*} \link[funGp]{fgpm} for creation of a funGp model;
 #' @seealso \strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection.
 #'

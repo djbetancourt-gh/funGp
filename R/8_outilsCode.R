@@ -141,7 +141,7 @@ show.factoryCall <- function (x, ...) {
 ##' @return A data frame with character columns corresponding to
 ##'     abbreviated versions of the content of \code{data}.
 ##' 
-##' @author Yves
+##' @noRd
 ##' 
 formatShort <- function(structData) {
     nms <- colnames(structData)

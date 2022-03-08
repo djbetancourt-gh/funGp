@@ -58,34 +58,39 @@ of Leave-One-Out cross-validation.  The choice \code{which =
 plots are shown as sub-plots by default, but each can be discarded
 if wanted.
 
-The choice \code{which = "evolution"} displays the evolution of the
-quality of the configurations evaluated along the iterations, by the
-model selection algorithm in the fgpm_factory function. For each
-iteration, the performance statistic of all the evaluated models is
-printed, along with the corresponding median of the group. The plot
-also includes the global maximum, which corresponds to the best
-performance statistic obtained up to the current iteration. In this
-plot, it is typical to have some points falling relatively far from
-the maximum, even after multiple iterations. This happens mainly
-because we have multiple categorical features, whose alteration
-might change the performance statistic in a nonsmooth way. On the
-other hand, the points that fall bellow zero usually correspond to
-models whose hyperparameters were hard to optimize. This occurs
-sporadically during the log-likelihood optimization for Gaussian
-processes, due to the non-linearity of the objective function.
-As long as the maximum keeps improving and the median remains close
-to it, none of the two aforementioned phenomena is matter for worries.
-Both of them respond to the mechanism of exploration implemented in
-the algorithm, which makes it able to progressively move towards better
-model configurations.
+The choice \code{which = "evol"} displays the evolution of the
+quality of the configurations evaluated along the iterations, by
+the model selection algorithm in the fgpm_factory function. For
+each iteration, the performance statistic of all the evaluated
+models is printed, along with the corresponding median of the
+group. The plot also includes the global maximum, which
+corresponds to the best performance statistic obtained up to the
+current iteration. In this plot, it is typical to have some points
+falling relatively far from the maximum, even after multiple
+iterations. This happens mainly because we have multiple
+categorical features, whose alteration might change the
+performance statistic in a nonsmooth way. On the other hand, the
+points that fall bellow zero usually correspond to models whose
+hyperparameters were hard to optimize. This occurs sporadically
+during the log-likelihood optimization for Gaussian processes, due
+to the non-linearity of the objective function.  As long as the
+maximum keeps improving and the median remains close to it, none
+of the two aforementioned phenomena is matter for worries.  Both
+of them respond to the mechanism of exploration implemented in the
+algorithm, which makes it able to progressively move towards
+better model configurations.
 
- The choice \code{which = "diag"} provides two plots for assessing the quality of the output delivered by the
- model selection algorithm in the \link[funGp]{fgpm_factory} function. The first one is a calibration
- plot similar to the one offered for \linkS4class{fgpm} objects by \link[funGp]{plot,fgpm-method}.
- This plot allows to validate the absolute quality of the selected model. The second one displays the
- performance statistic of all the models successfully evaluated by the model selection algorithm. This
- provides a notion of the relative quality of the selected model with respect to the other models that
- can be made using the same data.
+ The choice \code{which = "diag"} provides two plots for assessing
+ the quality of the output delivered by the model selection
+ algorithm in the \link[funGp]{fgpm_factory} function. The first
+ one is a calibration plot similar to the one offered for
+ \linkS4class{fgpm} objects by \link[funGp]{plot,fgpm-method}.
+ This plot allows to validate the absolute quality of the selected
+ model. The second one displays the performance statistic of all
+ the models successfully evaluated by the model selection
+ algorithm. This provides a notion of the relative quality of the
+ selected model with respect to the other models that can be made
+ using the same data.
 }
 \examples{
 # generating input and output data
@@ -109,11 +114,12 @@ plot(xm, which = "diag", horiz = TRUE)
 plot(xm, which = "diag", fitp = FALSE)
 plot(xm, which = "diag", calib = FALSE)
 # customizing some graphical parameters
-plotX(xm, calib.gpars = list(xlim = c(800,1000), ylim = c(600,1200)),
+plot(xm, calib.gpars = list(xlim = c(800,1000), ylim = c(600,1200)),
      fitp.gpars = list(main = "Relative quality", legends = FALSE))
 
 }
 }
 \seealso{
-\strong{*} \link[funGp]{fgpm_factory} for structural optimization of funGp models.
+\strong{*} \link[funGp]{fgpm_factory} for structural
+    optimization of funGp models.
 }

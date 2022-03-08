@@ -201,7 +201,7 @@ m1up <- update(m1, var.re = TRUE, ls_s.re = TRUE, ls_f.re = TRUE) # all hyperpar
 \seealso{
 \strong{*} \link[funGp]{fgpm} for creation of a funGp model;
 
-\strong{*} \link[funGp]{predict} for predictions based on a funGp model;
+\strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a funGp model;
 
 \strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a funGp model.
 }

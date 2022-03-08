@@ -590,8 +590,8 @@ check_duplicates_S <- function(sBench, sCand, oCand, iCand){
 ##'     exported only on a temporary basis}, to make the help and
 ##'     examples visible.
 ##'
-##' @export
-##'
+##' @noRd
+##' 
 ##' @examples
 ##' ## works
 ##' check_new_inputs(newsIn = runif(4))

@@ -30,34 +30,36 @@ Remind that the models are sorted by decreasing quality so
     \code{i = 1} extracts the definition of the best model.
 }
 \examples{
-set.seed(100)
-n.tr <- 32
-x1 <- x2 <- x3 <- x4 <- x5 <- seq(0, 1, length = n.tr^(1/5))
-
-sIn <- as.matrix(expand.grid(x1 = x1, x2 = x2, x3 = x3, x4 = x4, x5 = x5))
-fIn <- list(f1 = matrix(runif(n.tr * 10), ncol = 10),
-            f2 = matrix(runif(n.tr * 22), ncol = 22))
-sOut <- fgp_BB7(sIn, fIn, n.tr)
-xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
+## =========================================================================
+## Using the re-calculated object `xm` to save time. See `?xm` to re-create
+## this object.
+## =========================================================================
 
 ## 'xm@model' is the best 'fgpm' model in 'xm'
 plot(xm@model)
+
+## see the R code to use to recreate the model
 modelDef(xm, i = 1)
 
-## Define new data
-n.new <- 3^5
-x1 <- x2 <- x3 <- x4 <- x5 <- seq(0, 1, length = n.new^(1/5))
+\dontrun{
+    ## Define new data in a list. Using an environment would also work,
+    ## including the global environment, which is the default in  `eval`.
+    L <- list()
+    set.seed(341)
+    n.new <- 3^5
+    x1 <- x2 <- x3 <- x4 <- x5 <- seq(0, 1, length = n.new^(1/5))
 
-## replace the data objects from which the model is created
-sIn <- as.matrix(expand.grid(x1 = x1, x2 = x2, x3 = x3, x4 = x4, x5 = x5))
-fIn <- list(f1 = matrix(runif(n.new * 10), ncol = 10),
-            f2 = matrix(runif(n.new * 22), ncol = 22))
-sOut <- fgp_BB7(sIn, fIn, n.new)
-## Now evaluate the definition. Since the objects 'sIn' and 'fIn'
-## have been replaced by new values, the perfomance will differ.
-fgpm.new <- eval(modelDef(xm, i = 1))
-plot(fgpm.new, main = "Re-created 'fgpm' model with different data")
-plot(xm[[1]], main = "Re-created 'fgpm' model with the same data")
+    ## create the data objects required to fit the model 
+    L$sIn <- as.matrix(expand.grid(x1 = x1, x2 = x2, x3 = x3, x4 = x4, x5 = x5))
+    L$fIn <- list(f1 = matrix(runif(n.new * 10), ncol = 10),
+                   f2 = matrix(runif(n.new * 22), ncol = 22))
+    L$sOut <- fgp_BB7(L$sIn, $fIn, n.new)
+
+    ## Now evaluate 
+    fgpm.new <- eval(modelDef(xm, i = 1), envir = L)
+    plot(fgpm.new, main = "Re-created 'fgpm' model with different data")
+    plot(xm[[1]], main = "Re-created 'fgpm' model with the same data")
+}
 }
 \seealso{
 the \code{\link{[[,Xfgpm-method}} that can also be used

@@ -93,7 +93,7 @@ plot(simsf, detail = "light")
 
 \strong{*} \link[funGp]{plot,fgpm-method} for model diagnostic plots;
 
-\strong{*} \link[funGp]{predict} for predictions based on a funGp model;
+\strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a funGp model;
 
 \strong{*} \link[funGp]{plot.predict.fgpm} for prediction plots.
 }

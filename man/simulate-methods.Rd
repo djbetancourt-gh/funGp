@@ -113,7 +113,7 @@ plot(m1.sims_f, detail = "light")
 \seealso{
 \strong{*} \link[funGp]{plot.simulate.fgpm} for the simulation plot of a funGp model;
 
-\strong{*} \link[funGp]{predict} for predictions based on a funGp model;
+\strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a funGp model;
 
 \strong{*} \link[funGp]{plot.predict.fgpm} for the prediction plot of a funGp model.
 }

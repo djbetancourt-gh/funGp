@@ -243,20 +243,22 @@ Dubrule, O. (1983),
 \href{https://link.springer.com/article/10.1007/BF01033232}{[MG]}
 }
 \seealso{
-\strong{*} \link[funGp]{plot,Xfgpm-method} for a call to \link[funGp]{plotEvol} with \code{which = "evolution"}
-       or to \link[funGp]{plotX} with \code{which = "diag"};
+\strong{*} \link[funGp]{plot,Xfgpm-method} with
+    \code{which = "evolution"} for to visualize the evolution of
+    the ACO algorigthm, or with \code{which = "diag"} for a
+    diagnostic plot;
 
-\strong{*} \link[funGp]{plotEvol} for a plot of the evolution of the model selection algorithm in fgpm_factory;
+\strong{*} \link[funGp]{get_active_in} for post-processing
+    of input data structures following a fgpm_factory call;
 
-\strong{*} \link[funGp]{plotX} for diagnostic plots for a fgpm_factory output and selected model;
+\strong{*} \link[funGp]{predict,fgpm-method} for
+    predictions based on a funGp model;
 
-\strong{*} \link[funGp]{get_active_in} for post-processing of input data structures following a fgpm_factory call;
+\strong{*} \link[funGp]{simulate,fgpm-method} for
+    simulations based on a funGp model;
 
-\strong{*} \link[funGp]{predict} for predictions based on a funGp model;
-
-\strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a funGp model;
-
-\strong{*} \link[funGp]{update,fgpm-method} for post-creation updates on a funGp model.
+\strong{*} \link[funGp]{update,fgpm-method} for
+    post-creation updates on a funGp model.
 }
 \author{
 José Betancourt, François Bachoc and Thierry Klein

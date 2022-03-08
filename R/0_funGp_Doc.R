@@ -6,7 +6,7 @@
 #' \itemize{
 #'  \item{\strong{Main methods}}{\cr
 #'        \link[funGp]{fgpm}: creation of funGp regression models \cr
-#'        \link[funGp]{predict}: output estimation at new input points based on a funGp model \cr
+#'        \link[funGp]{predict,fgpm-method}: output estimation at new input points based on a funGp model \cr
 #'        \link[funGp]{simulate,fgpm-method}: random sampling from a funGp Gaussian process model \cr
 #'        \link[funGp]{update,fgpm-method}: modification of data and hyperparameters of a funGp model
 #'  }
@@ -70,3 +70,4 @@
 #' @docType package
 #' @name funGp-package
 NULL
+

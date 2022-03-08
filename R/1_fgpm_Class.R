@@ -176,7 +176,7 @@ setClass("fgpm",
 #' \href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
 #'
 #' @seealso \strong{*} \link[funGp]{plot,fgpm-method}: validation plot for a \code{fgpm} model;
-#' @seealso \strong{*} \link[funGp]{predict} for predictions based on a funGp model;
+#' @seealso \strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a funGp model;
 #' @seealso \strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a funGp model;
 #' @seealso \strong{*} \link[funGp]{update,fgpm-method} for post-creation updates on a funGp model;
 #' @seealso \strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection.
@@ -248,7 +248,7 @@ setClass("fgpm",
 #' m1.preds <- predict(m1, sIn.pr = sIn.pr, fIn.pr = fIn.pr)
 #'
 #' # plotting predictions
-#' plot(m1, preds = m1.preds)
+#' plot(m1.preds)
 #'
 #'
 #' # simulating from a funGp model____________________________________________________________
@@ -652,6 +652,7 @@ show.fgpm <- function(model) {
 #' @rdname predict-methods
 #' @importFrom stats predict
 #' @exportMethod predict
+#' @noRd
 setGeneric(name = "predict", def = function(object, ...) standardGeneric("predict"))
 
 #' @title Prediction from a funGp Gaussian process model
@@ -918,7 +919,7 @@ setGeneric(name = "simulate", def = function(object, nsim = 1, seed = NULL, ...)
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #'
 #' @seealso \strong{*} \link[funGp]{plot.simulate.fgpm} for the simulation plot of a funGp model;
-#' @seealso \strong{*} \link[funGp]{predict} for predictions based on a funGp model;
+#' @seealso \strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a funGp model;
 #' @seealso \strong{*} \link[funGp]{plot.predict.fgpm} for the prediction plot of a funGp model.
 #'
 #' @examples
@@ -1163,7 +1164,7 @@ setGeneric(name = "update", def = function(object, ...) standardGeneric("update"
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #'
 #' @seealso \strong{*} \link[funGp]{fgpm} for creation of a funGp model;
-#' @seealso \strong{*} \link[funGp]{predict} for predictions based on a funGp model;
+#' @seealso \strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a funGp model;
 #' @seealso \strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a funGp model.
 #'
 #' @examples
