@@ -40,7 +40,7 @@
 #'    (x2 - (5 / (4 * pi^2)) * x1^2 + (5 / pi) * x1 - 6)^2 +
 #'        10 * (1 - (1 / (8 * pi))) * cos(x1) + 10 + 
 #'        (4 / 3) * pi * (42 * mean(f1 * (1 - t1)) +
-#'                        pi * ((x1 + 5) / 5) + 15) * mean(t2 * f2)}}
+#'                        pi * ((x1 + 5) / 5) + 15) * mean(t2 * f2))}}
 #' 
 #' \item{\bold{\code{fgp_BB5 }}}{With  \eqn{d_s=2}{ds = 2} and \eqn{d_f=2}{df = 2} is
 #'     inspired by the  second analytical example in \emph{final version} of Muehlenstaedt et al (2016)
