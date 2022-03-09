@@ -8,9 +8,9 @@
 #' \itemize{
 #'  \item{\strong{Main methods}}{\cr
 #'        \link[funGp]{fgpm}: creation of funGp regression models \cr
-#'        \link[funGp]{predict,fgpm-method}: output estimation at new input points based on a funGp model \cr
-#'        \link[funGp]{simulate,fgpm-method}: random sampling from a funGp Gaussian process model \cr
-#'        \link[funGp]{update,fgpm-method}: modification of data and hyperparameters of a funGp model
+#'        \link[funGp]{predict,fgpm-method}: output estimation at new input points based on a \code{fgpm} model \cr
+#'        \link[funGp]{simulate,fgpm-method}: random sampling from a \code{fgpm} model \cr
+#'        \link[funGp]{update,fgpm-method}: modification of data and hyperparameters of a \code{fgpm} model
 #'  }
 #'  \item{\strong{Plotters}}{\cr
 #'         \link[funGp]{plot,fgpm-method}: validation plot for a \code{fgpm} model \cr
@@ -176,9 +176,9 @@ setClass("fgpm",
 #' \href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
 #'
 #' @seealso \strong{*} \link[funGp]{plot,fgpm-method}: validation plot for a \code{fgpm} model;
-#' @seealso \strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a funGp model;
-#' @seealso \strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a funGp model;
-#' @seealso \strong{*} \link[funGp]{update,fgpm-method} for post-creation updates on a funGp model;
+#' @seealso \strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a \code{fgpm} model;
+#' @seealso \strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a \code{fgpm} model;
+#' @seealso \strong{*} \link[funGp]{update,fgpm-method} for post-creation updates on a \code{fgpm} model;
 #' @seealso \strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection.
 #'
 #' @examples
@@ -553,7 +553,7 @@ fgpm <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
 
 
 # ==========================================================================================================
-# Printing of a funGp model
+# Printing of a \code{fgpm} model
 # ==========================================================================================================
 #' @importFrom knitr kable
 #' @rdname show-methods
@@ -646,7 +646,7 @@ show.fgpm <- function(model) {
 
 
 # ==========================================================================================================
-# Prediction based on a funGp model
+# Prediction based on a \code{fgpm} model
 # ==========================================================================================================
 #' @name predict
 #' @rdname predict-methods
@@ -655,9 +655,9 @@ show.fgpm <- function(model) {
 #' @noRd
 setGeneric(name = "predict", def = function(object, ...) standardGeneric("predict"))
 
-#' @title Prediction from a funGp Gaussian process model
-#' @description This method enables prediction based on a funGp Gaussian process model, at any given set of
-#'   points. Check \code{\link{fgpm}} for information on how to create funGp models.
+#' @title Prediction from a \code{fgpm} Gaussian process model
+#' @description This method enables prediction based on a \code{fgpm} model, at any given set of
+#'   points. Check \code{\link{fgpm}} for information on how to create \code{fgpm} models.
 #'
 #' @param object An object of class \linkS4class{fgpm} corresponding to the funGp model that should be used
 #'   to predict the output.
@@ -684,9 +684,9 @@ setGeneric(name = "predict", def = function(object, ...) standardGeneric("predic
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #'
-#' @seealso \strong{*} \link[funGp]{plot.predict.fgpm} for the prediction plot of a funGp model;
-#' @seealso \strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a funGp model;
-#' @seealso \strong{*} \link[funGp]{plot.simulate.fgpm} for the simulation plot of a funGp model.
+#' @seealso \strong{*} \link[funGp]{plot.predict.fgpm} for the prediction plot of a \code{fgpm} model;
+#' @seealso \strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a \code{fgpm} model;
+#' @seealso \strong{*} \link[funGp]{plot.simulate.fgpm} for the simulation plot of a \code{fgpm} model.
 #'
 #' @examples
 #' # light predictions________________________________________________________________________
@@ -874,7 +874,7 @@ predict.fgpm <- function(model, sIn.pr, fIn.pr, detail = "light") {
 
 
 # ==========================================================================================================
-# Simulation based on a funGp model
+# Simulation based on a \code{fgpm} model
 # ==========================================================================================================
 #' @name simulate
 #' @rdname simulate-methods
@@ -883,9 +883,9 @@ predict.fgpm <- function(model, sIn.pr, fIn.pr, detail = "light") {
 #' @noRd
 setGeneric(name = "simulate", def = function(object, nsim = 1, seed = NULL, ...) standardGeneric("simulate"))
 
-#' @title Random sampling from a funGp Gaussian process model
+#' @title Random sampling from a \code{fgpm} model
 #' @description This method enables simulation of Gaussian process values at any given set of points
-#'   based on a pre-built funGp model. Check \code{\link{fgpm}} for information on how to create funGp models.
+#'   based on a pre-built \code{fgpm} model. Check \code{\link{fgpm}} for information on how to create funGp models.
 #'
 #' @param object An object of class \linkS4class{fgpm} corresponding to the funGp model from which
 #'   simulations must be performed.
@@ -918,9 +918,9 @@ setGeneric(name = "simulate", def = function(object, nsim = 1, seed = NULL, ...)
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #'
-#' @seealso \strong{*} \link[funGp]{plot.simulate.fgpm} for the simulation plot of a funGp model;
-#' @seealso \strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a funGp model;
-#' @seealso \strong{*} \link[funGp]{plot.predict.fgpm} for the prediction plot of a funGp model.
+#' @seealso \strong{*} \link[funGp]{plot.simulate.fgpm} for the simulation plot of a \code{fgpm} model;
+#' @seealso \strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a \code{fgpm} model;
+#' @seealso \strong{*} \link[funGp]{plot.predict.fgpm} for the prediction plot of a \code{fgpm} model.
 #'
 #' @examples
 #' # light simulations _______________________________________________________________________
@@ -1078,7 +1078,7 @@ simulate.fgpm <- function(model, nsim, seed, sIn.sm, fIn.sm, nugget.sm = 10^-8, 
 
 
 # ==========================================================================================================
-# Updating of a funGp model
+# Updating of a \code{fgpm} model
 # ==========================================================================================================
 #' @name update
 #' @rdname update-methods
@@ -1087,8 +1087,8 @@ simulate.fgpm <- function(model, nsim, seed, sIn.sm, fIn.sm, nugget.sm = 10^-8, 
 #' @noRd
 setGeneric(name = "update", def = function(object, ...) standardGeneric("update"))
 
-#' @title Easy update of funGp Gaussian process models
-#' @description This method enables the update of data or hyperparameters of a funGp Gaussian process model.
+#' @title Easy update of \code{fgpm} models
+#' @description This method enables the update of data or hyperparameters of a \code{fgpm} model.
 #'   It corresponds to an object of the class \linkS4class{fgpm}. The method allows addition, subtraction
 #'   and substitution of data points, as well as substitution and re-estimation of hyperparameters.
 #'
@@ -1164,8 +1164,8 @@ setGeneric(name = "update", def = function(object, ...) standardGeneric("update"
 #' @author José Betancourt, François Bachoc and Thierry Klein
 #'
 #' @seealso \strong{*} \link[funGp]{fgpm} for creation of a funGp model;
-#' @seealso \strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a funGp model;
-#' @seealso \strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a funGp model.
+#' @seealso \strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a \code{fgpm} model;
+#' @seealso \strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a \code{fgpm} model.
 #'
 #' @examples
 #' # deletion and addition of data points_____________________________________________________

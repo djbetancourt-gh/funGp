@@ -1,7 +1,7 @@
 # ==========================================================================================================
-# S4 class for structures linked to projections in a funGp model
+# S4 class for structures linked to projections in a \code{fgpm} model
 # ==========================================================================================================
-#' @title S4 class for structures linked to projections in a funGp model
+#' @title S4 class for structures linked to projections in a \code{fgpm} model
 #' @description This is the formal representation for data structures linked to projection of inputs in a
 #'   Gaussian process model within the \link[=funGp-package]{funGp package}.
 #'

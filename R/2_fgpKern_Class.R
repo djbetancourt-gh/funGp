@@ -1,7 +1,7 @@
 # ==========================================================================================================
-# S4 class for structures linked to the kernel of a funGp model
+# S4 class for structures linked to the kernel of a \code{fgpm} model
 # ==========================================================================================================
-#' @title S4 class for structures linked to the kernel of a funGp model
+#' @title S4 class for structures linked to the kernel of a \code{fgpm} model
 #' @description This is the formal representation for data structures linked to the kernel of a Gaussian
 #'   process model within the \link[=funGp-package]{funGp package}.
 #'
