@@ -858,6 +858,7 @@ fitNtests_ACO <- function(ant, sIn, fIn, sOut, extargs, base,
 #'
 #' @importFrom qdapRegex rm_between
 #' @rdname package-deprecated
+#' @noRd
 #' @export
 format4pred <- function(sIn.pr = NULL, fIn.pr = NULL, args) {
   .Deprecated("get_active_in")
