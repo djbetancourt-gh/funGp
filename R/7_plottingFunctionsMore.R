@@ -339,7 +339,7 @@ plot.predict.fgpm <- function(x, y = NULL, sOut.pr = NULL,
 ##' @param detail An optional character string specifying the data
 ##'     elements that should be included in the plot, to be chosen
 ##'     between \code{"light"} and \code{"full"}. A \emph{light} plot
-##'     will include only the simulated values, while a a
+##'     will include only the simulated values, while a
 ##'     \emph{full} plot will also include the predicted mean and
 ##'     confidence bands at the simulation points. This argument will
 ##'     only be used if full simulations (including the mean and
