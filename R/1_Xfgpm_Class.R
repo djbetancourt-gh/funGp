@@ -8,12 +8,12 @@
 #' trace of an optimization process, conducted to build Gaussian process models of outstanding performance.
 #' \itemize{
 #'  \item{\strong{Main methods}}{\cr
-#'        \link[funGp]{fgpm_factory}: structural optimization of funGp models,
-#'        creator of the \code{"Xfgpm"} class \cr
+#'        \link[funGp]{fgpm_factory}: structural optimization of \code{fgpm} models,
+#'        creator of the \code{"Xfgpm"} class. \cr
 #'  }
 #'  \item{\strong{Plotters}}{\cr
 #'        \link[funGp]{plot,Xfgpm-method}: plot of the evolution of the algorithm with \code{which = "evolution"}
-#'        or of the absolute and relative quality of the optimized model with \code{which = "diag"}
+#'        or of the absolute and relative quality of the optimized model with \code{which = "diag"}.
 #'  }
 #' }
 #'
@@ -41,7 +41,7 @@
 #'     the provided scalar inputs.
 #' @slot fIn An object of class \code{"list"} containing a copy of
 #'     the provided functional inputs.
-#' @slot sOut An object of class \code{"matrix"} containing a copy of the provided output.
+#' @slot sOut An object of class \code{"matrix"} containing a copy of the provided outputs.
 #' @section Useful material:
 #' \itemize{
 #'  \item{\strong{Manual}}{
