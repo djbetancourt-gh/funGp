@@ -760,7 +760,7 @@ printSpace <- function(ds, df, space) {
 ##'       }
 ##'
 ##' @title Summary method for \code{Xfgpm} objects
-##' @param object An \code{Xfgpm} object.
+##' @param object A \code{Xfgpm} object.
 ##' @param n Maximal number of lines (\code{fgpm} objects) to show.
 ##' @param ... Not used yet.
 ##'
