@@ -266,9 +266,11 @@ show.Xfgpm <- function(object) {
 #' fIn <- list(f1 = matrix(runif(n.tr * 10), ncol = 10),
 #'             f2 = matrix(runif(n.tr * 22), ncol = 22))
 #' sOut <- fgp_BB7(sIn, fIn, n.tr)
+#'
 #' # optimizing the model structure with fgpm_factory (~12 seconds)
-## Not run:
+#' \dontrun{
 #' xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
+#'}
 #'
 #' # assessing the quality of the model
 #' # in the absolute and also w.r.t. the other explored models
@@ -296,9 +298,10 @@ show.Xfgpm <- function(object) {
 #'
 #' # improving performance with more iterations_______________________________________________
 #' # call to fgpm_factory (~22 seconds)
-## Not run:
+#' \dontrun{
 #' xm25 <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut,
 #'                      setup = list(n.iter = 25))
+#'}
 #'
 #' #assessing evolution and quality
 #' plot(xm25, which="evol")
@@ -314,8 +317,9 @@ show.Xfgpm <- function(object) {
 #' kerTypes = c("matern5_2", "gauss")) # test only Matern 5/2 and Gaussian kernels
 #' #
 #' # call to fgpm_factory (~12 seconds)
-## Not run:
+#' \dontrun{
 #' xmc <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, ctraints = myctr)
+#'}
 #'
 #' #assessing evolution and quality
 #' plot(xmc, which="evol")
@@ -328,9 +332,11 @@ show.Xfgpm <- function(object) {
 #' mysup <- list(n.iter = 30, n.pop = 12, tao0 = .15, dop.s = 1.2,
 #'               dop.f = 1.3, delta.f = 4, dispr.f = 1.1, q0 = .85,
 #'               rho.l = .2, u.gbest = TRUE, n.ibest = 2, rho.g = .08)
+#'
 #' # call to fgpm_factory (~20 seconds)
-## Not run:
+#' \dontrun{
 #' xmh <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, setup = mysup)
+#' }
 #'
 #' # verifying heuristic setup through the details of the Xfgpm object
 #' unlist(xmh@details$param)
@@ -338,10 +344,12 @@ show.Xfgpm <- function(object) {
 #' # stopping condition based on time_________________________________________________________
 #' mysup <- list(n.iter = 2000)
 #' mytlim <- 60
+#'
 #' # call to fgpm_factory (~60 seconds)
-## Not run:
+#' \dontrun{
 #' xms <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut,
 #'                     setup = mysup, time.lim = mytlim)
+#' }
 #' summary(xms)
 #'
 #' \dontrun{
