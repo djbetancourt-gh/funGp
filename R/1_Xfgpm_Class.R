@@ -110,7 +110,7 @@ show.Xfgpm <- function(object) {
 #'   configurations of a funGp model, and the consequent selection of a high quality configuration. funGp
 #'   currently relies on an ant colony based algorithm to perform this task. The algorithm defines the
 #'   solution space based on the levels of each structural parameter currently available in the
-#'   \link[funGp]{fgpm} function, and performs as smart exploration of it. More details on the algorithm are
+#'   \link[funGp]{fgpm} function, and performs a smart exploration of it. More details on the algorithm are
 #'   provided in a dedicated
 #'   \href{https://hal.archives-ouvertes.fr/hal-02532713}{technical report}.
 #'   funGp might evolve in the future to include improvements in the current algorithm or alternative
@@ -126,7 +126,7 @@ show.Xfgpm <- function(object) {
 #'   input points.
 #' @param ind.vl An optional numerical matrix specifying which points in the three structures above should be
 #'   used for training and which for validation. If provided, the optimization will be conducted in terms of
-#'   the hold-out Q2, which comes from training the model with a subset of the points, and then estimate the
+#'   the hold-out Q2, which comes from training the model with a subset of the points, and then estimating the
 #'   prediction error in the remaining points. In that case, each column of \emph{ind.vl} will be interpreted
 #'   as one validation set, and the multiple columns will imply replicates. In the simplest case,
 #'   \emph{ind.vl} will be a one-column matrix or simply an array, meaning that a simple replicate should be
@@ -139,9 +139,9 @@ show.Xfgpm <- function(object) {
 #' @param ctraints An optional list specifying the constraints of the structural optimization problem. Valid
 #'   entries for this list are: \cr\cr
 #'   \strong{*}\emph{s_keepOn}: a numerical array indicating the scalar inputs that should remain active in the
-#'     model. It should contain the index of the columns of sIn corresponding to the inputs to keep active. \cr\cr
+#'     model. It should contain the indices of the columns of sIn corresponding to the inputs to keep active. \cr\cr
 #'   \strong{*}\emph{f_keepOn}: a numerical array indicating the functional inputs that should remain active in
-#'     the model. It should contain the index of the elements of fIn corresponding to the inputs to keep active. \cr\cr
+#'     the model. It should contain the indices of the elements of fIn corresponding to the inputs to keep active. \cr\cr
 #'   \strong{*}\emph{f_disTypes}: a list specifying the set of distances that should be tested for some
 #'     functional inputs. The values should be taken from the possibilities offered by the \link[funGp]{fgpm}
 #'     function for the argument \emph{f_disType} therein. Valid choices at this time are "L2_bygroup" and
@@ -218,7 +218,7 @@ show.Xfgpm <- function(object) {
 #' @param pbars An optional boolean indicating if progress bars should be displayed.
 #'
 #' @return An object of class \linkS4class{Xfgpm} containing the data structures linked to the structural optimization
-#'   of a funGp model. It includes as the main component, an object of class \linkS4class{fgpm} corresponding to the
+#'   of a funGp model. It includes as the main component an object of class \linkS4class{fgpm} corresponding to the
 #'   optimized model. It is accessible through the \code{@@model} slot of the Xfgpm object.
 #'
 #' @author José Betancourt, François Bachoc and Thierry Klein
@@ -245,7 +245,7 @@ show.Xfgpm <- function(object) {
 #' \href{https://link.springer.com/article/10.1007/BF01033232}{[MG]}
 #'
 #' @seealso \strong{*} \link[funGp]{plot,Xfgpm-method} with
-#'     \code{which = "evolution"} for to visualize the evolution of
+#'     \code{which = "evolution"} for visualizing the evolution of
 #'     the ACO algorigthm, or with \code{which = "diag"} for a
 #'     diagnostic plot;
 #' @seealso \strong{*} \link[funGp]{get_active_in} for post-processing
