@@ -95,7 +95,7 @@ setMethod("plot", "fgpm",
 ##' iterations. This happens mainly because we have multiple
 ##' categorical features, whose alteration might change the
 ##' performance statistic in a nonsmooth way. On the other hand, the
-##' points that fall bellow zero usually correspond to models whose
+##' points that fall below zero usually correspond to models whose
 ##' hyperparameters were hard to optimize. This occurs sporadically
 ##' during the log-likelihood optimization for Gaussian processes, due
 ##' to the non-linearity of the objective function.  As long as the
