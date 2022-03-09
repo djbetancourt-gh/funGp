@@ -63,7 +63,7 @@
 #' xmh <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, setup = mysup)
 #'
 #' ##################################################################
-#' ## Construction of xmc object with time budget constraint (60 seconds)
+#' ## Construction of xmc object with time budget constraint (~60 seconds)
 #' ##################################################################
 #' mysup <- list(n.iter = 2000)
 #' mytlim <- 60
