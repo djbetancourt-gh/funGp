@@ -274,10 +274,10 @@ show.Xfgpm <- function(object) {
 #'
 #' # assessing the quality of the model
 #' # in the absolute and also w.r.t. the other explored models
-#' plot(xm, which="diag")
+#' plot(xm, which = "diag")
 #'
 #' # checking the evolution of the algorithm
-#' plot(xm, which="evol")
+#' plot(xm, which = "evol")
 #'
 #' # Summary of the tested configurations
 #' summary(xm)
@@ -304,8 +304,8 @@ show.Xfgpm <- function(object) {
 #'}
 #'
 #' #assessing evolution and quality
-#' plot(xm25, which="evol")
-#' plot(xm25, which="diag")
+#' plot(xm25, which = "evol")
+#' plot(xm25, which = "diag")
 #'
 #' # custom solution space____________________________________________________________________
 #' myctr <- list(s_keepOn = c(1,2), # keep both scalar inputs always on
@@ -322,8 +322,8 @@ show.Xfgpm <- function(object) {
 #'}
 #'
 #' #assessing evolution and quality
-#' plot(xmc, which="evol")
-#' plot(xmc, which="diag")
+#' plot(xmc, which = "evol")
+#' plot(xmc, which = "diag")
 #'
 #' # verifying constraints with the log of some successfully built models
 #' summary(xmc)
