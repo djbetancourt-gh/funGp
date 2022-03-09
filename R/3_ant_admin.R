@@ -873,7 +873,7 @@ format4pred <- function(sIn.pr = NULL, fIn.pr = NULL, args) {
 # ==========================================================================================================
 #' @title Indices of active inputs in a given model structure
 #' @description The \link[funGp]{fgpm_factory} function returns an object of class \code{"\linkS4class{Xfgpm}"}
-#'   with the function call of all the evaluated models stored in the \code{@log.success@args} and
+#'   with the function calls of all the evaluated models stored in the \code{@log.success@args} and
 #'   \code{@log.crashes@args} slots. The \code{which_on} function interprets the arguments linked to any
 #'   structural configuration and returns a list with two elements: (i) an \code{array} of indices of the scalar
 #'   inputs kept active; and (ii) an \code{array} of indices of the functional inputs kept active.
@@ -899,9 +899,9 @@ format4pred <- function(sIn.pr = NULL, fIn.pr = NULL, args) {
 #' \href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
 #'
 #' @seealso \strong{*} \link[funGp]{get_active_in} for details on how to obtain the data structures linked to the
-#' active inputs.
-#' @seealso \strong{*} \linkS4class{modelCall} for details on the \emph{args} argument.
-#' @seealso \strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection.
+#' active inputs;
+#' @seealso \strong{*} \linkS4class{modelCall} for details on the \emph{args} argument;
+#' @seealso \strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection;
 #' @seealso \strong{*} \linkS4class{Xfgpm} for details on object delivered by \link[funGp]{fgpm_factory}.
 #'
 #' @examples

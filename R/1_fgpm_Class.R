@@ -1107,7 +1107,7 @@ setGeneric(name = "update", def = function(object, ...) standardGeneric("update"
 #' @param sOut.sb An optional vector (or 1-column matrix) containing the values of the scalar output at the
 #'   substituting input points.
 #' @param ind.sb An optional numeric array indicating the indices of the input and output points stored in
-#'   the model, that should be replaced by the values specified through sIn.sb, fIn.sb and/or, sOut.sb.
+#'   the model, that should be replaced by the values specified through sIn.sb, fIn.sb and/or sOut.sb.
 #' @param ind.dl An optional numeric array indicating the indices of the input and output points stored in
 #'   the model that should be deleted.
 #' @param var.sb An optional number indicating the value that should be used to substitute the current
