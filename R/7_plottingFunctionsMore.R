@@ -85,7 +85,7 @@ setMethod("plot", "fgpm",
 ##'
 ##' The choice \code{which = "evol"} displays the evolution of the
 ##' quality of the configurations evaluated along the iterations, by
-##' the model selection algorithm in the fgpm_factory function. For
+##' the model selection algorithm in the \code{fgpm_factory} function. For
 ##' each iteration, the performance statistic of all the evaluated
 ##' models is printed, along with the corresponding median of the
 ##' group. The plot also includes the global maximum, which
@@ -165,15 +165,15 @@ setMethod("plot", "fgpm",
 ##'             f2 = matrix(runif(n.tr * 22), ncol = 22))
 ##' sOut <- fgp_BB7(sIn, fIn, n.tr)
 ##' \dontrun{
-##' # optimizing the model structure with 'fgpm_factory' (~5 seconds)
+##' # optimizing the model structure with 'fgpm_factory' (~10 seconds)
 ##' xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
 ##' # assessing the quality of the model - absolute and w.r.t. the other
 ##' # explored models
 ##' plot(xm, which = "evol")
-##' # Diagnostics (two subplots)
+##' # diagnostics (two subplots)
 ##' plot(xm, which = "diag")
 ##' plot(xm, which = "diag", horiz = TRUE)
-##' # Diagnostics (one plot)
+##' # diagnostics (one plot)
 ##' plot(xm, which = "diag", fitp = FALSE)
 ##' plot(xm, which = "diag", calib = FALSE)
 ##' # customizing some graphical parameters
