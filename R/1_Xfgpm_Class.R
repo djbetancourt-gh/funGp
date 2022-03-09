@@ -258,8 +258,18 @@ show.Xfgpm <- function(object) {
 #'     post-creation updates on a funGp model.
 #'
 #' @examples
-#' # Data with precalculated Xfgpm objects are already available
-#' # Optimized model structure for fgp_BB7 black-box function with standard parameters
+#' #construction of a fgpm object
+#' set.seed(100)
+#' n.tr <- 32
+#' x1 <- x2 <- x3 <- x4 <- x5 <- seq(0,1,length = n.tr^(1/5))
+#' sIn <- expand.grid(x1 = x1, x2 = x2, x3 = x3, x4 = x4, x5 = x5)
+#' fIn <- list(f1 = matrix(runif(n.tr * 10), ncol = 10),
+#'             f2 = matrix(runif(n.tr * 22), ncol = 22))
+#' sOut <- fgp_BB7(sIn, fIn, n.tr)
+#' # optimizing the model structure with fgpm_factory (~12 seconds)
+## Not run:
+#' xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
+#'
 #' # assessing the quality of the model
 #' # in the absolute and also w.r.t. the other explored models
 #' plot(xm, which="diag")
@@ -285,10 +295,29 @@ show.Xfgpm <- function(object) {
 #' plot(m1) # plotting the model
 #'
 #' # improving performance with more iterations_______________________________________________
+#' # call to fgpm_factory (~22 seconds)
+## Not run:
+#' xm25 <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut,
+#'                      setup = list(n.iter = 25))
+#'
+#' #assessing evolution and quality
 #' plot(xm25, which="evol")
 #' plot(xm25, which="diag")
 #'
 #' # custom solution space____________________________________________________________________
+#' myctr <- list(s_keepOn = c(1,2), # keep both scalar inputs always on
+#' f_keepOn = c(2), # keep f2 always active
+#' f_disTypes = list("2" = c("L2_byindex")), # only use L2_byindex distance for f2
+#' f_fixDims = matrix(c(2,4), ncol = 1), # f2 projected in dimension 4
+#' f_maxDims = matrix(c(1,5), ncol = 1), # f1 projected in dimension max 5
+#' f_basTypes = list("1" = c("B-splines")), # only use B-splines projection for f1
+#' kerTypes = c("matern5_2", "gauss")) # test only Matern 5/2 and Gaussian kernels
+#' #
+#' # call to fgpm_factory (~12 seconds)
+## Not run:
+#' xmc <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, ctraints = myctr)
+#'
+#' #assessing evolution and quality
 #' plot(xmc, which="evol")
 #' plot(xmc, which="diag")
 #'
@@ -296,10 +325,23 @@ show.Xfgpm <- function(object) {
 #' summary(xmc)
 #'
 #' # custom heuristic parameters______________________________________________________________
+#' mysup <- list(n.iter = 30, n.pop = 12, tao0 = .15, dop.s = 1.2,
+#'               dop.f = 1.3, delta.f = 4, dispr.f = 1.1, q0 = .85,
+#'               rho.l = .2, u.gbest = TRUE, n.ibest = 2, rho.g = .08)
+#' # call to fgpm_factory (~20 seconds)
+## Not run:
+#' xmh <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, setup = mysup)
+#'
 #' # verifying heuristic setup through the details of the Xfgpm object
 #' unlist(xmh@details$param)
 #'
 #' # stopping condition based on time_________________________________________________________
+#' mysup <- list(n.iter = 2000)
+#' mytlim <- 60
+#' # call to fgpm_factory (~60 seconds)
+## Not run:
+#' xms <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut,
+#'                     setup = mysup, time.lim = mytlim)
 #' summary(xms)
 #'
 #' \dontrun{
@@ -688,7 +730,7 @@ printSpace <- function(ds, df, space) {
 ##'     inputs are labelled with integer suffixes, the prefix being
 ##'     \code{"X"} for scalar inputs and \code{"F"} for functional
 ##'     inputs.
-##'     \itemize{ 
+##'     \itemize{
 ##'         \item{With a small number of inputs, the list
 ##'               contains only one data frame. For each candidate
 ##'               input (either scalar or functional) a column with
@@ -708,12 +750,12 @@ printSpace <- function(ds, df, space) {
 ##'               inputs. The second data frame gives more details
 ##'               for functional inputs as before.}
 ##'       }
-##' 
+##'
 ##' @title Summary method for \code{Xfgpm} objects
 ##' @param object An \code{Xfgpm} object.
 ##' @param n Maximal number of lines (\code{fgpm} objects) to show.
 ##' @param ... Not used yet.
-##' 
+##'
 ##' @return An object inheriting from \code{list}, actually a list
 ##'     containing one or two data frames depending on the number of
 ##'     inputs. In each data frame, the \code{n} rows provide
@@ -823,9 +865,9 @@ print.summary.Xfgpm <- function(x, ...) {
 ##'     data \code{sIn}, \code{fIn} and \code{sOut}.
 ##'
 ##' @examples
-##' ## see `?xm` to see how to recreate the pre-caclulated `Xfgpm` object `xm`. 
+##' ## see `?xm` to see how to recreate the pre-caclulated `Xfgpm` object `xm`.
 ##' xm[[2]]
-##' 
+##'
 setMethod("[[", "Xfgpm",
           function(x, i) {
               if (i > length(x@log.success@args)) {
@@ -882,7 +924,7 @@ setMethod("[[", "Xfgpm",
 ##' ## Using the re-calculated object `xm` to save time. See `?xm` to re-create
 ##' ## this object.
 ##' ## =========================================================================
-##' 
+##'
 ##' ## 'xm@model' is the best 'fgpm' model in 'xm'
 ##' plot(xm@model)
 ##'
@@ -897,13 +939,13 @@ setMethod("[[", "Xfgpm",
 ##'     n.new <- 3^5
 ##'     x1 <- x2 <- x3 <- x4 <- x5 <- seq(0, 1, length = n.new^(1/5))
 ##'
-##'     ## create the data objects required to fit the model 
+##'     ## create the data objects required to fit the model
 ##'     L$sIn <- as.matrix(expand.grid(x1 = x1, x2 = x2, x3 = x3, x4 = x4, x5 = x5))
 ##'     L$fIn <- list(f1 = matrix(runif(n.new * 10), ncol = 10),
 ##'                    f2 = matrix(runif(n.new * 22), ncol = 22))
 ##'     L$sOut <- fgp_BB7(L$sIn, $fIn, n.new)
 ##'
-##'     ## Now evaluate 
+##'     ## Now evaluate
 ##'     fgpm.new <- eval(modelDef(xm, i = 1), envir = L)
 ##'     plot(fgpm.new, main = "Re-created 'fgpm' model with different data")
 ##'     plot(xm[[1]], main = "Re-created 'fgpm' model with the same data")
