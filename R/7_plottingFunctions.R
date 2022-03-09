@@ -1,6 +1,6 @@
 ## ==========================================================================================================
 ## Diagnostic calibration plot for funGp models
-## 
+##
 ## CHANGE IN VERSION 0.3.0
 ##
 ## The code of the methods 'plotLOO' and 'plotEvol' is now commented
@@ -158,7 +158,7 @@ plotLOO.fgpm <- function(model, ...) {
 ## #' @name plotPreds
 ## #' @export
 ## #' @keywords internal
-## #' 
+## #'
 ## ## setGeneric("plotPreds", function(model, ...) standardGeneric("plotPreds"))
 
 ## #' @title Plot for predictions of a funGp model
@@ -982,7 +982,7 @@ decay2probs <- function(k, pmax = NULL, tao0 = .1, delta = 2, dispr = 1.4, doplo
 ##           })
 
 ##' @importFrom graphics lines points plot layout legend par arrows abline axis
-##' 
+##'
 plotX.Xfgpm <- function(x.model, calib = TRUE, fitp = TRUE,
                         horiz = FALSE, ...) {
 

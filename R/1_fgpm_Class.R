@@ -108,7 +108,7 @@ setClass("fgpm",
 #'   parameters per functional input as discretization points it has. For instance an input discretized as
 #'   a vector of size 8 will use 8 length-scale parameters when using L2_byindex. If dimension reduction of
 #'   a functional input is requested, then L2_byindex uses as many length scale parameters as effective
-#'   dimensions are used to represent the input. A single character string can also be passed as a general
+#'   dimensions used to represent the input. A single character string can also be passed as a general
 #'   selection for all the functional inputs of the model. More details in
 #'   \href{https://www.sciencedirect.com/science/article/abs/pii/S0951832019301693}{
 #'   the reference article}
@@ -1427,13 +1427,13 @@ update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb,
 ## ==============================================================================
 
 ##' @description Display the structure of a \code{fgpm}
-##'     object and the value of the parameters (variance and length-scales). 
+##'     object and the value of the parameters (variance and length-scales).
 ##'
 ##' @title Summary method for \code{fgpm} objects
 ##' @param object An \code{fgpm} object.
 ##' @param ... Not used yet.
 ##' @method summary fgpm
-##' 
+##'
 ##' @note This method is actually identical to the \code{show} method
 ##'     for this class which is called when the name of the object is
 ##'     entered in an interactive session.
