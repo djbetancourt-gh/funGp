@@ -3,8 +3,7 @@
 # ==========================================================================================================
 #' @title S4 class for funGp model selection data structures
 #' @description This is the formal representation of the assembly of data structures delivered by the model
-#' selection routines in the \link[=funGp-package]{funGp package}. Gaussian process models are useful
-#' statistical tools in the modeling of complex input-output relationships. An \code{Xfgpm} object contains the
+#' selection routines in the \link[=funGp-package]{funGp package}. An \code{Xfgpm} object contains the
 #' trace of an optimization process, conducted to build Gaussian process models of outstanding performance.
 #' \itemize{
 #'  \item{\strong{Main methods}}{\cr
