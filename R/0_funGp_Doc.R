@@ -1,6 +1,6 @@
 #' @title Gaussian Process Models for Scalar and Functional Inputs
 #'
-#' @description Construction and smart selection of Gaussian process models for analysis of computer experiments with emphasis on treatment of functional inputs that are regularly sampled.
+#' @description Construction and smart selection of Gaussian process models for analysis of computer experiments with emphasis on treatment of functional inputs that are regularly sampled. Smart selection is based on Ant Colony Optimization ACO algorithm.
 #'
 #' @section Base functionalities:
 #' \itemize{
