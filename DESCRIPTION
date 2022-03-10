@@ -10,7 +10,8 @@ Authors@R: c(
     person("Jeremy", "Rohmer", email = "J.Rohmer@brgm.fr", role = "ctb"))
 Maintainer: Jose Betancourt <djbetancourt@uninorte.edu.co>
 Description: Construction and smart selection of Gaussian process models
-	with emphasis on treatment of functional inputs. This package
+	for analysis of computer experiments
+	with emphasis on treatment of functional inputs that are regularly sampled. This package
 	offers: (i) flexible modeling of functional-input regression
 	problems through the fairly general Gaussian process model; (ii)
 	built-in dimension reduction for functional inputs; (iii)
