@@ -39,7 +39,6 @@ setGeneric(name = "plot", def = function(x, y, ...) standardGeneric("plot"))
 ##'        the labels of the axes and the main title.} See
 ##'        \bold{Examples}.
 ##' }
-##' @return Nothing.
 ##' @export
 ##' @method plot fgpm
 ##'
