@@ -126,12 +126,12 @@ show.Xfgpm <- function(object) {
 #'   input points.
 #' @param ind.vl An optional numerical matrix specifying which points in the three structures above should be
 #'   used for training and which for validation. If provided, the optimization will be conducted in terms of
-#'   the hold-out Q2, which comes from training the model with a subset of the points, and then estimating the
+#'   the hold-out coefficient of determination Q², which comes from training the model with a subset of the points, and then estimating the
 #'   prediction error in the remaining points. In that case, each column of \emph{ind.vl} will be interpreted
 #'   as one validation set, and the multiple columns will imply replicates. In the simplest case,
 #'   \emph{ind.vl} will be a one-column matrix or simply an array, meaning that a simple replicate should be
 #'   used for each model configuration explored. If not provided, the optimization will be conducted in terms
-#'   of the leave-one-out cross-validation Q2, which for a total number of n observations, comes from training
+#'   of the leave-one-out cross-validation Q², which for a total number of n observations, comes from training
 #'   the model n times, each using n-1 points for training and the remaining one for validation. This procedure
 #'   is typically costly due to the large number of hyperparameter optimizations that should be conducted,
 #'   nonetheless, fgpm_factory implements the virtual equations introduced by Dubrule (1983) for Gaussian
