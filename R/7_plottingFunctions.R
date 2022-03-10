@@ -15,7 +15,6 @@
 ## #' @param model A model object for which the LOO calibration plot is to be made.
 ## #' @param ... Additional arguments affecting the plot.
 ## #'
-## #' @return None.
 ## #'
 ## #' @seealso \strong{*} \link[funGp]{plotLOO} for the diagnostic plot of a funGp model.
 ## #'
@@ -49,7 +48,6 @@
 ## #' @param ... Additional arguments affecting the plot. The following typical graphics parameters are
 ## #'   valid entries: \emph{xlim}, \emph{ylim}, \emph{xlab}, \emph{ylab}, \emph{main}.
 ## #'
-## #' @return None.
 ## #'
 ## #' @author José Betancourt, François Bachoc and Thierry Klein
 ## #'
@@ -131,7 +129,6 @@ plotLOO.fgpm <- function(model, ...) {
 ## #' @param model a model object for which the plot is to be made.
 ## #' @param ... additional arguments affecting the plot.
 ## #'
-## #' @return None.
 ## #'
 ## #' @seealso \strong{*} \link[funGp]{plotPreds} for the predictions plot of a funGp model.
 ## #'
@@ -185,7 +182,6 @@ plotLOO.fgpm <- function(model, ...) {
 ## #'   argument \emph{legends} can also be included in any of the two lists in order to control the display of
 ## #'   legends in the corresponding plot.
 ## #'
-## #' @return None.
 ## #'
 ## #' @author José Betancourt, François Bachoc and Thierry Klein
 ## #'
@@ -480,7 +476,6 @@ plotPreds.fgpm <- function(preds, sOut.pr, calib, sortp, ...) {
 ## #'   used, it might also contain, for instance, the mean and confidence bands at the simulation points.
 ## #' @param ... additional arguments affecting the plot.
 ## #'
-## #' @return None.
 ## #'
 ## #' @seealso \strong{*} \link[funGp]{plotSims} for the simulations plot of a funGp model.
 ## #'
@@ -526,7 +521,6 @@ plotPreds.fgpm <- function(preds, sOut.pr, calib, sortp, ...) {
 ## #'   \emph{legends} can also be included in any of the two lists in order to control the display of legends
 ## #'   in the corresponding plot.
 ## #'
-## #' @return None.
 ## #'
 ## #' @author José Betancourt, François Bachoc and Thierry Klein
 ## #'
@@ -876,7 +870,6 @@ decay2probs <- function(k, pmax = NULL, tao0 = .1, delta = 2, dispr = 1.4, doplo
 ## #' @param x.model an object containing the model for which the quality plot is to be made.
 ## #' @param ... additional arguments affecting the plot.
 ## #'
-## #' @return None.
 ## #'
 ## #' @seealso \strong{*} \link[funGp]{plotX} for the diagnostic plot of a quality-enhanced funGp model.
 ## #'
@@ -933,7 +926,6 @@ decay2probs <- function(k, pmax = NULL, tao0 = .1, delta = 2, dispr = 1.4, doplo
 ## #'   boolean argument legends can also be included in any of the two lists in order to control the display
 ## #'   of legends in the corresponding plot.
 ## #'
-## #' @return None.
 ## #'
 ## #' @author José Betancourt, François Bachoc and Thierry Klein
 ## #'
@@ -1161,7 +1153,6 @@ plotX.Xfgpm <- function(x.model, calib = TRUE, fitp = TRUE,
 ## #' @param x.model an object containing the data structures returned by the model selection algorithm.
 ## #' @param ... additional arguments affecting the plot.
 ## #'
-## #' @return None.
 ## #'
 ## #' @seealso \strong{*} \link[funGp]{plotEvol} for a plot on the evolution of the model selection algorithm
 ## #'   in fgpm_factory.
@@ -1212,7 +1203,6 @@ plotX.Xfgpm <- function(x.model, calib = TRUE, fitp = TRUE,
 ## #' @param ... Additional arguments affecting the plot. The following typical graphics parameters are
 ## #'   valid entries: \emph{xlim}, \emph{ylim}, \emph{xlab}, \emph{ylab}, \emph{main}.
 ## #'
-## #' @return None.
 ## #'
 ## #' @author José Betancourt, François Bachoc and Thierry Klein
 ## #'
