@@ -22,7 +22,7 @@
 #'  \item{\strong{Main method}}{\cr
 #'        \link[funGp]{fgpm_factory}: structural parameter optimization
 #'  }
-#'  \item{\strong{Plotters pre-optimization}}{\cr
+#'  \item{\strong{Functions for pre-optimization}}{\cr
 #'        \link[funGp]{decay}: regularized initial pheromones \cr
 #'        \link[funGp]{decay2probs}: normalized initial pheromones
 #'  }
