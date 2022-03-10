@@ -22,9 +22,6 @@
        \bold{Examples}.
 }}
 }
-\value{
-Nothing.
-}
 \description{
 This method provides a diagnostic plot for the
     validation of regression models. It displays a calibration plot

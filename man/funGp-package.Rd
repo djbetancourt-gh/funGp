@@ -5,7 +5,7 @@
 \alias{funGp-package}
 \title{Gaussian Process Models for Scalar and Functional Inputs}
 \description{
-Construction and smart selection of Gaussian process models with emphasis on treatment of functional inputs.
+Construction and smart selection of Gaussian process models for analysis of computer experiments with emphasis on treatment of functional inputs that are regularly sampled. Smart selection is based on Ant Colony Optimization ACO algorithm.
 }
 \note{
 This package was first developed in the frame of the RISCOPE research project, funded
@@ -37,7 +37,7 @@ This package was first developed in the frame of the RISCOPE research project, f
  \item{\strong{Main method}}{\cr
        \link[funGp]{fgpm_factory}: structural parameter optimization
  }
- \item{\strong{Plotters pre-optimization}}{\cr
+ \item{\strong{Functions for pre-optimization}}{\cr
        \link[funGp]{decay}: regularized initial pheromones \cr
        \link[funGp]{decay2probs}: normalized initial pheromones
  }

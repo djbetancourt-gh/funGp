@@ -33,12 +33,12 @@ input points.}
 
 \item{ind.vl}{An optional numerical matrix specifying which points in the three structures above should be
 used for training and which for validation. If provided, the optimization will be conducted in terms of
-the hold-out Q2, which comes from training the model with a subset of the points, and then estimate the
+the hold-out coefficient of determination Q², which comes from training the model with a subset of the points, and then estimating the
 prediction error in the remaining points. In that case, each column of \emph{ind.vl} will be interpreted
 as one validation set, and the multiple columns will imply replicates. In the simplest case,
 \emph{ind.vl} will be a one-column matrix or simply an array, meaning that a simple replicate should be
 used for each model configuration explored. If not provided, the optimization will be conducted in terms
-of the leave-one-out cross-validation Q2, which for a total number of n observations, comes from training
+of the leave-one-out cross-validation Q², which for a total number of n observations, comes from training
 the model n times, each using n-1 points for training and the remaining one for validation. This procedure
 is typically costly due to the large number of hyperparameter optimizations that should be conducted,
 nonetheless, fgpm_factory implements the virtual equations introduced by Dubrule (1983) for Gaussian
@@ -47,9 +47,9 @@ processes, which require a single hyperparameter optimization. See the reference
 \item{ctraints}{An optional list specifying the constraints of the structural optimization problem. Valid
 entries for this list are: \cr\cr
 \strong{*}\emph{s_keepOn}: a numerical array indicating the scalar inputs that should remain active in the
-  model. It should contain the index of the columns of sIn corresponding to the inputs to keep active. \cr\cr
+  model. It should contain the indices of the columns of sIn corresponding to the inputs to keep active. \cr\cr
 \strong{*}\emph{f_keepOn}: a numerical array indicating the functional inputs that should remain active in
-  the model. It should contain the index of the elements of fIn corresponding to the inputs to keep active. \cr\cr
+  the model. It should contain the indices of the elements of fIn corresponding to the inputs to keep active. \cr\cr
 \strong{*}\emph{f_disTypes}: a list specifying the set of distances that should be tested for some
   functional inputs. The values should be taken from the possibilities offered by the \link[funGp]{fgpm}
   function for the argument \emph{f_disType} therein. Valid choices at this time are "L2_bygroup" and
@@ -134,7 +134,7 @@ sequence.}
 }
 \value{
 An object of class \linkS4class{Xfgpm} containing the data structures linked to the structural optimization
-  of a funGp model. It includes as the main component, an object of class \linkS4class{fgpm} corresponding to the
+  of a funGp model. It includes as the main component an object of class \linkS4class{fgpm} corresponding to the
   optimized model. It is accessible through the \code{@model} slot of the Xfgpm object.
 }
 \description{
@@ -142,21 +142,33 @@ This function enables the smart exploration of the solution space of potential s
   configurations of a funGp model, and the consequent selection of a high quality configuration. funGp
   currently relies on an ant colony based algorithm to perform this task. The algorithm defines the
   solution space based on the levels of each structural parameter currently available in the
-  \link[funGp]{fgpm} function, and performs as smart exploration of it. More details on the algorithm are
+  \link[funGp]{fgpm} function, and performs a smart exploration of it. More details on the algorithm are
   provided in a dedicated
   \href{https://hal.archives-ouvertes.fr/hal-02532713}{technical report}.
   funGp might evolve in the future to include improvements in the current algorithm or alternative
   solution methods.
 }
 \examples{
-# Data with precalculated Xfgpm objects are already available
-# Optimized model structure for fgp_BB7 black-box function with standard parameters
+#construction of a fgpm object
+set.seed(100)
+n.tr <- 32
+x1 <- x2 <- x3 <- x4 <- x5 <- seq(0,1,length = n.tr^(1/5))
+sIn <- expand.grid(x1 = x1, x2 = x2, x3 = x3, x4 = x4, x5 = x5)
+fIn <- list(f1 = matrix(runif(n.tr * 10), ncol = 10),
+            f2 = matrix(runif(n.tr * 22), ncol = 22))
+sOut <- fgp_BB7(sIn, fIn, n.tr)
+
+# optimizing the model structure with fgpm_factory (~12 seconds)
+\dontrun{
+xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
+}
+
 # assessing the quality of the model
 # in the absolute and also w.r.t. the other explored models
-plot(xm, which="diag")
+plot(xm, which = "diag")
 
 # checking the evolution of the algorithm
-plot(xm, which="evol")
+plot(xm, which = "evol")
 
 # Summary of the tested configurations
 summary(xm)
@@ -176,21 +188,59 @@ m1 <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut)
 plot(m1) # plotting the model
 
 # improving performance with more iterations_______________________________________________
-plot(xm25, which="evol")
-plot(xm25, which="diag")
+# call to fgpm_factory (~22 seconds)
+\dontrun{
+xm25 <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut,
+                     setup = list(n.iter = 25))
+}
+
+#assessing evolution and quality
+plot(xm25, which = "evol")
+plot(xm25, which = "diag")
 
 # custom solution space____________________________________________________________________
-plot(xmc, which="evol")
-plot(xmc, which="diag")
+myctr <- list(s_keepOn = c(1,2), # keep both scalar inputs always on
+f_keepOn = c(2), # keep f2 always active
+f_disTypes = list("2" = c("L2_byindex")), # only use L2_byindex distance for f2
+f_fixDims = matrix(c(2,4), ncol = 1), # f2 projected in dimension 4
+f_maxDims = matrix(c(1,5), ncol = 1), # f1 projected in dimension max 5
+f_basTypes = list("1" = c("B-splines")), # only use B-splines projection for f1
+kerTypes = c("matern5_2", "gauss")) # test only Matern 5/2 and Gaussian kernels
+#
+# call to fgpm_factory (~12 seconds)
+\dontrun{
+xmc <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, ctraints = myctr)
+}
+
+#assessing evolution and quality
+plot(xmc, which = "evol")
+plot(xmc, which = "diag")
 
 # verifying constraints with the log of some successfully built models
 summary(xmc)
 
 # custom heuristic parameters______________________________________________________________
+mysup <- list(n.iter = 30, n.pop = 12, tao0 = .15, dop.s = 1.2,
+              dop.f = 1.3, delta.f = 4, dispr.f = 1.1, q0 = .85,
+              rho.l = .2, u.gbest = TRUE, n.ibest = 2, rho.g = .08)
+
+# call to fgpm_factory (~20 seconds)
+\dontrun{
+xmh <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, setup = mysup)
+}
+
 # verifying heuristic setup through the details of the Xfgpm object
 unlist(xmh@details$param)
 
 # stopping condition based on time_________________________________________________________
+mysup <- list(n.iter = 2000)
+mytlim <- 60
+
+# call to fgpm_factory (~60 seconds)
+\dontrun{
+xms <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut,
+                    setup = mysup, time.lim = mytlim)
+}
 summary(xms)
 
 \dontrun{
@@ -212,7 +262,7 @@ parallel::stopCluster(cl)
 # NOTE: in order to provide progress bars for the monitoring of time consuming processes
 #       ran in parallel, funGp relies on the doFuture and future packages. Parallel processes
 #       suddenly interrupted by the user tend to leave corrupt connections. This problem is
-#       originated outside funGp, which limits our control over it. On section 4.1 of the manual
+#       originated outside funGp, which limits our control over it. In the manual
 #       of funGp, we provide a temporary solution to the issue and we remain attentive in
 #       case it appears a more elegant way to handle it or a manner to suppress it.
 #
@@ -244,7 +294,7 @@ Dubrule, O. (1983),
 }
 \seealso{
 \strong{*} \link[funGp]{plot,Xfgpm-method} with
-    \code{which = "evolution"} for to visualize the evolution of
+    \code{which = "evolution"} for visualizing the evolution of
     the ACO algorigthm, or with \code{which = "diag"} for a
     diagnostic plot;
 

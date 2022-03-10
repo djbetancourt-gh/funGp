@@ -45,7 +45,7 @@ length-scale parameter per functional input variable. The L2_byindex distance us
 parameters per functional input as discretization points it has. For instance an input discretized as
 a vector of size 8 will use 8 length-scale parameters when using L2_byindex. If dimension reduction of
 a functional input is requested, then L2_byindex uses as many length scale parameters as effective
-dimensions are used to represent the input. A single character string can also be passed as a general
+dimensions used to represent the input. A single character string can also be passed as a general
 selection for all the functional inputs of the model. More details in
 \href{https://www.sciencedirect.com/science/article/abs/pii/S0951832019301693}{
 the reference article}
@@ -247,7 +247,7 @@ parallel::stopCluster(cl)
 # NOTE: in order to provide progress bars for the monitoring of time consuming processes
 #       ran in parallel, funGp relies on the doFuture and future packages. Parallel processes
 #       suddenly interrupted by the user tend to leave corrupt connections. This problem is
-#       originated outside funGp, which limits our control over it. On section 4.1 of the manual
+#       originated outside funGp, which limits our control over it. In the manual
 #       of funGp, we provide a temporary solution to the issue and we remain attentive in
 #       case it appears a more elegant way to handle it or a manner to suppress it.
 #
@@ -275,11 +275,11 @@ R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs 
 \seealso{
 \strong{*} \link[funGp]{plot,fgpm-method}: validation plot for a \code{fgpm} model;
 
-\strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a funGp model;
+\strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a \code{fgpm} model;
 
-\strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a funGp model;
+\strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a \code{fgpm} model;
 
-\strong{*} \link[funGp]{update,fgpm-method} for post-creation updates on a funGp model;
+\strong{*} \link[funGp]{update,fgpm-method} for post-creation updates on a \code{fgpm} model;
 
 \strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection.
 }

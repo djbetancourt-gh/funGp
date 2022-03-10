@@ -669,12 +669,12 @@ setGeneric(name = "predict", def = function(object, ...) standardGeneric("predic
 #'   predicted. Each element of the list is interpreted as a functional input variable. Every functional input
 #'   variable should be provided as a matrix with one curve per row. Either scalar input coordinates (sIn.pr),
 #'   functional input coordinates (fIn.pr), or both must be provided.
-#' @param detail An optional character string specifying the extent of information that should be delivered
-#'   by the method, to be chosen between "light" and "full". \emph{Light} predictions produce a list including
+#' @param detail An optional character specifying the extent of information that should be delivered
+#'   by the method, to be chosen between \code{"light"} (default) and \code{"full"}.
+#'   \emph{Light} predictions produce a list including
 #'   the predicted mean, standard deviation and limits of the 95\% confidence intervals at the prediction
 #'   points. \emph{Full} predictions produce the same information as light ones, in addition to the
-#'   training-prediction cross-covariance matrix and the prediction auto-covariance matrix. Default is
-#'   "light".
+#'   training-prediction cross-covariance matrix and the prediction auto-covariance matrix. 
 #'
 #' @return An object of class \code{"list"} containing the data structures linked to predictions. For
 #'   \emph{light} predictions, the list will include the mean, standard deviation and limits of the 95\%
@@ -780,8 +780,9 @@ setGeneric(name = "predict", def = function(object, ...) standardGeneric("predic
 #' @importFrom methods hasArg
 #' @aliases predict,fgpm-method
 setMethod("predict", "fgpm",
-          function(object, sIn.pr = NULL, fIn.pr = NULL, detail = "light", ...){
-            predict.fgpm(model = object, sIn.pr = sIn.pr, fIn.pr = fIn.pr, detail = detail)
+          function(object, sIn.pr = NULL, fIn.pr = NULL, detail = c("light", "full"), ...){
+              detail <- match.arg(detail)
+              predict.fgpm(model = object, sIn.pr = sIn.pr, fIn.pr = fIn.pr, detail = detail)
           })
 
 predict.fgpm <- function(model, sIn.pr, fIn.pr, detail = "light") {
@@ -904,11 +905,12 @@ setGeneric(name = "simulate", def = function(object, nsim = 1, seed = NULL, ...)
 #'   is added to the main diagonal of the simulation covariance matrix in order to prevent numerical
 #'   instabilities during Cholesky decomposition. A small number in the order of 1e-8 is often enough.
 #'   Default is 0.
-#' @param detail An optional character string specifying the extent of information that should be delivered
-#'   by the method, to be chosen between "light" and "full". \emph{Light} simulations produce a matrix of
+#' @param detail An optional character specifying the extent of information that should be delivered
+#'   by the method, to be chosen between \code{"light"} (default)  and \code{"full"}.
+#'   \emph{Light} simulations produce a matrix of
 #'   simulated output values, with as many rows as requested random samples. \emph{Full} simulations produce a
 #'   list with the matrix of simulated output values, along with the predicted mean, standard deviation and
-#'   limits of the 95\% confidence intervals at the simulation points. Default is "light".
+#'   limits of the 95\% confidence intervals at the simulation points.
 #'
 #' @return An object containing the data structures linked to simulations. For \emph{light} simulations, the
 #'   output will be a matrix of simulated output values, with as many rows as requested random samples.
@@ -977,7 +979,9 @@ setGeneric(name = "simulate", def = function(object, nsim = 1, seed = NULL, ...)
 #' @rdname simulate-methods
 #' @aliases simulate,fgpm-method
 setMethod("simulate", "fgpm",
-          function(object, nsim = 1, seed = NULL, sIn.sm = NULL, fIn.sm = NULL, nugget.sm = 0, detail = "light", ...) {
+          function(object, nsim = 1, seed = NULL, sIn.sm = NULL, fIn.sm = NULL,
+                   nugget.sm = 0, detail = c("light", "full"), ...) {
+              detail <- match.arg(detail)
             simulate.fgpm(model = object, nsim = nsim, seed = seed, sIn.sm = sIn.sm, fIn.sm = fIn.sm,
                            nugget.sm = nugget.sm, detail = detail)
           })

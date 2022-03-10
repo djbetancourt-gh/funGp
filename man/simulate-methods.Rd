@@ -2,7 +2,7 @@
 % Please edit documentation in R/1_fgpm_Class.R
 \name{simulate,fgpm-method}
 \alias{simulate,fgpm-method}
-\title{Random sampling from a funGp Gaussian process model}
+\title{Random sampling from a \code{fgpm} model}
 \usage{
 \S4method{simulate}{fgpm}(
   object,
@@ -11,7 +11,7 @@
   sIn.sm = NULL,
   fIn.sm = NULL,
   nugget.sm = 0,
-  detail = "light",
+  detail = c("light", "full"),
   ...
 )
 }
@@ -38,11 +38,12 @@ is added to the main diagonal of the simulation covariance matrix in order to pr
 instabilities during Cholesky decomposition. A small number in the order of 1e-8 is often enough.
 Default is 0.}
 
-\item{detail}{An optional character string specifying the extent of information that should be delivered
-by the method, to be chosen between "light" and "full". \emph{Light} simulations produce a matrix of
+\item{detail}{An optional character specifying the extent of information that should be delivered
+by the method, to be chosen between \code{"light"} (default)  and \code{"full"}.
+\emph{Light} simulations produce a matrix of
 simulated output values, with as many rows as requested random samples. \emph{Full} simulations produce a
 list with the matrix of simulated output values, along with the predicted mean, standard deviation and
-limits of the 95\% confidence intervals at the simulation points. Default is "light".}
+limits of the 95\% confidence intervals at the simulation points.}
 
 \item{...}{Not used.}
 }
@@ -55,7 +56,7 @@ An object containing the data structures linked to simulations. For \emph{light}
 }
 \description{
 This method enables simulation of Gaussian process values at any given set of points
-  based on a pre-built funGp model. Check \code{\link{fgpm}} for information on how to create funGp models.
+  based on a pre-built \code{fgpm} model. Check \code{\link{fgpm}} for information on how to create funGp models.
 }
 \examples{
 # light simulations _______________________________________________________________________
@@ -111,11 +112,11 @@ plot(m1.sims_f, detail = "light")
 
 }
 \seealso{
-\strong{*} \link[funGp]{plot.simulate.fgpm} for the simulation plot of a funGp model;
+\strong{*} \link[funGp]{plot.simulate.fgpm} for the simulation plot of a \code{fgpm} model;
 
-\strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a funGp model;
+\strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a \code{fgpm} model;
 
-\strong{*} \link[funGp]{plot.predict.fgpm} for the prediction plot of a funGp model.
+\strong{*} \link[funGp]{plot.predict.fgpm} for the prediction plot of a \code{fgpm} model.
 }
 \author{
 José Betancourt, François Bachoc and Thierry Klein

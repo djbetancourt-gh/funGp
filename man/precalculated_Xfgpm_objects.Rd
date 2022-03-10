@@ -10,13 +10,13 @@
 \alias{xms}
 \title{Precalculated Xfgpm objects}
 \format{
-Four objects of class \code{"Xfgpm"}:
+Five objects of class \code{"Xfgpm"}:
 \describe{
   \item{xm}{With 32 training points and default parameters.}
   \item{xm25}{With 32 training points and 25 iterations of the algorithm.}
   \item{xmc}{With 32 training points and customized solution space.}
   \item{xmh}{With 32 training points and customized heuristic parameters.}
-  \item{xms}{With 32 training points and a time budget constraint adn large number of iterations.}
+  \item{xms}{With 32 training points and a time budget constraint and large number of iterations.}
 }
 }
 \description{
@@ -29,7 +29,7 @@ A dataset containing the results of the application of
 \dontrun{
 
 ##################################################################
-## Construction of xm object with default parameters
+## Construction of xm object with default parameters (~12 seconds)
 ##################################################################
 set.seed(100)
 n.tr <- 32
@@ -41,13 +41,13 @@ sOut <- fgp_BB7(sIn, fIn, n.tr)
 xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
 
 ##################################################################
-## Construction of xm25 object with 25 iterations
+## Construction of xm25 object with 25 iterations (~20 seconds)
 ##################################################################
 xm25 <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut,
                      setup = list(n.iter = 25))
 
 ##################################################################
-## Construction of xmc object with customized solution space
+## Construction of xmc object with customized solution space (~12 seconds)
 ##################################################################
 myctr <- list(s_keepOn = c(1,2), # keep both scalar inputs always on
 f_keepOn = c(2), # keep f2 always active
@@ -59,7 +59,7 @@ kerTypes = c("matern5_2", "gauss")) # test only Matern 5/2 and Gaussian kernels
 xmc <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, ctraints = myctr)
 
 ##################################################################
-## Construction of xmc object with customized heuristic parameters
+## Construction of xmc object with customized heuristic parameters (~15 seconds)
 ##################################################################
 mysup <- list(n.iter = 30, n.pop = 12, tao0 = .15, dop.s = 1.2,
               dop.f = 1.3, delta.f = 4, dispr.f = 1.1, q0 = .85,
@@ -67,7 +67,7 @@ mysup <- list(n.iter = 30, n.pop = 12, tao0 = .15, dop.s = 1.2,
 xmh <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, setup = mysup)
 
 ##################################################################
-## Construction of xmc object with time budget constraint
+## Construction of xmc object with time budget constraint (~60 seconds)
 ##################################################################
 mysup <- list(n.iter = 2000)
 mytlim <- 60

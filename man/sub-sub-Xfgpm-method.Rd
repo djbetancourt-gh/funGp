@@ -37,7 +37,7 @@ The slot \code{@model} returns the best \code{fgpm} as
 }
 
 \examples{
-## see `?xm` to see how to recreate the pre-caclulated `Xfgpm` object `xm`. 
+## see `?xm` to see how to recreate the pre-caclulated `Xfgpm` object `xm`.
 xm[[2]]
 
 }

@@ -42,16 +42,13 @@ the default.}
 should be enclosed into a list and passed with the formal name
 \code{calib.gpars} or \code{fitp.gpars}.}
 }
-\value{
-Nothing.
-}
 \description{
 Plot an object with class \code{"Xfgpm"} representing
     a collection of functional GP models corresponding to
     different structural parameters.
 
 Two types of graphics can be shown depending on the choice of
-\code{which}. The choice \code{which = "evolution"} is used to
+\code{which}. The choice \code{which = "evol"} is used to
 assess the quality of the fitted \code{fgpm} models on the basis
 of Leave-One-Out cross-validation.  The choice \code{which =
 "diag"} is used to display diagnostics. Two types of diagnostic
@@ -60,7 +57,7 @@ if wanted.
 
 The choice \code{which = "evol"} displays the evolution of the
 quality of the configurations evaluated along the iterations, by
-the model selection algorithm in the fgpm_factory function. For
+the model selection algorithm in the \code{fgpm_factory} function. For
 each iteration, the performance statistic of all the evaluated
 models is printed, along with the corresponding median of the
 group. The plot also includes the global maximum, which
@@ -70,7 +67,7 @@ falling relatively far from the maximum, even after multiple
 iterations. This happens mainly because we have multiple
 categorical features, whose alteration might change the
 performance statistic in a nonsmooth way. On the other hand, the
-points that fall bellow zero usually correspond to models whose
+points that fall below zero usually correspond to models whose
 hyperparameters were hard to optimize. This occurs sporadically
 during the log-likelihood optimization for Gaussian processes, due
 to the non-linearity of the objective function.  As long as the
@@ -102,15 +99,15 @@ fIn <- list(f1 = matrix(runif(n.tr * 10), ncol = 10),
             f2 = matrix(runif(n.tr * 22), ncol = 22))
 sOut <- fgp_BB7(sIn, fIn, n.tr)
 \dontrun{
-# optimizing the model structure with 'fgpm_factory' (~5 seconds)
+# optimizing the model structure with 'fgpm_factory' (~10 seconds)
 xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
 # assessing the quality of the model - absolute and w.r.t. the other
 # explored models
 plot(xm, which = "evol")
-# Diagnostics (two subplots)
+# diagnostics (two subplots)
 plot(xm, which = "diag")
 plot(xm, which = "diag", horiz = TRUE)
-# Diagnostics (one plot)
+# diagnostics (one plot)
 plot(xm, which = "diag", fitp = FALSE)
 plot(xm, which = "diag", calib = FALSE)
 # customizing some graphical parameters

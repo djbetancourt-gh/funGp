@@ -25,7 +25,7 @@ An object of class \code{"list"}, containing the following information extracted
 }
 \description{
 The \link[funGp]{fgpm_factory} function returns an object of class \code{"\linkS4class{Xfgpm}"}
-  with the function call of all the evaluated models stored in the \code{@log.success@args} and
+  with the function calls of all the evaluated models stored in the \code{@log.success@args} and
   \code{@log.crashes@args} slots. The \code{which_on} function interprets the arguments linked to any
   structural configuration and returns a list with two elements: (i) an \code{array} of indices of the scalar
   inputs kept active; and (ii) an \code{array} of indices of the functional inputs kept active.
@@ -52,11 +52,11 @@ R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs 
 }
 \seealso{
 \strong{*} \link[funGp]{get_active_in} for details on how to obtain the data structures linked to the
-active inputs.
+active inputs;
 
-\strong{*} \linkS4class{modelCall} for details on the \emph{args} argument.
+\strong{*} \linkS4class{modelCall} for details on the \emph{args} argument;
 
-\strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection.
+\strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection;
 
 \strong{*} \linkS4class{Xfgpm} for details on object delivered by \link[funGp]{fgpm_factory}.
 }

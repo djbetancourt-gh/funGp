@@ -6,17 +6,16 @@
 \title{S4 class for funGp model selection data structures}
 \description{
 This is the formal representation of the assembly of data structures delivered by the model
-selection routines in the \link[=funGp-package]{funGp package}. Gaussian process models are useful
-statistical tools in the modeling of complex input-output relationships. An \code{Xfgpm} object contains the
+selection routines in the \link[=funGp-package]{funGp package}. An \code{Xfgpm} object contains the
 trace of an optimization process, conducted to build Gaussian process models of outstanding performance.
 \itemize{
  \item{\strong{Main methods}}{\cr
-       \link[funGp]{fgpm_factory}: structural optimization of funGp models,
-       creator of the \code{"Xfgpm"} class \cr
+       \link[funGp]{fgpm_factory}: structural optimization of \code{fgpm} models,
+       creator of the \code{"Xfgpm"} class. \cr
  }
  \item{\strong{Plotters}}{\cr
        \link[funGp]{plot,Xfgpm-method}: plot of the evolution of the algorithm with \code{which = "evolution"}
-       or of the absolute and relative quality of the optimized model with \code{which = "diag"}
+       or of the absolute and relative quality of the optimized model with \code{which = "diag"}.
  }
 }
 }
@@ -59,7 +58,7 @@ the provided scalar inputs.}
 \item{\code{fIn}}{An object of class \code{"list"} containing a copy of
 the provided functional inputs.}
 
-\item{\code{sOut}}{An object of class \code{"matrix"} containing a copy of the provided output.}
+\item{\code{sOut}}{An object of class \code{"matrix"} containing a copy of the provided outputs.}
 }}
 
 \section{Useful material}{

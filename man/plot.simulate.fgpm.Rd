@@ -15,7 +15,7 @@ by \link[funGp]{simulate,fgpm-method}.}
 \item{detail}{An optional character string specifying the data
 elements that should be included in the plot, to be chosen
 between \code{"light"} and \code{"full"}. A \emph{light} plot
-will include only the simulated values, while a a
+will include only the simulated values, while a
 \emph{full} plot will also include the predicted mean and
 confidence bands at the simulation points. This argument will
 only be used if full simulations (including the mean and
@@ -29,9 +29,6 @@ following typical graphics parameters are valid entries:
 \emph{main}. The boolean argument \emph{legends} can also be
 included in any of the two lists in order to control the
 display of legends in the corresponding plot.}
-}
-\value{
-None.
 }
 \description{
 This method displays the simulated output values

@@ -2,9 +2,9 @@
 % Please edit documentation in R/1_fgpm_Class.R
 \name{predict,fgpm-method}
 \alias{predict,fgpm-method}
-\title{Prediction from a funGp Gaussian process model}
+\title{Prediction from a \code{fgpm} Gaussian process model}
 \usage{
-\S4method{predict}{fgpm}(object, sIn.pr = NULL, fIn.pr = NULL, detail = "light", ...)
+\S4method{predict}{fgpm}(object, sIn.pr = NULL, fIn.pr = NULL, detail = c("light", "full"), ...)
 }
 \arguments{
 \item{object}{An object of class \linkS4class{fgpm} corresponding to the funGp model that should be used
@@ -19,12 +19,12 @@ predicted. Each element of the list is interpreted as a functional input variabl
 variable should be provided as a matrix with one curve per row. Either scalar input coordinates (sIn.pr),
 functional input coordinates (fIn.pr), or both must be provided.}
 
-\item{detail}{An optional character string specifying the extent of information that should be delivered
-by the method, to be chosen between "light" and "full". \emph{Light} predictions produce a list including
+\item{detail}{An optional character specifying the extent of information that should be delivered
+by the method, to be chosen between \code{"light"} (default) and \code{"full"}.
+\emph{Light} predictions produce a list including
 the predicted mean, standard deviation and limits of the 95\% confidence intervals at the prediction
 points. \emph{Full} predictions produce the same information as light ones, in addition to the
-training-prediction cross-covariance matrix and the prediction auto-covariance matrix. Default is
-"light".}
+training-prediction cross-covariance matrix and the prediction auto-covariance matrix.}
 
 \item{...}{Not used.}
 }
@@ -36,8 +36,8 @@ An object of class \code{"list"} containing the data structures linked to predic
   matrix.
 }
 \description{
-This method enables prediction based on a funGp Gaussian process model, at any given set of
-  points. Check \code{\link{fgpm}} for information on how to create funGp models.
+This method enables prediction based on a \code{fgpm} model, at any given set of
+  points. Check \code{\link{fgpm}} for information on how to create \code{fgpm} models.
 }
 \examples{
 # light predictions________________________________________________________________________
@@ -128,11 +128,11 @@ plot(m1.preds)
 
 }
 \seealso{
-\strong{*} \link[funGp]{plot.predict.fgpm} for the prediction plot of a funGp model;
+\strong{*} \link[funGp]{plot.predict.fgpm} for the prediction plot of a \code{fgpm} model;
 
-\strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a funGp model;
+\strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a \code{fgpm} model;
 
-\strong{*} \link[funGp]{plot.simulate.fgpm} for the simulation plot of a funGp model.
+\strong{*} \link[funGp]{plot.simulate.fgpm} for the simulation plot of a \code{fgpm} model.
 }
 \author{
 José Betancourt, François Bachoc and Thierry Klein

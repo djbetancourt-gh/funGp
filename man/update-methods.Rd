@@ -2,7 +2,7 @@
 % Please edit documentation in R/1_fgpm_Class.R
 \name{update,fgpm-method}
 \alias{update,fgpm-method}
-\title{Easy update of funGp Gaussian process models}
+\title{Easy update of \code{fgpm} models}
 \usage{
 \S4method{update}{fgpm}(
   object,
@@ -45,7 +45,7 @@ list must be a matrix containing the set of curves corresponding to one function
 substituting input points.}
 
 \item{ind.sb}{An optional numeric array indicating the indices of the input and output points stored in
-the model, that should be replaced by the values specified through sIn.sb, fIn.sb and/or, sOut.sb.}
+the model, that should be replaced by the values specified through sIn.sb, fIn.sb and/or sOut.sb.}
 
 \item{ind.dl}{An optional numeric array indicating the indices of the input and output points stored in
 the model that should be deleted.}
@@ -74,7 +74,7 @@ inputs should be re-estimated. Default is FALSE.}
 An object of class \linkS4class{fgpm} representing the updated funGp model.
 }
 \description{
-This method enables the update of data or hyperparameters of a funGp Gaussian process model.
+This method enables the update of data or hyperparameters of a \code{fgpm} model.
   It corresponds to an object of the class \linkS4class{fgpm}. The method allows addition, subtraction
   and substitution of data points, as well as substitution and re-estimation of hyperparameters.
 }
@@ -201,9 +201,9 @@ m1up <- update(m1, var.re = TRUE, ls_s.re = TRUE, ls_f.re = TRUE) # all hyperpar
 \seealso{
 \strong{*} \link[funGp]{fgpm} for creation of a funGp model;
 
-\strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a funGp model;
+\strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a \code{fgpm} model;
 
-\strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a funGp model.
+\strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a \code{fgpm} model.
 }
 \author{
 José Betancourt, François Bachoc and Thierry Klein

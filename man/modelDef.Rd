@@ -31,7 +31,7 @@ Remind that the models are sorted by decreasing quality so
 }
 \examples{
 ## =========================================================================
-## Using the re-calculated object `xm` to save time. See `?xm` to re-create
+## Using the pre-calculated object `xm` to save time. See `?xm` to re-create
 ## this object.
 ## =========================================================================
 
@@ -49,20 +49,20 @@ modelDef(xm, i = 1)
     n.new <- 3^5
     x1 <- x2 <- x3 <- x4 <- x5 <- seq(0, 1, length = n.new^(1/5))
 
-    ## create the data objects required to fit the model 
+    ## create the data objects required to fit the model
     L$sIn <- as.matrix(expand.grid(x1 = x1, x2 = x2, x3 = x3, x4 = x4, x5 = x5))
     L$fIn <- list(f1 = matrix(runif(n.new * 10), ncol = 10),
                    f2 = matrix(runif(n.new * 22), ncol = 22))
-    L$sOut <- fgp_BB7(L$sIn, $fIn, n.new)
+    L$sOut <- fgp_BB7(L$sIn, L$fIn, n.new)
 
-    ## Now evaluate 
+    ## Now evaluate
     fgpm.new <- eval(modelDef(xm, i = 1), envir = L)
     plot(fgpm.new, main = "Re-created 'fgpm' model with different data")
     plot(xm[[1]], main = "Re-created 'fgpm' model with the same data")
 }
 }
 \seealso{
-the \code{\link{[[,Xfgpm-method}} that can also be used
+The \code{\link{[[,Xfgpm-method}} that can also be used
     to re-create a \code{fgpm} object using \emph{the same data}
     as that used to create the \code{Xfgpm} object in
     \code{object}.
