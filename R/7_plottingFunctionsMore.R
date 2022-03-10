@@ -146,7 +146,6 @@ setMethod("plot", "fgpm",
 ##'     should be enclosed into a list and passed with the formal name
 ##'     \code{calib.gpars} or \code{fitp.gpars}.
 ##'
-##' @return Nothing.
 ##'
 ##'
 ##' @export
@@ -244,7 +243,6 @@ setMethod("plot", "Xfgpm",
 ##' @export
 ##' @method plot predict.fgpm
 ##'
-##' @return None.
 ##'
 ##' @author José Betancourt, François Bachoc and Thierry Klein
 ##'
@@ -354,7 +352,6 @@ plot.predict.fgpm <- function(x, y = NULL, sOut.pr = NULL,
 ##'     included in any of the two lists in order to control the
 ##'     display of legends in the corresponding plot.
 ##'
-##' @return None.
 ##'
 ##' @author José Betancourt, François Bachoc and Thierry Klein
 ##'
