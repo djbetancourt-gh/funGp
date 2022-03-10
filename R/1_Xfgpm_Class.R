@@ -750,7 +750,7 @@ printSpace <- function(ds, df, space) {
 ##'               the type of basis used \code{B_}. Remind that the
 ##'               kernel (\code{Kern}) is the same for all functional
 ##'               inputs. Also shown is the value of the Leave-One-Out
-##'               coefficient \code{Q2}.
+##'               coefficient \code{Q²}.
 ##'         }
 ##'         \item{With a large number of inputs, the list contains
 ##'               two data frames. The first one tells which inputs
