@@ -1,6 +1,6 @@
 #' @title Gaussian Process Models for Scalar and Functional Inputs
 #'
-#' @description Construction and smart selection of Gaussian process models with emphasis on treatment of functional inputs.
+#' @description Construction and smart selection of Gaussian process models for analysis of computer experiments with emphasis on treatment of functional inputs that are regularly sampled.
 #'
 #' @section Base functionalities:
 #' \itemize{
