@@ -76,7 +76,7 @@ setMethod("plot", "fgpm",
 ##'     different structural parameters.
 ##'
 ##' Two types of graphics can be shown depending on the choice of
-##' \code{which}. The choice \code{which = "evolution"} is used to
+##' \code{which}. The choice \code{which = "evol"} is used to
 ##' assess the quality of the fitted \code{fgpm} models on the basis
 ##' of Leave-One-Out cross-validation.  The choice \code{which =
 ##' "diag"} is used to display diagnostics. Two types of diagnostic
