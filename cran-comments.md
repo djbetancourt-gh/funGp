@@ -1,13 +1,11 @@
 ## Resubmission
-This is a resubmission. Previous version (0.2.1) was archived on
-CRAN due to a check ERROR not corrected in time. In this version
-we have:
+This is a resubmission. In this version we have:
 
-* Resolved the line that was causing the check ERROR displayed for
-  version 0.2.1.
+* Implemented plot and summary methods for our most important
+  objects to adjust to the standard use in R packages
   
-* Replaced the \donttest command around long examples by \dontrun
-  to prevent issues during CRAN revision.
+* Removed our dependency on the qdapRegex package which is
+  already scheduled for archival by CRAN
   
 * Improved the documentation to simplify help pages indexing
 
@@ -15,20 +13,24 @@ we have:
 * local Windows install, R 4.1.0
 * rhub, Fedora Linux, R-devel, clang, gfortran
 * rhub, Ubuntu Linux 20.04.1 LTS, R-release, GCC
-* rhub, Windows Server 2008 R2 SP1, R-devel, 32/64 bit
+* rhub, Windows Server 2022, R-devel, 64 bit
 
 Also checked with --run-donttest
 
 ## R CMD check results
 There were no ERRORs or WARNINGs.
 There were some NOTEs indicating:
-  - Package was archived on CRAN on 2021-04-29 as check problems
-  were not corrected in time
-  - Possibly mis-spelled words in DESCRIPTION:
-    - Betancourt (my last name)
-    - Metamodeling (valid technical word)
-    - al (standard part of a reference)
-    - et (standard part of a reference)
+  - Possibly invalid URLs:
+    URL: https://www.sciencedirect.com/science/article/abs/pii/S0951832019301693
+    From: man/fgpm.Rd
+          man/fgpm_factory.Rd
+          man/funGp-package.Rd
+    Status: 403
+    Message: Forbidden
+    - Confirmed directly from the NOTEs that the URL is working fine
+  - checking for detritus in the temp directory ... NOTE
+    - Only on Windows Server 2022, R-devel, 64 bit
+    - might be related to the first NOTE
 
 ## Downstream dependencies
 There are currently no downstream dependencies for this package.

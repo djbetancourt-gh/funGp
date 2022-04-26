@@ -677,7 +677,7 @@ plotSims.fgpm <- function(sims, detail, ...) {
 #'   corresponding to the specified projection dimensions. Otherwise, the function plots the pheromones and
 #'   nothing is returned.
 #'
-#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #'
 #' @seealso \strong{*} \link[funGp]{decay2probs} for the function to generate the initial probability load;
 #' @seealso \strong{*} \link[funGp]{fgpm_factory} for heuristic funGp model selection.
@@ -794,7 +794,7 @@ decay <- function(k, pmax = NULL, tao0 = .1, delta = 2, dispr = 1.4, doplot = TR
 #'   corresponding to the specified projection dimensions. Otherwise, the function plots the normalized
 #'   pheromones and nothing is returned.
 #'
-#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #'
 #' @seealso \strong{*} \link[funGp]{decay} for the function to generate the initial pheromone load;
 #' @seealso \strong{*} \link[funGp]{fgpm_factory} for heuristic model selection in funGp.

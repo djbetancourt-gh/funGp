@@ -51,12 +51,14 @@ axtags <- function(x){
     l <- lapply(t, function(a) seq(1,x,a))
     s <- ((x-1)/t) + 1
     l[[which(s <= 10)[1]]]
-    # l
   } else {
     seq(1, x)
   }
 }
 
+text_bt <- function(key, left, right) {
+  gsub(paste0(".*", left, "\\s*|", right, ".*"), "", key)
+}
 
 # ==========================================================================================================
 # S4 class for fgpm function calls
@@ -66,7 +68,7 @@ axtags <- function(x){
 #'
 #' @slot string Object of class \code{"character"}. User call reminder in string format.
 #'
-#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #'
 #' @rdname modelCall-class
 #' @export
@@ -98,7 +100,7 @@ show.modelCall <- function (x, ...) {
 #'
 #' @slot string Object of class \code{"character"}. User call reminder in string format.
 #'
-#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #'
 #' @rdname factoryCall-class
 #' @export
@@ -126,11 +128,11 @@ show.factoryCall <- function (x, ...) {
 ##'
 ##' @note This function is not exported. It could work with a
 ##'     character matrix rather than a data frame. Mind that the input
-##'     names of a \code{Xfgpm} object are implicitely assumed to be
+##'     names of a \code{Xfgpm} object are implicitly assumed to be
 ##'     "X1", "X2", ... for the scalar inputs and "F1", "F2",
 ##'     ... while the matrix \code{sIn} and the list \code{fIn} given
 ##'     at the creation time may have different names!
-##' 
+##'
 ##' @title Put the "summary" table for a \code{Xfgpm} object in a
 ##'     shorter format using suitable abbreviations.
 ##'
@@ -140,9 +142,9 @@ show.factoryCall <- function (x, ...) {
 ##'
 ##' @return A data frame with character columns corresponding to
 ##'     abbreviated versions of the content of \code{data}.
-##' 
+##'
 ##' @noRd
-##' 
+##'
 formatShort <- function(structData) {
     nms <- colnames(structData)
     for (i in 1:ncol(structData)) {

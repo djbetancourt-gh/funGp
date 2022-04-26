@@ -14,5 +14,5 @@ User reminder of the \link[funGp]{fgpm} function call.
 }}
 
 \author{
-José Betancourt, François Bachoc and Thierry Klein
+José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 }

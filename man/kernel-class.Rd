@@ -29,5 +29,5 @@ element in \emph{f_lsHyps}}
 }}
 
 \author{
-José Betancourt, François Bachoc and Thierry Klein
+José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 }

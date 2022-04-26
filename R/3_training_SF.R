@@ -105,6 +105,7 @@ setSPoints_SF <- function(bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_
 # ==========================================================================================================
 #' @importFrom stats optim
 #' @importFrom doFuture registerDoFuture
+#' @importFrom doRNG registerDoRNG
 #' @importFrom future plan cluster
 #' @importFrom progressr with_progress progressor
 optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known, nugget, par.clust, trace, pbars){
@@ -166,6 +167,7 @@ optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, var
 
       # register parallel backend
       registerDoFuture()
+      registerDoRNG()
       plan(cluster, workers = par.clust)
 
       with_progress({

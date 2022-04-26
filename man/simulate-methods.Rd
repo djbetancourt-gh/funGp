@@ -119,5 +119,5 @@ plot(m1.sims_f, detail = "light")
 \strong{*} \link[funGp]{plot.predict.fgpm} for the prediction plot of a \code{fgpm} model.
 }
 \author{
-José Betancourt, François Bachoc and Thierry Klein
+José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 }

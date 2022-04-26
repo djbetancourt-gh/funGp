@@ -284,5 +284,5 @@ R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs 
 \strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection.
 }
 \author{
-José Betancourt, François Bachoc and Thierry Klein
+José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 }

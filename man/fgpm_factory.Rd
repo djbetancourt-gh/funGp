@@ -311,5 +311,5 @@ Dubrule, O. (1983),
     post-creation updates on a funGp model.
 }
 \author{
-José Betancourt, François Bachoc and Thierry Klein
+José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 }

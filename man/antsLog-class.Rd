@@ -21,5 +21,5 @@ active) or the type of kernel function.}
 }}
 
 \author{
-José Betancourt, François Bachoc and Thierry Klein
+José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 }

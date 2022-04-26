@@ -6,8 +6,9 @@ Authors@R: c(
     person("Jose", "Betancourt", email = "djbetancourt@uninorte.edu.co", role = c("cre", "aut")),
     person("François", "Bachoc", email = "francois.bachoc@math.univ-toulouse.fr", role = "aut"),
     person("Thierry", "Klein", email = "thierry.klein@math.univ-toulouse.fr", role = "aut"),
-    person("Deborah", "Idier", email = "D.Idier@brgm.fr", role = "ctb"),
-    person("Jeremy", "Rohmer", email = "J.Rohmer@brgm.fr", role = "ctb"))
+    person("Jeremy", "Rohmer", email = "J.Rohmer@brgm.fr", role = "aut"),
+    person("Yves", "Deville", email = "deville.yves@alpestat.com", role = "ctb"),
+    person("Deborah", "Idier", email = "D.Idier@brgm.fr", role = "ctb"))
 Maintainer: Jose Betancourt <djbetancourt@uninorte.edu.co>
 Description: Construction and smart selection of Gaussian process models
 	for analysis of computer experiments
@@ -26,7 +27,7 @@ Note: research product of the RISCOPE project
 License: GPL-3
 URL: https://djbetancourt-gh.github.io/funGp/
 Depends: R (>= 3.5.0)
-Imports: methods, foreach, knitr, scales, qdapRegex, microbenchmark, doFuture, future, progressr
+Imports: methods, foreach, knitr, scales, microbenchmark, doFuture, doRNG, future, progressr
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.2
@@ -57,6 +58,6 @@ Collate:
     '7_dimRedFunctions.R'
     '7_distanceFunctions.R'
     '7_plottingFunctions.R'
-    '7_plottingFunctionsMore.R'
+    '7_plottingFunctionsStandard.R'
     '8_outilsStats.R'
-    'precalculated_Xfgpm_objects.R'
+    '8_precalculated_Xfgpm_objects.R'

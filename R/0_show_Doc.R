@@ -9,12 +9,12 @@
 #' @param object Either a \linkS4class{fgpm}, \linkS4class{fgpKern}, \linkS4class{fgpProj}, or
 #'   \linkS4class{Xfgpm} object.
 #'
-#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #'
 #' @name show
 #' @rdname show-methods
 #' @importFrom methods show
 #' @noRd
-#' 
+#'
 NULL
 # ==========================================================================================================

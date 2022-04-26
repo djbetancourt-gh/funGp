@@ -54,7 +54,7 @@
 #'  }}
 #' }
 #'
-#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #'
 #' @include 2_fgpProj_Class.R
 #' @include 2_fgpKern_Class.R
@@ -157,7 +157,7 @@ setClass("fgpm",
 #'
 #' @return An object of class \linkS4class{fgpm} containing the data structures representing the fitted funGp model.
 #'
-#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #'
 #' @references Betancourt, J., Bachoc, F., Klein, T., Idier, D., Pedreros, R., and Rohmer, J. (2020),
 #' "Gaussian process metamodeling of functional-input code for coastal flood hazard assessment".
@@ -674,7 +674,7 @@ setGeneric(name = "predict", def = function(object, ...) standardGeneric("predic
 #'   \emph{Light} predictions produce a list including
 #'   the predicted mean, standard deviation and limits of the 95\% confidence intervals at the prediction
 #'   points. \emph{Full} predictions produce the same information as light ones, in addition to the
-#'   training-prediction cross-covariance matrix and the prediction auto-covariance matrix. 
+#'   training-prediction cross-covariance matrix and the prediction auto-covariance matrix.
 #'
 #' @return An object of class \code{"list"} containing the data structures linked to predictions. For
 #'   \emph{light} predictions, the list will include the mean, standard deviation and limits of the 95\%
@@ -682,7 +682,7 @@ setGeneric(name = "predict", def = function(object, ...) standardGeneric("predic
 #'   information, plus the training-prediction cross-covariance matrix and the prediction auto-covariance
 #'   matrix.
 #'
-#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #'
 #' @seealso \strong{*} \link[funGp]{plot.predict.fgpm} for the prediction plot of a \code{fgpm} model;
 #' @seealso \strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a \code{fgpm} model;
@@ -918,7 +918,7 @@ setGeneric(name = "simulate", def = function(object, nsim = 1, seed = NULL, ...)
 #'   along with the predicted mean, standard deviation and limits of the 95\% confidence intervals at the
 #'   simulation points.
 #'
-#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #'
 #' @seealso \strong{*} \link[funGp]{plot.simulate.fgpm} for the simulation plot of a \code{fgpm} model;
 #' @seealso \strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a \code{fgpm} model;
@@ -1165,7 +1165,7 @@ setGeneric(name = "update", def = function(object, ...) standardGeneric("update"
 #' time, the user is allowed to request the re-estimation of the hyperparameters, which will make
 #' the model fully up to date.
 #'
-#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #'
 #' @seealso \strong{*} \link[funGp]{fgpm} for creation of a funGp model;
 #' @seealso \strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a \code{fgpm} model;
@@ -1429,7 +1429,6 @@ update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb,
 ## ==============================================================================
 ## summary method. Simple copy of 'show', at least for now.
 ## ==============================================================================
-
 ##' @description Display the structure of a \code{fgpm}
 ##'     object and the value of the parameters (variance and length-scales).
 ##'

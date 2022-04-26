@@ -49,7 +49,7 @@
 #'  }}
 #' }
 #'
-#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #'
 #' @include 1_fgpm_Class.R
 #' @include 3_ant_admin.R
@@ -220,7 +220,7 @@ show.Xfgpm <- function(object) {
 #'   of a funGp model. It includes as the main component an object of class \linkS4class{fgpm} corresponding to the
 #'   optimized model. It is accessible through the \code{@@model} slot of the Xfgpm object.
 #'
-#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #'
 #' @references Betancourt, J., Bachoc, F., Klein, T., Idier, D., Pedreros, R., and Rohmer, J. (2020),
 #' "Gaussian process metamodeling of functional-input code for coastal flood hazard assessment".

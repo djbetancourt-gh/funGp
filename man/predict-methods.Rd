@@ -135,5 +135,5 @@ plot(m1.preds)
 \strong{*} \link[funGp]{plot.simulate.fgpm} for the simulation plot of a \code{fgpm} model.
 }
 \author{
-José Betancourt, François Bachoc and Thierry Klein
+José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 }

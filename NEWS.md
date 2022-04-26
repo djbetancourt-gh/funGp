@@ -1,11 +1,34 @@
+# funGp 0.3.0 (2022-04-29)
+
+## Main flow changes
+
+* `format4pred()` removed and replaced by `get_active_in()` as  anticipated in 0.2.0 release
+
+## Minor flow changes
+
+* Own `rm_between()` and function implemented to remove dependency on the `qdapRegex` package
+  already scheduled by CRAN for archival
+  
+* Minor change to resolve a `%dopar%` issue during parallelized processes based on `%dorng%`
+
+
+
 # funGp 0.2.2 (2021-07-21)
+
+## Minor flow changes
 
 * Minor change to resolve a `check` issue evoked by CRAN
 
+
+
 # funGp 0.2.1 (2020-11-24)
+
+## Minor flow changes
 
 * Minor change to resolve a `check` `NOTE` related to the declaration in `Imports` of the `plyr`
   package.
+
+
 
 # funGp 0.2.0 (2020-11-17)
 
@@ -25,13 +48,15 @@
 
 ## Minor display changes
 
-* Iproved display of progress bars for `fgpm()` and `fgpm_factory()`
+* Improved display of progress bars for `fgpm()` and `fgpm_factory()`
 
 * Improved placing of the legend in `plotX()` to prevent hiding important information
 
 ## Minor flow changes
 
 * `format4pred()` deprecated for `get_active_in()`
+
+
 
 # funGp 0.1.0 (2020-04-22)
 

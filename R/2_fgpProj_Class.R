@@ -14,7 +14,7 @@
 #'
 #' @rdname proj-Class
 #'
-#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #' @export
 setClass("fgpProj",
          representation(

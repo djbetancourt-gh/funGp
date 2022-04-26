@@ -11,7 +11,7 @@
 #'   \code{"\linkS4class{modelCall}"}.
 #' @slot fitness Object of class \code{"numeric"}. Performance statistic of each model, if available.
 #'
-#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #'
 #' @rdname antsLog-class
 #' @export
@@ -586,6 +586,7 @@ getLog_ACO <- function(sIn, fIn, log.vec, log.fitness, base, extargs) {
 #' @importFrom foreach foreach `%dopar%`
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #' @importFrom doFuture registerDoFuture
+#' @importFrom doRNG registerDoRNG
 #' @importFrom future plan cluster
 #' @importFrom progressr with_progress progressor
 eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.lim, pbars, par.clust) {
@@ -595,6 +596,7 @@ eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.l
   if (!is.null(par.clust)) {
     # register parallel backend
     registerDoFuture()
+    registerDoRNG()
     plan(cluster, workers = par.clust)
 
     # evaluate the ants as models
@@ -649,6 +651,7 @@ eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.l
 #' @importFrom foreach foreach `%dopar%`
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #' @importFrom doFuture registerDoFuture
+#' @importFrom doRNG registerDoRNG
 #' @importFrom future plan cluster
 #' @importFrom progressr with_progress progressor
 eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str, time.lim, pbars, par.clust) {
@@ -659,6 +662,7 @@ eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str
   if (!is.null(par.clust)) {
     # register parallel backend
     registerDoFuture()
+    registerDoRNG()
     plan(cluster, workers = par.clust)
 
     # evaluate the ants as models
@@ -820,55 +824,6 @@ fitNtests_ACO <- function(ant, sIn, fIn, sOut, extargs, base,
 
 
 # ==========================================================================================================
-# Function to prepare input data structures for prediction based on a fgpm arguments
-# ==========================================================================================================
-#' @title Preparation of inputs for predictions based on a fgpm modelCall
-#' @description \strong{Deprecated function, use \link[funGp]{get_active_in} instead.}\cr This function prepares
-#'   input data structures according to the active inputs specified by a \code{"\linkS4class{modelCall}"}
-#'   object. This function is intended to easily adapt the data structures to the requirements of a specific
-#'   model delivered by the model factory function \link[funGp]{fgpm_factory}.
-#'
-#' @param sIn.pr An optional matrix of scalar input coordinates at which the output values should be
-#'   predicted. Each column is interpreted as a scalar input variable and each row as a coordinate.
-#'   Either scalar input coordinates (sIn.pr), functional input coordinates (fIn.pr), or both must be provided.
-#'   The \code{"\linkS4class{modelCall}"} object provided through args will lead to the extraction of only the
-#'   active scalar inputs in the model.
-#' @param fIn.pr An optional list of functional input coordinates at which the output values should be
-#'   predicted. Each element of the list is interpreted as a functional input variable. Every functional input
-#'   variable should be provided as a matrix with one curve per row. Either scalar input coordinates (sIn.pr),
-#'   functional input coordinates (fIn.pr), or both must be provided. The \code{"\linkS4class{modelCall}"}
-#'   object provided through args will lead to the extraction of only the active functional inputs in the model.
-#' @param args An object of class \code{"\linkS4class{modelCall}"}, which specifies the set of active
-#'   scalar and functional inputs.
-#'
-#' @return An object of class \code{"list"}, containing the input data structures with only the active inputs
-#'   specified by \emph{args}.
-#'
-#' @author José Betancourt, François Bachoc and Thierry Klein
-#'
-#' @references Betancourt, J., Bachoc, F., and Klein, T. (2020),
-#' R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
-#' \emph{RISCOPE project}.
-#' \href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
-#'
-#' @seealso \strong{*} \link[funGp]{get_active_in} for the substitute of this function in future releases;
-#' @seealso \strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a funGp model;
-#' @seealso \strong{*} \link[funGp]{fgpm} for creation of a funGp model;
-#' @seealso \strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection.
-#'
-#' @importFrom qdapRegex rm_between
-#' @rdname package-deprecated
-#' @noRd
-#' @export
-format4pred <- function(sIn.pr = NULL, fIn.pr = NULL, args) {
-  .Deprecated("get_active_in")
-  return(get_active_in(sIn.pr, fIn.pr, args))
-}
-# ==========================================================================================================
-
-
-
-# ==========================================================================================================
 # Function to obtain the indices of the variables kept active in some structure delivered by the factory
 # ==========================================================================================================
 #' @title Indices of active inputs in a given model structure
@@ -891,7 +846,7 @@ format4pred <- function(sIn.pr = NULL, fIn.pr = NULL, args) {
 #'   \emph{args} parameter: (i) an array of indices of the scalar inputs kept active; and (ii) an array of
 #'   indices of the functional inputs kept active.
 #'
-#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #'
 #' @references Betancourt, J., Bachoc, F., and Klein, T. (2020),
 #' R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
@@ -917,7 +872,6 @@ format4pred <- function(sIn.pr = NULL, fIn.pr = NULL, args) {
 #' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
 #' which_on(sIn, fIn, xm@log.success@args[[1]]) # only the indices extracted by which_on
 #'
-#' @importFrom qdapRegex rm_between
 #' @export
 which_on <- function (sIn = NULL, fIn = NULL, args) {
   # initalize controllers and outputs of the function
@@ -935,14 +889,14 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 
   # get sIn and fIn expressions when necessary
   if (all(s.on, f.on)) { # scalar and functional inputs on
-    xs <- rm_between(key, "sIn = ", ", fIn", extract = TRUE)[[1]]
-    xf <- rm_between(key, "fIn = ", ", sOut", extract = TRUE)[[1]]
+    xs <- text_bt(key, "sIn = ", ", fIn")
+    xf <- text_bt(key, "fIn = ", ", sOut")
   } else if (s.on) { # only scalar inputs on
-    xs <- rm_between(key, "sIn = ", ", sOut", extract = TRUE)[[1]]
+    xs <- text_bt(key, "sIn = ", ", sOut")
     xf <- fIn.on <- NULL
   } else if (f.on) { # only functional inputs on
     xs <- sIn.on <- NULL
-    xf <- rm_between(key, "fIn = ", ", sOut", extract = TRUE)[[1]]
+    xf <- text_bt(key, "fIn = ", ", sOut")
   } else return(NULL)
 
   # prune the scalar inputs based on vector of indices
@@ -1019,7 +973,7 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #'   \emph{args} parameter: (i) a \code{matrix} of scalar input variables kept active; and (ii) a \code{list}
 #'   of functional input variables kept active.
 #'
-#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #'
 #' @references Betancourt, J., Bachoc, F., and Klein, T. (2020),
 #' R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
@@ -1164,7 +1118,6 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #'        pch = c(21, 23, 24), pt.bg = c("black", "red", "green"), inset = c(.02,.08))
 #' }
 #'
-#' @importFrom qdapRegex rm_between
 #' @export
 get_active_in <- function (sIn = NULL, fIn = NULL, args) {
   # get indices of active inputs

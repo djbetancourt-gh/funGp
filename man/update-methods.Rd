@@ -206,5 +206,5 @@ m1up <- update(m1, var.re = TRUE, ls_s.re = TRUE, ls_f.re = TRUE) # all hyperpar
 \strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a \code{fgpm} model.
 }
 \author{
-José Betancourt, François Bachoc and Thierry Klein
+José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 }

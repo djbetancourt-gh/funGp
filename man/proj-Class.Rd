@@ -23,5 +23,5 @@ the projection of one functional input.}
 }}
 
 \author{
-José Betancourt, François Bachoc and Thierry Klein
+José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 }

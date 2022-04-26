@@ -96,5 +96,5 @@ decay(15, deliver = TRUE)
 \strong{*} \link[funGp]{fgpm_factory} for heuristic funGp model selection.
 }
 \author{
-José Betancourt, François Bachoc and Thierry Klein
+José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 }

@@ -177,5 +177,5 @@ R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs 
 \strong{*} \linkS4class{Xfgpm} for details on object delivered by \link[funGp]{fgpm_factory}.
 }
 \author{
-José Betancourt, François Bachoc and Thierry Klein
+José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 }

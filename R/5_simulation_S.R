@@ -1,5 +1,5 @@
 #' @importFrom stats rnorm
-#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 makeSims_S <- function(sMs.ts, sMs.ss, sig2, thetas_s, kerType, L, LInvY, nsim, nugget.sm, detail, seed){
   # create empty prediction list
   sims <- list()

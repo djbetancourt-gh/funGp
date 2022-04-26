@@ -146,6 +146,7 @@ optimHypers_F <- function(spoints, n.starts, bnds, fMs, sOut, kerType, varfun, n
 
       # register parallel backend
       registerDoFuture()
+      registerDoRNG()
       plan(cluster, workers = par.clust)
 
       with_progress({

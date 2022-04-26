@@ -2,7 +2,9 @@
 
 -   **(x)** is used for tasks that are completed,
 -   **(WIP)** is used for tasks that are in progress,
--   **(?)** Idea to be discussed.
+-   **(?)** Idea to be discussed.  
+-   **()** FB 25/02/2022 test git push
+-   **()** FB 07/03/2022 test git push macbook
 
 ## Checks
 
@@ -115,109 +117,13 @@
 Try
 
     library(funGp)
+
+    ## Warning: package 'funGp' was built under R version 4.1.3
+
     example(plot.predict.fgpm)
 
-    ## 
-    ## plt.p.> # plotting predictions without the true output values_______________________
-    ## plt.p.> # building the model
-    ## plt.p.> set.seed(100)
-    ## 
-    ## plt.p.> n.tr <- 25
-    ## 
-    ## plt.p.> sIn <- expand.grid(x1 = seq(0, 1, length = sqrt(n.tr)),
-    ## plt.p.+                    x2 = seq(0, 1, length = sqrt(n.tr)))
-    ## 
-    ## plt.p.> fIn <- list(f1 = matrix(runif(n.tr * 10), ncol = 10),
-    ## plt.p.+             f2 = matrix(runif(n.tr * 22), ncol = 22))
-    ## 
-    ## plt.p.> sOut <- fgp_BB3(sIn, fIn, n.tr)
-    ## 
-    ## plt.p.> m1 <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut)
-
-    ## ** Presampling...
-
-    ## ** Optimising hyperparameters...
-
-    ## final  value 2.841058 
-    ## converged
-
-    ## ** Hyperparameters done!
-
-    ## 
-    ## plt.p.> # making predictions
-    ## plt.p.> n.pr <- 100
-    ## 
-    ## plt.p.> sIn.pr <- as.matrix(expand.grid(x1 = seq(0,1,length = sqrt(n.pr)),
-    ## plt.p.+                                 x2 = seq(0,1,length = sqrt(n.pr))))
-    ## 
-    ## plt.p.> fIn.pr <- list(f1 = matrix(runif(n.pr * 10), ncol = 10),
-    ## plt.p.+                f2 = matrix(runif(n.pr * 22), ncol = 22))
-    ## 
-    ## plt.p.> m1.preds <- predict(m1, sIn.pr = sIn.pr, fIn.pr = fIn.pr)
-    ## 
-    ## plt.p.> # plotting predictions
-    ## plt.p.> plotPreds(m1, preds = m1.preds)
-
-    ## 
-    ## plt.p.> # plotting predictions and true output values_______________________________
-    ## plt.p.> # building the model
-    ## plt.p.> set.seed(100)
-    ## 
-    ## plt.p.> n.tr <- 25
-    ## 
-    ## plt.p.> sIn <- expand.grid(x1 = seq(0, 1, length = sqrt(n.tr)),
-    ## plt.p.+                    x2 = seq(0, 1, length = sqrt(n.tr)))
-    ## 
-    ## plt.p.> fIn <- list(f1 = matrix(runif(n.tr * 10), ncol = 10),
-    ## plt.p.+             f2 = matrix(runif(n.tr * 22), ncol = 22))
-    ## 
-    ## plt.p.> sOut <- fgp_BB3(sIn, fIn, n.tr)
-    ## 
-    ## plt.p.> m1 <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut)
-
-    ## ** Presampling...
-    ## ** Optimising hyperparameters...
-
-    ## final  value 2.841058 
-    ## converged
-
-    ## ** Hyperparameters done!
-
-![](TODO_files/figure-markdown_strict/unnamed-chunk-1-1.png)
-
-    ## 
-    ## plt.p.> # making predictions
-    ## plt.p.> n.pr <- 100
-    ## 
-    ## plt.p.> sIn.pr <- as.matrix(expand.grid(x1 = seq(0,1,length = sqrt(n.pr)),
-    ## plt.p.+                                 x2 = seq(0,1,length = sqrt(n.pr))))
-    ## 
-    ## plt.p.> fIn.pr <- list(f1 = matrix(runif(n.pr*10), ncol = 10),
-    ## plt.p.+                f2 = matrix(runif(n.pr*22), ncol = 22))
-    ## 
-    ## plt.p.> m1.preds <- predict(m1, sIn.pr = sIn.pr, fIn.pr = fIn.pr)
-    ## 
-    ## plt.p.> # generating output data for validation
-    ## plt.p.> sOut.pr <- fgp_BB3(sIn.pr, fIn.pr, n.pr)
-    ## 
-    ## plt.p.> # plotting predictions. Note that the 2-nd argument is 'y'
-    ## plt.p.> plot(m1.preds, sOut.pr)
-
-![](TODO_files/figure-markdown_strict/unnamed-chunk-1-2.png)
-
-    ## 
-    ## plt.p.> # only calibration plot
-    ## plt.p.> plot(m1.preds, sOut.pr = sOut.pr, sortp = FALSE)
-
-![](TODO_files/figure-markdown_strict/unnamed-chunk-1-3.png)
-
-    ## 
-    ## plt.p.> # only sorted output plot
-    ## plt.p.> plot(m1.preds, sOut.pr = sOut.pr, calib = FALSE)
-
-![](TODO_files/figure-markdown_strict/unnamed-chunk-1-4.png)
+    ## Warning in example(plot.predict.fgpm): no help found for 'plot.predict.fgpm'
 
     example(plt.simulate.fgpm)
 
     ## Warning in example(plt.simulate.fgpm): no help found for 'plt.simulate.fgpm'
-    ##FB test git 24/02/2022
