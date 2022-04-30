@@ -829,7 +829,7 @@ summary.Xfgpm <- function(object, n = 24, ...) {
 print.summary.Xfgpm <- function(x, ...) {
     cat(names(x)[1], "\n")
     print(x[[1]])
-    if (length(x) > 2) {
+    if (length(x) >= 2) {
         cat(names(x)[2], "\n")
         nBlocks <- ceiling(ncol(x[[2]]) / 12)
         for (i in 1:nBlocks) {
