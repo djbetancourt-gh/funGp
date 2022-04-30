@@ -412,9 +412,8 @@ fgpm_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, ind.vl = NULL,
   X.model@log.success <- opt$log.suc
   X.model@log.crashes <- opt$log.cra
   X.model@n.solspace <- getSpacesize(solspace$sp.user)
-  X.model@n.explored <- nrow(opt$log.suc@sols)
+    X.model@n.explored <- nrow(opt$log.suc@sols)
     X.model@details <- opt$all.details
-    ## XXXY warn if these are not matrices, but data frames?
     X.model@sIn <- as.matrix(sIn)
     X.model@fIn <- fIn
     X.model@sOut <- as.matrix(sOut)
@@ -815,7 +814,7 @@ summary.Xfgpm <- function(object, n = 24, ...) {
                        "Q2" = sprintf("%5.3f", object@log.success@fitness))
         funDf <- funDf[1L:n, , drop = FALSE]
         daf <- list("State of inputs" = activeDf,
-                 "Details for functional inputs " = funDf)
+                    "Details for functional inputs " = funDf)
     }
 
     class(daf) <- c("summary.Xfgpm", "list")
@@ -828,9 +827,15 @@ summary.Xfgpm <- function(object, n = 24, ...) {
 ##' @method print summary.Xfgpm
 ##' @export
 print.summary.Xfgpm <- function(x, ...) {
-    for (i in seq_along(x)) {
-        cat(names(x)[i], "\n")
-        print(x[[i]])
+    cat(names(x)[1], "\n")
+    print(x[[1]])
+    if (length(x) > 2) {
+        cat(names(x)[2], "\n")
+        nBlocks <- ceiling(ncol(x[[2]]) / 12)
+        for (i in 1:nBlocks) {
+            iCol <- ((i - 1) * 12 + 1):min((i * 12), ncol(x[[2]]))
+            print(x[[2]][ , iCol])
+        }
     }
 }
 
@@ -889,9 +894,6 @@ setMethod("[[", "Xfgpm",
               fIn <- x@fIn
               sOut <- x@sOut
               text <- x@log.success@args[[i]]@string
-              ## text <- gsub("= sIn", "= x@sIn", text)
-              ## text <- gsub("= fIn", "= x@fIn", text)
-              ## cat("XXX", text, "\n")
               eval(parse(text = text)[[1]])
           })
 
