@@ -1,4 +1,14 @@
-# funGp 0.3.0 (2022-04-29)
+# funGp 0.3.0 (2022-05-02)
+
+## Main functionality corrections
+
+* `Summary` method added for `Xfgpm`
+
+* New classes `predict.Xfgpm` and `simulate.Xfgpm`
+
+* All plotters are `plot` methods
+
+* New functions `modelDef` and `[[` to refit a `fgpm` object from a `Xfgpm` one
 
 ## Main flow changes
 
