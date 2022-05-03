@@ -2,7 +2,7 @@
 
 ## Main functionality corrections
 
-* The `summary` method added for `Xfgpm` and `fgpm` objects
+* The `summary` method has been added for `Xfgpm` and `fgpm` objects
 
 * New classes `"predict.Xfgpm"` and `"simulate.Xfgpm"`
 
