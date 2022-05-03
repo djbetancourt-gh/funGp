@@ -2,11 +2,12 @@
 
 ## Main functionality corrections
 
-* `Summary` method added for `Xfgpm`
+* The `summary` method added for `Xfgpm` and `fgpm` objects
 
-* New classes `predict.Xfgpm` and `simulate.Xfgpm`
+* New classes `"predict.Xfgpm"` and `"simulate.Xfgpm"`
 
-* All plotters are `plot` methods
+* All plotters are now `plot` methods for the classes `"Xfgpm"`, `"fgpm"`
+`"predict.Xfgpm"` or `"simulate.Xfgpm"`
 
 * New functions `modelDef` and `[[` to refit a `fgpm` object from a `Xfgpm` one
 
