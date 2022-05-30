@@ -1,9 +1,6 @@
 ## ==========================================================================================================
 ## Diagnostic calibration plot for funGp models
 ## ==========================================================================================================
-
-
-
 plotLOO.fgpm <- function(model, ...) {
   # recover observed output
   y_obs <- model@sOut
@@ -48,6 +45,10 @@ plotLOO.fgpm <- function(model, ...) {
 # ==========================================================================================================
 
 
+
+# ==========================================================================================================
+# Plot of predictions in increasing order with condifence bands
+# ==========================================================================================================
 #' @importFrom graphics lines plot polygon layout legend par mtext
 plotPreds.fgpm <- function(preds, sOut.pr, calib, sortp, ...) {
   # recover observed and predicted output
@@ -264,8 +265,9 @@ plotPreds.fgpm <- function(preds, sOut.pr, calib, sortp, ...) {
 
 
 
-
-
+# ==========================================================================================================
+# Plot of simulations by input index - option to add predicted mean and confidence bands
+# ==========================================================================================================
 #' @importFrom graphics lines plot layout legend par matplot axis
 plotSims.fgpm <- function(sims, detail, ...) {
   # recover realizations
@@ -547,6 +549,9 @@ decay2probs <- function(k, pmax = NULL, tao0 = .1, delta = 2, dispr = 1.4, doplo
 
 
 
+# ==========================================================================================================
+# Diagnostic calibration and fitness plot for Xfgpm objects
+# ==========================================================================================================
 ##' @importFrom graphics lines points plot layout legend par arrows abline axis
 ##'
 plotX.Xfgpm <- function(x.model, calib = TRUE, fitp = TRUE,
@@ -717,6 +722,10 @@ plotX.Xfgpm <- function(x.model, calib = TRUE, fitp = TRUE,
 # ==========================================================================================================
 
 
+
+# ==========================================================================================================
+# Diagnostic plot for ACO evolution along iterations
+# ==========================================================================================================
 #' @importFrom graphics lines points plot layout legend par arrows axis
 #' @importFrom scales alpha
 #' @importFrom stats median
@@ -795,4 +804,3 @@ plotEvol.Xfgpm <- function(x.model, ...) {
   arrows(x0 = xcr, x1 = xcr, y0 = ycr1, y1 = ycr2, length = 0.06, code = 1,
          angle = 25, lwd = 1.5, col = alpha(col.arr, .7))
 }
-

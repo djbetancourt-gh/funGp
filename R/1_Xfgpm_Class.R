@@ -245,7 +245,7 @@ show.Xfgpm <- function(object) {
 #'
 #' @seealso \strong{*} \link[funGp]{plot,Xfgpm-method} with
 #'     \code{which = "evolution"} for visualizing the evolution of
-#'     the ACO algorigthm, or with \code{which = "diag"} for a
+#'     the ACO algorithm, or with \code{which = "diag"} for a
 #'     diagnostic plot;
 #' @seealso \strong{*} \link[funGp]{get_active_in} for post-processing
 #'     of input data structures following a fgpm_factory call;

@@ -50,6 +50,7 @@
     </div>
 
 <div id="todo-or-not-todo" class="section level1">
+
 <ul><li>
 <strong>(x)</strong> is used for tasks that are completed,</li>
 <li>
@@ -63,7 +64,8 @@
 </ul><div class="section level2">
 <h2 id="checks">Checks<a class="anchor" aria-label="anchor" href="#checks"></a></h2>
 <ul><li>
-<strong>(x)</strong> Check that the dimensions/the content of the data given as inputs for the <code>predict</code> and the <code>simulate</code> methods are consistent with the content of the object used to predict or simulate from.</li></ul></div>
+<strong>(x)</strong> Check that the dimensions/the content of the data given as inputs for the <code>predict</code> and the <code>simulate</code> methods are consistent with the content of the object used to predict or simulate from.</li>
+</ul></div>
 <div class="section level2">
 <h2 id="summary-methods">
 <code>summary</code> methods<a class="anchor" aria-label="anchor" href="#summary-methods"></a></h2>
@@ -90,7 +92,8 @@
 <h2 id="s3-classes-predictfgpm-and-simulatefgpm">S3 classes <code>"predict.fgpm"</code> and <code>"simulate.fgpm"</code>
 <a class="anchor" aria-label="anchor" href="#s3-classes-predictfgpm-and-simulatefgpm"></a></h2>
 <ul><li>
-<strong>(x)</strong> Set the S3 class ot the output of the <code>predict</code> and <code>simulate</code> methods to <code>"predict.fgpm"</code> and <code>"simulate.fgpm"</code> both inheriting from <code>"list"</code>. This allows to write (S3) plot methods without breaking the inherited standard behaviours (in <code>print</code>, …).</li></ul></div>
+<strong>(x)</strong> Set the S3 class ot the output of the <code>predict</code> and <code>simulate</code> methods to <code>"predict.fgpm"</code> and <code>"simulate.fgpm"</code> both inheriting from <code>"list"</code>. This allows to write (S3) plot methods without breaking the inherited standard behaviours (in <code>print</code>, …).</li>
+</ul></div>
 <div class="section level2">
 <h2 id="simplifications">Simplifications<a class="anchor" aria-label="anchor" href="#simplifications"></a></h2>
 <ul><li><p><strong>(?)</strong> Should we still export the methods <code>plotSims</code>, <code>plotPred</code>, … ? As a compromise we could continue to export the functions, but no longer turn them into S4 generics and methods because e.g., <code>plotEvol</code> is unlikely to be mnemonic for the user or to be used in some other package.</p></li>
@@ -100,10 +103,12 @@
 <div class="section level2">
 <h2 id="tests">Tests<a class="anchor" aria-label="anchor" href="#tests"></a></h2>
 <ul><li>
-<strong>(?)</strong> Add tests to make sure that the checks on the size of objects actually do what we expect.</li></ul></div>
+<strong>(?)</strong> Add tests to make sure that the checks on the size of objects actually do what we expect.</li>
+</ul></div>
 <div class="section level2">
 <h2 id="new-functions">New functions<a class="anchor" aria-label="anchor" href="#new-functions"></a></h2>
-<ul><li>Add a function <code>model_def</code> (or other name) that takes <code>Xfgpm</code> object and returns a parsed code for one or several model. Bys using <code>eval</code> on this It could also return a list of model definitions. Then <code>eval(model_def[[4]])</code> would rebuild the 4-th model. Using <code>fIn</code> and <code>sIn</code> in the current env?</li></ul></div>
+<ul><li>Add a function <code>model_def</code> (or other name) that takes <code>Xfgpm</code> object and returns a parsed code for one or several model. Bys using <code>eval</code> on this It could also return a list of model definitions. Then <code>eval(model_def[[4]])</code> would rebuild the 4-th model. Using <code>fIn</code> and <code>sIn</code> in the current env?</li>
+</ul></div>
 <div class="section level2">
 <h2 id="package-documentation">Package documentation<a class="anchor" aria-label="anchor" href="#package-documentation"></a></h2>
 <ul><li><p>Read again carefully the doc for the new functions and methods. Find the <code>"XXXY"</code> code that shows something that still requires work.</p></li>
@@ -117,7 +122,8 @@
 </ul></div>
 <div class="section level2">
 <h2 id="misc">Misc<a class="anchor" aria-label="anchor" href="#misc"></a></h2>
-<ul><li>No longer export <code>formatShort</code>.</li></ul></div>
+<ul><li>No longer export <code>formatShort</code>.</li>
+</ul></div>
 <div class="section level2">
 <h2 id="news">NEWS<a class="anchor" aria-label="anchor" href="#news"></a></h2>
 <p>Try</p>

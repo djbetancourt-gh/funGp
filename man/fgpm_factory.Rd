@@ -295,7 +295,7 @@ Dubrule, O. (1983),
 \seealso{
 \strong{*} \link[funGp]{plot,Xfgpm-method} with
     \code{which = "evolution"} for visualizing the evolution of
-    the ACO algorigthm, or with \code{which = "diag"} for a
+    the ACO algorithm, or with \code{which = "diag"} for a
     diagnostic plot;
 
 \strong{*} \link[funGp]{get_active_in} for post-processing

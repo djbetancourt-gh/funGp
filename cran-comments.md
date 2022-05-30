@@ -10,7 +10,7 @@ This is a resubmission. In this version we have:
 * Improved the documentation to simplify help pages indexing
 
 ## Test environments
-* local Windows install, R 4.1.0
+* local Windows install, R 4.2.0
 * rhub, Fedora Linux, R-devel, clang, gfortran
 * rhub, Ubuntu Linux 20.04.1 LTS, R-release, GCC
 * rhub, Windows Server 2022, R-devel, 64 bit
@@ -30,7 +30,8 @@ There were some NOTEs indicating:
     - Confirmed directly from the NOTEs that the URL is working fine
   - checking for detritus in the temp directory ... NOTE
     - Only on Windows Server 2022, R-devel, 64 bit
-    - might be related to the first NOTE
+    - As noted in R-hub issue #503, this could be due to a bug/crash in MiKTeX
+      and can likely be ignored
 
 ## Downstream dependencies
 There are currently no downstream dependencies for this package.

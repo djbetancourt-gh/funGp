@@ -1,4 +1,4 @@
-# funGp 0.3.0 (2022-05-02)
+# funGp 0.3.0 (2022-05-30)
 
 ## Main functionality corrections
 
@@ -13,12 +13,11 @@
 
 ## Main flow changes
 
-* `format4pred()` removed and replaced by `get_active_in()` as  anticipated in 0.2.0 release
+* `format4pred()` removed and replaced by `get_active_in()` as anticipated in 0.2.0 release
 
 ## Minor flow changes
 
-* Own `rm_between()` and function implemented to remove dependency on the `qdapRegex` package
-  already scheduled by CRAN for archival
+* Own `rm_between()` function implemented to remove dependency on the `qdapRegex` package
   
 * Minor change to resolve a `%dopar%` issue during parallelized processes based on `%dorng%`
 
