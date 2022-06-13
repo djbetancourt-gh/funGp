@@ -1,4 +1,4 @@
-#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 makePreds_F <- function(fMs.tp, fMs.pp, sig2, thetas_f, kerType, L, LInvY, detail, nugget){
   # create empty prediction list
   preds <- list()
@@ -19,7 +19,7 @@ makePreds_F <- function(fMs.tp, fMs.pp, sig2, thetas_f, kerType, L, LInvY, detai
   return(preds)
 }
 
-#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 preMats_F <- function(fMs, sOut, sig2, thetas_f, kerType, nugget){
   # precompute L and LInvY matrices
   R <- setR(thetas_f, fMs, kerType)

@@ -7,15 +7,15 @@
 which_on(sIn = NULL, fIn = NULL, args)
 }
 \arguments{
-\item{sIn}{sIn an optional matrix of scalar input coordinates with all the orignal scalar input variables.
+\item{sIn}{An optional matrix of scalar input coordinates with all the orignal scalar input variables.
 This is used only to know the total number of scalar input variables. Any \code{matrix} with as many
 columns as original scalar input variables could be used instead.}
 
-\item{fIn}{an optional list of functional input coordinates with all the original functional input
+\item{fIn}{An optional list of functional input coordinates with all the original functional input
 variables. This is used only to know the total number of functional input variables. Any \code{list}
 with as many elements as original functional input variables could be used instead.}
 
-\item{args}{an object of class \code{"\linkS4class{modelCall}"}, which specifies the model structure for
+\item{args}{An object of class \code{"\linkS4class{modelCall}"}, which specifies the model structure for
 which the active inputs should be extracted.}
 }
 \value{
@@ -25,29 +25,23 @@ An object of class \code{"list"}, containing the following information extracted
 }
 \description{
 The \link[funGp]{fgpm_factory} function returns an object of class \code{"\linkS4class{Xfgpm}"}
-  with the function call of all the evaluated models stored in the \code{@log.success@args} and
+  with the function calls of all the evaluated models stored in the \code{@log.success@args} and
   \code{@log.crashes@args} slots. The \code{which_on} function interprets the arguments linked to any
   structural configuration and returns a list with two elements: (i) an \code{array} of indices of the scalar
   inputs kept active; and (ii) an \code{array} of indices of the functional inputs kept active.
 }
 \examples{
 # extracting the indices of the active inputs in an optimized model________________________
-# generating input and output data
+# use precalculated Xfgpm object named xm
+# active inputs in the best model
+xm@log.success@args[[1]] # the full fgpm call
 set.seed(100)
 n.tr <- 32
 sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
-                   x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
-                   x5 = seq(0,1,length = n.tr^(1/5)))
+x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
+x5 = seq(0,1,length = n.tr^(1/5)))
 fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
-sOut <- fgp_BB7(sIn, fIn, n.tr)
-\dontrun{
-# optimizing the model structure with fgpm_factory (~12 seconds)
-xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
-
-# active inputs in the best model
-xm@log.success@args[[1]] # the full fgpm call
-which_on(sIn, fIn, xm@log.success@args[[1]]) # only the indices extracted bu which_on
-}
+which_on(sIn, fIn, xm@log.success@args[[1]]) # only the indices extracted by which_on
 
 }
 \references{
@@ -57,15 +51,15 @@ R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs 
 \href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
 }
 \seealso{
-\strong{*} \link[funGp]{get_active_in} for details how to obtain the data structures linked to the
-active inputs.
+\strong{*} \link[funGp]{get_active_in} for details on how to obtain the data structures linked to the
+active inputs;
 
-\strong{*} \linkS4class{modelCall} for details on the \emph{args} argument.
+\strong{*} \linkS4class{modelCall} for details on the \emph{args} argument;
 
-\strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection.
+\strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection;
 
 \strong{*} \linkS4class{Xfgpm} for details on object delivered by \link[funGp]{fgpm_factory}.
 }
 \author{
-José Betancourt, François Bachoc and Thierry Klein
+José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 }

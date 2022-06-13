@@ -105,6 +105,7 @@ setSPoints_SF <- function(bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_
 # ==========================================================================================================
 #' @importFrom stats optim
 #' @importFrom doFuture registerDoFuture
+#' @importFrom doRNG registerDoRNG
 #' @importFrom future plan cluster
 #' @importFrom progressr with_progress progressor
 optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known, nugget, par.clust, trace, pbars){
@@ -129,7 +130,7 @@ optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, var
       # set up progress bar
       if (pbars) {
         pb <- txtProgressBar(min = 0, max = n.starts, style = 3)
-        cat("\n")
+        ## cat("\n")
       }
 
       optOutList <- list()
@@ -156,7 +157,7 @@ optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, var
         }
         if (pbars) {
           setTxtProgressBar(pb, i)
-          cat("\n")
+          ## cat("\n")
         }
       }
       if (pbars) close(pb)
@@ -166,6 +167,7 @@ optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, var
 
       # register parallel backend
       registerDoFuture()
+      registerDoRNG()
       plan(cluster, workers = par.clust)
 
       with_progress({
@@ -176,7 +178,7 @@ optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, var
                        lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
                        sMs = sMs, fMs = fMs, sOut = sOut, kerType = kerType,
                        varfun = varfun, ls_s.known = ls_s.known, ls_f.known = ls_f.known, nugget = nugget)
-            cat("\n")
+            ## cat("\n")
           } else {
             o <- quiet(optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_SF, method = "L-BFGS-B",
                              lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),

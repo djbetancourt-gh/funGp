@@ -1,7 +1,7 @@
 # ==========================================================================================================
-# S4 class for structures linked to the kernel of a funGp model
+# S4 class for structures linked to the kernel of a \code{fgpm} model
 # ==========================================================================================================
-#' @title S4 class for structures linked to the kernel of a funGp model
+#' @title S4 class for structures linked to the kernel of a \code{fgpm} model
 #' @description This is the formal representation for data structures linked to the kernel of a Gaussian
 #'   process model within the \link[=funGp-package]{funGp package}.
 #'
@@ -18,7 +18,7 @@
 #'
 #' @rdname kernel-class
 #'
-#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #' @export
 setClass("fgpKern",
          representation(
@@ -49,7 +49,7 @@ show.fgpKern <- function(kernel) {
   mainTxt <- "Kernel structure"
   cat(paste("\n", mainTxt, paste(rep("_", 13), collapse = ""), sep = ""))
 
-  cat(paste("\n\n* Kernel type: ", kernel@kerType, "\n", sep = ""))
+  cat(paste("\n* Kernel type: ", kernel@kerType, "\n", sep = ""))
   if (ds > 0)
     cat("* Scalar distance: L2_byindex\n")
 

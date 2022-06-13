@@ -1,16 +1,18 @@
 Package: funGp
 Type: Package
 Title: Gaussian Process Models for Scalar and Functional Inputs
-Version: 0.2.2
+Version: 0.3.0
 Authors@R: c(
     person("Jose", "Betancourt", email = "djbetancourt@uninorte.edu.co", role = c("cre", "aut")),
     person("François", "Bachoc", email = "francois.bachoc@math.univ-toulouse.fr", role = "aut"),
     person("Thierry", "Klein", email = "thierry.klein@math.univ-toulouse.fr", role = "aut"),
-    person("Deborah", "Idier", email = "D.Idier@brgm.fr", role = "ctb"),
-    person("Jeremy", "Rohmer", email = "J.Rohmer@brgm.fr", role = "ctb"))
+    person("Jeremy", "Rohmer", email = "J.Rohmer@brgm.fr", role = "aut"),
+    person("Yves", "Deville", email = "deville.yves@alpestat.com", role = "ctb"),
+    person("Deborah", "Idier", email = "D.Idier@brgm.fr", role = "ctb"))
 Maintainer: Jose Betancourt <djbetancourt@uninorte.edu.co>
 Description: Construction and smart selection of Gaussian process models
-	with emphasis on treatment of functional inputs. This package
+	for analysis of computer experiments
+	with emphasis on treatment of functional inputs that are regularly sampled. This package
 	offers: (i) flexible modeling of functional-input regression
 	problems through the fairly general Gaussian process model; (ii)
 	built-in dimension reduction for functional inputs; (iii)
@@ -24,13 +26,15 @@ Note: research product of the RISCOPE project
     (ANR, project No.16CE04-0011) <https://perso.math.univ-toulouse.fr/riscope/>.
 License: GPL-3
 URL: https://djbetancourt-gh.github.io/funGp/
-Imports: methods, foreach, knitr, scales, qdapRegex, microbenchmark, doFuture, future, progressr
+Depends: R (>= 3.5.0)
+Imports: methods, foreach, knitr, scales, microbenchmark, doFuture, doRNG, future, progressr
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.0
 Collate: 
     '0_funGp_Doc.R'
     '0_show_Doc.R'
+    '0_summary_Doc.R'
     '8_outilsCode.R'
     '3_ant_admin.R'
     '2_fgpKern_Class.R'
@@ -54,4 +58,6 @@ Collate:
     '7_dimRedFunctions.R'
     '7_distanceFunctions.R'
     '7_plottingFunctions.R'
+    '7_plottingFunctionsStandard.R'
     '8_outilsStats.R'
+    '8_precalculated_Xfgpm_objects.R'

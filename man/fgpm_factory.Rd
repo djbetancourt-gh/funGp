@@ -16,40 +16,40 @@ fgpm_factory(
   n.starts = 1,
   n.presample = 20,
   par.clust = NULL,
-  pbars = TRUE
+  pbars = interactive()
 )
 }
 \arguments{
-\item{sIn}{an optional matrix of scalar input values to train the model. Each column must match an input
+\item{sIn}{An optional matrix of scalar input values to train the model. Each column must match an input
 variable and each row a training point. Either scalar input coordinates (sIn), functional input
 coordinates (fIn), or both must be provided.}
 
-\item{fIn}{an optional list of functional input values to train the model. Each element of the list must
-be a matrix containing to the set of curves corresponding to one functional input. Either scalar input
+\item{fIn}{An optional list of functional input values to train the model. Each element of the list must
+be a matrix containing the set of curves corresponding to one functional input. Either scalar input
 coordinates (sIn), functional input coordinates (fIn), or both must be provided.}
 
-\item{sOut}{a vector (or 1-column matrix) containing the values of the scalar output at the specified
+\item{sOut}{A vector (or 1-column matrix) containing the values of the scalar output at the specified
 input points.}
 
-\item{ind.vl}{an optional numerical matrix specifying which points in the three structures above should be
+\item{ind.vl}{An optional numerical matrix specifying which points in the three structures above should be
 used for training and which for validation. If provided, the optimization will be conducted in terms of
-the hold-out Q2, which comes from training the model with a subset of the points, and then estimate the
+the hold-out coefficient of determination Q², which comes from training the model with a subset of the points, and then estimating the
 prediction error in the remaining points. In that case, each column of \emph{ind.vl} will be interpreted
 as one validation set, and the multiple columns will imply replicates. In the simplest case,
 \emph{ind.vl} will be a one-column matrix or simply an array, meaning that a simple replicate should be
 used for each model configuration explored. If not provided, the optimization will be conducted in terms
-of the leave-one-out cross-validation Q2, which for a total number of n observations, comes from training
+of the leave-one-out cross-validation Q², which for a total number of n observations, comes from training
 the model n times, each using n-1 points for training and the remaining one for validation. This procedure
-is typically costly due to the large number of hyperparameters optimizations that should be conducted,
+is typically costly due to the large number of hyperparameter optimizations that should be conducted,
 nonetheless, fgpm_factory implements the virtual equations introduced by Dubrule (1983) for Gaussian
-processes, which require a single hyperparameters optimization. See the reference below for more details.}
+processes, which require a single hyperparameter optimization. See the reference below for more details.}
 
-\item{ctraints}{an optional list specifying the constraints of the structural optimization problem. Valid
+\item{ctraints}{An optional list specifying the constraints of the structural optimization problem. Valid
 entries for this list are: \cr\cr
 \strong{*}\emph{s_keepOn}: a numerical array indicating the scalar inputs that should remain active in the
-  model. It should contain the index of the columns of sIn corresponding to the inputs to keep active. \cr\cr
+  model. It should contain the indices of the columns of sIn corresponding to the inputs to keep active. \cr\cr
 \strong{*}\emph{f_keepOn}: a numerical array indicating the functional inputs that should remain active in
-  the model. It should contain the index of the elements of fIn corresponding to the inputs to keep active. \cr\cr
+  the model. It should contain the indices of the elements of fIn corresponding to the inputs to keep active. \cr\cr
 \strong{*}\emph{f_disTypes}: a list specifying the set of distances that should be tested for some
   functional inputs. The values should be taken from the possibilities offered by the \link[funGp]{fgpm}
   function for the argument \emph{f_disType} therein. Valid choices at this time are "L2_bygroup" and
@@ -78,12 +78,12 @@ entries for this list are: \cr\cr
   \emph{kerType} therein. Valid choices at this time are "gauss", "matern5_2" and "matern3_2". If not
   provided, all the available kernel functions will be tried.}
 
-\item{setup}{an optional list indicating the value for some parameters of the structural optimization
+\item{setup}{An optional list indicating the value for some parameters of the structural optimization
 algorithm. The ant colony optimization algorithm available at this time allows the following entries: \cr\cr
 \strong{Initial pheromone load}\cr\cr
   \strong{*}\emph{tao0}: a number indicating the initial pheromone load on links pointing out to the
     selection of a distance type, a projection basis or a kernel type. Default is 0.1. \cr\cr
-  \strong{*}\emph{dop.s}: a number controlling how likely is to activate a scalar input. It operates on a
+  \strong{*}\emph{dop.s}: a number controlling how likely it is to activate a scalar input. It operates on a
     relation of the type \eqn{A  = dop.s * I}, where \emph{A} is the initial pheromone load of links
     pointing out to the activation of scalar inputs and \emph{I} is the initial pheromone load of links
     pointing out to their inactivation. Default is 1. \cr\cr
@@ -92,9 +92,9 @@ algorithm. The ant colony optimization algorithm available at this time allows t
     function that determines the initial pheromone values on the links connecting the L2_byindex distance
     with the projection dimension. Default are 2 and 1.4, respectively. \cr\cr
 \strong{Local pheromone update}\cr\cr
-  \strong{*}\emph{rho.l}: a number specifying the pheromone evaporation rate. Default is 0.1 \cr\cr
+  \strong{*}\emph{rho.l}: a number specifying the pheromone evaporation rate. Default is 0.1. \cr\cr
 \strong{Global pheromone update}\cr\cr
-  \strong{*}\emph{u.gbest}: a boolean indicating if at each iterations, the pheromone load on the links
+  \strong{*}\emph{u.gbest}: a boolean indicating if at each iteration, the pheromone load on the links
     of the best ant of the whole trial should be reinforced. Default is FALSE. \cr\cr
   \strong{*}\emph{n.ibest}: a number indicating how many top ants of each iteration should be used for
     pheromone reinforcement. Default is 1. \cr\cr
@@ -109,32 +109,32 @@ algorithm. The ant colony optimization algorithm available at this time allows t
     are proportional to the pheromone load on the feasible links. The ants will randomly chose one of the two
     rules at each time. They will opt for rule 1 with probability \emph{q0}. Default is 0.95.}
 
-\item{time.lim}{an optional number specifying a time limit in seconds to be used as stopping condition for the
+\item{time.lim}{An optional number specifying a time limit in seconds to be used as stopping condition for the
 structural optimization.}
 
-\item{nugget}{an optional variance value standing for the homogeneous nugget effect. A tiny nugget might help
+\item{nugget}{An optional variance value standing for the homogeneous nugget effect. A tiny nugget might help
 to overcome numerical problems related to the ill-conditioning of the covariance matrix. Default is 1e-8.}
 
-\item{n.starts}{an optional integer indicating the number of initial points to use for the optimization of the
+\item{n.starts}{An optional integer indicating the number of initial points to use for the optimization of the
 hyperparameters. A parallel processing cluster can be exploited in order to speed up the evaluation of
 multiple initial points. More details in the description of the argument par.clust below. Default is 1.}
 
-\item{n.presample}{an optional integer indicating the number of points to be tested in order to select the
+\item{n.presample}{An optional integer indicating the number of points to be tested in order to select the
 n.starts initial points. The n.presample points will be randomly sampled from the hyper-rectangle defined by: \cr \cr
 1e-10 \eqn{\le} \code{ls_s.hyp[i]} \eqn{\le} 2*max(\code{sMs[[i]]}), for i in 1 to the number of scalar inputs, \cr
 1e-10 \eqn{\le} \code{ls_f.hyp[i]} \eqn{\le} 2*max(\code{fMs[[i]]}), for i in 1 to the number of functional inputs, \cr \cr
 with  sMs and fMs the lists of distance matrices for the scalar and functional inputs, respectively. The value of
 n.starts will be assigned to n.presample if this last is smaller. Default is 20.}
 
-\item{par.clust}{an optional parallel processing cluster created with the \code{\link[parallel]{makeCluster}}
+\item{par.clust}{An optional parallel processing cluster created with the \code{\link[parallel]{makeCluster}}
 function of the \link[=parallel]{parallel package}. If not provided, structural configurations are evaluated in
 sequence.}
 
-\item{pbars}{an optional boolean indicating if progress bars should be displayed. Default is TRUE.}
+\item{pbars}{An optional boolean indicating if progress bars should be displayed.}
 }
 \value{
 An object of class \linkS4class{Xfgpm} containing the data structures linked to the structural optimization
-  of a funGp model. It includes as the main component, an object of class \linkS4class{fgpm} corresponding to the
+  of a funGp model. It includes as the main component an object of class \linkS4class{fgpm} corresponding to the
   optimized model. It is accessible through the \code{@model} slot of the Xfgpm object.
 }
 \description{
@@ -142,148 +142,107 @@ This function enables the smart exploration of the solution space of potential s
   configurations of a funGp model, and the consequent selection of a high quality configuration. funGp
   currently relies on an ant colony based algorithm to perform this task. The algorithm defines the
   solution space based on the levels of each structural parameter currently available in the
-  \link[funGp]{fgpm} function, and performs as smart exploration of it. More details on the algorithm are
+  \link[funGp]{fgpm} function, and performs a smart exploration of it. More details on the algorithm are
   provided in a dedicated
   \href{https://hal.archives-ouvertes.fr/hal-02532713}{technical report}.
   funGp might evolve in the future to include improvements in the current algorithm or alternative
   solution methods.
 }
 \examples{
-# calling fgpm_factory with the default arguments__________________________________________
-# generating input and output data
+#construction of a fgpm object
 set.seed(100)
 n.tr <- 32
-sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
-                   x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
-                   x5 = seq(0,1,length = n.tr^(1/5)))
-fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
+x1 <- x2 <- x3 <- x4 <- x5 <- seq(0,1,length = n.tr^(1/5))
+sIn <- expand.grid(x1 = x1, x2 = x2, x3 = x3, x4 = x4, x5 = x5)
+fIn <- list(f1 = matrix(runif(n.tr * 10), ncol = 10),
+            f2 = matrix(runif(n.tr * 22), ncol = 22))
 sOut <- fgp_BB7(sIn, fIn, n.tr)
-\dontrun{
-# optimizing the model structure with fgpm_factory (~12 seconds)
-xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
-plotLOO(xm@model) # plotting the model
 
-# building the model with the default fgpm arguments to compare
-m1 <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut)
-plotLOO(m1) # plotting the model
+# optimizing the model structure with fgpm_factory (~12 seconds)
+\dontrun{
+xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
+}
 
 # assessing the quality of the model
 # in the absolute and also w.r.t. the other explored models
-plotX(xm)
+plot(xm, which = "diag")
 
 # checking the evolution of the algorithm
-plotEvol(xm)
-}
-\dontrun{
+plot(xm, which = "evol")
+
+# Summary of the tested configurations
+summary(xm)
+
+# checking the log of crashed iterations
+print(xm@log.crashes)
+
+# building the model with the default fgpm arguments to compare
+set.seed(100)
+n.tr <- 32
+x1 <- x2 <- x3 <- x4 <- x5 <- seq(0,1,length = n.tr^(1/5))
+sIn <- expand.grid(x1 = x1, x2 = x2, x3 = x3, x4 = x4, x5 = x5)
+fIn <- list(f1 = matrix(runif(n.tr * 10), ncol = 10),
+f2 <- matrix(runif(n.tr * 22), ncol = 22))
+sOut <- fgp_BB7(sIn, fIn, n.tr)
+m1 <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut)
+plot(m1) # plotting the model
+
 # improving performance with more iterations_______________________________________________
-# generating input and output data
-set.seed(100)
-n.tr <- 32
-sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
-                   x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
-                   x5 = seq(0,1,length = n.tr^(1/5)))
-fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
-sOut <- fgp_BB7(sIn, fIn, n.tr)
-
-# default of 15 iterations (~12 seconds)
-xm15 <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
-
-# increasing to 25 iterations (~20 seconds)
-xm25 <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, setup = list(n.iter = 25))
-
-# plotting both models
-plotLOO(xm15@model)
-plotLOO(xm25@model)
-}
+# call to fgpm_factory (~22 seconds)
 \dontrun{
+xm25 <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut,
+                     setup = list(n.iter = 25))
+}
+
+#assessing evolution and quality
+plot(xm25, which = "evol")
+plot(xm25, which = "diag")
+
 # custom solution space____________________________________________________________________
-# generating input and output data
-set.seed(100)
-n.tr <- 32
-sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
-                   x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
-                   x5 = seq(0,1,length = n.tr^(1/5)))
-fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
-sOut <- fgp_BB7(sIn, fIn, n.tr)
-
-# setting up the constraints
 myctr <- list(s_keepOn = c(1,2), # keep both scalar inputs always on
-              f_keepOn = c(2), # keep f2 always active
-              f_disTypes = list("2" = c("L2_byindex")), # only use L2_byindex distance for f2
-              f_fixDims = matrix(c(2,4), ncol = 1), # f2 projected in dimension 4
-              f_maxDims = matrix(c(1,5), ncol = 1), # f1 projected in dimension max 5
-              f_basTypes = list("1" = c("B-splines")), # only use B-splines projection for f1
-              kerTypes = c("matern5_2", "gauss")) # test only Matern 5/2 and Gaussian kernels
+f_keepOn = c(2), # keep f2 always active
+f_disTypes = list("2" = c("L2_byindex")), # only use L2_byindex distance for f2
+f_fixDims = matrix(c(2,4), ncol = 1), # f2 projected in dimension 4
+f_maxDims = matrix(c(1,5), ncol = 1), # f1 projected in dimension max 5
+f_basTypes = list("1" = c("B-splines")), # only use B-splines projection for f1
+kerTypes = c("matern5_2", "gauss")) # test only Matern 5/2 and Gaussian kernels
+#
+# call to fgpm_factory (~12 seconds)
+\dontrun{
+xmc <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, ctraints = myctr)
+}
 
-# calling the funGp factory with specific constraints (~17 seconds)
-xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, ctraints = myctr)
+#assessing evolution and quality
+plot(xmc, which = "evol")
+plot(xmc, which = "diag")
 
 # verifying constraints with the log of some successfully built models
-cbind(xm@log.success@sols, "Q2" = xm@log.success@fitness)
-}
-\dontrun{
+summary(xmc)
+
 # custom heuristic parameters______________________________________________________________
-# generating input and output data
-set.seed(100)
-n.tr <- 32
-sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
-                   x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
-                   x5 = seq(0,1,length = n.tr^(1/5)))
-fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
-sOut <- fgp_BB7(sIn, fIn, n.tr)
+mysup <- list(n.iter = 30, n.pop = 12, tao0 = .15, dop.s = 1.2,
+              dop.f = 1.3, delta.f = 4, dispr.f = 1.1, q0 = .85,
+              rho.l = .2, u.gbest = TRUE, n.ibest = 2, rho.g = .08)
 
-# defining the heuristic parameters
-mysup <- list(n.iter = 30, n.pop = 12, tao0 = .15, dop.s = 1.2, dop.f = 1.3, delta.f = 4,
-              dispr.f = 1.1, q0 = .85, rho.l = .2, u.gbest = TRUE, n.ibest = 2, rho.g = .08)
-
-# calling the funGp factory with a custom heuristic setup (~17 seconds)
-xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, setup = mysup)
+# call to fgpm_factory (~20 seconds)
+\dontrun{
+xmh <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, setup = mysup)
+}
 
 # verifying heuristic setup through the details of the Xfgpm object
-unlist(xm@details$param)
-}
-\dontrun{
+unlist(xmh@details$param)
+
 # stopping condition based on time_________________________________________________________
-# generating input and output data
-set.seed(100)
-n.tr <- 32
-sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
-                   x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
-                   x5 = seq(0,1,length = n.tr^(1/5)))
-fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
-sOut <- fgp_BB7(sIn, fIn, n.tr)
-
-# setting up a sufficiently large number of iterations
 mysup <- list(n.iter = 2000)
-
-# defining time budget
 mytlim <- 60
 
-# calling the funGp factory with time limit (~60 seconds)
-xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, setup = mysup, time.lim = mytlim)
-}
+# call to fgpm_factory (~60 seconds)
 \dontrun{
-# passing fgpm arguments through fgpm_factory______________________________________________
-# generating input and output data
-set.seed(100)
-n.tr <- 32
-sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
-                   x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
-                   x5 = seq(0,1,length = n.tr^(1/5)))
-fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
-sOut <- fgp_BB7(sIn, fIn, n.tr)
-
-# calling the funGp factory with custom fgpm parameters (~25 seconds)
-xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut,
-                   nugget = 0, n.starts = 3, n.presample = 12)
-
-# NOTE: in the run above, some models crash. This happens because we set the nugget to 0
-#       and some input points become duplicates when some variables are removed from
-#       the model. We strongly recommend to always run fgpm_factory with at least a
-#       small nugget in order to prevent loss of configurations. By default fgpm_factory
-#       runs with 1e-8, which is enough in most cases.
-xm@log.crashes
+xms <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut,
+                    setup = mysup, time.lim = mytlim)
 }
+summary(xms)
+
 \dontrun{
 # parallelization in the model factory_____________________________________________________
 # generating input and output data
@@ -303,7 +262,7 @@ parallel::stopCluster(cl)
 # NOTE: in order to provide progress bars for the monitoring of time consuming processes
 #       ran in parallel, funGp relies on the doFuture and future packages. Parallel processes
 #       suddenly interrupted by the user tend to leave corrupt connections. This problem is
-#       originated outside funGp, which limits our control over it. On section 4.1 of the
+#       originated outside funGp, which limits our control over it. In the manual
 #       of funGp, we provide a temporary solution to the issue and we remain attentive in
 #       case it appears a more elegant way to handle it or a manner to suppress it.
 #
@@ -334,18 +293,23 @@ Dubrule, O. (1983),
 \href{https://link.springer.com/article/10.1007/BF01033232}{[MG]}
 }
 \seealso{
-\strong{*} \link[funGp]{plotX} for diagnostic plots for a fgpm_factory output and selected model;
+\strong{*} \link[funGp]{plot,Xfgpm-method} with
+    \code{which = "evolution"} for visualizing the evolution of
+    the ACO algorithm, or with \code{which = "diag"} for a
+    diagnostic plot;
 
-\strong{*} \link[funGp]{plotEvol} for a plot of the evolution of the model selection algorithm in fgpm_factory;
+\strong{*} \link[funGp]{get_active_in} for post-processing
+    of input data structures following a fgpm_factory call;
 
-\strong{*} \link[funGp]{get_active_in} for post-processing of input data structures following a fgpm_factory call;
+\strong{*} \link[funGp]{predict,fgpm-method} for
+    predictions based on a funGp model;
 
-\strong{*} \link[funGp]{predict} for predictions based on a funGp model;
+\strong{*} \link[funGp]{simulate,fgpm-method} for
+    simulations based on a funGp model;
 
-\strong{*} \link[funGp]{simulate} for simulations based on a funGp model;
-
-\strong{*} \link[funGp]{update} for post-creation updates on a funGp model.
+\strong{*} \link[funGp]{update,fgpm-method} for
+    post-creation updates on a funGp model.
 }
 \author{
-José Betancourt, François Bachoc and Thierry Klein
+José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 }

@@ -8,4 +8,6 @@
 README\.Rmd$
 README\.html$
 ^CRAN-RELEASE$
+^TODO.*$
 \.RData$
+^CRAN-SUBMISSION$

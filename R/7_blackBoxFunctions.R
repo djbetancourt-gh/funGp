@@ -1,74 +1,79 @@
 # ==========================================================================================================
 # Analytic black-box functions
 # ==========================================================================================================
-#' @title Analytic black-boxes for the exploration of the funGp package
-#' @description Set of black-box analytic functions for the discovering and testing of funGp functionalities.
+
+#' @title Analytic models for the exploration of the funGp package
 #'
-#' @section Usage:
-#' \preformatted{
-#' ## Own analytical function 1
-#' ## -------------------------
-#' ## x1 * sin(x2) + x1 * mean(f1) - x2^2 * diff(range(f2))
-#' fgp_BB1(sIn, fIn, n.tr)
+#' @description Set of analytic functions that take functional
+#'     variables as inputs.  Since they run quickly, they can be used
+#'     for testing of \pkg{funGp} functionalities as if they were black box
+#'     computer models. They cover different situations (number of
+#'     scalar inputs and complexity of the inputs-output mathematical
+#'     relationship).
 #'
+#' @details
 #'
-#' ## Own analytical function 2
-#' ## -------------------------
-#' ## x1 * sin(x2) + mean(exp(x1 * t1) * f1) - x2^2 * mean(f2^2 * t2)
-#' fgp_BB2(sIn, fIn, n.tr)
+#' For all the functions, the \eqn{d_s}{ds} scalar inputs
+#' \eqn{x_i}{xi} are in the real interval \eqn{[0,\,1]}{[0, 1]} and
+#' the \eqn{d_f}{df} functional inputs
+#' \eqn{f_i(t_i)}{fi(ti)} are defined on the interval
+#' \eqn{[0,\,1]}{[0, 1]}. Expressions for the values are as follows.
 #'
+#' \itemize{
 #'
-#' ## First analytical example in Muehlenstaedt, Fruth & Roustant (2016)
-#' ## ------------------------------------------------------------------
-#' ## x1 + 2 * x2 + 4 * mean(t1 * f1) + mean(f2)
-#' fgp_BB3(sIn, fIn, n.tr)
+#' \item{\bold{\code{fgp_BB1 }}}{With \eqn{d_s = 2}{ds = 2} \eqn{d_f = 2}{df = 2}
+#'    \preformatted{
+#'    x1 * sin(x2) + x1 * mean(f1) - x2^2 * diff(range(f2))}}
 #'
+#' \item{\bold{\code{fgp_BB2 }}}{With \eqn{d_s = 2}{ds = 2} and \eqn{d_f = 2}{df = 2}
+#'    \preformatted{
+#'    x1 * sin(x2) + mean(exp(x1 * t1) * f1) - x2^2 * mean(f2^2 * t2)}}
 #'
-#' ## Second analytical example in preprint of Muehlenstaedt, Fruth & Roustant (2016)
-#' ## -------------------------------------------------------------------------------
-#' ## a = (x2 - (5/(4*pi^2)) * x1^2 + (5/pi) * x1 - 6)^2
-#' ## b = 10 * (1 - (1/(8*pi))) * cos(x1)
-#' ## c = 10
-#' ## d = (4/3) * pi * (42 * mean(f1*(1-t1)) + pi * (((x1+5)/5) + 15) * mean(t2*f2))
-#' ## a + b + c + d
-#' fgp_BB4(sIn, fIn, n.tr)
+#' \item{\bold{\code{fgp_BB3 }}}{With  \eqn{d_s = 2}{ds = 2} and \eqn{d_f = 2}{df = 2}
+#'   is the first analytical example in Muehlenstaedt et al (2017)
+#'    \preformatted{
+#'    x1 + 2 * x2 + 4 * mean(t1 * f1) + mean(f2)}}
 #'
+#' \item{\bold{\code{fgp_BB4 }}}{With  \eqn{d_s = 2}{ds = 2} and \eqn{d_f = 2}{df = 2} is the
+#'     second analytical example in \emph{preprint} of Muehlenstaedt et al (2017)
+#'    \preformatted{
+#'    (x2 - (5 / (4 * pi^2)) * x1^2 + (5 / pi) * x1 - 6)^2 +
+#'        10 * (1 - (1 / (8 * pi))) * cos(x1) + 10 +
+#'        (4 / 3) * pi * (42 * mean(f1 * (1 - t1)) +
+#'                        pi * ((x1 + 5) / 5) + 15) * mean(t2 * f2))}}
 #'
-#' ## Second analytical example in final version of Muehlenstaedt, Fruth & Roustant (2016)
-#' ## ------------------------------------------------------------------------------------
-#' ## a = (x2 - (5/(4*pi^2)) * x1^2 + (5/pi) * x1 - 6)^2
-#' ## b = 10 * (1 - (1/(8*pi))) * cos(x1)
-#' ## c = 10
-#' ## d <- (4/3) * pi * (42 * mean(15*f1*(1-t1)-5) + pi * (((x1+5)/5) + 15) * mean(15*t2*f2))
-#' ## a + b + c + d
-#' fgp_BB5(sIn, fIn, n.tr)
+#' \item{\bold{\code{fgp_BB5 }}}{With  \eqn{d_s=2}{ds = 2} and \eqn{d_f=2}{df = 2} is
+#'     inspired by the  second analytical example in \emph{final version} of Muehlenstaedt et al (2017)
+#'    \preformatted{
+#'    (x2 - (5 / (4 * pi^2)) * x1^2 + (5 / pi) * x1 - 6)^2 +
+#'        10 * (1 - (1 / (8 * pi))) * cos(x1) + 10 +
+#'        (4 / 3) * pi * (42 * mean(15 * f1 * (1 - t1) - 5) +
+#'                        pi * ((x1 + 5) / 5) + 15) * mean(15 * t2 * f2))}}
 #'
+#' \item{\bold{\code{fgp_BB6 }}}{With  \eqn{d_s = 2}{ds = 2} and \eqn{d_f = 2}{df = 2}
+#'     is inspired by the analytical example in Nanty et al (2016)
+#'    \preformatted{
+#'    2 * x1^2 + 2 * mean(f1 + t1) + 2 * mean(f2 + t2) + max(f2) + x2}}
 #'
-#' ## Inspired by the analytical example in Nanty, Helbert, Marrel, Pérot, Prieur (2016)
-#' ## ----------------------------------------------------------------------------------
-#' ## 2 * x1^2 + 2 * mean(f1 + t1) + 2 * mean(f2 + t2) + max(f2) + x2
-#' fgp_BB6(sIn, fIn, n.tr)
-#'
-#'
-#' ## Inspired by the second analytical example in final version of Muehlenstaedt et al (2016)
-#' ## ----------------------------------------------------------------------------------------
-#' ## a = (x2 + 4*x3 - (5/(4*pi^2)) * x1^2 + (5/pi) * x1 - 6)^2
-#' ## b = 10 * (1 - (1/(8*pi))) * cos(x1) * x2^2 * x5^3
-#' ## c = 10
-#' ## d <- (4/3) * pi * (42 * sin(x4) * mean(15*f1*(1-t1)-5) +
-#'                                           pi * (((x1*x5+5)/5) + 15) * mean(15*t2*f2))
-#' ## a + b + c + d
-#' fgp_BB7(sIn, fIn, n.tr)
+#' \item{\bold{\code{fgp_BB7 }}}{With \eqn{d_s = 5}{ds = 5} and \eqn{d_f = 2}{df = 2} is
+#'    inspired by the second analytical example in \emph{final version} of Muehlenstaedt et al (2017)
+#'    \preformatted{
+#'    (x2 + 4 * x3 - (5 / (4 * pi^2)) * x1^2 + (5 / pi) * x1 - 6)^2 +
+#'        10 * (1 - (1 / (8 * pi))) * cos(x1) * x2^2 * x5^3 + 10 +
+#'        (4 / 3) * pi * (42 * sin(x4) * mean(15 * f1 * (1 - t1) - 5) +
+#'                        pi * (((x1 * x5 + 5) / 5) + 15) * mean(15 * t2 * f2))}}
 #' }
 #'
-#' @section Arguments:
-#' \strong{*}\emph{sIn}: Object of class \code{"matrix"}. The scalar input points. Variables are arranged
-#'   by columns and coordinates by rows. \cr\cr
-#' \strong{*}\emph{fIn}: Object of class \code{"list"}. The functional input points. Each element of the
-#'   list contains a functional input in the form of a matrix. In each matrix, curves representing
-#'   functional coordinates are arranged by rows. \cr\cr
-#' \strong{*}\emph{n.tr}: Object of class \code{"numeric"}. The number of input points provided and
-#'   correspondingly, the number of observations to produce.
+#' @param sIn Object with class \code{"matrix"}. The scalar input
+#'         points. Variables are arranged by columns and coordinates by rows.
+#'
+#' @param fIn Object with class \code{"list"}. The functional inputs.
+#' Each element of the list must be a matrix containing the set of curves
+#' corresponding to one functional input.
+#'
+#' @param n.tr Object with class \code{"numeric"}. The number of
+#'          input points provided and correspondingly, the number of observations
+#'          to produce.
 #'
 #' @section Value:
 #' An object of class \code{"matrix"} with the values of the output at the specified input coordinates.
@@ -91,15 +96,14 @@
 #' \emph{SIAM/ASA Journal on Uncertainty Quantification}, \strong{4}(1), 636-659.
 #' \href{https://epubs.siam.org/doi/10.1137/15M1033319}{[SA-JUQ]}
 #'
-#' @docType methods
 #' @name black-boxes
 #' @rdname black-boxes
+#'
 NULL
-# ==========================================================================================================
 
 #' BBK_1
 #' @export
-#' @keywords internal
+#' @rdname black-boxes
 fgp_BB1 <- function(sIn, fIn, n.tr){
   sOut <- as.matrix(sapply(t(1:n.tr), function(i){
     x1 <- sIn[i,1]
@@ -114,7 +118,7 @@ fgp_BB1 <- function(sIn, fIn, n.tr){
 
 #' BBK_2
 #' @export
-#' @keywords internal
+#' @rdname black-boxes
 fgp_BB2 <- function(sIn, fIn, n.tr){
   sOut <- as.matrix(sapply(t(1:n.tr), function(i){
     x1 <- sIn[i,1]
@@ -131,7 +135,7 @@ fgp_BB2 <- function(sIn, fIn, n.tr){
 
 #' MFR_1
 #' @export
-#' @keywords internal
+#' @rdname black-boxes
 fgp_BB3 <- function(sIn, fIn, n.tr){
   sOut <- as.matrix(sapply(t(1:n.tr), function(i){
     x1 <- sIn[i,1]
@@ -148,7 +152,7 @@ fgp_BB3 <- function(sIn, fIn, n.tr){
 
 #' MFR_2p
 #' @export
-#' @keywords internal
+#' @rdname black-boxes
 fgp_BB4 <- function(sIn, fIn, n.tr){
   sOut <- as.matrix(sapply(t(1:n.tr), function(i){
     x1 <- sIn[i,1]
@@ -171,7 +175,7 @@ fgp_BB4 <- function(sIn, fIn, n.tr){
 
 #' MFR_2f
 #' @export
-#' @keywords internal
+#' @rdname black-boxes
 fgp_BB5 <- function(sIn, fIn, n.tr){
   sOut <- as.matrix(sapply(t(1:n.tr), function(i){
     x1 <- sIn[i,1]
@@ -194,7 +198,7 @@ fgp_BB5 <- function(sIn, fIn, n.tr){
 
 #' NHMPP
 #' @export
-#' @keywords internal
+#' @rdname black-boxes
 fgp_BB6 <- function(sIn, fIn, n.tr){
   sOut <- as.matrix(sapply(t(1:n.tr), function(i){
     x1 <- sIn[i,1]
@@ -211,7 +215,7 @@ fgp_BB6 <- function(sIn, fIn, n.tr){
 
 #' BBK_7
 #' @export
-#' @keywords internal
+#' @rdname black-boxes
 fgp_BB7 <- function(sIn, fIn, n.tr){
   sOut <- as.matrix(sapply(t(1:n.tr), function(i){
     x1 <- sIn[i,1]

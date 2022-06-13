@@ -2,16 +2,16 @@
 # S4 class for the log of fgpm_factory optimizations using the ACO algorithm
 # ==========================================================================================================
 #' @title S4 class for log of models explored by ant colony in funGp
-#' @description Register of model structures and their performance statistic, if available.
+#' @description Register of model structures and their performance statistics, if available.
 #'
 #' @slot sols Object of class \code{"data.frame"}. Compendium of model structures arranged by rows. Each
 #'   column is linked to one structural parameter of the model such as the state of one variable (inactive,
 #'   active) or the type of kernel function.
 #' @slot args Object of class \code{"list"}. Compendium of model structures represented by objects of class
-#'   \code{"\linkS4class{modelCall}"}
+#'   \code{"\linkS4class{modelCall}"}.
 #' @slot fitness Object of class \code{"numeric"}. Performance statistic of each model, if available.
 #'
-#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #'
 #' @rdname antsLog-class
 #' @export
@@ -586,6 +586,7 @@ getLog_ACO <- function(sIn, fIn, log.vec, log.fitness, base, extargs) {
 #' @importFrom foreach foreach `%dopar%`
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #' @importFrom doFuture registerDoFuture
+#' @importFrom doRNG registerDoRNG
 #' @importFrom future plan cluster
 #' @importFrom progressr with_progress progressor
 eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.lim, pbars, par.clust) {
@@ -595,6 +596,7 @@ eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.l
   if (!is.null(par.clust)) {
     # register parallel backend
     registerDoFuture()
+    registerDoRNG()
     plan(cluster, workers = par.clust)
 
     # evaluate the ants as models
@@ -649,6 +651,7 @@ eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.l
 #' @importFrom foreach foreach `%dopar%`
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #' @importFrom doFuture registerDoFuture
+#' @importFrom doRNG registerDoRNG
 #' @importFrom future plan cluster
 #' @importFrom progressr with_progress progressor
 eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str, time.lim, pbars, par.clust) {
@@ -659,6 +662,7 @@ eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str
   if (!is.null(par.clust)) {
     # register parallel backend
     registerDoFuture()
+    registerDoRNG()
     plan(cluster, workers = par.clust)
 
     # evaluate the ants as models
@@ -820,109 +824,54 @@ fitNtests_ACO <- function(ant, sIn, fIn, sOut, extargs, base,
 
 
 # ==========================================================================================================
-# Function to prepare input data structures for prediction based on a fgpm arguments
-# ==========================================================================================================
-#' @title Preparation of inputs for predictions based on an fgpm modelCall
-#' @description \strong{Deprecated function, use \link[funGp]{get_active_in} instead.}\cr This function prepared
-#'   input data structures according to the active inputs specified by a \code{"\linkS4class{modelCall}"}
-#'   object. This function is intended to easily adapt the data structures to the requirements of a specific
-#'   model delivered by the model factory function \link[funGp]{fgpm_factory}.
-#'
-#' @param sIn.pr sIn.pr an optional matrix of scalar input coordinates at which the output values should be
-#'   predicted. Each column is interpreted as a scalar input variable and each row as a coordinate.
-#'   Either scalar input coordinates (sIn.pr), functional input coordinates (fIn.pr), or both must be provided.
-#'   The \code{"\linkS4class{modelCall}"} object provided through args will lead the extraction of only the
-#'   active scalar inputs in the model.
-#' @param fIn.pr an optional list of functional input coordinates at which the output values should be
-#'   predicted. Each element of the list is interpreted as a functional input variable. Every functional input
-#'   variable should be provided as a matrix with one curve per row. Either scalar input coordinates (sIn.pr),
-#'   functional input coordinates (fIn.pr), or both must be provided. The \code{"\linkS4class{modelCall}"}
-#'   object provided through args will lead the extraction of only the active functional inputs in the model.
-#' @param args an object of class \code{"\linkS4class{modelCall}"}, which specifies the set of active
-#'   scalar and functional inputs.
-#'
-#' @return An object of class \code{"list"}, containing the input data structures with only the active inputs
-#'   specified by \emph{args}.
-#'
-#' @author José Betancourt, François Bachoc and Thierry Klein
-#'
-#' @references Betancourt, J., Bachoc, F., and Klein, T. (2020),
-#' R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
-#' \emph{RISCOPE project}.
-#' \href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
-#'
-#' @seealso \strong{*} \link[funGp]{get_active_in} for the substitute of this function in future releases;
-#' @seealso \strong{*} \link[funGp]{predict} for predictions based on a funGp model;
-#' @seealso \strong{*} \link[funGp]{fgpm} for creation of a funGp model;
-#' @seealso \strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection.
-#'
-#' @importFrom qdapRegex rm_between
-#' @rdname package-deprecated
-#' @export
-format4pred <- function(sIn.pr = NULL, fIn.pr = NULL, args) {
-  .Deprecated("get_active_in")
-  return(get_active_in(sIn.pr, fIn.pr, args))
-}
-# ==========================================================================================================
-
-
-
-# ==========================================================================================================
 # Function to obtain the indices of the variables kept active in some structure delivered by the factory
 # ==========================================================================================================
 #' @title Indices of active inputs in a given model structure
 #' @description The \link[funGp]{fgpm_factory} function returns an object of class \code{"\linkS4class{Xfgpm}"}
-#'   with the function call of all the evaluated models stored in the \code{@log.success@args} and
+#'   with the function calls of all the evaluated models stored in the \code{@log.success@args} and
 #'   \code{@log.crashes@args} slots. The \code{which_on} function interprets the arguments linked to any
 #'   structural configuration and returns a list with two elements: (i) an \code{array} of indices of the scalar
 #'   inputs kept active; and (ii) an \code{array} of indices of the functional inputs kept active.
 #'
-#' @param sIn sIn an optional matrix of scalar input coordinates with all the orignal scalar input variables.
+#' @param sIn An optional matrix of scalar input coordinates with all the orignal scalar input variables.
 #'   This is used only to know the total number of scalar input variables. Any \code{matrix} with as many
 #'   columns as original scalar input variables could be used instead.
-#' @param fIn an optional list of functional input coordinates with all the original functional input
+#' @param fIn An optional list of functional input coordinates with all the original functional input
 #'   variables. This is used only to know the total number of functional input variables. Any \code{list}
 #'   with as many elements as original functional input variables could be used instead.
-#' @param args an object of class \code{"\linkS4class{modelCall}"}, which specifies the model structure for
+#' @param args An object of class \code{"\linkS4class{modelCall}"}, which specifies the model structure for
 #'   which the active inputs should be extracted.
 #'
 #' @return An object of class \code{"list"}, containing the following information extracted from the
 #'   \emph{args} parameter: (i) an array of indices of the scalar inputs kept active; and (ii) an array of
 #'   indices of the functional inputs kept active.
 #'
-#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #'
 #' @references Betancourt, J., Bachoc, F., and Klein, T. (2020),
 #' R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
 #' \emph{RISCOPE project}.
 #' \href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
 #'
-#' @seealso \strong{*} \link[funGp]{get_active_in} for details how to obtain the data structures linked to the
-#' active inputs.
-#' @seealso \strong{*} \linkS4class{modelCall} for details on the \emph{args} argument.
-#' @seealso \strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection.
+#' @seealso \strong{*} \link[funGp]{get_active_in} for details on how to obtain the data structures linked to the
+#' active inputs;
+#' @seealso \strong{*} \linkS4class{modelCall} for details on the \emph{args} argument;
+#' @seealso \strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection;
 #' @seealso \strong{*} \linkS4class{Xfgpm} for details on object delivered by \link[funGp]{fgpm_factory}.
 #'
 #' @examples
 #' # extracting the indices of the active inputs in an optimized model________________________
-#' # generating input and output data
+#' # use precalculated Xfgpm object named xm
+#' # active inputs in the best model
+#' xm@log.success@args[[1]] # the full fgpm call
 #' set.seed(100)
 #' n.tr <- 32
 #' sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
-#'                    x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
-#'                    x5 = seq(0,1,length = n.tr^(1/5)))
+#' x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
+#' x5 = seq(0,1,length = n.tr^(1/5)))
 #' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
-#' sOut <- fgp_BB7(sIn, fIn, n.tr)
-#' \dontrun{
-#' # optimizing the model structure with fgpm_factory (~12 seconds)
-#' xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
+#' which_on(sIn, fIn, xm@log.success@args[[1]]) # only the indices extracted by which_on
 #'
-#' # active inputs in the best model
-#' xm@log.success@args[[1]] # the full fgpm call
-#' which_on(sIn, fIn, xm@log.success@args[[1]]) # only the indices extracted bu which_on
-#' }
-#'
-#' @importFrom qdapRegex rm_between
 #' @export
 which_on <- function (sIn = NULL, fIn = NULL, args) {
   # initalize controllers and outputs of the function
@@ -940,14 +889,14 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 
   # get sIn and fIn expressions when necessary
   if (all(s.on, f.on)) { # scalar and functional inputs on
-    xs <- rm_between(key, "sIn = ", ", fIn", extract = TRUE)[[1]]
-    xf <- rm_between(key, "fIn = ", ", sOut", extract = TRUE)[[1]]
+    xs <- text_bt(key, "sIn = ", ", fIn")
+    xf <- text_bt(key, "fIn = ", ", sOut")
   } else if (s.on) { # only scalar inputs on
-    xs <- rm_between(key, "sIn = ", ", sOut", extract = TRUE)[[1]]
+    xs <- text_bt(key, "sIn = ", ", sOut")
     xf <- fIn.on <- NULL
   } else if (f.on) { # only functional inputs on
     xs <- sIn.on <- NULL
-    xf <- rm_between(key, "fIn = ", ", sOut", extract = TRUE)[[1]]
+    xf <- text_bt(key, "fIn = ", ", sOut")
   } else return(NULL)
 
   # prune the scalar inputs based on vector of indices
@@ -1014,65 +963,44 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #'   structural configuration and returns a list with two elements: (i) a \code{matrix} of scalar input
 #'   variables kept active; and (ii) a \code{list} of functional input variables kept active.
 #'
-#' @param sIn sIn an optional matrix of scalar input coordinates with all the orignal scalar input variables.
-#' @param fIn an optional list of functional input coordinates with all the original functional input
+#' @param sIn An optional matrix of scalar input coordinates with all the orignal scalar input variables.
+#' @param fIn An optional list of functional input coordinates with all the original functional input
 #'   variables.
-#' @param args an object of class \code{"\linkS4class{modelCall}"}, which specifies the model structure for
+#' @param args An object of class \code{"\linkS4class{modelCall}"}, which specifies the model structure for
 #'   which the active inputs should be extracted.
 #'
 #' @return An object of class \code{"list"}, containing the following information extracted from the
 #'   \emph{args} parameter: (i) a \code{matrix} of scalar input variables kept active; and (ii) a \code{list}
 #'   of functional input variables kept active.
 #'
-#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #'
 #' @references Betancourt, J., Bachoc, F., and Klein, T. (2020),
 #' R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
 #' \emph{RISCOPE project}.
 #' \href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
 #'
-#' @seealso \strong{*} \link[funGp]{which_on} for details how to obtain only on the indices of the active inputs.
+#' @seealso \strong{*} \link[funGp]{which_on} for details on how to obtain only the indices of the active inputs.
 #' @seealso \strong{*} \linkS4class{modelCall} for details on the \emph{args} argument.
 #' @seealso \strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection.
 #' @seealso \strong{*} \linkS4class{Xfgpm} for details on object delivered by \link[funGp]{fgpm_factory}.
 #'
 #' @examples
-#' # extracting the indices of the active inputs in an optimized model________________________
-#' # generating input and output data
+#' # Use precalculated Xfgpm object named xm
+#' # indices of active inputs in the best model
+#' xm@log.success@args[[1]] # the full fgpm call
 #' set.seed(100)
 #' n.tr <- 32
 #' sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
-#'                    x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
-#'                    x5 = seq(0,1,length = n.tr^(1/5)))
+#' x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
+#' x5 = seq(0,1,length = n.tr^(1/5)))
 #' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
-#' sOut <- fgp_BB7(sIn, fIn, n.tr)
-#' \dontrun{
-#' # optimizing the model structure with fgpm_factory (~12 seconds)
-#' xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
-#'
-#' # indices of active inputs in the best model
-#' xm@log.success@args[[1]] # the full fgpm call
-#' which_on(sIn, fIn, xm@log.success@args[[1]]) # only the indices extracted bu which_on
+#' which_on(sIn, fIn, xm@log.success@args[[1]]) # only the indices extracted by which_on
 #'
 #' # data structures of active inputs
 #' active <- get_active_in(sIn, fIn, xm@log.success@args[[1]])
 #' active$sIn.on # scalar data structures
 #' active$fIn.on # functional data structures
-#' }
-#' \dontrun{
-#' # preparing new data for prediction based on inputs kept active____________________________
-#' # generating input and output data for structural optimization
-#' set.seed(100)
-#' n.tr <- 32
-#' sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
-#'                    x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
-#'                    x5 = seq(0,1,length = n.tr^(1/5)))
-#' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
-#' sOut <- fgp_BB7(sIn, fIn, n.tr)
-#'
-#' # optimizing the model structure with fgpm_factory (~12 seconds)
-#' xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
-#'
 #' # identifying selected model and corresponding fgpm arguments
 #' opt.model <- xm@model
 #' opt.args <- xm@log.success@args[[1]]
@@ -1084,49 +1012,36 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #'                       x5 = seq(0,1,length = n.pr^(1/5)))
 #' fIn.pr <- list(f1 = matrix(runif(n.pr*10), ncol = 10), f2 = matrix(runif(n.pr*22), ncol = 22))
 #'
-#' # prunning data structures for prediction to keep only active inputs!!
+#' # pruning data structures for prediction to keep only active inputs!!
 #' active <- get_active_in(sIn.pr, fIn.pr, opt.args)
 #'
 #' # making predictions
 #' preds <- predict(opt.model, sIn.pr = active$sIn.on, fIn.pr = active$fIn.on)
 #'
 #' # plotting predictions
-#' plotPreds(opt.model, preds)
-#' }
-#' \dontrun{
+#' plot(preds)
+#'
+#'
 #' # preparing new data for simulation based on inputs kept active____________________________
-#' # generating input and output data for structural optimization
-#' set.seed(100)
-#' n.tr <- 32
-#' sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
-#'                    x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
-#'                    x5 = seq(0,1,length = n.tr^(1/5)))
-#' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
-#' sOut <- fgp_BB7(sIn, fIn, n.tr)
-#'
-#' # optimizing the model structure with fgpm_factory (~12 seconds)
-#' xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
-#'
-#' # identifying selected model and corresponding fgpm arguments
 #' opt.model <- xm@model
 #' opt.args <- xm@log.success@args[[1]]
 #'
 #' # generating new input data for simulation
 #' n.sm <- 243
-#' sIn.sm <- expand.grid(x1 = seq(0,1,length = n.sm^(1/5)), x2 = seq(0,1,length = n.sm^(1/5)),
-#'                       x3 = seq(0,1,length = n.sm^(1/5)), x4 = seq(0,1,length = n.sm^(1/5)),
-#'                       x5 = seq(0,1,length = n.sm^(1/5)))
+#' sIn.sm <- expand.grid(x1 = seq(0,1,length = n.pr^(1/5)), x2 = seq(0,1,length = n.pr^(1/5)),
+#'                       x3 = seq(0,1,length = n.pr^(1/5)), x4 = seq(0,1,length = n.pr^(1/5)),
+#'                       x5 = seq(0,1,length = n.pr^(1/5)))
 #' fIn.sm <- list(f1 = matrix(runif(n.sm*10), ncol = 10), f2 = matrix(runif(n.sm*22), ncol = 22))
 #'
-#' # prunning data structures for simulation to keep only active inputs!!
+#' # pruning data structures for simulation to keep only active inputs!!
 #' active <- get_active_in(sIn.sm, fIn.sm, opt.args)
 #'
 #' # making light simulations
-#' sims_l <- simulate(opt.model, nsim = 10, sIn.sm = sIn.sm, fIn.sm = fIn.sm)
+#' sims_l <- simulate(opt.model, nsim = 10, sIn.sm = active$sIn.on, fIn.sm = active$fIn.on)
 #'
 #' # plotting light simulations
-#' plotSims(opt.model, sims_l)
-#' }
+#' plot(sims_l)
+#'
 #' \dontrun{
 #' # rebuilding of 3 best models using new data_______________________________________________
 #' # NOTE: this example is of higher complexity than the previous ones. We recomend you run
@@ -1136,7 +1051,7 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #' #       In the second example above we showed how to use get_active_in to prune the input
 #' #       data structures for prediction based on the fgpm arguments of the best model found
 #' #       by fgpm_factory. In this new example we generalize that concept by: (i) rebuilding
-#' #       the 3 best models fouond by fgpm_factory using new data, (ii) pruning the input
+#' #       the 3 best models found by fgpm_factory using new data, (ii) pruning the input
 #' #       data structures used for prediction with each of the models, and (iii) plotting
 #' #       the predictions made by the three models. The key ingredient here is that the
 #' #       three best models might have different scalar and functional inputs active. The
@@ -1149,18 +1064,8 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #'
 #' # <<<<<<< PART 1: calling fgpm_factory to perform the structural optimization >>>>>>>
 #' #         -------------------------------------------------------------------
-#' # generating input and output data for structural optimization
-#' set.seed(100)
-#' n.tr <- 32
-#' sIn <- expand.grid(x1 = seq(0,1,length = n.tr^(1/5)), x2 = seq(0,1,length = n.tr^(1/5)),
-#'                    x3 = seq(0,1,length = n.tr^(1/5)), x4 = seq(0,1,length = n.tr^(1/5)),
-#'                    x5 = seq(0,1,length = n.tr^(1/5)))
-#' fIn <- list(f1 = matrix(runif(n.tr*10), ncol = 10), f2 = matrix(runif(n.tr*22), ncol = 22))
-#' sOut <- fgp_BB7(sIn, fIn, n.tr)
-#'
-#' # optimizing the model structure with fgpm_factory (~12 seconds)
-#' xm <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut)
-#'
+#' # this part is precalculated and loaded via data("precalculated_Xfgpm_objects")
+#' summary(xm)
 #'
 #' # <<<<<<< PART 2: re-building the three best models found by fgpm_factory >>>>>>>
 #' #         ---------------------------------------------------------------
@@ -1175,8 +1080,11 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #' fIn.nw <- list(f1 = matrix(runif(n.nw*10), ncol = 10), f2 = matrix(runif(n.nw*22), ncol = 22))
 #' sOut.nw <- fgp_BB7(sIn.nw, fIn.nw, n.nw)
 #'
+#' # the second best model
+#' modelDef(xm,2)
 #' # re-building the three best models based on the new data (compact code with all 3 calls)
-#' modStack <- lapply(1:3, function(i) eval(parse(text = argStack[[i]]@string)[[1]]))
+#' newEnv <- list(sIn = sIn.nw, fIn = fIn.nw, sOut = sOut.nw)
+#' modStack <- lapply(1:3, function(i) eval(parse(text =  modelDef(xm,i)), env = newEnv))
 #'
 #'
 #' # <<<<<<< PART 3: making predictions from the three best models found by fgpm_factory >>>>>>>
@@ -1210,7 +1118,6 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #'        pch = c(21, 23, 24), pt.bg = c("black", "red", "green"), inset = c(.02,.08))
 #' }
 #'
-#' @importFrom qdapRegex rm_between
 #' @export
 get_active_in <- function (sIn = NULL, fIn = NULL, args) {
   # get indices of active inputs

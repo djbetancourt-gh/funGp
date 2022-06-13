@@ -43,9 +43,9 @@ This project is licensed under the GPL-3 License. <br /><br />
 
 **Manual** :book: <br /> [Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour](https://hal.archives-ouvertes.fr/hal-02536624) <br /><br />
 
-**Authors:** José Betancourt :wrench: (IMT, ENAC), François Bachoc (IMT) and Thierry Klein (IMT, ENAC).
+**Authors:** José Betancourt :wrench: (IMT, ENAC), François Bachoc (IMT), Thierry Klein (IMT, ENAC) and Jérémy Rohmer (BRGM).
 
-**Contributors:** Déborah Idier (BRGM) and Jérémy Rohmer (BRGM).
+**Contributors:** Yves Deville (Alpestat) and Déborah Idier (BRGM).
 
 :wrench: maintainer - <a href = "mailto: djbetancourt@uninorte.edu.co">djbetancourt@uninorte.edu.co</a> <br /><br />
 

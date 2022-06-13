@@ -5,7 +5,7 @@
 \alias{funGp-package}
 \title{Gaussian Process Models for Scalar and Functional Inputs}
 \description{
-Construction and smart selection of Gaussian process models with emphasis on treatment of functional inputs.
+Construction and smart selection of Gaussian process models for analysis of computer experiments with emphasis on treatment of functional inputs that are regularly sampled. Smart selection is based on Ant Colony Optimization ACO algorithm.
 }
 \note{
 This package was first developed in the frame of the RISCOPE research project, funded
@@ -19,14 +19,14 @@ This package was first developed in the frame of the RISCOPE research project, f
 \itemize{
  \item{\strong{Main methods}}{\cr
        \link[funGp]{fgpm}: creation of funGp regression models \cr
-       \link[funGp]{predict}: output estimation at new input points based on a funGp model \cr
-       \link[funGp]{simulate}: random sampling from a funGp Gaussian process model \cr
-       \link[funGp]{update}: modification of data and hyperparameters of a funGp model
+       \link[funGp]{predict,fgpm-method}: output estimation at new input points based on a funGp model \cr
+       \link[funGp]{simulate,fgpm-method}: random sampling from a funGp Gaussian process model \cr
+       \link[funGp]{update,fgpm-method}: modification of data and hyperparameters of a funGp model
  }
  \item{\strong{Plotters}}{\cr
-       \link[funGp]{plotLOO}: validation plot for a funGp model \cr
-       \link[funGp]{plotPreds}: plot of predictions based on a funGp model \cr
-       \link[funGp]{plotSims}: plot of simulations based on a funGp model
+       \link[funGp]{plot,fgpm-method}: validation plot for a \code{fgpm} model \cr
+       \link[funGp]{plot.predict.fgpm}: plot of predictions based on a \code{fgpm} model \cr
+       \link[funGp]{plot.simulate.fgpm}: plot of simulations based on a \code{fgpm} model
  }
 }
 }
@@ -37,17 +37,20 @@ This package was first developed in the frame of the RISCOPE research project, f
  \item{\strong{Main method}}{\cr
        \link[funGp]{fgpm_factory}: structural parameter optimization
  }
- \item{\strong{Plotters pre-optimization}}{\cr
+ \item{\strong{Functions for pre-optimization}}{\cr
        \link[funGp]{decay}: regularized initial pheromones \cr
        \link[funGp]{decay2probs}: normalized initial pheromones
  }
  \item{\strong{Plotters post-optimization}}{\cr
-       \link[funGp]{plotX}: absolute and relative quality of the optimized model \cr
-       \link[funGp]{plotEvol}: evolution of the algorithm
+       \link[funGp]{plot,Xfgpm-method}: plot of the evolution of the algorithm with \code{which = "evolution"}
+       or of the absolute and relative quality of the optimized model with \code{which = "diag"}
+
  }
  \item{\strong{Correction post-optimization of input data structures}}{\cr
-       \link[funGp]{which_on}: indices of active inputs in a model structure delivered by \link[funGp]{fgpm_factory} \cr
-       \link[funGp]{get_active_in}: extraction of active input data based on a model structure delivered by \link[funGp]{fgpm_factory}
+       \link[funGp]{which_on}: indices of active inputs in a model
+       structure delivered by \link[funGp]{fgpm_factory}\cr
+       \link[funGp]{get_active_in}: extraction of active input
+       data based on a model structure delivered by \link[funGp]{fgpm_factory}
  }
 }
 }

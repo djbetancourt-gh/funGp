@@ -24,28 +24,28 @@ fgpm(
 )
 }
 \arguments{
-\item{sIn}{an optional matrix of scalar input values to train the model. Each column must match an input
+\item{sIn}{An optional matrix of scalar input values to train the model. Each column must match an input
 variable and each row a training point. Either scalar input coordinates (sIn), functional input
 coordinates (fIn), or both must be provided.}
 
-\item{fIn}{an optional list of functional input values to train the model. Each element of the list must
-be a matrix containing to the set of curves corresponding to one functional input. Either scalar input
+\item{fIn}{An optional list of functional input values to train the model. Each element of the list must
+be a matrix containing the set of curves corresponding to one functional input. Either scalar input
 coordinates (sIn), functional input coordinates (fIn), or both must be provided.}
 
-\item{sOut}{a vector (or 1-column matrix) containing the values of the scalar output at the specified
+\item{sOut}{A vector (or 1-column matrix) containing the values of the scalar output at the specified
 input points.}
 
-\item{kerType}{an optional character string specifying the covariance structure to be used. To be chosen
+\item{kerType}{An optional character string specifying the covariance structure to be used. To be chosen
 between "gauss", "matern5_2" and "matern3_2". Default is "matern5_2".}
 
-\item{f_disType}{an optional array of character strings specifying the distance function to be used for
+\item{f_disType}{An optional array of character strings specifying the distance function to be used for
 each functional coordinates within the covariance function of the Gaussian process. To be chosen between
 "L2_bygroup" and "L2_byindex". The L2_bygroup distance considers each curve as a whole and uses a single
 length-scale parameter per functional input variable. The L2_byindex distance uses as many length-scale
 parameters per functional input as discretization points it has. For instance an input discretized as
 a vector of size 8 will use 8 length-scale parameters when using L2_byindex. If dimension reduction of
 a functional input is requested, then L2_byindex uses as many length scale parameters as effective
-dimensions are used to represent the input. A single character string can also be passed as a general
+dimensions used to represent the input. A single character string can also be passed as a general
 selection for all the functional inputs of the model. More details in
 \href{https://www.sciencedirect.com/science/article/abs/pii/S0951832019301693}{
 the reference article}
@@ -53,55 +53,55 @@ and
 \href{https://hal.archives-ouvertes.fr/hal-02536624}{
 the in-depth package manual}. Default is "L2_bygroup".}
 
-\item{f_pdims}{an optional array with the projection dimension for each functional input. For each input,
+\item{f_pdims}{An optional array with the projection dimension for each functional input. For each input,
 the projection dimension should be an integer between 0 and its original dimension, with 0 denoting
 no projection. A single character string can also be passed as a general selection for all the functional
 inputs of the model. Default is 3.}
 
-\item{f_basType}{an optional array of character strings specifying the family of basis function to be used
+\item{f_basType}{An optional array of character strings specifying the family of basis functions to be used
 in the projection of each functional input. To be chosen between "B-splines" and "PCA". A single character
 string can also be passed as a general selection for all the functional inputs of the model. This argument
 will be ignored for those inputs for which no projection was requested (i.e., for which f_pdims = 0).
 Default is "B-splines".}
 
-\item{var.hyp}{an optional number indicating the value that should be used as the variance parameter of the
+\item{var.hyp}{An optional number indicating the value that should be used as the variance parameter of the
 model. If not provided, it is estimated through likelihood maximization.}
 
-\item{ls_s.hyp}{an optional numeric array indicating the values that should be used as length-scale parameters
+\item{ls_s.hyp}{An optional numeric array indicating the values that should be used as length-scale parameters
 for the scalar inputs. If provided, the size of the array should match the number of scalar inputs. If not
-provided, this parameters are estimated through likelihood maximization.}
+provided, these parameters are estimated through likelihood maximization.}
 
-\item{ls_f.hyp}{an optional numeric array indicating the values that should be used as length-scale parameters
+\item{ls_f.hyp}{An optional numeric array indicating the values that should be used as length-scale parameters
 for the functional inputs. If provided, the size of the array should match the number of effective dimensions.
 Each input using the "L2_bygroup" distance will count 1 effective dimension, and each input using the
 "L2_byindex" distance will count as many effective dimensions as specified by the corresponding element of
 the f_pdims argument. For instance, two functional inputs of original dimensions 10 and 22, the first one
 projected onto a space of dimension 5 with "L2_byindex" distance, and the second one not projected with
-"L2_byindex" distance will make up a total of 6 effective dimensions; five for the first functional input and
+"L2_bygroup" distance will make up a total of 6 effective dimensions; five for the first functional input and
 one for second one. If this argument is not provided, the functional length-scale parameters are estimated
 through likelihood maximization.}
 
-\item{nugget}{an optional variance value standing for the homogeneous nugget effect. A tiny nugget might help
+\item{nugget}{An optional variance value standing for the homogeneous nugget effect. A tiny nugget might help
 to overcome numerical problems related to the ill-conditioning of the covariance matrix. Default is 1e-8.}
 
-\item{n.starts}{an optional integer indicating the number of initial points to use for the optimization of the
+\item{n.starts}{An optional integer indicating the number of initial points to use for the optimization of the
 hyperparameters. A parallel processing cluster can be exploited in order to speed up the evaluation of
 multiple initial points. More details in the description of the argument par.clust below. Default is 1.}
 
-\item{n.presample}{an optional integer indicating the number of points to be tested in order to select the
+\item{n.presample}{An optional integer indicating the number of points to be tested in order to select the
 n.starts initial points. The n.presample points will be randomly sampled from the hyper-rectangle defined by: \cr \cr
 1e-10 \eqn{\le} \code{ls_s.hyp[i]} \eqn{\le} 2*max(\code{sMs[[i]]}), for i in 1 to the number of scalar inputs, \cr
 1e-10 \eqn{\le} \code{ls_f.hyp[i]} \eqn{\le} 2*max(\code{fMs[[i]]}), for i in 1 to the number of functional inputs, \cr \cr
 with  sMs and fMs the lists of distance matrices for the scalar and functional inputs, respectively. The value of
 n.starts will be assigned to n.presample if this last is smaller. Default is 20.}
 
-\item{par.clust}{an optional parallel processing cluster created with the \code{\link[parallel]{makeCluster}} function
+\item{par.clust}{An optional parallel processing cluster created with the \code{\link[parallel]{makeCluster}} function
 of the \link[=parallel]{parallel package}. If not provided, multistart optimizations are done in sequence.}
 
-\item{trace}{an optional boolean indicating if control messages from the \link[stats]{optim} function regarding the
+\item{trace}{An optional boolean indicating if control messages from the \link[stats]{optim} function regarding the
 optimization of the hyperparameters should be printed to console. Default is TRUE.}
 
-\item{pbars}{an optional boolean indicating if progress bars should be displayed. Default is TRUE.}
+\item{pbars}{An optional boolean indicating if progress bars should be displayed. Default is TRUE.}
 }
 \value{
 An object of class \linkS4class{fgpm} containing the data structures representing the fitted funGp model.
@@ -131,14 +131,14 @@ mf <- fgpm(fIn = fIn, sOut = sOut)
 msf <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut)
 
 # plotting the three models
-plotLOO(ms)
-plotLOO(mf)
-plotLOO(msf)
+plot(ms)
+plot(mf)
+plot(msf)
 
 # printing the three models
-ms # equivalent to show(ms)
-mf # equivalent to show(mf)
-msf # equivalent to show(msf)
+summary(ms) # equivalent to show(ms)
+summary(mf) # equivalent to show(mf)
+summary(msf) # equivalent to show(msf)
 
 
 # recovering useful information from a funGp model_________________________________________
@@ -177,7 +177,7 @@ fIn.pr <- list(f1 = matrix(runif(n.pr*10), ncol = 10), matrix(runif(n.pr*22), nc
 m1.preds <- predict(m1, sIn.pr = sIn.pr, fIn.pr = fIn.pr)
 
 # plotting predictions
-plotPreds(m1, preds = m1.preds)
+plot(m1.preds)
 
 
 # simulating from a funGp model____________________________________________________________
@@ -199,7 +199,7 @@ fIn.sm <- list(f1 = matrix(runif(n.sm*10), ncol = 10), matrix(runif(n.sm*22), nc
 m1.sims <- simulate(m1, nsim = 10, sIn.sm = sIn.sm, fIn.sm = fIn.sm)
 
 # plotting simulations
-plotSims(m1, m1.sims)
+plot(m1.sims)
 
 
 # creating funGp model using custom fgpm arguments_________________________________________
@@ -223,7 +223,7 @@ m1 <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut,
            f_pdims = c(0,5), f_basType = c(NA, "B-splines"))
 
 # plotting the model
-plotLOO(m1)
+plot(m1)
 
 # printing the model
 m1 # equivalent to show(m1)
@@ -247,7 +247,7 @@ parallel::stopCluster(cl)
 # NOTE: in order to provide progress bars for the monitoring of time consuming processes
 #       ran in parallel, funGp relies on the doFuture and future packages. Parallel processes
 #       suddenly interrupted by the user tend to leave corrupt connections. This problem is
-#       originated outside funGp, which limits our control over it. On section 4.1 of the
+#       originated outside funGp, which limits our control over it. In the manual
 #       of funGp, we provide a temporary solution to the issue and we remain attentive in
 #       case it appears a more elegant way to handle it or a manner to suppress it.
 #
@@ -273,16 +273,16 @@ R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs 
 \href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
 }
 \seealso{
-\strong{*} \link[funGp]{plotLOO} for diagnostic plot of a funGp model;
+\strong{*} \link[funGp]{plot,fgpm-method}: validation plot for a \code{fgpm} model;
 
-\strong{*} \link[funGp]{predict} for predictions based on a funGp model;
+\strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a \code{fgpm} model;
 
-\strong{*} \link[funGp]{simulate} for simulations based on a funGp model;
+\strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a \code{fgpm} model;
 
-\strong{*} \link[funGp]{update} for post-creation updates on a funGp model;
+\strong{*} \link[funGp]{update,fgpm-method} for post-creation updates on a \code{fgpm} model;
 
 \strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection.
 }
 \author{
-José Betancourt, François Bachoc and Thierry Klein
+José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 }

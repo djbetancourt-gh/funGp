@@ -8,14 +8,14 @@
 #' \itemize{
 #'  \item{\strong{Main methods}}{\cr
 #'        \link[funGp]{fgpm}: creation of funGp regression models \cr
-#'        \link[funGp]{predict}: output estimation at new input points based on a funGp model \cr
-#'        \link[funGp]{simulate}: random sampling from a funGp Gaussian process model \cr
-#'        \link[funGp]{update}: modification of data and hyperparameters of a funGp model
+#'        \link[funGp]{predict,fgpm-method}: output estimation at new input points based on a \code{fgpm} model \cr
+#'        \link[funGp]{simulate,fgpm-method}: random sampling from a \code{fgpm} model \cr
+#'        \link[funGp]{update,fgpm-method}: modification of data and hyperparameters of a \code{fgpm} model
 #'  }
 #'  \item{\strong{Plotters}}{\cr
-#'        \link[funGp]{plotLOO}: leave-one-out diagnostic plot for a funGp model \cr
-#'        \link[funGp]{plotPreds}: plot for predictions of a funGp model \cr
-#'        \link[funGp]{plotSims}: plot for simulations of a funGp model
+#'         \link[funGp]{plot,fgpm-method}: validation plot for a \code{fgpm} model \cr
+#'        \link[funGp]{plot.predict.fgpm}: plot of predictions based on a \code{fgpm} model \cr
+#'        \link[funGp]{plot.simulate.fgpm}: plot of simulations based on a \code{fgpm} model
 #'  }
 #' }
 #'
@@ -54,7 +54,7 @@
 #'  }}
 #' }
 #'
-#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #'
 #' @include 2_fgpProj_Class.R
 #' @include 2_fgpKern_Class.R
@@ -91,73 +91,73 @@ setClass("fgpm",
 #' @description This function enables fitting of Gaussian process regression models. The inputs can be
 #'   either scalar, functional or a combination of both types.
 #'
-#' @param sIn an optional matrix of scalar input values to train the model. Each column must match an input
+#' @param sIn An optional matrix of scalar input values to train the model. Each column must match an input
 #'   variable and each row a training point. Either scalar input coordinates (sIn), functional input
 #'   coordinates (fIn), or both must be provided.
-#' @param fIn an optional list of functional input values to train the model. Each element of the list must
-#'   be a matrix containing to the set of curves corresponding to one functional input. Either scalar input
+#' @param fIn An optional list of functional input values to train the model. Each element of the list must
+#'   be a matrix containing the set of curves corresponding to one functional input. Either scalar input
 #'   coordinates (sIn), functional input coordinates (fIn), or both must be provided.
-#' @param sOut a vector (or 1-column matrix) containing the values of the scalar output at the specified
+#' @param sOut A vector (or 1-column matrix) containing the values of the scalar output at the specified
 #'   input points.
-#' @param kerType an optional character string specifying the covariance structure to be used. To be chosen
+#' @param kerType An optional character string specifying the covariance structure to be used. To be chosen
 #'   between "gauss", "matern5_2" and "matern3_2". Default is "matern5_2".
-#' @param f_disType an optional array of character strings specifying the distance function to be used for
+#' @param f_disType An optional array of character strings specifying the distance function to be used for
 #'   each functional coordinates within the covariance function of the Gaussian process. To be chosen between
 #'   "L2_bygroup" and "L2_byindex". The L2_bygroup distance considers each curve as a whole and uses a single
 #'   length-scale parameter per functional input variable. The L2_byindex distance uses as many length-scale
 #'   parameters per functional input as discretization points it has. For instance an input discretized as
 #'   a vector of size 8 will use 8 length-scale parameters when using L2_byindex. If dimension reduction of
 #'   a functional input is requested, then L2_byindex uses as many length scale parameters as effective
-#'   dimensions are used to represent the input. A single character string can also be passed as a general
+#'   dimensions used to represent the input. A single character string can also be passed as a general
 #'   selection for all the functional inputs of the model. More details in
 #'   \href{https://www.sciencedirect.com/science/article/abs/pii/S0951832019301693}{
 #'   the reference article}
 #'   and
 #'   \href{https://hal.archives-ouvertes.fr/hal-02536624}{
 #'   the in-depth package manual}. Default is "L2_bygroup".
-#' @param f_pdims an optional array with the projection dimension for each functional input. For each input,
+#' @param f_pdims An optional array with the projection dimension for each functional input. For each input,
 #'   the projection dimension should be an integer between 0 and its original dimension, with 0 denoting
 #'   no projection. A single character string can also be passed as a general selection for all the functional
 #'   inputs of the model. Default is 3.
-#' @param f_basType an optional array of character strings specifying the family of basis function to be used
+#' @param f_basType An optional array of character strings specifying the family of basis functions to be used
 #'   in the projection of each functional input. To be chosen between "B-splines" and "PCA". A single character
 #'   string can also be passed as a general selection for all the functional inputs of the model. This argument
 #'   will be ignored for those inputs for which no projection was requested (i.e., for which f_pdims = 0).
 #'   Default is "B-splines".
-#' @param var.hyp an optional number indicating the value that should be used as the variance parameter of the
+#' @param var.hyp An optional number indicating the value that should be used as the variance parameter of the
 #'   model. If not provided, it is estimated through likelihood maximization.
-#' @param ls_s.hyp an optional numeric array indicating the values that should be used as length-scale parameters
+#' @param ls_s.hyp An optional numeric array indicating the values that should be used as length-scale parameters
 #'   for the scalar inputs. If provided, the size of the array should match the number of scalar inputs. If not
-#'   provided, this parameters are estimated through likelihood maximization.
-#' @param ls_f.hyp an optional numeric array indicating the values that should be used as length-scale parameters
+#'   provided, these parameters are estimated through likelihood maximization.
+#' @param ls_f.hyp An optional numeric array indicating the values that should be used as length-scale parameters
 #'   for the functional inputs. If provided, the size of the array should match the number of effective dimensions.
 #'   Each input using the "L2_bygroup" distance will count 1 effective dimension, and each input using the
 #'   "L2_byindex" distance will count as many effective dimensions as specified by the corresponding element of
 #'   the f_pdims argument. For instance, two functional inputs of original dimensions 10 and 22, the first one
 #'   projected onto a space of dimension 5 with "L2_byindex" distance, and the second one not projected with
-#'   "L2_byindex" distance will make up a total of 6 effective dimensions; five for the first functional input and
+#'   "L2_bygroup" distance will make up a total of 6 effective dimensions; five for the first functional input and
 #'   one for second one. If this argument is not provided, the functional length-scale parameters are estimated
 #'   through likelihood maximization.
-#' @param nugget an optional variance value standing for the homogeneous nugget effect. A tiny nugget might help
+#' @param nugget An optional variance value standing for the homogeneous nugget effect. A tiny nugget might help
 #'   to overcome numerical problems related to the ill-conditioning of the covariance matrix. Default is 1e-8.
-#' @param n.starts an optional integer indicating the number of initial points to use for the optimization of the
+#' @param n.starts An optional integer indicating the number of initial points to use for the optimization of the
 #'   hyperparameters. A parallel processing cluster can be exploited in order to speed up the evaluation of
 #'   multiple initial points. More details in the description of the argument par.clust below. Default is 1.
-#' @param n.presample an optional integer indicating the number of points to be tested in order to select the
+#' @param n.presample An optional integer indicating the number of points to be tested in order to select the
 #'   n.starts initial points. The n.presample points will be randomly sampled from the hyper-rectangle defined by: \cr \cr
 #'   1e-10 \eqn{\le} \code{ls_s.hyp[i]} \eqn{\le} 2*max(\code{sMs[[i]]}), for i in 1 to the number of scalar inputs, \cr
 #'   1e-10 \eqn{\le} \code{ls_f.hyp[i]} \eqn{\le} 2*max(\code{fMs[[i]]}), for i in 1 to the number of functional inputs, \cr \cr
 #'   with  sMs and fMs the lists of distance matrices for the scalar and functional inputs, respectively. The value of
 #'   n.starts will be assigned to n.presample if this last is smaller. Default is 20.
-#' @param par.clust an optional parallel processing cluster created with the \code{\link[parallel]{makeCluster}} function
+#' @param par.clust An optional parallel processing cluster created with the \code{\link[parallel]{makeCluster}} function
 #'   of the \link[=parallel]{parallel package}. If not provided, multistart optimizations are done in sequence.
-#' @param trace an optional boolean indicating if control messages from the \link[stats]{optim} function regarding the
+#' @param trace An optional boolean indicating if control messages from the \link[stats]{optim} function regarding the
 #'   optimization of the hyperparameters should be printed to console. Default is TRUE.
-#' @param pbars an optional boolean indicating if progress bars should be displayed. Default is TRUE.
+#' @param pbars An optional boolean indicating if progress bars should be displayed. Default is TRUE.
 #'
 #' @return An object of class \linkS4class{fgpm} containing the data structures representing the fitted funGp model.
 #'
-#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #'
 #' @references Betancourt, J., Bachoc, F., Klein, T., Idier, D., Pedreros, R., and Rohmer, J. (2020),
 #' "Gaussian process metamodeling of functional-input code for coastal flood hazard assessment".
@@ -175,10 +175,10 @@ setClass("fgpm",
 #' \emph{RISCOPE project}.
 #' \href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
 #'
-#' @seealso \strong{*} \link[funGp]{plotLOO} for diagnostic plot of a funGp model;
-#' @seealso \strong{*} \link[funGp]{predict} for predictions based on a funGp model;
-#' @seealso \strong{*} \link[funGp]{simulate} for simulations based on a funGp model;
-#' @seealso \strong{*} \link[funGp]{update} for post-creation updates on a funGp model;
+#' @seealso \strong{*} \link[funGp]{plot,fgpm-method}: validation plot for a \code{fgpm} model;
+#' @seealso \strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a \code{fgpm} model;
+#' @seealso \strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a \code{fgpm} model;
+#' @seealso \strong{*} \link[funGp]{update,fgpm-method} for post-creation updates on a \code{fgpm} model;
 #' @seealso \strong{*} \link[funGp]{fgpm_factory} for funGp heuristic model selection.
 #'
 #' @examples
@@ -202,14 +202,14 @@ setClass("fgpm",
 #' msf <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut)
 #'
 #' # plotting the three models
-#' plotLOO(ms)
-#' plotLOO(mf)
-#' plotLOO(msf)
+#' plot(ms)
+#' plot(mf)
+#' plot(msf)
 #'
 #' # printing the three models
-#' ms # equivalent to show(ms)
-#' mf # equivalent to show(mf)
-#' msf # equivalent to show(msf)
+#' summary(ms) # equivalent to show(ms)
+#' summary(mf) # equivalent to show(mf)
+#' summary(msf) # equivalent to show(msf)
 #'
 #'
 #' # recovering useful information from a funGp model_________________________________________
@@ -248,7 +248,7 @@ setClass("fgpm",
 #' m1.preds <- predict(m1, sIn.pr = sIn.pr, fIn.pr = fIn.pr)
 #'
 #' # plotting predictions
-#' plotPreds(m1, preds = m1.preds)
+#' plot(m1.preds)
 #'
 #'
 #' # simulating from a funGp model____________________________________________________________
@@ -270,7 +270,7 @@ setClass("fgpm",
 #' m1.sims <- simulate(m1, nsim = 10, sIn.sm = sIn.sm, fIn.sm = fIn.sm)
 #'
 #' # plotting simulations
-#' plotSims(m1, m1.sims)
+#' plot(m1.sims)
 #'
 #'
 #' # creating funGp model using custom fgpm arguments_________________________________________
@@ -294,7 +294,7 @@ setClass("fgpm",
 #'            f_pdims = c(0,5), f_basType = c(NA, "B-splines"))
 #'
 #' # plotting the model
-#' plotLOO(m1)
+#' plot(m1)
 #'
 #' # printing the model
 #' m1 # equivalent to show(m1)
@@ -318,7 +318,7 @@ setClass("fgpm",
 #' # NOTE: in order to provide progress bars for the monitoring of time consuming processes
 #' #       ran in parallel, funGp relies on the doFuture and future packages. Parallel processes
 #' #       suddenly interrupted by the user tend to leave corrupt connections. This problem is
-#' #       originated outside funGp, which limits our control over it. On section 4.1 of the
+#' #       originated outside funGp, which limits our control over it. In the manual
 #' #       of funGp, we provide a temporary solution to the issue and we remain attentive in
 #' #       case it appears a more elegant way to handle it or a manner to suppress it.
 #' #
@@ -553,11 +553,12 @@ fgpm <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
 
 
 # ==========================================================================================================
-# Printing of a funGp model
+# Printing of a \code{fgpm} model
 # ==========================================================================================================
 #' @importFrom knitr kable
 #' @rdname show-methods
 #' @aliases show,fgpm-method
+#' @noRd
 setMethod("show", "fgpm", function(object) show.fgpm(model = object))
 
 show.fgpm <- function(model) {
@@ -568,7 +569,7 @@ show.fgpm <- function(model) {
     cat(paste("\n", mainTxt, paste(rep("_", 2), collapse = ""), sep = ""))
   }
 
-  cat(paste("\n\n* Scalar inputs: ", model@ds, "\n", sep = ""))
+  cat(paste("\n* Scalar inputs: ", model@ds, "\n", sep = ""))
   cat(paste("* Functional inputs: ", model@df, "", sep = ""))
   if (model@df > 0) {
     np <- min(model@df, 8)
@@ -581,7 +582,7 @@ show.fgpm <- function(model) {
   }
 
   cat(paste("\n* Total data points: ", model@n.tot, "\n", sep = ""))
-  cat(paste("* Trained with: ", model@n.tr, "\n\n", sep = ""))
+  cat(paste("* Trained with: ", model@n.tr, "\n", sep = ""))
 
   cat(paste("* Kernel type: ", model@kern@kerType, "\n", sep = ""))
   cat("* Hyperparameters:\n")
@@ -635,9 +636,9 @@ show.fgpm <- function(model) {
       cat("\n Some length-scale parameters were not printed. Consider\n checking 'model@kern@s_lsHyps'\n")
   }
   if (model@df > 0) {
-    cat(paste(rep("_", 58), collapse = ""))
+    cat(paste(rep("_", 58), collapse = ""), "\n")
   } else {
-    cat(paste(rep("_", 24), collapse = ""))
+    cat(paste(rep("_", 24), collapse = ""), "\n")
   }
 }
 # ==========================================================================================================
@@ -645,34 +646,35 @@ show.fgpm <- function(model) {
 
 
 # ==========================================================================================================
-# Prediction based on a funGp model
+# Prediction based on a \code{fgpm} model
 # ==========================================================================================================
 #' @name predict
 #' @rdname predict-methods
 #' @importFrom stats predict
 #' @exportMethod predict
+#' @noRd
 setGeneric(name = "predict", def = function(object, ...) standardGeneric("predict"))
 
-#' @title Prediction from a funGp Gaussian process model
-#' @description This method enables prediction based on a funGp Gaussian process model, at any given set of
-#'   points. Check \code{\link{fgpm}} for information on how to create funGp models.
+#' @title Prediction from a \code{fgpm} Gaussian process model
+#' @description This method enables prediction based on a \code{fgpm} model, at any given set of
+#'   points. Check \code{\link{fgpm}} for information on how to create \code{fgpm} models.
 #'
-#' @param object an object of class \linkS4class{fgpm} corresponding to the funGp model that should be used
+#' @param object An object of class \linkS4class{fgpm} corresponding to the funGp model that should be used
 #'   to predict the output.
-#' @param ... not used.
-#' @param sIn.pr an optional matrix of scalar input coordinates at which the output values should be
+#' @param ... Not used.
+#' @param sIn.pr An optional matrix of scalar input coordinates at which the output values should be
 #'   predicted. Each column is interpreted as a scalar input variable and each row as a coordinate.
 #'   Either scalar input coordinates (sIn.pr), functional input coordinates (fIn.pr), or both must be provided.
-#' @param fIn.pr an optional list of functional input coordinates at which the output values should be
+#' @param fIn.pr An optional list of functional input coordinates at which the output values should be
 #'   predicted. Each element of the list is interpreted as a functional input variable. Every functional input
 #'   variable should be provided as a matrix with one curve per row. Either scalar input coordinates (sIn.pr),
 #'   functional input coordinates (fIn.pr), or both must be provided.
-#' @param detail an optional character string specifying the extent of information that should be delivered
-#'   by the method, to be chosen between "light" and "full". \emph{Light} predictions produce a list including
+#' @param detail An optional character specifying the extent of information that should be delivered
+#'   by the method, to be chosen between \code{"light"} (default) and \code{"full"}.
+#'   \emph{Light} predictions produce a list including
 #'   the predicted mean, standard deviation and limits of the 95\% confidence intervals at the prediction
 #'   points. \emph{Full} predictions produce the same information as light ones, in addition to the
-#'   training-prediction cross-covariance matrix and the prediction auto-covariance matrix. Default is
-#'   "light".
+#'   training-prediction cross-covariance matrix and the prediction auto-covariance matrix.
 #'
 #' @return An object of class \code{"list"} containing the data structures linked to predictions. For
 #'   \emph{light} predictions, the list will include the mean, standard deviation and limits of the 95\%
@@ -680,11 +682,11 @@ setGeneric(name = "predict", def = function(object, ...) standardGeneric("predic
 #'   information, plus the training-prediction cross-covariance matrix and the prediction auto-covariance
 #'   matrix.
 #'
-#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #'
-#' @seealso \strong{*} \link[funGp]{plotPreds} for the predictions plot of a funGp model;
-#' @seealso \strong{*} \link[funGp]{simulate} for simulations based on a funGp model;
-#' @seealso \strong{*} \link[funGp]{plotSims} for the simulations plot of a funGp model.
+#' @seealso \strong{*} \link[funGp]{plot.predict.fgpm} for the prediction plot of a \code{fgpm} model;
+#' @seealso \strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a \code{fgpm} model;
+#' @seealso \strong{*} \link[funGp]{plot.simulate.fgpm} for the simulation plot of a \code{fgpm} model.
 #'
 #' @examples
 #' # light predictions________________________________________________________________________
@@ -716,7 +718,7 @@ setGeneric(name = "predict", def = function(object, ...) standardGeneric("predic
 #' # upper95 100    -none- numeric
 #'
 #' # plotting predictions
-#' plotPreds(m1, preds = m1.preds)
+#' plot(m1.preds)
 #'
 #'
 #' # comparison against true output___________________________________________________________
@@ -739,7 +741,7 @@ setGeneric(name = "predict", def = function(object, ...) standardGeneric("predic
 #' sOut.pr <- fgp_BB3(sIn.pr, fIn.pr, n.pr)
 #'
 #' # plotting predictions along with true output values
-#' plotPreds(m1, m1.preds, sOut.pr)
+#' plot(m1.preds, sOut.pr)
 #'
 #'
 #' # full predictions_________________________________________________________________________
@@ -771,18 +773,26 @@ setGeneric(name = "predict", def = function(object, ...) standardGeneric("predic
 #' # upper95   100  -none- numeric
 #'
 #' # plotting predictions
-#' plotPreds(m1, preds = m1.preds)
+#' plot(m1.preds)
 #'
 #' @rdname predict-methods
 #' @importFrom stats qnorm
 #' @importFrom methods hasArg
 #' @aliases predict,fgpm-method
 setMethod("predict", "fgpm",
-          function(object, sIn.pr = NULL, fIn.pr = NULL, detail = "light", ...){
-            predict.fgpm(model = object, sIn.pr = sIn.pr, fIn.pr = fIn.pr, detail = detail)
+          function(object, sIn.pr = NULL, fIn.pr = NULL, detail = c("light", "full"), ...){
+              detail <- match.arg(detail)
+              predict.fgpm(model = object, sIn.pr = sIn.pr, fIn.pr = fIn.pr, detail = detail)
           })
 
 predict.fgpm <- function(model, sIn.pr, fIn.pr, detail = "light") {
+
+  ## Added by Yves
+  L <- check_new_inputs(object = model, newsIn = sIn.pr, newfIn = fIn.pr)
+  ## sIn.pr <- L$newsIn
+  ## fIn.pr <- L$newfIn
+  ## End added by Yves
+
   nugget <- model@nugget
 
   # check validity of user inputs
@@ -850,60 +860,69 @@ predict.fgpm <- function(model, sIn.pr, fIn.pr, detail = "light") {
   # 4.  * upper95 ............ array (n.pr) .............. upper bounds of 95% confidence intervals
   # 5.  * K.pp ............... matrix (n.pr x n.pr) ...... conditional covariance matrix
   # 6.  * K.tp ............... matrix (n.tr x n.pr) ...... training vs prediction cross covariance matrix
-  # _______________________________________________________________________________________________________
-  return(preds)
+                                        # _______________________________________________________________________________________________________
+
+    preds$mean <- drop(preds$mean)
+    preds$sd <- drop(preds$sd)
+    preds$lower95 <- drop(preds$lower95)
+    preds$upper95 <- drop(preds$upper95)
+
+    class(preds) <- c("predict.fgpm", "list")
+    return(preds)
 }
 # ==========================================================================================================
 
 
 
 # ==========================================================================================================
-# Simulation based on a funGp model
+# Simulation based on a \code{fgpm} model
 # ==========================================================================================================
 #' @name simulate
 #' @rdname simulate-methods
 #' @importFrom stats simulate
 #' @exportMethod simulate
+#' @noRd
 setGeneric(name = "simulate", def = function(object, nsim = 1, seed = NULL, ...) standardGeneric("simulate"))
 
-#' @title Random sampling from a funGp Gaussian process model
+#' @title Random sampling from a \code{fgpm} model
 #' @description This method enables simulation of Gaussian process values at any given set of points
-#'   based on a pre-built funGp model. Check \code{\link{fgpm}} for information on how to create funGp models.
+#'   based on a pre-built \code{fgpm} model. Check \code{\link{fgpm}} for information on how to create funGp models.
 #'
-#' @param object an object of class \linkS4class{fgpm} corresponding to the funGp model from which
+#' @param object An object of class \linkS4class{fgpm} corresponding to the funGp model from which
 #'   simulations must be performed.
-#' @param nsim an optional integer indicating the number of samples to produce. Default is 1.
-#' @param seed an optional value interpreted as an integer, that will be used as argument of
+#' @param nsim An optional integer indicating the number of samples to produce. Default is 1.
+#' @param seed An optional value interpreted as an integer, that will be used as argument of
 #'   \code{\link[base]{set.seed}} just before simulating the response values.
-#' @param ... not used.
-#' @param sIn.sm an optional matrix of scalar input coordinates at which the output values should be
+#' @param ... Not used.
+#' @param sIn.sm An optional matrix of scalar input coordinates at which the output values should be
 #'   simulated. Each column is interpreted as a scalar input variable and each row as a coordinate.
 #'   Either scalar input coordinates (sIn.sm), functional input coordinates (fIn.sm), or both must be provided.
-#' @param fIn.sm an optional list of functional input coordinates at which the output values should be
+#' @param fIn.sm An optional list of functional input coordinates at which the output values should be
 #'   simulated. Each element of the list is interpreted as a functional input variable. Every functional input
 #'   variable should be provided as a matrix with one curve per row. Either scalar input coordinates (sIn.sm),
 #'   functional input coordinates (fIn.sm), or both must be provided.
-#' @param nugget.sm an optional number corresponding to a numerical nugget effect. If provided, this number
+#' @param nugget.sm An optional number corresponding to a numerical nugget effect. If provided, this number
 #'   is added to the main diagonal of the simulation covariance matrix in order to prevent numerical
 #'   instabilities during Cholesky decomposition. A small number in the order of 1e-8 is often enough.
 #'   Default is 0.
-#' @param detail an optional character string specifying the extent of information that should be delivered
-#'   by the method, to be chosen between "light" and "full". \emph{Light} simulations produce a matrix of
+#' @param detail An optional character specifying the extent of information that should be delivered
+#'   by the method, to be chosen between \code{"light"} (default)  and \code{"full"}.
+#'   \emph{Light} simulations produce a matrix of
 #'   simulated output values, with as many rows as requested random samples. \emph{Full} simulations produce a
 #'   list with the matrix of simulated output values, along with the predicted mean, standard deviation and
-#'   limits of the 95\% confidence intervals at the simulation points. Default is "light".
+#'   limits of the 95\% confidence intervals at the simulation points.
 #'
 #' @return An object containing the data structures linked to simulations. For \emph{light} simulations, the
-#'   output will be a matrix with of simulated output values, with as many rows as requested random samples.
+#'   output will be a matrix of simulated output values, with as many rows as requested random samples.
 #'   For \emph{full} simulations, the output will be a list with the matrix of simulated output values,
 #'   along with the predicted mean, standard deviation and limits of the 95\% confidence intervals at the
 #'   simulation points.
 #'
-#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #'
-#' @seealso \strong{*} \link[funGp]{plotSims} for the simulations plot of a funGp model;
-#' @seealso \strong{*} \link[funGp]{predict} for predictions based on a funGp model;
-#' @seealso \strong{*} \link[funGp]{plotPreds} for the predictions plot of a funGp model.
+#' @seealso \strong{*} \link[funGp]{plot.simulate.fgpm} for the simulation plot of a \code{fgpm} model;
+#' @seealso \strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a \code{fgpm} model;
+#' @seealso \strong{*} \link[funGp]{plot.predict.fgpm} for the prediction plot of a \code{fgpm} model.
 #'
 #' @examples
 #' # light simulations _______________________________________________________________________
@@ -925,7 +944,7 @@ setGeneric(name = "simulate", def = function(object, nsim = 1, seed = NULL, ...)
 #' m1.sims_l <- simulate(m1, nsim = 10, sIn.sm = sIn.sm, fIn.sm = fIn.sm)
 #'
 #' # plotting light simulations
-#' plotSims(m1, m1.sims_l)
+#' plot(m1.sims_l)
 #'
 #'
 #' # full simulations ________________________________________________________________________
@@ -952,15 +971,17 @@ setGeneric(name = "simulate", def = function(object, nsim = 1, seed = NULL, ...)
 #' # upper95  100   -none- numeric
 #'
 #' # plotting full simulations in full mode
-#' plotSims(m1, m1.sims_f)
+#' plot(m1.sims_f)
 #'
 #' # plotting full simulations in light mode
-#' plotSims(m1, m1.sims_f, detail = "light")
+#' plot(m1.sims_f, detail = "light")
 #'
 #' @rdname simulate-methods
 #' @aliases simulate,fgpm-method
 setMethod("simulate", "fgpm",
-          function(object, nsim = 1, seed = NULL, sIn.sm = NULL, fIn.sm = NULL, nugget.sm = 0, detail = "light", ...) {
+          function(object, nsim = 1, seed = NULL, sIn.sm = NULL, fIn.sm = NULL,
+                   nugget.sm = 0, detail = c("light", "full"), ...) {
+              detail <- match.arg(detail)
             simulate.fgpm(model = object, nsim = nsim, seed = seed, sIn.sm = sIn.sm, fIn.sm = fIn.sm,
                            nugget.sm = nugget.sm, detail = detail)
           })
@@ -968,6 +989,13 @@ setMethod("simulate", "fgpm",
 simulate.fgpm <- function(model, nsim, seed, sIn.sm, fIn.sm, nugget.sm = 10^-8, detail) {
   # check validity of user inputs
   checkVal_pred_and_sim(as.list(environment()))
+
+  ## Added by Yves
+  L <- check_new_inputs(object = model, newsIn = sIn.sm, newfIn = fIn.sm)
+  ## sIn.sm <- L$newsIn
+  ## fIn.sm <- L$newfIn
+  ## End added by Yves
+
 
   # check which type of model it is
   if (all(model@ds > 0, model@df > 0)) { # Hybrid-input case *******************************************
@@ -1021,7 +1049,10 @@ simulate.fgpm <- function(model, nsim, seed, sIn.sm, fIn.sm, nugget.sm = 10^-8, 
 
   # if detail == 'full', confidence intervals at simulation points are provided,
   # else the sims list is dropped to a matrix with the observations only
-  if (detail == "full") {
+    if (detail == "full") {
+        sims$mean <- drop(sims$mean)
+        sims$sd <- drop(sims$sd)
+
     # compute confidence intervals
     sims$lower95 <- sims$mean - qnorm(0.975) * sims$sd
     sims$upper95 <- sims$mean + qnorm(0.975) * sims$sd
@@ -1038,6 +1069,12 @@ simulate.fgpm <- function(model, nsim, seed, sIn.sm, fIn.sm, nugget.sm = 10^-8, 
   # 4.  * lower95 ............ array (n.sm) .............. lower bounds of 95% confidence intervals
   # 5.  * upper95 ............ array (n.sm) .............. upper bounds of 95% confidence intervals
   # _______________________________________________________________________________________________________
+
+
+    class(sims) <- c("simulate.fgpm", "list")
+    return(sims)
+
+
   return(sims)
 }
 # ==========================================================================================================
@@ -1045,48 +1082,49 @@ simulate.fgpm <- function(model, nsim, seed, sIn.sm, fIn.sm, nugget.sm = 10^-8, 
 
 
 # ==========================================================================================================
-# Updating of a funGp model
+# Updating of a \code{fgpm} model
 # ==========================================================================================================
 #' @name update
 #' @rdname update-methods
 #' @importFrom stats update
 #' @exportMethod update
+#' @noRd
 setGeneric(name = "update", def = function(object, ...) standardGeneric("update"))
 
-#' @title Easy update of funGp funGp Gaussian process models
-#' @description This method enables the update of data or hyperparameters of a funGp Gaussian process model.
+#' @title Easy update of \code{fgpm} models
+#' @description This method enables the update of data or hyperparameters of a \code{fgpm} model.
 #'   It corresponds to an object of the class \linkS4class{fgpm}. The method allows addition, subtraction
 #'   and substitution of data points, as well as substitution and re-estimation of hyperparameters.
 #'
-#' @param object an object of class \linkS4class{fgpm} corresponding to the funGp model to update.
-#' @param ... not used.
-#' @param sIn.nw an optional matrix of scalar input values to be added to the model. Each column must match
+#' @param object An object of class \linkS4class{fgpm} corresponding to the funGp model to update.
+#' @param ... Not used.
+#' @param sIn.nw An optional matrix of scalar input values to be added to the model. Each column must match
 #'   an input variable and each row a scalar coordinate.
-#' @param fIn.nw an optional list of functional input values to be added to the model. Each element of the
-#'   list must be a matrix containing to the set of curves corresponding to one functional input.
-#' @param sOut.nw an optional vector (or 1-column matrix) containing the values of the scalar output at the
+#' @param fIn.nw An optional list of functional input values to be added to the model. Each element of the
+#'   list must be a matrix containing the set of curves corresponding to one functional input.
+#' @param sOut.nw An optional vector (or 1-column matrix) containing the values of the scalar output at the
 #'   new input points.
-#' @param sIn.sb an optional matrix of scalar input values to be used as substitutes of other scalar input
+#' @param sIn.sb An optional matrix of scalar input values to be used as substitutes of other scalar input
 #'   values already stored in the model. Each column must match an input variable and each row a coordinate.
-#' @param fIn.sb an optional list of functional input values to be added to the model. Each element of the
-#'   list must be a matrix containing to the set of curves corresponding to one functional input.
-#' @param sOut.sb an optional vector (or 1-column matrix) containing the values of the scalar output at the
+#' @param fIn.sb An optional list of functional input values to be added to the model. Each element of the
+#'   list must be a matrix containing the set of curves corresponding to one functional input.
+#' @param sOut.sb An optional vector (or 1-column matrix) containing the values of the scalar output at the
 #'   substituting input points.
-#' @param ind.sb an optional numeric array indicating the indices of the input and output points stored in
-#'   the model, that should be replaced by the values specified through sIn.sb, fIn.sb and/or, sOut.sb.
-#' @param ind.dl an optional numeric array indicating the indices of the input and output points stored in
+#' @param ind.sb An optional numeric array indicating the indices of the input and output points stored in
+#'   the model, that should be replaced by the values specified through sIn.sb, fIn.sb and/or sOut.sb.
+#' @param ind.dl An optional numeric array indicating the indices of the input and output points stored in
 #'   the model that should be deleted.
-#' @param var.sb an optional number indicating the value that should be used to substitute the current
+#' @param var.sb An optional number indicating the value that should be used to substitute the current
 #'   variance parameter of the model.
-#' @param ls_s.sb an optional numerical array indicating the values that should be used to substitute the
+#' @param ls_s.sb An optional numerical array indicating the values that should be used to substitute the
 #'   current length-scale parameters for the scalar inputs of the model.
-#' @param ls_f.sb an optional numerical array indicating the values that should be used to substitute the
+#' @param ls_f.sb An optional numerical array indicating the values that should be used to substitute the
 #'   current length-scale parameters for the functional inputs of the model.
-#' @param var.re an optional boolean indicating whether the variance parameter should be re-estimated.
+#' @param var.re An optional boolean indicating whether the variance parameter should be re-estimated.
 #'   Default is FALSE.
-#' @param ls_s.re an optional boolean indicating whether the length-scale parameters of the scalar inputs
+#' @param ls_s.re An optional boolean indicating whether the length-scale parameters of the scalar inputs
 #'   should be re-estimated. Default is FALSE.
-#' @param ls_f.re an optional boolean indicating whether the length-scale parameters of the functional
+#' @param ls_f.re An optional boolean indicating whether the length-scale parameters of the functional
 #'   inputs should be re-estimated. Default is FALSE.
 #'
 #' @return An object of class \linkS4class{fgpm} representing the updated funGp model.
@@ -1102,7 +1140,7 @@ setGeneric(name = "update", def = function(object, ...) standardGeneric("update"
 #' }
 #'
 #' All the arguments listed above are optional since any of these tasks can be requested without need to
-#' request any of the other tasks. In fact, even most of the arguments can be used even if the other
+#' request any of the other tasks. In fact, most of the arguments can be used even if the other
 #' arguments related to the same task are not. For instance, the re-estimation of the variance can be
 #' requested via var.re without requiring re-estimation of the scalar or functional length-scale
 #' parameters. The only two exceptions are: (i) for data addition, the new output sOut.nw should always
@@ -1120,18 +1158,18 @@ setGeneric(name = "update", def = function(object, ...) standardGeneric("update"
 #' @details
 #' Note that the parameters of the model will not be updated after modifying the model unless explicitly
 #' requested through the var.re, ls_s.re and ls_f.re arguments. If, for instance, some points are added
-#' to the model without requesting parameters re-estimation, the new data will be included in the
+#' to the model without requesting parameter re-estimation, the new data will be included in the
 #' training-training and training-prediction covariance matrices, but the hyperparameters will not
 #' be updated. This allows to make updates in the data that might help to improve predictions,
 #' without the immediate need to perform a training procedure that could be time consuming. At any later
 #' time, the user is allowed to request the re-estimation of the hyperparameters, which will make
-#' the model be fully up to date.
+#' the model fully up to date.
 #'
-#' @author José Betancourt, François Bachoc and Thierry Klein
+#' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #'
 #' @seealso \strong{*} \link[funGp]{fgpm} for creation of a funGp model;
-#' @seealso \strong{*} \link[funGp]{predict} for predictions based on a funGp model;
-#' @seealso \strong{*} \link[funGp]{simulate} for simulations based on a funGp model;
+#' @seealso \strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a \code{fgpm} model;
+#' @seealso \strong{*} \link[funGp]{simulate,fgpm-method} for simulations based on a \code{fgpm} model.
 #'
 #' @examples
 #' # deletion and addition of data points_____________________________________________________
@@ -1175,14 +1213,14 @@ setGeneric(name = "update", def = function(object, ...) standardGeneric("update"
 #' # generating indices for substitution
 #' ind.sb <- sample(1:(m1@n.tot), n.sb)
 #'
-#' # updating all, the scalar inputs, functional inputs and the output
+#' # updating all, the scalar inputs, functional inputs and the outputs
 #' m1up <- update(m1, sIn.sb = sIn.sb, fIn.sb = fIn.sb, sOut.sb = sOut.sb, ind.sb = ind.sb)
 #'
 #' # updating only some of the data structures
 #' m1up1 <- update(m1, sIn.sb = sIn.sb, ind.sb = ind.sb) # only the scalar inputs
-#' m1up2 <- update(m1, sOut.sb = sOut.sb, ind.sb = ind.sb) # only the output
+#' m1up2 <- update(m1, sOut.sb = sOut.sb, ind.sb = ind.sb) # only the outputs
 #' m1up3 <- update(m1, sIn.sb = sIn.sb, sOut.sb = sOut.sb, ind.sb = ind.sb) # the scalar inputs
-#'                                                                          # and the output
+#'                                                                          # and the outputs
 #'
 #'
 #' # substitution of hyperparameters__________________________________________________________
@@ -1354,7 +1392,7 @@ update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb,
   if (length(cptasks) > 0) { # list of complete tasks if there is any
     cat("--------------\n")
     cat("Update summary\n")
-    cat("--------------\n\n")
+    cat("--------------\n")
 
     cat("* Complete tasks:\n")
     ct <- tasknames[cptasks]
@@ -1387,4 +1425,25 @@ update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb,
 
   return(modelup)
 }
-# ==========================================================================================================
+
+## ==============================================================================
+## summary method. Simple copy of 'show', at least for now.
+## ==============================================================================
+##' @description Display the structure of a \code{fgpm}
+##'     object and the value of the parameters (variance and length-scales).
+##'
+##' @title Summary method for \code{fgpm} objects
+##' @param object An \code{fgpm} object.
+##' @param ... Not used yet.
+##' @method summary fgpm
+##'
+##' @note This method is actually identical to the \code{show} method
+##'     for this class which is called when the name of the object is
+##'     entered in an interactive session.
+##'
+##' @examples
+##' m <- xm@model
+##' class(m)
+##' summary(m)
+##' m
+setMethod("summary", "fgpm", function(object, ...) show(object, ...))
