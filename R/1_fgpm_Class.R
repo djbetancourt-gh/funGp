@@ -1126,7 +1126,7 @@ setGeneric(name = "update", def = function(object, ...) standardGeneric("update"
 #'   should be re-estimated. Default is FALSE.
 #' @param ls_f.re An optional boolean indicating whether the length-scale parameters of the functional
 #'   inputs should be re-estimated. Default is FALSE.
-#' @param trace An optional boolean indicating whether a summary update should be displayed. Default is FALSE.
+#' @param trace An optional boolean indicating whether a summary update should be displayed. Default is TRUE.
 #'
 #' @return An object of class \linkS4class{fgpm} representing the updated funGp model.
 #'
