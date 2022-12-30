@@ -20,6 +20,7 @@
   var.re = FALSE,
   ls_s.re = FALSE,
   ls_f.re = FALSE,
+  trace = TRUE,
   ...
 )
 }

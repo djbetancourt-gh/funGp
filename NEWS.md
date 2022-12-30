@@ -1,3 +1,14 @@
+# funGp 0.3.1 (2023-01-02)
+
+## Minor display changes
+
+* Line type of the mean function in `plotSims.fgpm` changed to dashed
+  (`lty` = 2) for easier inspection
+
+* A `trace` argument was added to `update.fgpm`
+
+
+
 # funGp 0.3.0 (2022-05-30)
 
 ## Main functionality corrections
@@ -6,8 +17,8 @@
 
 * New classes `"predict.Xfgpm"` and `"simulate.Xfgpm"`
 
-* All plotters are now `plot` methods for the classes `"Xfgpm"`, `"fgpm"`
-`"predict.Xfgpm"` or `"simulate.Xfgpm"`
+* All plotters are now `plot` methods for the classes `"Xfgpm"`, `"fgpm"`,
+  `"predict.Xfgpm"` or `"simulate.Xfgpm"`
 
 * New functions `modelDef` and `[[` to refit a `fgpm` object from a `Xfgpm` one
 

@@ -1,13 +1,15 @@
 ## Resubmission
 This is a resubmission. In this version we have:
 
-* Implemented plot and summary methods for our most important
-  objects to adjust to the standard use in R packages
-  
-* Removed our dependency on the qdapRegex package which is
-  already scheduled for archival by CRAN
-  
-* Improved the documentation to simplify help pages indexing
+* Updated the source URL of funGp's logo in README.md
+
+* Edited the line type in one plot to improve its visualization
+
+* Added a trace argument to some functions to improve the user control of
+  displays
+
+
+
 
 ## Test environments
 * local Windows install, R 4.2.0

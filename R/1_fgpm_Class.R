@@ -1263,16 +1263,18 @@ setMethod("update", "fgpm",
           function(object, sIn.nw = NULL, fIn.nw = NULL, sOut.nw = NULL,
                    sIn.sb = NULL, fIn.sb = NULL, sOut.sb = NULL, ind.sb = NULL,
                    ind.dl = NULL, var.sb = NULL, ls_s.sb = NULL, ls_f.sb = NULL,
-                   var.re = FALSE, ls_s.re = FALSE, ls_f.re = FALSE, ...) {
+                   var.re = FALSE, ls_s.re = FALSE, ls_f.re = FALSE, trace = TRUE, ...) {
             update.fgpm(model = object, sIn.nw = sIn.nw, fIn.nw = fIn.nw, sOut.nw = sOut.nw,
-                         sIn.sb = sIn.sb, fIn.sb = fIn.sb, sOut.sb = sOut.sb, ind.sb = ind.sb,
-                         ind.dl = ind.dl,
-                         var.sb = var.sb, ls_s.sb = ls_s.sb, ls_f.sb = ls_f.sb,
-                         var.re = var.re, ls_s.re = ls_s.re, ls_f.re = ls_f.re)
-            })
+                        sIn.sb = sIn.sb, fIn.sb = fIn.sb, sOut.sb = sOut.sb, ind.sb = ind.sb,
+                        ind.dl = ind.dl,
+                        var.sb = var.sb, ls_s.sb = ls_s.sb, ls_f.sb = ls_f.sb,
+                        var.re = var.re, ls_s.re = ls_s.re, ls_f.re = ls_f.re,
+                        trace = trace)
+
+          })
 
 update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb, ind.sb, ind.dl,
-                         var.sb, ls_s.sb, ls_f.sb, var.re, ls_s.re, ls_f.re) {
+                         var.sb, ls_s.sb, ls_f.sb, var.re, ls_s.re, ls_f.re, trace) {
   # check what does the user want to do
   delInOut <- !is.null(ind.dl)
   subHypers <- any(!is.null(var.sb), !is.null(ls_s.sb), !is.null(ls_f.sb))
@@ -1294,8 +1296,10 @@ update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb,
   # (4) var substitution, (5) ls_s substitution, (6) ls_f substitution,
   # (7) var re-estimation, (8) ls_s re-estimation, (9) ls_f re-estimation
   tasknames <- c("data deletion", "data substitution", "data addition",
-                 "var substitution", "scalar length-scale substitution", "functional length-scale substitution",
-                 "var re-estimation", "scalar length-scale re-estimation", "functional length-scale re-estimation")
+                 "var substitution", "scalar length-scale substitution",
+                 "functional length-scale substitution",
+                 "var re-estimation", "scalar length-scale re-estimation",
+                 "functional length-scale re-estimation")
 
   # identify and drop conflicting tasks
   # ----------------------------------------------------
@@ -1387,39 +1391,41 @@ update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb,
   }
   # ----------------------------------------------------
 
-  # print update summary
-  # ----------------------------------------------------
-  if (length(cptasks) > 0) { # list of complete tasks if there is any
-    cat("--------------\n")
-    cat("Update summary\n")
-    cat("--------------\n")
-
-    cat("* Complete tasks:\n")
-    ct <- tasknames[cptasks]
-    for (t in ct) {
-      cat(paste("  - ", t, "\n", sep = ""))
-    }
-  }
-
-  if (length(dptasks) > 0) { # list of dropped tasks if there is any
-    if (length(cptasks) == 0) {
+  # print update summary (only if trace is enabled)
+  if (trace) {
+    # ----------------------------------------------------
+    if (length(cptasks) > 0) { # list of complete tasks if there is any
       cat("--------------\n")
       cat("Update summary\n")
       cat("--------------\n")
+
+      cat("* Complete tasks:\n")
+      ct <- tasknames[cptasks]
+      for (t in ct) {
+        cat(paste("  - ", t, "\n", sep = ""))
+      }
     }
 
-    cat("\n* Dropped tasks:\n")
-    dt <- tasknames[dptasks]
-    for (t in dt) {
-      cat(paste("  - ", t, "\n", sep = ""))
+    if (length(dptasks) > 0) { # list of dropped tasks if there is any
+      if (length(cptasks) == 0) {
+        cat("--------------\n")
+        cat("Update summary\n")
+        cat("--------------\n")
+      }
+
+      cat("\n* Dropped tasks:\n")
+      dt <- tasknames[dptasks]
+      for (t in dt) {
+        cat(paste("  - ", t, "\n", sep = ""))
+      }
+      cat("\n* Recall that:\n")
+      cat(" - Data points deletion and substitution are not compatible tasks\n")
+      cat(" - Hyperparameters substitution and re-estimation are not compatible tasks\n")
+      cat(" - Hyperparameters re-estimation is automatically dropped when data deletion and substitution are both requested\n")
+      cat(" - Scalar length-scale coeficients re-estimation is automatically dropped when the model has only functional inputs\n")
+      cat(" - Functional length-scale coeficients re-estimation is automatically dropped when the model has only scalar inputs\n")
+      cat(" -> Please check ?funGp::update for more details\n")
     }
-    cat("\n* Recall that:\n")
-    cat(" - Data points deletion and substitution are not compatible tasks\n")
-    cat(" - Hyperparameters substitution and re-estimation are not compatible tasks\n")
-    cat(" - Hyperparameters re-estimation is automatically dropped when data deletion and substitution are both requested\n")
-    cat(" - Scalar length-scale coeficients re-estimation is automatically dropped when the model has only functional inputs\n")
-    cat(" - Functional length-scale coeficients re-estimation is automatically dropped when the model has only scalar inputs\n")
-    cat(" -> Please check ?funGp::update for more details\n")
   }
   # ----------------------------------------------------
 
