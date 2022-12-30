@@ -69,6 +69,8 @@ should be re-estimated. Default is FALSE.}
 \item{ls_f.re}{An optional boolean indicating whether the length-scale parameters of the functional
 inputs should be re-estimated. Default is FALSE.}
 
+\item{trace}{An optional boolean indicating whether a summary update should be displayed. Default is FALSE.}
+
 \item{...}{Not used.}
 }
 \value{
