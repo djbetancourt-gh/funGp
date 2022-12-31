@@ -25,7 +25,8 @@ Description: Construction and smart selection of Gaussian process models
 Note: research product of the RISCOPE project
     (ANR, project No.16CE04-0011) <https://perso.math.univ-toulouse.fr/riscope/>.
 License: GPL-3
-URL: https://djbetancourt-gh.github.io/funGp/
+URL: https://djbetancourt-gh.github.io/funGp/, https://github.com/djbetancourt-gh/funGp
+BugReports: https://github.com/djbetancourt-gh/funGp/issues
 Depends: R (>= 3.5.0)
 Imports: methods, foreach, knitr, scales, microbenchmark, doFuture, doRNG, future, progressr
 Encoding: UTF-8
