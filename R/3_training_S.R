@@ -10,7 +10,7 @@ setHypers_S <- function(sIn, sMs, sOut, kerType, var.known, ls_s.known, n.starts
     U <- chol(R)
 
     # 2. estimate the a priori process variance
-    message("** Computing optimal variance...")
+    if (trace) message("** Computing optimal variance...")
     sig2 <- analyticVar_llik(U, sOut, n.tr)
 
     # 3. merge hyperparameters and return
@@ -29,13 +29,13 @@ setHypers_S <- function(sIn, sMs, sOut, kerType, var.known, ls_s.known, n.starts
     }
 
     # 3. set starting points
-    message("** Presampling...")
+    if (trace) message("** Presampling...")
     spoints <- setSPoints_S(bnds, sMs, sOut, kerType, varfun, n.starts, n.presample, nugget)
 
     # 4. Perform optimization
-    message("** Optimising hyperparameters...")
+    if (trace) message("** Optimising hyperparameters...")
     optResult <- optimHypers_S(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, nugget, par.clust, trace, pbars, control.optim)
-    message("** Hyperparameters done!")
+    if (trace) message("** Hyperparameters done!")
     return(optResult)
   }
 }
@@ -98,19 +98,12 @@ setSPoints_S <- function(bnds, sMs, sOut, kerType, varfun, n.starts, n.presample
 optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, nugget, par.clust, trace, pbars, control.optim){
   # if multistart is required then parallelize, else run single optimization
   if (n.starts == 1){
-    # if (trace) {
-      optOut <- optim(par = as.numeric(spoints), fn = negLogLik_funGp_S, method = "L-BFGS-B",
-                      lower = bnds[1,], upper = bnds[2,], control = control.optim,
-                      sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
-    # } else {
-    #   optOut <- quiet(optim(par = as.numeric(spoints), fn = negLogLik_funGp_S, method = "L-BFGS-B",
-    #                         lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
-    #                         sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget))
-    # }
-
+    optOut <- optim(par = as.numeric(spoints), fn = negLogLik_funGp_S, method = "L-BFGS-B",
+                    lower = bnds[1,], upper = bnds[2,], control = control.optim,
+                    sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
   } else {
     if (is.null(par.clust)) {
-      message("** Parallel backend register not found. Multistart optimizations done in sequence.")
+      if (trace) message("** Parallel backend register not found. Multistart optimizations done in sequence.")
 
       # set up progress bar
       if (pbars) {
@@ -122,15 +115,9 @@ optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, n
       for (i in 1:n.starts) {
         modeval <- tryCatch(
           {
-            # if (trace) {
-              optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
-                    lower = bnds[1,], upper = bnds[2,], control = control.optim,
-                    sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
-            # } else {
-            #   quiet(optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
-            #                 lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
-            #                 sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget))
-            # }
+            optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
+                  lower = bnds[1,], upper = bnds[2,], control = control.optim,
+                  sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
           },
           error = function(e) e
         )
@@ -146,7 +133,7 @@ optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, n
       if (pbars) close(pb)
 
     } else {
-      message("** Parallel backend register found. Multistart optimizations done in parallel.")
+      if (trace) message("** Parallel backend register found. Multistart optimizations done in parallel.")
 
       # register parallel backend
       registerDoFuture()
@@ -156,16 +143,10 @@ optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, n
       with_progress({
         if (pbars) p <- progressor(along = 1:n.starts, auto_finish = FALSE)
         optOutList <- foreach(i = 1:n.starts, .errorhandling = "remove") %dopar% {
-          # if (trace) {
-            o <- optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
-                       lower = bnds[1,], upper = bnds[2,], control = control.optim,
-                       sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
-            ## cat("\n")
-          # } else {
-          #   o <- quiet(optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
-          #                    lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
-          #                    sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget))
-          # }
+          o <- optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
+                     lower = bnds[1,], upper = bnds[2,], control = control.optim,
+                     sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
+          ## cat("\n")
           if (pbars) p()
           return(o)
         }
@@ -182,7 +163,7 @@ optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, n
     optOut <- optOutList[[which.min(fitvec)]]
   }
 
-  if (trace) message("The function value is the negated log-likelihood")
+  if (isTRUE(control.optim$trace)) message("The function value is the negated log-likelihood")
 
   # recovering relevant information for the estimation of the process a priori variance
   thetas_s <- optOut$par

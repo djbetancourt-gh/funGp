@@ -10,7 +10,12 @@
 * Convergence code and negated log-likelihood value added as slots of
   fgpm objects to make them more informative.
 
-* Forwarding of `control` argument enabled in fgpm.
+* Forwarding of `optim` `control` argument enabled in fgpm through
+  `control.optim`.
+
+* Following the addition of control.optim, we improved the functionality
+  of the `fgpm` and `fgpm_factory` arguments to control the display of
+  `funGp` native progress messages
 
 
 

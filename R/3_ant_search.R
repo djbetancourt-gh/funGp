@@ -178,7 +178,7 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, phero, base, extargs, time.st
     crashes <- crashes[!duplicated(crashes),,drop = FALSE]
   }
 
-  message("\n** Ants are done ;)")
+  if (pbars) message("\n** Ants are done ;)") else message("** Ants are done ;)")
 
   return(list(model = b.model, sol.vec = b.ant, sol.args = b.args, b.fitness = b.fitness,
               log.suc = top.ants, log.fitness = top.fitness, log.cra = crashes,

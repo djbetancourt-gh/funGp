@@ -157,16 +157,18 @@ setClass("fgpm",
 #'   n.starts will be assigned to n.presample if this last is smaller. Default is 20.
 #' @param par.clust An optional parallel processing cluster created with the \code{\link[parallel]{makeCluster}} function
 #'   of the \link[=parallel]{parallel package}. If not provided, multistart optimizations are done in sequence.
-#' @param trace An optional boolean indicating if control messages from the \link[stats]{optim} function regarding the
-#'   optimization of the hyperparameters should be printed to console. Default is TRUE.
+#' @param trace An optional boolean indicating if control messages native of the \link[=funGp]{funGp package} should be printed to
+#'   console. Default is TRUE. For complementary control on the display of \link[=funGp]{funGp} progress bars and
+#'   \code{\link[stats]{optim}} trace about the hyperparameter optimization process, have a look at the \code{pbars} and
+#'   \code{control.optim} arguments, respectively.
 #' @param pbars An optional boolean indicating if progress bars should be displayed. Default is TRUE.
 #' @param control.optim An optional list to be passed as the \code{control} argument to \code{\link[stats]{optim}}, the function
 #'   in charge of the non-linear optimization of the hyperparameters. Default is \code{list(trace = TRUE)}, equivalent to
 #'   \code{list(trace = 1)}, which enables the printing of tracing information on the progress of the optimization. Before
-#'   interacting with this \code{\link[funGp]{fgpm}} argument, please carefully check the documentation provided in
-#'   \code{\link[stats]{optim}} to ensure a coherent behavior and sound results. Note that: (i) at this time, only the
-#'   \code{"L-BFGS-B"} method (Byrd et. al., 1995) is enabled in \code{\link[funGp]{fgpm}}; (ii) \code{control.optim$fnscale}
-#'   should not be used since our optimization problem is strictly of minimization, not maximization.
+#'   interacting with the \code{\link[funGp]{fgpm}} \code{control.optim} argument, please carefully check the documentation about
+#'   the \code{control} argument provided in \code{\link[stats]{optim}} to ensure a coherent behavior and sound results. Note
+#'   that: (i) at this time, only the \code{"L-BFGS-B"} method (Byrd et. al., 1995) is enabled in \code{\link[funGp]{fgpm}};
+#'   (ii) \code{control.optim$fnscale} should not be used since our optimization problem is strictly of minimization, not maximization.
 #'
 #' @return An object of class \linkS4class{fgpm} containing the data structures representing the fitted funGp model.
 #'
