@@ -597,7 +597,9 @@ eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.l
     # register parallel backend
     registerDoFuture()
     registerDoRNG()
-    plan(cluster, workers = par.clust)
+    # plan(cluster, workers = par.clust)
+    oplan <- plan(cluster, workers = par.clust)
+    on.exit(plan(oplan), add = TRUE)
 
     # evaluate the ants as models
     with_progress({
@@ -663,7 +665,9 @@ eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str
     # register parallel backend
     registerDoFuture()
     registerDoRNG()
-    plan(cluster, workers = par.clust)
+    # plan(cluster, workers = par.clust)
+    oplan <- plan(cluster, workers = par.clust)
+    on.exit(plan(oplan), add = TRUE)
 
     # evaluate the ants as models
     with_progress({

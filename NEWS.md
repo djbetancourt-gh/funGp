@@ -17,6 +17,9 @@
   of the `fgpm` and `fgpm_factory` arguments to control the display of
   `funGp` native progress messages
 
+* Pre-existent future backend registers protected as suggested by the
+  author of future in a previous issue
+
 
 
 # funGp 0.3.0 (2022-05-30)

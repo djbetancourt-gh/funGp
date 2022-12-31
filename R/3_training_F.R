@@ -134,7 +134,9 @@ optimHypers_F <- function(spoints, n.starts, bnds, fMs, sOut, kerType, varfun, n
       # register parallel backend
       registerDoFuture()
       registerDoRNG()
-      plan(cluster, workers = par.clust)
+      # plan(cluster, workers = par.clust)
+      oplan <- plan(cluster, workers = par.clust)
+      on.exit(plan(oplan), add = TRUE)
 
       with_progress({
         if (pbars) p <- progressor(along = 1:n.starts, auto_finish = FALSE)

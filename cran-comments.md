@@ -12,6 +12,9 @@ This is a resubmission. In this version we have:
 
 * Enabled forwarding of the control argument to optim through fgpm calls
 
+* Protected pre-existent future backend registers as suggested by the
+  author of future
+
 
 
 
