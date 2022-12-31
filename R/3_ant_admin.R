@@ -29,17 +29,17 @@ setClass("antsLog",
 # ==========================================================================================================
 # Master function to process ACO tasks
 # ==========================================================================================================
-master_ACO <- function(sIn, fIn, sOut, ind.vl, solspace, setup, extargs, time.str, time.lim, pbars, par.clust) {
+master_ACO <- function(sIn, fIn, sOut, ind.vl, solspace, setup, extargs, time.str, time.lim, trace, pbars, par.clust) {
   # set heuristic parameters based on defaults and user specifications
   param <- setParams_ACO(setup, length(fIn))
 
   # set pheromones based on the solution space and initial parameters
-  message("** Initializing decision network...")
+  if (trace) message("** Initializing decision network...")
   phero <- setEnvir_ACO(solspace, param)
 
   # perform exploration
-  message("** Optimizing structural parameters...")
-  res <- run_ACO(sIn, fIn, sOut, ind.vl, param, phero, solspace$sp.base, extargs, time.str, time.lim, pbars, par.clust)
+  if (trace) message("** Optimizing structural parameters...")
+  res <- run_ACO(sIn, fIn, sOut, ind.vl, param, phero, solspace$sp.base, extargs, time.str, time.lim, trace, pbars, par.clust)
 
   # correct the howCalled of best model
   res$model@howCalled@string <- getCall_ACO(res$sol.vec, sIn, fIn, res$sol.args, solspace$sp.base, extargs)

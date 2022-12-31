@@ -1,7 +1,7 @@
 # ==========================================================================================================
 # Skeleton of the Ant Colony Optimization algoritm for model selection
 # ==========================================================================================================
-run_ACO <- function(sIn, fIn, sOut, ind.vl, param, phero, base, extargs, time.str, time.lim, pbars, par.clust) {
+run_ACO <- function(sIn, fIn, sOut, ind.vl, param, phero, base, extargs, time.str, time.lim, trace, pbars, par.clust) {
   # recover heuristic parameters
   #___________________________________________________________________________________________
   # <---> population factors
@@ -155,7 +155,7 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, phero, base, extargs, time.st
 
     dt <- difftime(Sys.time(), time.str, units = 'secs')
     if (dt >= time.lim) {
-      message(paste("** Time limit reached, exploration stopped after", format(as.numeric(dt), digits = 3, nsmall = 2), "seconds."))
+      if (trace) message(paste("** Time limit reached, exploration stopped after", format(as.numeric(dt), digits = 3, nsmall = 2), "seconds."))
       break
     }
   }
@@ -178,7 +178,9 @@ run_ACO <- function(sIn, fIn, sOut, ind.vl, param, phero, base, extargs, time.st
     crashes <- crashes[!duplicated(crashes),,drop = FALSE]
   }
 
-  if (pbars) message("\n** Ants are done ;)") else message("** Ants are done ;)")
+  if (trace) {
+    if (pbars) message("\n** Ants are done ;)") else message("** Ants are done ;)")
+  }
 
   return(list(model = b.model, sol.vec = b.ant, sol.args = b.args, b.fitness = b.fitness,
               log.suc = top.ants, log.fitness = top.fitness, log.cra = crashes,

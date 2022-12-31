@@ -16,6 +16,7 @@ fgpm_factory(
   n.starts = 1,
   n.presample = 20,
   par.clust = NULL,
+  trace = TRUE,
   pbars = interactive()
 )
 }
@@ -130,7 +131,11 @@ n.starts will be assigned to n.presample if this last is smaller. Default is 20.
 function of the \link[=parallel]{parallel package}. If not provided, structural configurations are evaluated in
 sequence.}
 
-\item{pbars}{An optional boolean indicating if progress bars should be displayed.}
+\item{trace}{An optional boolean indicating if control messages native of the \link[=funGp]{funGp package} should be printed to
+console. Default is TRUE. For complementary control on the display of \link[=funGp]{funGp} progress bars, have a look at the
+\code{pbars} argument below.}
+
+\item{pbars}{An optional boolean indicating if progress bars should be displayed. Default is TRUE.}
 }
 \value{
 An object of class \linkS4class{Xfgpm} containing the data structures linked to the structural optimization

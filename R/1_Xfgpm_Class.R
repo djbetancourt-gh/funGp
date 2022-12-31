@@ -214,7 +214,10 @@ show.Xfgpm <- function(object) {
 #' @param par.clust An optional parallel processing cluster created with the \code{\link[parallel]{makeCluster}}
 #'   function of the \link[=parallel]{parallel package}. If not provided, structural configurations are evaluated in
 #'   sequence.
-#' @param pbars An optional boolean indicating if progress bars should be displayed.
+#' @param trace An optional boolean indicating if control messages native of the \link[=funGp]{funGp package} should be printed to
+#'   console. Default is TRUE. For complementary control on the display of \link[=funGp]{funGp} progress bars, have a look at the
+#'   \code{pbars} argument below.
+#' @param pbars An optional boolean indicating if progress bars should be displayed. Default is TRUE.
 #'
 #' @return An object of class \linkS4class{Xfgpm} containing the data structures linked to the structural optimization
 #'   of a funGp model. It includes as the main component an object of class \linkS4class{fgpm} corresponding to the
@@ -383,7 +386,7 @@ show.Xfgpm <- function(object) {
 fgpm_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, ind.vl = NULL,
                          ctraints = list(), setup = list(), time.lim = Inf,
                          nugget = 1e-8, n.starts = 1, n.presample = 20,
-                         par.clust = NULL, pbars = interactive()) {
+                         par.clust = NULL, trace = TRUE, pbars = interactive()) {
 
   # launch timer
   time.str <- Sys.time()
@@ -402,7 +405,7 @@ fgpm_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, ind.vl = NULL,
   }
 
   # optimize model structure
-  opt <- master_ACO(sIn, fIn, sOut, ind.vl, solspace, setup, extargs, time.str, time.lim, pbars, par.clust)
+  opt <- master_ACO(sIn, fIn, sOut, ind.vl, solspace, setup, extargs, time.str, time.lim, trace, pbars, par.clust)
   X.model <- new("Xfgpm")
   X.model@factoryCall@string <- gsub("^ *|(?<= ) | *$", "", paste0(deparse(match.call()), collapse = " "), perl = TRUE)
   X.model@model <- opt$model
