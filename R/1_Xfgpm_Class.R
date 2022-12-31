@@ -302,7 +302,7 @@ show.Xfgpm <- function(object) {
 #'                      setup = list(n.iter = 25))
 #'}
 #'
-#' #assessing evolution and quality
+#' # assessing evolution and quality
 #' plot(xm25, which = "evol")
 #' plot(xm25, which = "diag")
 #'
@@ -320,7 +320,7 @@ show.Xfgpm <- function(object) {
 #' xmc <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, ctraints = myctr)
 #'}
 #'
-#' #assessing evolution and quality
+#' # assessing evolution and quality
 #' plot(xmc, which = "evol")
 #' plot(xmc, which = "diag")
 #'

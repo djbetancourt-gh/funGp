@@ -10,6 +10,8 @@ This is a resubmission. In this version we have:
 
 * Added two slots to the fgpm class to make it more informative
 
+* Enabled forwarding of the control argument to optim through fgpm calls
+
 
 
 

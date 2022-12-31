@@ -805,7 +805,7 @@ fitNtests_ACO <- function(ant, sIn, fIn, sOut, extargs, base,
       model <- suppressMessages(fgpm(sIn = args$sIn, fIn = args$fIn, sOut = sOut, kerType = args$kerType,
                                      f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType,
                                      nugget = extargs$nugget, n.starts = extargs$n.starts, n.presample = extargs$n.presample,
-                                     trace = F, pbars = F))
+                                     trace = F, pbars = F, control.optim = list(trace = 0)))
     },
     error = function(e) e
   )

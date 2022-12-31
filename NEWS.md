@@ -10,6 +10,8 @@
 * Convergence code and negated log-likelihood value added as slots of
   fgpm objects to make them more informative.
 
+* Forwarding of `control` argument enabled in fgpm.
+
 
 
 # funGp 0.3.0 (2022-05-30)

@@ -194,7 +194,7 @@ xm25 <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut,
                      setup = list(n.iter = 25))
 }
 
-#assessing evolution and quality
+# assessing evolution and quality
 plot(xm25, which = "evol")
 plot(xm25, which = "diag")
 
@@ -212,7 +212,7 @@ kerTypes = c("matern5_2", "gauss")) # test only Matern 5/2 and Gaussian kernels
 xmc <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, ctraints = myctr)
 }
 
-#assessing evolution and quality
+# assessing evolution and quality
 plot(xmc, which = "evol")
 plot(xmc, which = "diag")
 
