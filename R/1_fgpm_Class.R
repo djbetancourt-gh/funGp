@@ -45,6 +45,10 @@
 #' @slot preMats Object of class \code{"list"}. L and LInvY matrices pre-computed for prediction. L is a lower
 #'   diagonal matrix such that \eqn{L'L} equals the training auto-covariance matrix \eqn{K.tt}. On the other
 #'   hand, \eqn{LInvY = L^(-1) * sOut}.
+#' @slot convergence Object of class \code{"numeric"}. Integer code either confirming convergence or indicating
+#'  an error. Check the convergence component of the Value returned by \code{\link[stats]{optim}}.
+#' @slot NegLogLike Object of class \code{"numeric"}. Negated log-likelihood obained by \code{\link[stats]{optim}}
+#'  during hyperparameter optimization.
 #'
 #' @section Useful material:
 #' \itemize{
@@ -65,7 +69,7 @@
 setClass("fgpm",
          slots = c(
            howCalled = "modelCall",    # reminder of function call
-           type = "character",         # Type of model. To be set from {"scalar", "functional", "hybrid"}.
+           type = "character",         # type of model. To be set from {"scalar", "functional", "hybrid"}.
            ds = "numeric",             # number of scalar inputs
            df = "numeric",             # number of functional inputs
            f_dims = "numeric",         # dimension of each functional input
@@ -77,7 +81,9 @@ setClass("fgpm",
            f_proj = "fgpProj",         # structures related to the projection of functional inputs
            kern = "fgpKern",           # structures related to the kernel of the model
            nugget = "numeric",         # variance parameter standing for the homogeneous nugget effect
-           preMats = "list"            # Pre-computed KttInv and KttInv.sOut matrices
+           preMats = "list",           # pre-computed KttInv and KttInv.sOut matrices
+           convergence = "numeric",    # indicator of convergence/error
+           NegLogLike = "numeric"      # negated loglikelihood achieved during hypers optim
          ),
          validity = function(object) {TRUE})
 # ==========================================================================================================
@@ -154,6 +160,13 @@ setClass("fgpm",
 #' @param trace An optional boolean indicating if control messages from the \link[stats]{optim} function regarding the
 #'   optimization of the hyperparameters should be printed to console. Default is TRUE.
 #' @param pbars An optional boolean indicating if progress bars should be displayed. Default is TRUE.
+#' @param control.optim An optional list to be passed as the \code{control} argument to \code{\link[stats]{optim}}, the function
+#'   in charge of the non-linear optimization of the hyperparameters. Default is \code{list(trace = TRUE)}, equivalent to
+#'   \code{list(trace = 1)}, which enables the printing of tracing information on the progress of the optimization. Before
+#'   interacting with this \code{\link[funGp]{fgpm}} argument, please carefully check the documentation provided in
+#'   \code{\link[stats]{optim}} to ensure a coherent behavior and sound results. Note that: (i) at this time, only the
+#'   \code{"L-BFGS-B"} method (Byrd et. al., 1995) is enabled in \code{\link[funGp]{fgpm}}; (ii) \code{control.optim$fnscale}
+#'   should not be used since our optimization problem is strictly of minimization, not maximization.
 #'
 #' @return An object of class \linkS4class{fgpm} containing the data structures representing the fitted funGp model.
 #'
@@ -329,10 +342,10 @@ setClass("fgpm",
 #' @importFrom microbenchmark microbenchmark
 #' @export
 fgpm <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
-                  f_disType = "L2_bygroup", f_pdims = 3, f_basType = "B-splines",
-                  var.hyp = NULL, ls_s.hyp = NULL, ls_f.hyp = NULL, nugget = 1e-8,
-                  n.starts = 1, n.presample = 20, par.clust = NULL, trace = TRUE, pbars = TRUE) {
-
+                 f_disType = "L2_bygroup", f_pdims = 3, f_basType = "B-splines",
+                 var.hyp = NULL, ls_s.hyp = NULL, ls_f.hyp = NULL, nugget = 1e-8,
+                 n.starts = 1, n.presample = 20, par.clust = NULL, trace = TRUE, pbars = TRUE,
+                 control.optim = list(trace = TRUE)) {
   # extend simplified user inputs to full versions
   if (!is.null(sIn)) {
     if (is.numeric(sIn)) sIn <- as.matrix(sIn)
@@ -393,7 +406,10 @@ fgpm <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
       varHyp <- var.hyp
       lsHyps <- c(ls_s.hyp, ls_f.hyp)
     } else {
-      hypers <- setHypers_SF(sMs, fMs, sOut, kerType, var.hyp, ls_s.hyp, ls_f.hyp, n.starts, n.presample, nugget, par.clust, trace, pbars)
+      optResult <- setHypers_SF(sMs, fMs, sOut, kerType, var.hyp, ls_s.hyp, ls_f.hyp,
+                                n.starts, n.presample, nugget, par.clust, trace, pbars,
+                                control.optim)
+      hypers <- optResult$hypers
       varHyp <- hypers[1]
       lsHyps <- hypers[-1]
     }
@@ -442,7 +458,10 @@ fgpm <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
       varHyp <- var.hyp
       lsHyps <- ls_f.hyp
     } else {
-      hypers <- setHypers_F(fMs, sOut, kerType, var.hyp, ls_f.hyp, n.starts, n.presample, nugget, par.clust, trace, pbars)
+      optResult <- setHypers_F(fMs, sOut, kerType, var.hyp, ls_f.hyp,
+                               n.starts, n.presample, nugget, par.clust, trace, pbars,
+                               control.optim)
+      hypers <- optResult$hypers
       varHyp <- hypers[1]
       lsHyps <- hypers[-1]
     }
@@ -482,7 +501,10 @@ fgpm <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
       varHyp <- var.hyp
       lsHyps <- ls_s.hyp
     } else {
-      hypers <- setHypers_S(sIn, sMs, sOut, kerType, var.hyp, ls_s.hyp, n.starts, n.presample, nugget, par.clust, trace, pbars)
+      optResult <- setHypers_S(sIn, sMs, sOut, kerType, var.hyp, ls_s.hyp,
+                               n.starts, n.presample, nugget, par.clust, trace, pbars,
+                               control.optim)
+      hypers <- optResult$hypers
       varHyp <- hypers[1]
       lsHyps <- hypers[-1]
     }
@@ -515,6 +537,13 @@ fgpm <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
   model@n.tr <- n.tr
   model@kern <- kern
   model@nugget <- nugget
+  if (exists("optResult")) {
+    model@convergence <- optResult$convg
+    model@NegLogLike <- optResult$nllik
+  } else {
+    model@convergence <- as.numeric(NA)
+    model@NegLogLike <- as.numeric(NA)
+  }
 
   # ________________________________________________________________________________________________________
   # Attributes checklist
@@ -585,6 +614,8 @@ show.fgpm <- function(model) {
   cat(paste("* Trained with: ", model@n.tr, "\n", sep = ""))
 
   cat(paste("* Kernel type: ", model@kern@kerType, "\n", sep = ""))
+  cat(paste("* Convergence: ", model@convergence, "\n", sep = ""))
+  cat(paste("* NegLogLik: ", format(model@NegLogLike, digits = 3, nsmall = 4), "\n", sep = ""))
   cat("* Hyperparameters:\n")
   cat(paste("  -> variance: ", format(model@kern@varHyp, digits = 3, nsmall = 4), "\n", sep = ""))
   cat("  -> length-scale:\n")
@@ -1359,6 +1390,8 @@ update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb,
     modelup <- upd_del(model = modelup, ind.dl = ind.dl, remake = all(!newInOut, !subHypers, remake = !reeHypers))
     modelup@howCalled <- model@howCalled
     modelup@n.tr <- model@n.tr
+    modelup@convergence <- model@convergence
+    modelup@NegLogLike <- model@NegLogLike
     cptasks <- c(cptasks, 1)
   }
   if (subInOut & !(2 %in% dptasks)) {
@@ -1366,6 +1399,8 @@ update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb,
                            sOut.sb = tryCatch(as.matrix(sOut.sb), error = function(e) sOut.sb), ind.sb = ind.sb,
                            remake = all(!newInOut, !subHypers, !reeHypers))
     modelup@howCalled <- model@howCalled
+    modelup@convergence <- model@convergence
+    modelup@NegLogLike <- model@NegLogLike
     cptasks <- c(cptasks, 2)
   }
   if (newInOut) {
@@ -1373,12 +1408,16 @@ update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb,
                        remake = all(!subHypers, !reeHypers))
     modelup@howCalled <- model@howCalled
     modelup@n.tr <- model@n.tr
+    modelup@convergence <- model@convergence
+    modelup@NegLogLike <- model@NegLogLike
     cptasks <- c(cptasks, 3)
   }
   if (subHypers & any(!(c(4,5,6) %in% dptasks))) {
     modelup <- upd_subHypers(model = modelup, var.sb = var.sb, ls_s.sb = ls_s.sb, ls_f.sb = ls_f.sb)
     modelup@howCalled <- model@howCalled
     modelup@n.tr <- model@n.tr
+    modelup@convergence <- model@convergence
+    modelup@NegLogLike <- model@NegLogLike
     if (!is.null(var.sb) & !(4 %in% dptasks)) cptasks <- c(cptasks, 4)
     if (!is.null(ls_s.sb) & !(5 %in% dptasks)) cptasks <- c(cptasks, 5)
     if (!is.null(ls_f.sb) & !(6 %in% dptasks)) cptasks <- c(cptasks, 6)
@@ -1454,3 +1493,4 @@ update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb,
 ##' summary(m)
 ##' m
 setMethod("summary", "fgpm", function(object, ...) show(object, ...))
+

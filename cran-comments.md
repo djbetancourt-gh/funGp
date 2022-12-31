@@ -8,6 +8,8 @@ This is a resubmission. In this version we have:
 * Added a trace argument to some functions to improve the user control of
   displays
 
+* Added two slots to the fgpm class to make it more informative
+
 
 
 

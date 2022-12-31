@@ -1,7 +1,7 @@
 # ==========================================================================================================
 # Master function to manage the optimization of scalar-input models
 # ==========================================================================================================
-setHypers_S <- function(sIn, sMs, sOut, kerType, var.known, ls_s.known, n.starts, n.presample, nugget, par.clust, trace, pbars){
+setHypers_S <- function(sIn, sMs, sOut, kerType, var.known, ls_s.known, n.starts, n.presample, nugget, par.clust, trace, pbars, control.optim){
   # if the length-scale coefficients are known, skip optim and compute var analytically. Else optimize
   if (!is.null(ls_s.known)) {
     # 1. estimation of the correlation matrix
@@ -14,7 +14,7 @@ setHypers_S <- function(sIn, sMs, sOut, kerType, var.known, ls_s.known, n.starts
     sig2 <- analyticVar_llik(U, sOut, n.tr)
 
     # 3. merge hyperparameters and return
-    return(c(sig2, ls_s.known))
+    return(list(hypers = c(sig2, ls_s.known), convg = as.numeric(NA), nllik = as.numeric(NA)))
 
   } else {
     # 1. set hypercube for solution space
@@ -34,9 +34,9 @@ setHypers_S <- function(sIn, sMs, sOut, kerType, var.known, ls_s.known, n.starts
 
     # 4. Perform optimization
     message("** Optimising hyperparameters...")
-    hypers <- optimHypers_S(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, nugget, par.clust, trace, pbars)
+    optResult <- optimHypers_S(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, nugget, par.clust, trace, pbars, control.optim)
     message("** Hyperparameters done!")
-    return(hypers)
+    return(optResult)
   }
 }
 # ==========================================================================================================
@@ -95,18 +95,18 @@ setSPoints_S <- function(bnds, sMs, sOut, kerType, varfun, n.starts, n.presample
 #' @importFrom doRNG registerDoRNG
 #' @importFrom future plan cluster
 #' @importFrom progressr with_progress progressor
-optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, nugget, par.clust, trace, pbars){
+optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, nugget, par.clust, trace, pbars, control.optim){
   # if multistart is required then parallelize, else run single optimization
   if (n.starts == 1){
-    if (trace) {
+    # if (trace) {
       optOut <- optim(par = as.numeric(spoints), fn = negLogLik_funGp_S, method = "L-BFGS-B",
-                      lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
+                      lower = bnds[1,], upper = bnds[2,], control = control.optim,
                       sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
-    } else {
-      optOut <- quiet(optim(par = as.numeric(spoints), fn = negLogLik_funGp_S, method = "L-BFGS-B",
-                            lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
-                            sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget))
-    }
+    # } else {
+    #   optOut <- quiet(optim(par = as.numeric(spoints), fn = negLogLik_funGp_S, method = "L-BFGS-B",
+    #                         lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
+    #                         sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget))
+    # }
 
   } else {
     if (is.null(par.clust)) {
@@ -122,15 +122,15 @@ optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, n
       for (i in 1:n.starts) {
         modeval <- tryCatch(
           {
-            if (trace) {
+            # if (trace) {
               optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
-                    lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
+                    lower = bnds[1,], upper = bnds[2,], control = control.optim,
                     sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
-            } else {
-              quiet(optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
-                            lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
-                            sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget))
-            }
+            # } else {
+            #   quiet(optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
+            #                 lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
+            #                 sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget))
+            # }
           },
           error = function(e) e
         )
@@ -156,16 +156,16 @@ optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, n
       with_progress({
         if (pbars) p <- progressor(along = 1:n.starts, auto_finish = FALSE)
         optOutList <- foreach(i = 1:n.starts, .errorhandling = "remove") %dopar% {
-          if (trace) {
+          # if (trace) {
             o <- optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
-                       lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
+                       lower = bnds[1,], upper = bnds[2,], control = control.optim,
                        sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
             ## cat("\n")
-          } else {
-            o <- quiet(optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
-                             lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
-                             sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget))
-          }
+          # } else {
+          #   o <- quiet(optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
+          #                    lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
+          #                    sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget))
+          # }
           if (pbars) p()
           return(o)
         }
@@ -182,6 +182,8 @@ optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, n
     optOut <- optOutList[[which.min(fitvec)]]
   }
 
+  if (trace) message("The function value is the negated log-likelihood")
+
   # recovering relevant information for the estimation of the process a priori variance
   thetas_s <- optOut$par
   n.tr <- length(sOut)
@@ -191,7 +193,7 @@ optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, n
   # estimation of the variance
   sig2 <- varfun(U, sOut, n.tr)
 
-  return(c(sig2, thetas_s))
+  return(list(hypers = c(sig2, thetas_s), convg = optOut$convergence, nllik = optOut$value))
 }
 # ==========================================================================================================
 

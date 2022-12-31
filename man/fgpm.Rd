@@ -20,7 +20,8 @@ fgpm(
   n.presample = 20,
   par.clust = NULL,
   trace = TRUE,
-  pbars = TRUE
+  pbars = TRUE,
+  control.optim = list(trace = TRUE)
 )
 }
 \arguments{
@@ -102,6 +103,14 @@ of the \link[=parallel]{parallel package}. If not provided, multistart optimizat
 optimization of the hyperparameters should be printed to console. Default is TRUE.}
 
 \item{pbars}{An optional boolean indicating if progress bars should be displayed. Default is TRUE.}
+
+\item{control.optim}{An optional list to be passed as the \code{control} argument to \code{\link[stats]{optim}}, the function
+in charge of the non-linear optimization of the hyperparameters. Default is \code{list(trace = TRUE)}, equivalent to
+\code{list(trace = 1)}, which enables the printing of tracing information on the progress of the optimization. Before
+interacting with this \code{\link[funGp]{fgpm}} argument, please carefully check the documentation provided in
+\code{\link[stats]{optim}} to ensure a coherent behavior and sound results. Note that: (i) at this time, only the
+\code{"L-BFGS-B"} method (Byrd et. al., 1995) is enabled in \code{\link[funGp]{fgpm}}; (ii) \code{control.optim$fnscale}
+should not be used since our optimization problem is strictly of minimization, not maximization.}
 }
 \value{
 An object of class \linkS4class{fgpm} containing the data structures representing the fitted funGp model.

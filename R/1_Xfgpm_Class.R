@@ -381,9 +381,9 @@ show.Xfgpm <- function(object) {
 #' @importFrom microbenchmark microbenchmark
 #' @export
 fgpm_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, ind.vl = NULL,
-                          ctraints = list(), setup = list(), time.lim = Inf,
-                          nugget = 1e-8, n.starts = 1, n.presample = 20,
-                          par.clust = NULL, pbars = interactive()) {
+                         ctraints = list(), setup = list(), time.lim = Inf,
+                         nugget = 1e-8, n.starts = 1, n.presample = 20,
+                         par.clust = NULL, pbars = interactive()) {
 
   # launch timer
   time.str <- Sys.time()
@@ -412,12 +412,12 @@ fgpm_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, ind.vl = NULL,
   X.model@log.success <- opt$log.suc
   X.model@log.crashes <- opt$log.cra
   X.model@n.solspace <- getSpacesize(solspace$sp.user)
-    X.model@n.explored <- nrow(opt$log.suc@sols)
-    X.model@details <- opt$all.details
-    X.model@sIn <- as.matrix(sIn)
-    X.model@fIn <- fIn
-    X.model@sOut <- as.matrix(sOut)
-    return(X.model)
+  X.model@n.explored <- nrow(opt$log.suc@sols)
+  X.model@details <- opt$all.details
+  X.model@sIn <- as.matrix(sIn)
+  X.model@fIn <- fIn
+  X.model@sOut <- as.matrix(sOut)
+  return(X.model)
 }
 # ==========================================================================================================
 
