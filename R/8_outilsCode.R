@@ -60,6 +60,10 @@ text_bt <- function(key, left, right) {
   gsub(paste0(".*", left, "\\s*|", right, ".*"), "", key)
 }
 
+str_between <- function(x, lspl, rspl) {
+  strsplit(strsplit(x, lspl, fixed = TRUE)[[1]][2], rspl, fixed = TRUE)[[1]][1]
+}
+
 # ==========================================================================================================
 # S4 class for fgpm function calls
 # ==========================================================================================================

@@ -850,7 +850,6 @@ print.summary.Xfgpm <- function(x, ...) {
 ##' @title Refit a \code{fgpm} model in a \code{Xfgpm} object
 ##'
 ##' @param x A \code{Xfgpm} object.
-##'
 ##' @param i An integer giving the index of the model to refit. The
 ##'     models are in decreasing fit quality as assessed by the
 ##'     Leave-One-Out \eqn{Q^2}{Q2}.
@@ -916,8 +915,19 @@ setMethod("[[", "Xfgpm",
 ##'
 ##' @param object A \code{Xfgpm} object as created by
 ##' \code{\link{fgpm_factory}}.
-##'
 ##' @param ind The index (or rank) of the model in \code{object}.
+##' @param trace An optional boolean indicating whether funGp-native progress
+##'   messages should be displayed. Default is TRUE. See the \code{\link[funGp]{fgpm}()}
+##'   documentation for more details.
+##' @param pbars An optional boolean indicating whether progress bars managed by
+##'   \code{\link[funGp]{fgpm}()} should be displayed. Default is TRUE. See the
+##'   \code{\link[funGp]{fgpm}()} documentation for more details.
+##' @param control.optim An optional list to be passed as the control argument to
+##'   \code{\link[stats]{optim}}(), the function in charge of the non-linear
+##'   optimization of the hyperparameters. Default is list(trace = TRUE). See the
+##'   \code{\link[funGp]{fgpm}()} documentation for more details.
+##'
+##'
 ##'
 ##' @return A parsed R code defining the \code{fgpm} model.
 ##'
@@ -962,6 +972,25 @@ setMethod("[[", "Xfgpm",
 ##'     plot(fgpm.new, main = "Re-created 'fgpm' model with different data")
 ##'     plot(xm[[1]], main = "Re-created 'fgpm' model with the same data")
 ##' }
-modelDef <- function(object, ind) {
-    parse(text = object@log.success@args[[ind]]@string[[1]])
+modelDef <- function(object, ind, trace = TRUE, pbars = TRUE, control.optim = list(trace = TRUE)) {
+  # recover fgpm call stored in the Xgfpm object
+  howCalled <- object@log.success@args[[ind]]@string[[1]]
+
+  # prepare for potential extension with display controllers
+  howCalled <- substring(howCalled, 1, nchar(howCalled) - 1)
+
+  # add trace controller
+  howCalled <- paste0(howCalled, ", trace = ", trace)
+
+  # add pbars controller
+  howCalled <- paste0(howCalled, ", pbars = ", pbars)
+
+  # add control.optim controller
+  howCalled <- paste0(howCalled, ", control.optim = ", deparse(control.optim))
+
+  # close the fgpm call with parentheses
+  howCalled <- howCalled <- paste0(howCalled, ")")
+
+  # execute fgpm call
+  parse(text = howCalled)
 }

@@ -4,13 +4,32 @@
 \alias{modelDef}
 \title{Retrieve a \code{fgpm} from within a \code{Xfgpm} object}
 \usage{
-modelDef(object, ind)
+modelDef(
+  object,
+  ind,
+  trace = TRUE,
+  pbars = TRUE,
+  control.optim = list(trace = TRUE)
+)
 }
 \arguments{
 \item{object}{A \code{Xfgpm} object as created by
 \code{\link{fgpm_factory}}.}
 
 \item{ind}{The index (or rank) of the model in \code{object}.}
+
+\item{trace}{An optional boolean indicating whether funGp-native progress
+messages should be displayed. Default is TRUE. See the \code{\link[funGp]{fgpm}()}
+documentation for more details.}
+
+\item{pbars}{An optional boolean indicating whether progress bars managed by
+\code{\link[funGp]{fgpm}()} should be displayed. Default is TRUE. See the
+\code{\link[funGp]{fgpm}()} documentation for more details.}
+
+\item{control.optim}{An optional list to be passed as the control argument to
+\code{\link[stats]{optim}}(), the function in charge of the non-linear
+optimization of the hyperparameters. Default is list(trace = TRUE). See the
+\code{\link[funGp]{fgpm}()} documentation for more details.}
 }
 \value{
 A parsed R code defining the \code{fgpm} model.

@@ -1164,7 +1164,7 @@ setGeneric(name = "update", def = function(object, ...) standardGeneric("update"
 #' @param pbars An optional boolean indicating whether progress bars managed by \code{\link[funGp]{fgpm}()}
 #'  should be displayed (in case the update requires an \code{\link[funGp]{fgpm}()} call). Default is TRUE.
 #'  See the \code{\link[funGp]{fgpm}()} documentation for more details.
-#' @param control.optim An optional list to be passed as the control argument to \code{\link[stats]{optim}}
+#' @param control.optim An optional list to be passed as the control argument to \code{\link[stats]{optim}}()
 #'  (in case the update requires an \code{\link[funGp]{fgpm}()} call), the function in charge of the non-linear
 #'  optimization of the hyperparameters. Default is list(trace = TRUE). See the \code{\link[funGp]{fgpm}()}
 #'  documentation for more details.
