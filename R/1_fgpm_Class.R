@@ -1159,7 +1159,15 @@ setGeneric(name = "update", def = function(object, ...) standardGeneric("update"
 #'   should be re-estimated. Default is FALSE.
 #' @param ls_f.re An optional boolean indicating whether the length-scale parameters of the functional
 #'   inputs should be re-estimated. Default is FALSE.
-#' @param trace An optional boolean indicating whether a summary update should be displayed. Default is TRUE.
+#' @param trace An optional boolean indicating whether funGp-native progress messages and a summary update
+#'   should be displayed. Default is TRUE. See the \code{\link[funGp]{fgpm}()} documentation for more details.
+#' @param pbars An optional boolean indicating whether progress bars managed by \code{\link[funGp]{fgpm}()}
+#'  should be displayed (in case the update requires an \code{\link[funGp]{fgpm}()} call). Default is TRUE.
+#'  See the \code{\link[funGp]{fgpm}()} documentation for more details.
+#' @param control.optim An optional list to be passed as the control argument to \code{\link[stats]{optim}}
+#'  (in case the update requires an \code{\link[funGp]{fgpm}()} call), the function in charge of the non-linear
+#'  optimization of the hyperparameters. Default is list(trace = TRUE). See the \code{\link[funGp]{fgpm}()}
+#'  documentation for more details.
 #'
 #' @return An object of class \linkS4class{fgpm} representing the updated funGp model.
 #'
@@ -1297,18 +1305,20 @@ setMethod("update", "fgpm",
           function(object, sIn.nw = NULL, fIn.nw = NULL, sOut.nw = NULL,
                    sIn.sb = NULL, fIn.sb = NULL, sOut.sb = NULL, ind.sb = NULL,
                    ind.dl = NULL, var.sb = NULL, ls_s.sb = NULL, ls_f.sb = NULL,
-                   var.re = FALSE, ls_s.re = FALSE, ls_f.re = FALSE, trace = TRUE, ...) {
+                   var.re = FALSE, ls_s.re = FALSE, ls_f.re = FALSE,
+                   trace = TRUE, pbars = TRUE, control.optim = list(trace = TRUE), ...) {
             update.fgpm(model = object, sIn.nw = sIn.nw, fIn.nw = fIn.nw, sOut.nw = sOut.nw,
                         sIn.sb = sIn.sb, fIn.sb = fIn.sb, sOut.sb = sOut.sb, ind.sb = ind.sb,
                         ind.dl = ind.dl,
                         var.sb = var.sb, ls_s.sb = ls_s.sb, ls_f.sb = ls_f.sb,
                         var.re = var.re, ls_s.re = ls_s.re, ls_f.re = ls_f.re,
-                        trace = trace)
+                        trace = trace, pbars, control.optim)
 
           })
 
 update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb, ind.sb, ind.dl,
-                         var.sb, ls_s.sb, ls_f.sb, var.re, ls_s.re, ls_f.re, trace) {
+                        var.sb, ls_s.sb, ls_f.sb, var.re, ls_s.re, ls_f.re,
+                        trace, pbars, control.optim) {
   # check what does the user want to do
   delInOut <- !is.null(ind.dl)
   subHypers <- any(!is.null(var.sb), !is.null(ls_s.sb), !is.null(ls_f.sb))
@@ -1389,7 +1399,8 @@ update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb,
   modelup <- model
   cptasks <- c()
   if (delInOut & !(1 %in% dptasks)) {
-    modelup <- upd_del(model = modelup, ind.dl = ind.dl, remake = all(!newInOut, !subHypers, remake = !reeHypers))
+    modelup <- upd_del(model = modelup, ind.dl = ind.dl, remake = all(!newInOut, !subHypers, !reeHypers),
+                       trace = trace, pbars = pbars, control.optim = control.optim)
     modelup@howCalled <- model@howCalled
     modelup@n.tr <- model@n.tr
     modelup@convergence <- model@convergence
@@ -1399,7 +1410,8 @@ update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb,
   if (subInOut & !(2 %in% dptasks)) {
     modelup <- upd_subData(model = modelup, sIn.sb = sIn.sb, fIn.sb = fIn.sb,
                            sOut.sb = tryCatch(as.matrix(sOut.sb), error = function(e) sOut.sb), ind.sb = ind.sb,
-                           remake = all(!newInOut, !subHypers, !reeHypers))
+                           remake = all(!newInOut, !subHypers, !reeHypers),
+                           trace = trace, pbars = pbars, control.optim = control.optim)
     modelup@howCalled <- model@howCalled
     modelup@convergence <- model@convergence
     modelup@negLogLik <- model@negLogLik
@@ -1407,7 +1419,8 @@ update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb,
   }
   if (newInOut) {
     modelup <- upd_add(model = modelup, sIn.nw = sIn.nw, fIn.nw = fIn.nw, sOut.nw = as.matrix(sOut.nw),
-                       remake = all(!subHypers, !reeHypers))
+                       remake = all(!subHypers, !reeHypers),
+                       trace = trace, pbars = pbars, control.optim = control.optim)
     modelup@howCalled <- model@howCalled
     modelup@n.tr <- model@n.tr
     modelup@convergence <- model@convergence
@@ -1415,7 +1428,8 @@ update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb,
     cptasks <- c(cptasks, 3)
   }
   if (subHypers & any(!(c(4,5,6) %in% dptasks))) {
-    modelup <- upd_subHypers(model = modelup, var.sb = var.sb, ls_s.sb = ls_s.sb, ls_f.sb = ls_f.sb)
+    modelup <- upd_subHypers(model = modelup, var.sb = var.sb, ls_s.sb = ls_s.sb, ls_f.sb = ls_f.sb,
+                             trace = trace, pbars = pbars, control.optim = control.optim)
     modelup@howCalled <- model@howCalled
     modelup@n.tr <- model@n.tr
     modelup@convergence <- model@convergence
@@ -1425,7 +1439,8 @@ update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb,
     if (!is.null(ls_f.sb) & !(6 %in% dptasks)) cptasks <- c(cptasks, 6)
   }
   if (reeHypers & any(!(c(7,8,9) %in% dptasks))) {
-    modelup <- upd_reeHypers(model = modelup, var.re = var.re, ls_s.re = ls_s.re, ls_f.re = ls_f.re)
+    modelup <- upd_reeHypers(model = modelup, var.re = var.re, ls_s.re = ls_s.re, ls_f.re = ls_f.re,
+                             trace = trace, pbars = pbars, control.optim = control.optim)
     modelup@howCalled <- model@howCalled
     if (isTRUE(var.re) & !(7 %in% dptasks)) cptasks <- c(cptasks, 7)
     if (isTRUE(ls_s.re) & !(8 %in% dptasks)) cptasks <- c(cptasks, 8)

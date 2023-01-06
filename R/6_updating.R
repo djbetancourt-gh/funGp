@@ -4,7 +4,7 @@
 
 # Function to delete some data
 # ----------------------------------------------------------------------------------------------------------
-upd_del <- function(model, ind.dl, remake) {
+upd_del <- function(model, ind.dl, remake, trace, pbars, control.optim) {
   # check for validty of substituting data
   ind.dl <- check_del(as.list(environment()))
 
@@ -17,9 +17,10 @@ upd_del <- function(model, ind.dl, remake) {
     # the model is re-made if this is the last one in the sequence of requested tasks
     if (remake) {
       modelup <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut, kerType = model@kern@kerType,
-                       f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims,
-                       f_basType = model@f_proj@basType, var.hyp = model@kern@varHyp,
-                       ls_s.hyp = model@kern@s_lsHyps, ls_f.hyp = model@kern@f_lsHyps)
+                      f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims,
+                      f_basType = model@f_proj@basType, var.hyp = model@kern@varHyp,
+                      ls_s.hyp = model@kern@s_lsHyps, ls_f.hyp = model@kern@f_lsHyps,
+                      trace = trace, pbars = pbars, control.optim = control.optim)
     } else {
       modelup <- model
       # update projection
@@ -44,8 +45,9 @@ upd_del <- function(model, ind.dl, remake) {
     # the model is re-made if this is the last one in the sequence of requested tasks
     if (remake) {
       modelup <- fgpm(fIn = fIn, sOut = sOut,
-                       kerType = model@kern@kerType, f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims,
-                       f_basType = model@f_proj@basType, var.hyp = model@kern@varHyp, ls_f.hyp = model@kern@f_lsHyps)
+                      kerType = model@kern@kerType, f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims,
+                      f_basType = model@f_proj@basType, var.hyp = model@kern@varHyp, ls_f.hyp = model@kern@f_lsHyps,
+                      trace = trace, pbars = pbars, control.optim = control.optim)
     } else {
       modelup <- model
       # update projection
@@ -69,7 +71,8 @@ upd_del <- function(model, ind.dl, remake) {
     # request new model to fgpm if indicated
     if (remake) {
       modelup <- fgpm(sIn = sIn, sOut = sOut, kerType = model@kern@kerType,
-                       var.hyp = model@kern@varHyp, ls_s.hyp = model@kern@s_lsHyps)
+                      var.hyp = model@kern@varHyp, ls_s.hyp = model@kern@s_lsHyps,
+                      trace = trace, pbars = pbars, control.optim = control.optim)
     } else {
       modelup <- model
       modelup@sIn <- sIn
@@ -85,7 +88,7 @@ upd_del <- function(model, ind.dl, remake) {
 
 # Function to substitute some data
 # ----------------------------------------------------------------------------------------------------------
-upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake) {
+upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake, trace, pbars, control.optim) {
   # extract generic information from the model
   sOut <- model@sOut
 
@@ -157,9 +160,10 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake) {
         model@n.tot <- length(sOut)
       } else {
         modelup <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut, kerType = model@kern@kerType,
-                         f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims,
-                         f_basType = model@f_proj@basType, var.hyp = model@kern@varHyp,
-                         ls_s.hyp = model@kern@s_lsHyps, ls_f.hyp = model@kern@f_lsHyps)
+                        f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims,
+                        f_basType = model@f_proj@basType, var.hyp = model@kern@varHyp,
+                        ls_s.hyp = model@kern@s_lsHyps, ls_f.hyp = model@kern@f_lsHyps,
+                        trace = trace, pbars = pbars, control.optim = control.optim)
       }
     } else {
       modelup <- model
@@ -229,8 +233,9 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake) {
         model@n.tot <- length(sOut)
       } else {
         modelup <- fgpm(fIn = fIn, sOut = sOut,
-                         kerType = model@kern@kerType, f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims,
-                         f_basType = model@f_proj@basType, var.hyp = model@kern@varHyp, ls_f.hyp = model@kern@f_lsHyps)
+                        kerType = model@kern@kerType, f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims,
+                        f_basType = model@f_proj@basType, var.hyp = model@kern@varHyp, ls_f.hyp = model@kern@f_lsHyps,
+                        trace = trace, pbars = pbars, control.optim = control.optim)
       }
     } else {
       modelup <- model
@@ -299,7 +304,8 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake) {
         model@n.tot <- length(sOut)
       } else {
         modelup <- fgpm(sIn = sIn, sOut = sOut, kerType = model@kern@kerType,
-                         var.hyp = model@kern@varHyp, ls_s.hyp = model@kern@s_lsHyps)
+                        var.hyp = model@kern@varHyp, ls_s.hyp = model@kern@s_lsHyps,
+                        trace = trace, pbars = pbars, control.optim = control.optim)
       }
     } else {
       modelup <- model
@@ -316,7 +322,7 @@ upd_subData <- function(model, sIn.sb, fIn.sb, sOut.sb, ind.sb, remake) {
 
 # Function to add some data
 # ----------------------------------------------------------------------------------------------------------
-upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake) {
+upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake, trace, pbars, control.optim) {
   # check validty of substituting data
   check_add(as.list(environment()))
 
@@ -366,9 +372,10 @@ upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake) {
     # the model is re-made if this is the last one in the sequence of requested tasks
     if (remake) {
       modelup <- fgpm(sIn = sIn, fIn = fIn, sOut = sOut, kerType = model@kern@kerType,
-                       f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims,
-                       f_basType = model@f_proj@basType, var.hyp = model@kern@varHyp,
-                       ls_s.hyp = model@kern@s_lsHyps, ls_f.hyp = model@kern@f_lsHyps)
+                      f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims,
+                      f_basType = model@f_proj@basType, var.hyp = model@kern@varHyp,
+                      ls_s.hyp = model@kern@s_lsHyps, ls_f.hyp = model@kern@f_lsHyps,
+                      trace = trace, pbars = pbars, control.optim = control.optim)
     } else {
       modelup <- model
       # update projection
@@ -421,8 +428,9 @@ upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake) {
     # the model is re-made if this is the last one in the sequence of requested tasks
     if (remake) {
       modelup <- fgpm(fIn = fIn, sOut = sOut,
-                       kerType = model@kern@kerType, f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims,
-                       f_basType = model@f_proj@basType, var.hyp = model@kern@varHyp, ls_f.hyp = model@kern@f_lsHyps)
+                      kerType = model@kern@kerType, f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims,
+                      f_basType = model@f_proj@basType, var.hyp = model@kern@varHyp, ls_f.hyp = model@kern@f_lsHyps,
+                      trace = trace, pbars = pbars, control.optim = control.optim)
     } else {
       modelup <- model
       # update projection
@@ -474,7 +482,8 @@ upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake) {
     # the model is re-made if this is the last one in the sequence of requested tasks
     if (remake) {
       modelup <- fgpm(sIn = sIn, sOut = sOut, kerType = model@kern@kerType,
-                       var.hyp = model@kern@varHyp, ls_s.hyp = model@kern@s_lsHyps)
+                      var.hyp = model@kern@varHyp, ls_s.hyp = model@kern@s_lsHyps,
+                      trace = trace, pbars = pbars, control.optim = control.optim)
     } else {
       modelup <- model
       modelup@sIn <- sIn
@@ -490,7 +499,7 @@ upd_add <- function(model, sIn.nw, fIn.nw, sOut.nw, remake) {
 
 # Function to substitute some Hyperparameters
 # ----------------------------------------------------------------------------------------------------------
-upd_subHypers <- function(model, var.sb, ls_s.sb, ls_f.sb) {
+upd_subHypers <- function(model, var.sb, ls_s.sb, ls_f.sb, trace, pbars, control.optim) {
   # check validty of substituting hypers
   check_subHypers(as.list(environment()))
 
@@ -518,28 +527,33 @@ upd_subHypers <- function(model, var.sb, ls_s.sb, ls_f.sb) {
     # the model is re-made if this is the last one in the sequence of requested tasks
     if (all(!is.null(ls_f.sb), is.null(ls_s.sb))) {
       modelup <- fgpm(sIn = model@sIn, fIn = model@fIn, sOut = model@sOut, kerType = model@kern@kerType,
-                       f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims, f_basType = model@f_proj@basType,
-                       var.hyp = var.sb, ls_s.hyp = model@kern@s_lsHyps, ls_f.hyp = ls_f.sb)
+                      f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims, f_basType = model@f_proj@basType,
+                      var.hyp = var.sb, ls_s.hyp = model@kern@s_lsHyps, ls_f.hyp = ls_f.sb,
+                      trace = trace, pbars = pbars, control.optim = control.optim)
     } else if(all(!is.null(ls_s.sb), is.null(ls_f.sb))) {
       modelup <- fgpm(sIn = model@sIn, fIn = model@fIn, sOut = model@sOut, kerType = model@kern@kerType,
-                       f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims, f_basType = model@f_proj@basType,
-                       var.hyp = var.sb, ls_s.hyp = ls_s.sb, ls_f.hyp = model@kern@f_lsHyps)
+                      f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims, f_basType = model@f_proj@basType,
+                      var.hyp = var.sb, ls_s.hyp = ls_s.sb, ls_f.hyp = model@kern@f_lsHyps,
+                      trace = trace, pbars = pbars, control.optim = control.optim)
     } else {
       modelup <- fgpm(sIn = model@sIn, fIn = model@fIn, sOut = model@sOut, kerType = model@kern@kerType,
-                       f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims, f_basType = model@f_proj@basType,
-                       var.hyp = var.sb, ls_s.hyp = ls_s.sb, ls_f.hyp = ls_f.sb)
+                      f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims, f_basType = model@f_proj@basType,
+                      var.hyp = var.sb, ls_s.hyp = ls_s.sb, ls_f.hyp = ls_f.sb,
+                      trace = trace, pbars = pbars, control.optim = control.optim)
     }
 
   } else if (model@type == "functional") { # functional-input case *******************************************
     # the model is re-made if this is the last one in the sequence of requested tasks
     modelup <- fgpm(fIn = model@fIn, sOut = model@sOut, kerType = model@kern@kerType,
-                     f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims,
-                     f_basType = model@f_proj@basType, var.hyp = var.sb, ls_f.hyp = ls_f.sb)
+                    f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims,
+                    f_basType = model@f_proj@basType, var.hyp = var.sb, ls_f.hyp = ls_f.sb,
+                    trace = trace, pbars = pbars, control.optim = control.optim)
 
   } else { # scalar-input case *******************************************
     # the model is re-made if this is the last one in the sequence of requested tasks
     modelup <- fgpm(sIn = model@sIn, sOut = model@sOut, kerType = model@kern@kerType,
-                     var.hyp = var.sb, ls_s.hyp = ls_s.sb)
+                    var.hyp = var.sb, ls_s.hyp = ls_s.sb,
+                    trace = trace, pbars = pbars, control.optim = control.optim)
 
   }
 
@@ -550,7 +564,7 @@ upd_subHypers <- function(model, var.sb, ls_s.sb, ls_f.sb) {
 
 # Function to substitute some Hyperparameters
 # ----------------------------------------------------------------------------------------------------------
-upd_reeHypers <- function(model, var.re, ls_s.re, ls_f.re) {
+upd_reeHypers <- function(model, var.re, ls_s.re, ls_f.re, trace, pbars, control.optim) {
   # var is always necessary, so if no required to re-estimate, get it from original model
   if (!isTRUE(var.re)) var.up <- model@kern@varHyp else var.up <- NULL
 
@@ -560,23 +574,26 @@ upd_reeHypers <- function(model, var.re, ls_s.re, ls_f.re) {
 
     # the model is always re-made
     modelup <- fgpm(sIn = model@sIn, fIn = model@fIn, sOut = model@sOut, kerType = model@kern@kerType,
-                     f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims, f_basType = model@f_proj@basType,
-                     var.hyp = var.up, ls_s.hyp = ls_s.up, ls_f.hyp = ls_f.up)
+                    f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims, f_basType = model@f_proj@basType,
+                    var.hyp = var.up, ls_s.hyp = ls_s.up, ls_f.hyp = ls_f.up,
+                    trace = trace, pbars = pbars, control.optim = control.optim)
 
   } else if (model@type == "functional") { # functional-input case *******************************************
     if (!isTRUE(ls_f.re)) ls_f.up <- model@kern@f_lsHyps else ls_f.up <- NULL
 
     # the model is always re-made
     modelup <- fgpm(fIn = model@fIn, sOut = model@sOut, kerType = model@kern@kerType,
-                     f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims, f_basType = model@f_proj@basType,
-                     var.hyp = var.up, ls_s.hyp = ls_s.up, ls_f.hyp = ls_f.up)
+                    f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims, f_basType = model@f_proj@basType,
+                    var.hyp = var.up, ls_s.hyp = ls_s.up, ls_f.hyp = ls_f.up,
+                    trace = trace, pbars = pbars, control.optim = control.optim)
 
   } else { # scalar-input case *******************************************
     if (!isTRUE(ls_s.re)) ls_s.up <- model@kern@s_lsHyps else ls_s.up <- NULL
 
     # the model is always re-made
     modelup <- fgpm(sIn = model@sIn, sOut = model@sOut, kerType = model@kern@kerType,
-                     var.hyp = var.up, ls_s.hyp = ls_s.up, ls_f.hyp = ls_f.up)
+                    var.hyp = var.up, ls_s.hyp = ls_s.up, ls_f.hyp = ls_f.up,
+                    trace = trace, pbars = pbars, control.optim = control.optim)
 
   }
 
