@@ -47,7 +47,7 @@
 #'   hand, \eqn{LInvY = L^(-1) * sOut}.
 #' @slot convergence Object of class \code{"numeric"}. Integer code either confirming convergence or indicating
 #'  an error. Check the convergence component of the Value returned by \code{\link[stats]{optim}}.
-#' @slot NegLogLike Object of class \code{"numeric"}. Negated log-likelihood obained by \code{\link[stats]{optim}}
+#' @slot negLogLik Object of class \code{"numeric"}. Negated log-likelihood obained by \code{\link[stats]{optim}}
 #'  during hyperparameter optimization.
 #'
 #' @section Useful material:
@@ -83,7 +83,7 @@ setClass("fgpm",
            nugget = "numeric",         # variance parameter standing for the homogeneous nugget effect
            preMats = "list",           # pre-computed KttInv and KttInv.sOut matrices
            convergence = "numeric",    # indicator of convergence/error
-           NegLogLike = "numeric"      # negated loglikelihood achieved during hypers optim
+           negLogLik = "numeric"      # negated loglikelihood achieved during hypers optim
          ),
          validity = function(object) {TRUE})
 # ==========================================================================================================
@@ -157,17 +157,17 @@ setClass("fgpm",
 #'   n.starts will be assigned to n.presample if this last is smaller. Default is 20.
 #' @param par.clust An optional parallel processing cluster created with the \code{\link[parallel]{makeCluster}} function
 #'   of the \link[=parallel]{parallel package}. If not provided, multistart optimizations are done in sequence.
-#' @param trace An optional boolean indicating if control messages native of the \link[=funGp]{funGp package} should be printed to
-#'   console. Default is TRUE. For complementary control on the display of \link[=funGp]{funGp} progress bars and
+#' @param trace An optional boolean indicating if control messages native of the \link[=funGp-package]{funGp package} should be printed to
+#'   console. Default is TRUE. For complementary control on the display of funGp-native progress bars and
 #'   \code{\link[stats]{optim}} trace about the hyperparameter optimization process, have a look at the \code{pbars} and
 #'   \code{control.optim} arguments, respectively.
 #' @param pbars An optional boolean indicating if progress bars should be displayed. Default is TRUE.
 #' @param control.optim An optional list to be passed as the \code{control} argument to \code{\link[stats]{optim}}, the function
 #'   in charge of the non-linear optimization of the hyperparameters. Default is \code{list(trace = TRUE)}, equivalent to
 #'   \code{list(trace = 1)}, which enables the printing of tracing information on the progress of the optimization. Before
-#'   interacting with the \code{\link[funGp]{fgpm}} \code{control.optim} argument, please carefully check the documentation about
+#'   interacting with the \code{\link[funGp]{fgpm}()} \code{control.optim} argument, please carefully check the documentation about
 #'   the \code{control} argument provided in \code{\link[stats]{optim}} to ensure a coherent behavior and sound results. Note
-#'   that: (i) at this time, only the \code{"L-BFGS-B"} method (Byrd et. al., 1995) is enabled in \code{\link[funGp]{fgpm}};
+#'   that: (i) at this time, only the \code{"L-BFGS-B"} method (Byrd et. al., 1995) is enabled in \code{\link[funGp]{fgpm}()};
 #'   (ii) \code{control.optim$fnscale} should not be used since our optimization problem is strictly of minimization, not maximization.
 #'
 #' @return An object of class \linkS4class{fgpm} containing the data structures representing the fitted funGp model.
@@ -541,10 +541,10 @@ fgpm <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
   model@nugget <- nugget
   if (exists("optResult")) {
     model@convergence <- optResult$convg
-    model@NegLogLike <- optResult$nllik
+    model@negLogLik <- optResult$nllik
   } else {
     model@convergence <- as.numeric(NA)
-    model@NegLogLike <- as.numeric(NA)
+    model@negLogLik <- as.numeric(NA)
   }
 
   # ________________________________________________________________________________________________________
@@ -617,7 +617,7 @@ show.fgpm <- function(model) {
 
   cat(paste("* Kernel type: ", model@kern@kerType, "\n", sep = ""))
   cat(paste("* Convergence: ", model@convergence, "\n", sep = ""))
-  cat(paste("* NegLogLik: ", format(model@NegLogLike, digits = 3, nsmall = 4), "\n", sep = ""))
+  cat(paste("* NegLogLik: ", format(model@negLogLik, digits = 3, nsmall = 4), "\n", sep = ""))
   cat("* Hyperparameters:\n")
   cat(paste("  -> variance: ", format(model@kern@varHyp, digits = 3, nsmall = 4), "\n", sep = ""))
   cat("  -> length-scale:\n")
@@ -1393,7 +1393,7 @@ update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb,
     modelup@howCalled <- model@howCalled
     modelup@n.tr <- model@n.tr
     modelup@convergence <- model@convergence
-    modelup@NegLogLike <- model@NegLogLike
+    modelup@negLogLik <- model@negLogLik
     cptasks <- c(cptasks, 1)
   }
   if (subInOut & !(2 %in% dptasks)) {
@@ -1402,7 +1402,7 @@ update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb,
                            remake = all(!newInOut, !subHypers, !reeHypers))
     modelup@howCalled <- model@howCalled
     modelup@convergence <- model@convergence
-    modelup@NegLogLike <- model@NegLogLike
+    modelup@negLogLik <- model@negLogLik
     cptasks <- c(cptasks, 2)
   }
   if (newInOut) {
@@ -1411,7 +1411,7 @@ update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb,
     modelup@howCalled <- model@howCalled
     modelup@n.tr <- model@n.tr
     modelup@convergence <- model@convergence
-    modelup@NegLogLike <- model@NegLogLike
+    modelup@negLogLik <- model@negLogLik
     cptasks <- c(cptasks, 3)
   }
   if (subHypers & any(!(c(4,5,6) %in% dptasks))) {
@@ -1419,7 +1419,7 @@ update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb,
     modelup@howCalled <- model@howCalled
     modelup@n.tr <- model@n.tr
     modelup@convergence <- model@convergence
-    modelup@NegLogLike <- model@NegLogLike
+    modelup@negLogLik <- model@negLogLik
     if (!is.null(var.sb) & !(4 %in% dptasks)) cptasks <- c(cptasks, 4)
     if (!is.null(ls_s.sb) & !(5 %in% dptasks)) cptasks <- c(cptasks, 5)
     if (!is.null(ls_f.sb) & !(6 %in% dptasks)) cptasks <- c(cptasks, 6)

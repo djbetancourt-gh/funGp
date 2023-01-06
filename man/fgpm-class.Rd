@@ -68,7 +68,7 @@ hand, \eqn{LInvY = L^(-1) * sOut}.}
 \item{\code{convergence}}{Object of class \code{"numeric"}. Integer code either confirming convergence or indicating
 an error. Check the convergence component of the Value returned by \code{\link[stats]{optim}}.}
 
-\item{\code{NegLogLike}}{Object of class \code{"numeric"}. Negated log-likelihood obained by \code{\link[stats]{optim}}
+\item{\code{negLogLik}}{Object of class \code{"numeric"}. Negated log-likelihood obained by \code{\link[stats]{optim}}
 during hyperparameter optimization.}
 }}
 

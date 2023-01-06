@@ -214,9 +214,9 @@ show.Xfgpm <- function(object) {
 #' @param par.clust An optional parallel processing cluster created with the \code{\link[parallel]{makeCluster}}
 #'   function of the \link[=parallel]{parallel package}. If not provided, structural configurations are evaluated in
 #'   sequence.
-#' @param trace An optional boolean indicating if control messages native of the \link[=funGp]{funGp package} should be printed to
-#'   console. Default is TRUE. For complementary control on the display of \link[=funGp]{funGp} progress bars, have a look at the
-#'   \code{pbars} argument below.
+#' @param trace An optional boolean indicating if control messages native of the \link[=funGp-package]{funGp package} should be
+#'   printed to console. Default is TRUE. For complementary control on the display of funGp-native progress bars, have a look at
+#'   the \code{pbars} argument below.
 #' @param pbars An optional boolean indicating if progress bars should be displayed. Default is TRUE.
 #'
 #' @return An object of class \linkS4class{Xfgpm} containing the data structures linked to the structural optimization
