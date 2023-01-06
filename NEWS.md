@@ -5,17 +5,21 @@
 * Line type of the mean function in `plotSims.fgpm` changed to dashed
   (`lty` = 2) for easier inspection.
 
-* A `trace` argument was added to `update.fgpm`.
+* The `trace`, `pbars` and `control.optim` arguments were added to `update.fgpm`
+  for a wider control of displays.
 
 * Convergence code and negated log-likelihood value added as slots of
   fgpm objects to make them more informative.
 
-* Forwarding of `optim` `control` argument enabled in fgpm through
+* Forwarding of `optim()` `control` argument enabled in fgpm through
   `control.optim`.
 
 * Following the addition of control.optim, we improved the functionality
   of the `fgpm` and `fgpm_factory` arguments to control the display of
   `funGp` native progress messages
+
+* The `trace`, `pbars` and `control.optim` arguments were added to `modelDef`
+  for a wider control of displays.
 
 * Pre-existent future backend registers protected as suggested by the
   author of future in a previous issue

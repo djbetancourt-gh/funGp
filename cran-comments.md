@@ -5,8 +5,8 @@ This is a resubmission. In this version we have:
 
 * Edited the line type in one plot to improve its visualization
 
-* Added a trace argument to some functions to improve the user control of
-  displays
+* Added trace, pbars and control.optim arguments to some functions to improve
+  the user control over displays
 
 * Added two slots to the fgpm class to make it more informative
 
