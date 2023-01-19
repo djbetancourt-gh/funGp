@@ -91,8 +91,9 @@ setSPoints_S <- function(bnds, sMs, sOut, kerType, varfun, n.starts, n.presample
 # Function optimize the hyperparameters of scalar-input models
 # ==========================================================================================================
 #' @importFrom stats optim
+#' @importFrom foreach setDoPar %dopar%
 #' @importFrom doFuture registerDoFuture
-#' @importFrom doRNG registerDoRNG
+#' @importFrom doRNG registerDoRNG %dorng%
 #' @importFrom future plan cluster
 #' @importFrom progressr with_progress progressor
 optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, nugget, par.clust, trace, pbars, control.optim){
@@ -136,15 +137,18 @@ optimHypers_S <- function(spoints, n.starts, bnds, sMs, sOut, kerType, varfun, n
       if (trace) message("** Parallel backend register found. Multistart optimizations done in parallel.")
 
       # register parallel backend
-      registerDoFuture()
-      registerDoRNG()
+      oldDoPar <- registerDoFuture()
+      on.exit(with(oldDoPar, setDoPar(fun = fun, data = data, info = info)), add = TRUE)
+      # registerDoFuture()
+      # registerDoRNG()
+
       # plan(cluster, workers = par.clust)
       oplan <- plan(cluster, workers = par.clust)
       on.exit(plan(oplan), add = TRUE)
 
       with_progress({
         if (pbars) p <- progressor(along = 1:n.starts, auto_finish = FALSE)
-        optOutList <- foreach(i = 1:n.starts, .errorhandling = "remove") %dopar% {
+        optOutList <- foreach(i = 1:n.starts, .errorhandling = "remove") %dorng% {
           o <- optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_S, method = "L-BFGS-B",
                      lower = bnds[1,], upper = bnds[2,], control = control.optim,
                      sMs = sMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)

@@ -104,8 +104,9 @@ setSPoints_SF <- function(bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_
 # Function optimize the hyperparameters of hybrid-input models
 # ==========================================================================================================
 #' @importFrom stats optim
+#' @importFrom foreach setDoPar %dopar%
 #' @importFrom doFuture registerDoFuture
-#' @importFrom doRNG registerDoRNG
+#' @importFrom doRNG registerDoRNG %dorng%
 #' @importFrom future plan cluster
 #' @importFrom progressr with_progress progressor
 optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known, nugget, par.clust, trace, pbars, control.optim){
@@ -151,15 +152,18 @@ optimHypers_SF <- function(spoints, n.starts, bnds, sMs, fMs, sOut, kerType, var
       if (trace) message("** Parallel backend register found. Multistart optimizations done in parallel.")
 
       # register parallel backend
-      registerDoFuture()
-      registerDoRNG()
+      oldDoPar <- registerDoFuture()
+      on.exit(with(oldDoPar, setDoPar(fun = fun, data = data, info = info)), add = TRUE)
+      # registerDoFuture()
+      # registerDoRNG()
+
       # plan(cluster, workers = par.clust)
       oplan <- plan(cluster, workers = par.clust)
       on.exit(plan(oplan), add = TRUE)
 
       with_progress({
         if (pbars) p <- progressor(along = 1:n.starts, auto_finish = FALSE)
-        optOutList <- foreach(i = 1:n.starts, .errorhandling = "remove") %dopar% {
+        optOutList <- foreach(i = 1:n.starts, .errorhandling = "remove") %dorng% {
           o <- optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_SF, method = "L-BFGS-B",
                      lower = bnds[1,], upper = bnds[2,], control = control.optim,
                      sMs = sMs, fMs = fMs, sOut = sOut, kerType = kerType,

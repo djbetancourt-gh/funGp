@@ -1,4 +1,4 @@
-![**funGp**](https://github.com/djbetancourt-gh/funGp/blob/master/docs/logo.png?raw=true)
+![](https://github.com/djbetancourt-gh/funGp/blob/master/docs/logo.png?raw=true)
 
 Gaussian Process Models for Scalar and Functional Inputs
 --------------------------------------------------------

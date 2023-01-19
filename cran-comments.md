@@ -3,6 +3,8 @@ This is a resubmission. In this version we have:
 
 * Updated the source URL of funGp's logo in README.md
 
+* Added a BugReports section in DESCRIPTION
+
 * Edited the line type in one plot to improve its visualization
 
 * Added trace, pbars and control.optim arguments to some functions to improve
@@ -15,8 +17,8 @@ This is a resubmission. In this version we have:
 * Protected pre-existent future backend registers as suggested by the
   author of future
 
-
-
+* Also protected pre-existent foreach adaptors as suggested by the
+  author of future
 
 ## Test environments
 * local Windows install, R 4.2.0

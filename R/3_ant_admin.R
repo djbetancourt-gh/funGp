@@ -583,10 +583,10 @@ getLog_ACO <- function(sIn, fIn, log.vec, log.fitness, base, extargs) {
 # ==========================================================================================================
 # Function to evaluate ants for the Q2loocv statistic
 # ==========================================================================================================
-#' @importFrom foreach foreach `%dopar%`
+#' @importFrom foreach foreach setDoPar
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #' @importFrom doFuture registerDoFuture
-#' @importFrom doRNG registerDoRNG
+#' @importFrom doRNG registerDoRNG `%dorng%`
 #' @importFrom future plan cluster
 #' @importFrom progressr with_progress progressor
 eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.lim, pbars, par.clust) {
@@ -595,8 +595,11 @@ eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.l
 
   if (!is.null(par.clust)) {
     # register parallel backend
-    registerDoFuture()
-    registerDoRNG()
+    oldDoPar <- registerDoFuture()
+    on.exit(with(oldDoPar, setDoPar(fun = fun, data = data, info = info)), add = TRUE)
+    # registerDoFuture()
+    # registerDoRNG()
+
     # plan(cluster, workers = par.clust)
     oplan <- plan(cluster, workers = par.clust)
     on.exit(plan(oplan), add = TRUE)
@@ -604,7 +607,7 @@ eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.l
     # evaluate the ants as models
     with_progress({
       if (pbars) p <- progressor(along = 1:n.pop, auto_finish = FALSE)
-      result <- foreach(i = 1:n.pop, .errorhandling = "pass") %dopar% {
+      result <- foreach(i = 1:n.pop, .errorhandling = "pass") %dorng% {
         dt <- difftime(Sys.time(), time.str, units = 'secs')
         if (dt < time.lim) {
           # build and validate the model
@@ -650,10 +653,10 @@ eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.l
 # ==========================================================================================================
 # Function to evaluate ants for the Q2hout statistic
 # ==========================================================================================================
-#' @importFrom foreach foreach `%dopar%`
+#' @importFrom foreach foreach setDoPar
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #' @importFrom doFuture registerDoFuture
-#' @importFrom doRNG registerDoRNG
+#' @importFrom doRNG registerDoRNG `%dorng%`
 #' @importFrom future plan cluster
 #' @importFrom progressr with_progress progressor
 eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str, time.lim, pbars, par.clust) {
@@ -663,8 +666,11 @@ eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str
 
   if (!is.null(par.clust)) {
     # register parallel backend
-    registerDoFuture()
-    registerDoRNG()
+    oldDoPar <- registerDoFuture()
+    on.exit(with(oldDoPar, setDoPar(fun = fun, data = data, info = info)), add = TRUE)
+    # registerDoFuture()
+    # registerDoRNG()
+
     # plan(cluster, workers = par.clust)
     oplan <- plan(cluster, workers = par.clust)
     on.exit(plan(oplan), add = TRUE)
@@ -672,7 +678,7 @@ eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str
     # evaluate the ants as models
     with_progress({
       if (pbars) p <- progressor(along = 1:n.pop, auto_finish = FALSE)
-      result <- foreach(i = 1:n.pop, .errorhandling = "pass") %dopar% {
+      result <- foreach(i = 1:n.pop, .errorhandling = "pass") %dorng% {
         dt <- difftime(Sys.time(), time.str, units = 'secs')
         if (dt < time.lim) {
           sub_result <- list()

@@ -91,6 +91,8 @@ setSPoints_F <- function(bnds, fMs, sOut, kerType, varfun, n.starts, n.presample
 # Function optimize the hyperparameters of functional-input models
 # ==========================================================================================================
 #' @importFrom stats optim
+#' @importFrom foreach setDoPar %dopar%
+#' @importFrom doRNG %dorng%
 optimHypers_F <- function(spoints, n.starts, bnds, fMs, sOut, kerType, varfun, nugget, par.clust, trace, pbars, control.optim){
   # if multistart is required then parallelize, else run single optimization
   if (n.starts == 1){
@@ -132,15 +134,18 @@ optimHypers_F <- function(spoints, n.starts, bnds, fMs, sOut, kerType, varfun, n
       if (trace) message("** Parallel backend register found. Multistart optimizations done in parallel.")
 
       # register parallel backend
-      registerDoFuture()
-      registerDoRNG()
+      oldDoPar <- registerDoFuture()
+      on.exit(with(oldDoPar, setDoPar(fun = fun, data = data, info = info)), add = TRUE)
+      # registerDoFuture()
+      # registerDoRNG()
+
       # plan(cluster, workers = par.clust)
       oplan <- plan(cluster, workers = par.clust)
       on.exit(plan(oplan), add = TRUE)
 
       with_progress({
         if (pbars) p <- progressor(along = 1:n.starts, auto_finish = FALSE)
-        optOutList <- foreach(i = 1:n.starts, .errorhandling = "remove") %dopar% {
+        optOutList <- foreach(i = 1:n.starts, .errorhandling = "remove") %dorng% {
           o <- optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_F, method = "L-BFGS-B",
                      lower = bnds[1,], upper = bnds[2,], control = control.optim,
                      fMs = fMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)

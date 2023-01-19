@@ -22,7 +22,11 @@
   for a wider control of displays.
 
 * Pre-existent future backend registers protected as suggested by the
-  author of future in a previous issue
+  author of future in issue #14
+
+
+* Pre-existent foreach adaptors registers protected as suggested by the
+  author of future in issue #15
 
 
 
