@@ -1,4 +1,4 @@
-# funGp 0.3.1 (2023-01-02)
+# funGp 0.3.1 (2023-01-21)
 
 ## Minor display changes
 
