@@ -46,7 +46,7 @@
 #'  Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour
 #'  }}
 #'  \item{\strong{Paper}}{
-#'  \href{https://doi.org/10.1016/j.ress.2020.106870}{
+#'  \href{https://www.sciencedirect.com/science/article/abs/pii/S0951832019301693}{
 #'  Gaussian process metamodeling of functional-input code for coastal flood hazard assessment
 #'  }}
 #'  \item{\strong{Tech. report}}{
