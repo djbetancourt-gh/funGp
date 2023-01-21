@@ -279,7 +279,7 @@ parallel::stopCluster(cl)
 Betancourt, J., Bachoc, F., Klein, T., Idier, D., Pedreros, R., and Rohmer, J. (2020),
 "Gaussian process metamodeling of functional-input code for coastal flood hazard assessment".
 \emph{Reliability Engineering & System Safety}, \strong{198}, 106870.
-\href{https://www.sciencedirect.com/science/article/abs/pii/S0951832019301693}{[RESS]}
+\href{https://doi.org/10.1016/j.ress.2020.106870}{[RESS]}
 \href{https://hal.archives-ouvertes.fr/hal-01998724}{[HAL]}
 
 Betancourt, J., Bachoc, F., Klein, T., and Gamboa, F. (2020),

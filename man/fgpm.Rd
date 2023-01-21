@@ -48,7 +48,7 @@ a vector of size 8 will use 8 length-scale parameters when using L2_byindex. If 
 a functional input is requested, then L2_byindex uses as many length scale parameters as effective
 dimensions used to represent the input. A single character string can also be passed as a general
 selection for all the functional inputs of the model. More details in
-\href{https://www.sciencedirect.com/science/article/abs/pii/S0951832019301693}{
+\href{https://doi.org/10.1016/j.ress.2020.106870}{
 the reference article}
 and
 \href{https://hal.archives-ouvertes.fr/hal-02536624}{
@@ -270,7 +270,7 @@ parallel::stopCluster(cl)
 Betancourt, J., Bachoc, F., Klein, T., Idier, D., Pedreros, R., and Rohmer, J. (2020),
 "Gaussian process metamodeling of functional-input code for coastal flood hazard assessment".
 \emph{Reliability Engineering & System Safety}, \strong{198}, 106870.
-\href{https://www.sciencedirect.com/science/article/abs/pii/S0951832019301693}{[RESS]}
+\href{https://doi.org/10.1016/j.ress.2020.106870}{[RESS]}
 \href{https://hal.archives-ouvertes.fr/hal-01998724}{[HAL]}
 
 Betancourt, J., Bachoc, F., Klein, T., and Gamboa, F. (2020),

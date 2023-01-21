@@ -29,20 +29,7 @@ This is a resubmission. In this version we have:
 Also checked with --run-donttest
 
 ## R CMD check results
-There were no ERRORs or WARNINGs.
-There were some NOTEs indicating:
-  - Possibly invalid URLs:
-    URL: https://www.sciencedirect.com/science/article/abs/pii/S0951832019301693
-    From: man/fgpm.Rd
-          man/fgpm_factory.Rd
-          man/funGp-package.Rd
-    Status: 403
-    Message: Forbidden
-    - Confirmed directly from the NOTEs that the URL is working fine
-  - checking for detritus in the temp directory ... NOTE
-    - Only on Windows Server 2022, R-devel, 64 bit
-    - As noted in R-hub issue #503, this could be due to a bug/crash in MiKTeX
-      and can likely be ignored
+There were no ERRORs, NOTEs or WARNINGs.
 
 ## Downstream dependencies
 There are currently no downstream dependencies for this package.
