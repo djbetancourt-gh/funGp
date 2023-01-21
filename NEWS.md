@@ -25,7 +25,7 @@
   author of future in issue #14
 
 
-* Pre-existent foreach adaptors registers protected as suggested by the
+* Pre-existent foreach adapters registers protected as suggested by the
   author of future in issue #15
 
 
