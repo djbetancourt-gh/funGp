@@ -20,6 +20,9 @@ This is a resubmission. In this version we have:
 * Also protected pre-existent foreach adapters as suggested by the
   author of future
 
+* Corrected an issue with an URL from the previous submission attempt of this
+  version
+
 ## Test environments
 * local Windows install, R 4.2.0
 * rhub, Fedora Linux, R-devel, clang, gfortran
