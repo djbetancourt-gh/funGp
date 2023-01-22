@@ -17,7 +17,7 @@ This is a resubmission. In this version we have:
 * Protected pre-existent future backend registers as suggested by the
   author of future
 
-* Also protected pre-existent foreach adaptors as suggested by the
+* Also protected pre-existent foreach adapters as suggested by the
   author of future
 
 ## Test environments
