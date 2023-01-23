@@ -214,7 +214,10 @@ show.Xfgpm <- function(object) {
 #' @param par.clust An optional parallel processing cluster created with the \code{\link[parallel]{makeCluster}}
 #'   function of the \link[=parallel]{parallel package}. If not provided, structural configurations are evaluated in
 #'   sequence.
-#' @param pbars An optional boolean indicating if progress bars should be displayed.
+#' @param trace An optional boolean indicating if control messages native of the \link[=funGp-package]{funGp package} should be
+#'   printed to console. Default is TRUE. For complementary control on the display of funGp-native progress bars, have a look at
+#'   the \code{pbars} argument below.
+#' @param pbars An optional boolean indicating if progress bars should be displayed. Default is TRUE.
 #'
 #' @return An object of class \linkS4class{Xfgpm} containing the data structures linked to the structural optimization
 #'   of a funGp model. It includes as the main component an object of class \linkS4class{fgpm} corresponding to the
@@ -302,7 +305,7 @@ show.Xfgpm <- function(object) {
 #'                      setup = list(n.iter = 25))
 #'}
 #'
-#' #assessing evolution and quality
+#' # assessing evolution and quality
 #' plot(xm25, which = "evol")
 #' plot(xm25, which = "diag")
 #'
@@ -320,7 +323,7 @@ show.Xfgpm <- function(object) {
 #' xmc <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, ctraints = myctr)
 #'}
 #'
-#' #assessing evolution and quality
+#' # assessing evolution and quality
 #' plot(xmc, which = "evol")
 #' plot(xmc, which = "diag")
 #'
@@ -381,9 +384,9 @@ show.Xfgpm <- function(object) {
 #' @importFrom microbenchmark microbenchmark
 #' @export
 fgpm_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, ind.vl = NULL,
-                          ctraints = list(), setup = list(), time.lim = Inf,
-                          nugget = 1e-8, n.starts = 1, n.presample = 20,
-                          par.clust = NULL, pbars = interactive()) {
+                         ctraints = list(), setup = list(), time.lim = Inf,
+                         nugget = 1e-8, n.starts = 1, n.presample = 20,
+                         par.clust = NULL, trace = TRUE, pbars = interactive()) {
 
   # launch timer
   time.str <- Sys.time()
@@ -402,7 +405,7 @@ fgpm_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, ind.vl = NULL,
   }
 
   # optimize model structure
-  opt <- master_ACO(sIn, fIn, sOut, ind.vl, solspace, setup, extargs, time.str, time.lim, pbars, par.clust)
+  opt <- master_ACO(sIn, fIn, sOut, ind.vl, solspace, setup, extargs, time.str, time.lim, trace, pbars, par.clust)
   X.model <- new("Xfgpm")
   X.model@factoryCall@string <- gsub("^ *|(?<= ) | *$", "", paste0(deparse(match.call()), collapse = " "), perl = TRUE)
   X.model@model <- opt$model
@@ -412,12 +415,12 @@ fgpm_factory <- function(sIn = NULL, fIn = NULL, sOut = NULL, ind.vl = NULL,
   X.model@log.success <- opt$log.suc
   X.model@log.crashes <- opt$log.cra
   X.model@n.solspace <- getSpacesize(solspace$sp.user)
-    X.model@n.explored <- nrow(opt$log.suc@sols)
-    X.model@details <- opt$all.details
-    X.model@sIn <- as.matrix(sIn)
-    X.model@fIn <- fIn
-    X.model@sOut <- as.matrix(sOut)
-    return(X.model)
+  X.model@n.explored <- nrow(opt$log.suc@sols)
+  X.model@details <- opt$all.details
+  X.model@sIn <- as.matrix(sIn)
+  X.model@fIn <- fIn
+  X.model@sOut <- as.matrix(sOut)
+  return(X.model)
 }
 # ==========================================================================================================
 
@@ -847,7 +850,6 @@ print.summary.Xfgpm <- function(x, ...) {
 ##' @title Refit a \code{fgpm} model in a \code{Xfgpm} object
 ##'
 ##' @param x A \code{Xfgpm} object.
-##'
 ##' @param i An integer giving the index of the model to refit. The
 ##'     models are in decreasing fit quality as assessed by the
 ##'     Leave-One-Out \eqn{Q^2}{Q2}.
@@ -913,8 +915,19 @@ setMethod("[[", "Xfgpm",
 ##'
 ##' @param object A \code{Xfgpm} object as created by
 ##' \code{\link{fgpm_factory}}.
-##'
 ##' @param ind The index (or rank) of the model in \code{object}.
+##' @param trace An optional boolean indicating whether funGp-native progress
+##'   messages should be displayed. Default is TRUE. See the \code{\link[funGp]{fgpm}()}
+##'   documentation for more details.
+##' @param pbars An optional boolean indicating whether progress bars managed by
+##'   \code{\link[funGp]{fgpm}()} should be displayed. Default is TRUE. See the
+##'   \code{\link[funGp]{fgpm}()} documentation for more details.
+##' @param control.optim An optional list to be passed as the control argument to
+##'   \code{\link[stats]{optim}}(), the function in charge of the non-linear
+##'   optimization of the hyperparameters. Default is list(trace = TRUE). See the
+##'   \code{\link[funGp]{fgpm}()} documentation for more details.
+##'
+##'
 ##'
 ##' @return A parsed R code defining the \code{fgpm} model.
 ##'
@@ -959,6 +972,25 @@ setMethod("[[", "Xfgpm",
 ##'     plot(fgpm.new, main = "Re-created 'fgpm' model with different data")
 ##'     plot(xm[[1]], main = "Re-created 'fgpm' model with the same data")
 ##' }
-modelDef <- function(object, ind) {
-    parse(text = object@log.success@args[[ind]]@string[[1]])
+modelDef <- function(object, ind, trace = TRUE, pbars = TRUE, control.optim = list(trace = TRUE)) {
+  # recover fgpm call stored in the Xgfpm object
+  howCalled <- object@log.success@args[[ind]]@string[[1]]
+
+  # prepare for potential extension with display controllers
+  howCalled <- substring(howCalled, 1, nchar(howCalled) - 1)
+
+  # add trace controller
+  howCalled <- paste0(howCalled, ", trace = ", trace)
+
+  # add pbars controller
+  howCalled <- paste0(howCalled, ", pbars = ", pbars)
+
+  # add control.optim controller
+  howCalled <- paste0(howCalled, ", control.optim = ", deparse(control.optim))
+
+  # close the fgpm call with parentheses
+  howCalled <- howCalled <- paste0(howCalled, ")")
+
+  # execute fgpm call
+  parse(text = howCalled)
 }

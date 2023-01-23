@@ -64,7 +64,7 @@ setGeneric(name = "plot", def = function(x, y, ...) standardGeneric("plot"))
 ##'
 setMethod("plot", "fgpm",
           function(x, y = NULL, ...) {
-               plotLOO.fgpm(model = x, ...)
+            plotLOO.fgpm(model = x, ...)
           })
 
 ## ==============================================================================
@@ -182,19 +182,19 @@ setMethod("plot", "fgpm",
 ##' }
 setMethod("plot", "Xfgpm",
           function(x, y = NULL, which = c("diag", "evol"),
-              calib = TRUE, fitp = TRUE, horiz = FALSE, ...) {
-                  which <- match.arg(which)
-                  if (which == "evol") {
-                      if (!missing(calib) || ! missing(fitp)) {
-                          warning("the formal arguments 'calib' and 'fitp' are ",
-                                  "used only when 'which' is \"diag\"")
-                      }
-                      plotEvol.Xfgpm(x.model = x,  ...)
-                  } else if (which == "diag") {
-                      plotX.Xfgpm(x.model = x, calib = calib, fitp = fitp,
-                                 horiz = horiz, ...)
-                  }
-              })
+                   calib = TRUE, fitp = TRUE, horiz = FALSE, ...) {
+            which <- match.arg(which)
+            if (which == "evol") {
+              if (!missing(calib) || ! missing(fitp)) {
+                warning("the formal arguments 'calib' and 'fitp' are ",
+                        "used only when 'which' is \"diag\"")
+              }
+              plotEvol.Xfgpm(x.model = x,  ...)
+            } else if (which == "diag") {
+              plotX.Xfgpm(x.model = x, calib = calib, fitp = fitp,
+                          horiz = horiz, ...)
+            }
+          })
 
 ## ==============================================================================
 ## plot method, S3 class "predict.fgpm"
@@ -308,16 +308,16 @@ setMethod("plot", "Xfgpm",
 plot.predict.fgpm <- function(x, y = NULL, sOut.pr = NULL,
                               calib = TRUE, sortp = TRUE, ...) {
 
-    if (!is.null(y)) {
-        if (!is.null(sOut.pr)) {
-            warning("both 'y' and 'sOut.pr' are given. Only 'y' ",
-                    "will be used")
-        }
-        sOut.pr <- y
+  if (!is.null(y)) {
+    if (!is.null(sOut.pr)) {
+      warning("both 'y' and 'sOut.pr' are given. Only 'y' ",
+              "will be used")
     }
+    sOut.pr <- y
+  }
 
-    plotPreds.fgpm(preds = x, sOut.pr = sOut.pr, calib = calib,
-                   sortp = sortp, ...)
+  plotPreds.fgpm(preds = x, sOut.pr = sOut.pr, calib = calib,
+                 sortp = sortp, ...)
 
 }
 
@@ -414,21 +414,19 @@ plot.predict.fgpm <- function(x, y = NULL, sOut.pr = NULL,
 ##' plot(simsf, detail = "light")
 ##'
 plot.simulate.fgpm <- function(x, y = NULL, detail = NA, ...) {
-
-    if (is.na(detail)) {
-        if (is.list(x)) detail <- "full"
-        else detail <- "light"
-    } else {
-        detVal <- c("light", "full")
-        if (is.na(i <- pmatch(detail, detVal))) {
-            stop("invalid value for 'detail'")
-        } else detail <- detVal[i]
-        if ((detail == "full") && !is.list(x)) {
-            warning("the value \"full\" for 'detail' can only ",
-                    "be used when `x` is a list")
-            detail <- "light"
-        }
+  if (is.na(detail)) {
+    if (is.list(x)) detail <- "full"
+    else detail <- "light"
+  } else {
+    detVal <- c("light", "full")
+    if (is.na(i <- pmatch(detail, detVal))) {
+      stop("invalid value for 'detail'")
+    } else detail <- detVal[i]
+    if ((detail == "full") && !is.list(x)) {
+      warning("the value \"full\" for 'detail' can only ",
+              "be used when `x` is a list")
+      detail <- "light"
     }
-    plotSims.fgpm(sims = x, detail = detail, ...)
-
+  }
+  plotSims.fgpm(sims = x, detail = detail, ...)
 }

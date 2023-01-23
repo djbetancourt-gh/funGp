@@ -64,6 +64,12 @@ model. Check \linkS4class{fgpKern} for more details.}
 \item{\code{preMats}}{Object of class \code{"list"}. L and LInvY matrices pre-computed for prediction. L is a lower
 diagonal matrix such that \eqn{L'L} equals the training auto-covariance matrix \eqn{K.tt}. On the other
 hand, \eqn{LInvY = L^(-1) * sOut}.}
+
+\item{\code{convergence}}{Object of class \code{"numeric"}. Integer code either confirming convergence or indicating
+an error. Check the convergence component of the Value returned by \code{\link[stats]{optim}}.}
+
+\item{\code{negLogLik}}{Object of class \code{"numeric"}. Negated log-likelihood obained by \code{\link[stats]{optim}}
+during hyperparameter optimization.}
 }}
 
 \section{Useful material}{

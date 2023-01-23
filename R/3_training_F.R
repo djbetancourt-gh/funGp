@@ -1,7 +1,7 @@
 # ==========================================================================================================
 # Master function to manage the optimization of functional-input models
 # ==========================================================================================================
-setHypers_F <- function(fMs, sOut, kerType, var.known, ls_f.known, n.starts, n.presample, nugget, par.clust, trace, pbars){
+setHypers_F <- function(fMs, sOut, kerType, var.known, ls_f.known, n.starts, n.presample, nugget, par.clust, trace, pbars, control.optim){
   # if the length-scale coefficients are known, skip optim and compute var analytically. Else optimize
   if (!is.null(ls_f.known)) {
     # 1. estimation of the correlation matrix
@@ -10,11 +10,11 @@ setHypers_F <- function(fMs, sOut, kerType, var.known, ls_f.known, n.starts, n.p
     U <- chol(R)
 
     # 2. estimate the a priori process variance
-    message("** Computing optimal variance...")
+    if (trace) message("** Computing optimal variance...")
     sig2 <- analyticVar_llik(U, sOut, n.tr)
 
     # 3. merge hyperparameters and return
-    return(c(sig2, ls_f.known))
+    return(list(hypers = c(sig2, ls_f.known), convg = as.numeric(NA), nllik = as.numeric(NA)))
 
   } else {
     # 1. set hypercube for solution space
@@ -29,14 +29,14 @@ setHypers_F <- function(fMs, sOut, kerType, var.known, ls_f.known, n.starts, n.p
     }
 
     # 3. set starting points
-    message("** Presampling...")
+    if (trace) message("** Presampling...")
     spoints <- setSPoints_F(bnds, fMs, sOut, kerType, varfun, n.starts, n.presample, nugget)
 
     # 4. Perform optimization
-    message("** Optimising hyperparameters...")
-    hypers <- optimHypers_F(spoints, n.starts, bnds, fMs, sOut, kerType, varfun, nugget, par.clust, trace, pbars)
-    message("** Hyperparameters done!")
-    return(hypers)
+    if (trace) message("** Optimising hyperparameters...")
+    optResult <- optimHypers_F(spoints, n.starts, bnds, fMs, sOut, kerType, varfun, nugget, par.clust, trace, pbars, control.optim)
+    if (trace) message("** Hyperparameters done!")
+    return(optResult)
   }
 }
 # ==========================================================================================================
@@ -91,22 +91,17 @@ setSPoints_F <- function(bnds, fMs, sOut, kerType, varfun, n.starts, n.presample
 # Function optimize the hyperparameters of functional-input models
 # ==========================================================================================================
 #' @importFrom stats optim
-optimHypers_F <- function(spoints, n.starts, bnds, fMs, sOut, kerType, varfun, nugget, par.clust, trace, pbars){
+#' @importFrom foreach setDoPar %dopar%
+#' @importFrom doRNG %dorng%
+optimHypers_F <- function(spoints, n.starts, bnds, fMs, sOut, kerType, varfun, nugget, par.clust, trace, pbars, control.optim){
   # if multistart is required then parallelize, else run single optimization
   if (n.starts == 1){
-    if (trace) {
-      optOut <- optim(par = as.numeric(spoints), fn = negLogLik_funGp_F, method = "L-BFGS-B",
-                      lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
-                      fMs = fMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
-    } else {
-      optOut <- quiet(optim(par = as.numeric(spoints), fn = negLogLik_funGp_F, method = "L-BFGS-B",
-                            lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
-                            fMs = fMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget))
-    }
-
+    optOut <- optim(par = as.numeric(spoints), fn = negLogLik_funGp_F, method = "L-BFGS-B",
+                    lower = bnds[1,], upper = bnds[2,], control = control.optim,
+                    fMs = fMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
   } else {
     if (is.null(par.clust)) {
-      message("** Parallel backend register not found. Multistart optimizations done in sequence.")
+      if (trace) message("** Parallel backend register not found. Multistart optimizations done in sequence.")
 
       # set up progress bar
       if (pbars) {
@@ -118,15 +113,9 @@ optimHypers_F <- function(spoints, n.starts, bnds, fMs, sOut, kerType, varfun, n
       for (i in 1:n.starts) {
         modeval <- tryCatch(
           {
-            if (trace) {
-              optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_F, method = "L-BFGS-B",
-                    lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
-                    fMs = fMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
-            } else {
-              quiet(optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_F, method = "L-BFGS-B",
-                          lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
-                          fMs = fMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget))
-            }
+            optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_F, method = "L-BFGS-B",
+                  lower = bnds[1,], upper = bnds[2,], control = control.optim,
+                  fMs = fMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
           },
           error = function(e) e
         )
@@ -142,26 +131,25 @@ optimHypers_F <- function(spoints, n.starts, bnds, fMs, sOut, kerType, varfun, n
       if (pbars) close(pb)
 
     } else {
-      message("** Parallel backend register found. Multistart optimizations done in parallel.")
+      if (trace) message("** Parallel backend register found. Multistart optimizations done in parallel.")
 
       # register parallel backend
-      registerDoFuture()
-      registerDoRNG()
-      plan(cluster, workers = par.clust)
+      oldDoPar <- registerDoFuture()
+      on.exit(with(oldDoPar, setDoPar(fun = fun, data = data, info = info)), add = TRUE)
+      # registerDoFuture()
+      # registerDoRNG()
+
+      # plan(cluster, workers = par.clust)
+      oplan <- plan(cluster, workers = par.clust)
+      on.exit(plan(oplan), add = TRUE)
 
       with_progress({
         if (pbars) p <- progressor(along = 1:n.starts, auto_finish = FALSE)
-        optOutList <- foreach(i = 1:n.starts, .errorhandling = "remove") %dopar% {
-          if (trace) {
-            o <- optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_F, method = "L-BFGS-B",
-                       lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
-                       fMs = fMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
-            ## cat("\n")
-          } else {
-            o <- quiet(optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_F, method = "L-BFGS-B",
-                             lower = bnds[1,], upper = bnds[2,], control = list(trace = TRUE),
-                             fMs = fMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget))
-          }
+        optOutList <- foreach(i = 1:n.starts, .errorhandling = "remove") %dorng% {
+          o <- optim(par = as.numeric(spoints[,i]), fn = negLogLik_funGp_F, method = "L-BFGS-B",
+                     lower = bnds[1,], upper = bnds[2,], control = control.optim,
+                     fMs = fMs, sOut = sOut, kerType = kerType, varfun = varfun, nugget = nugget)
+          ## cat("\n")
           if (pbars) p()
           return(o)
         }
@@ -178,6 +166,8 @@ optimHypers_F <- function(spoints, n.starts, bnds, fMs, sOut, kerType, varfun, n
     optOut <- optOutList[[which.min(fitvec)]]
   }
 
+  if (isTRUE(control.optim$trace)) message("The function value is the negated log-likelihood")
+
   # recovering relevant information for the estimation of the process a priori variance
   thetas_f <- optOut$par
   n.tr <- length(sOut)
@@ -187,7 +177,7 @@ optimHypers_F <- function(spoints, n.starts, bnds, fMs, sOut, kerType, varfun, n
   # estimation of the variance
   sig2 <- varfun(U, sOut, n.tr)
 
-  return(c(sig2, thetas_f))
+  return(list(hypers = c(sig2, thetas_f), convg = optOut$convergence, nllik = optOut$value))
 }
 # ==========================================================================================================
 

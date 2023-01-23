@@ -291,8 +291,8 @@ plotSims.fgpm <- function(sims, detail, ...) {
   if (!is.null(gpars$lwd.sm)) lwd.sm <- gpars$lwd.sm else lwd.sm <- 1
   if (!is.null(gpars$lty.ci)) lty.ci <- gpars$lty.ci else lty.ci <- 1
   if (!is.null(gpars$lwd.ci)) lwd.ci <- gpars$lwd.ci else lwd.ci <- 1
-  if (!is.null(gpars$lty.mean)) lty.mean <- gpars$lty.mean else lty.mean <- 1
-  if (!is.null(gpars$lwd.mean)) lwd.mean <- gpars$lwd.mean else lwd.mean <- 1
+  if (!is.null(gpars$lty.mean)) lty.mean <- gpars$lty.mean else lty.mean <- 2
+  if (!is.null(gpars$lwd.mean)) lwd.mean <- gpars$lwd.mean else lwd.mean <- 1.5
   # <---> text
   if (!is.null(gpars$main)) main <- gpars$main else main <- "Simulations from a funGp model"
   if (!is.null(gpars$xlab)) xlab <- gpars$xlab else xlab <- "Sim. index"
@@ -311,12 +311,12 @@ plotSims.fgpm <- function(sims, detail, ...) {
   matplot(t(y_traj), type = "l", col = line.sm, lty = lty.sm, lwd = lwd.sm, main = main, xlab = xlab, ylab = ylab, xaxt = "n")
   axis(1, axtags(ncol(y_traj)))
   if (all(is.list(sims), detail == "full")) {
-    lines(sims$mean, col = line.mean)
-    lines(sims$lower95, col = line.ci)
-    lines(sims$upper95, col = line.ci)
+    lines(sims$mean, col = line.mean, lty = lty.mean, lwd = lwd.mean)
+    lines(sims$lower95, col = line.ci, lty = lty.ci, lwd = lwd.ci)
+    lines(sims$upper95, col = line.ci, lty = lty.ci, lwd = lwd.ci)
     if (legends)
       legend("topleft", legend = c("Sims", "Mean", "95% CIs"), col = c(line.sm, line.mean, line.ci),
-             lty = c(lty.sm, lty.mean, lty.ci), cex = 0.8)
+             lty = c(lty.sm, lty.mean, lty.ci), lwd = c(lwd.sm, lwd.mean, lwd.ci), cex = 0.8)
   }
 }
 # ==========================================================================================================

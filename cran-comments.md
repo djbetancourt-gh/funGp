@@ -1,13 +1,27 @@
 ## Resubmission
 This is a resubmission. In this version we have:
 
-* Implemented plot and summary methods for our most important
-  objects to adjust to the standard use in R packages
-  
-* Removed our dependency on the qdapRegex package which is
-  already scheduled for archival by CRAN
-  
-* Improved the documentation to simplify help pages indexing
+* Updated the source URL of funGp's logo in README.md
+
+* Added a BugReports section in DESCRIPTION
+
+* Edited the line type in one plot to improve its visualization
+
+* Added trace, pbars and control.optim arguments to some functions to improve
+  the user control over displays
+
+* Added two slots to the fgpm class to make it more informative
+
+* Enabled forwarding of the control argument to optim through fgpm calls
+
+* Protected pre-existent future backend registers as suggested by the
+  author of future
+
+* Also protected pre-existent foreach adapters as suggested by the
+  author of future
+
+* Corrected an issue with an URL from the previous submission attempt of this
+  version
 
 ## Test environments
 * local Windows install, R 4.2.0
@@ -18,20 +32,7 @@ This is a resubmission. In this version we have:
 Also checked with --run-donttest
 
 ## R CMD check results
-There were no ERRORs or WARNINGs.
-There were some NOTEs indicating:
-  - Possibly invalid URLs:
-    URL: https://www.sciencedirect.com/science/article/abs/pii/S0951832019301693
-    From: man/fgpm.Rd
-          man/fgpm_factory.Rd
-          man/funGp-package.Rd
-    Status: 403
-    Message: Forbidden
-    - Confirmed directly from the NOTEs that the URL is working fine
-  - checking for detritus in the temp directory ... NOTE
-    - Only on Windows Server 2022, R-devel, 64 bit
-    - As noted in R-hub issue #503, this could be due to a bug/crash in MiKTeX
-      and can likely be ignored
+There were no ERRORs, NOTEs or WARNINGs.
 
 ## Downstream dependencies
 There are currently no downstream dependencies for this package.

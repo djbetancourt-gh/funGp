@@ -29,17 +29,17 @@ setClass("antsLog",
 # ==========================================================================================================
 # Master function to process ACO tasks
 # ==========================================================================================================
-master_ACO <- function(sIn, fIn, sOut, ind.vl, solspace, setup, extargs, time.str, time.lim, pbars, par.clust) {
+master_ACO <- function(sIn, fIn, sOut, ind.vl, solspace, setup, extargs, time.str, time.lim, trace, pbars, par.clust) {
   # set heuristic parameters based on defaults and user specifications
   param <- setParams_ACO(setup, length(fIn))
 
   # set pheromones based on the solution space and initial parameters
-  message("** Initializing decision network...")
+  if (trace) message("** Initializing decision network...")
   phero <- setEnvir_ACO(solspace, param)
 
   # perform exploration
-  message("** Optimizing structural parameters...")
-  res <- run_ACO(sIn, fIn, sOut, ind.vl, param, phero, solspace$sp.base, extargs, time.str, time.lim, pbars, par.clust)
+  if (trace) message("** Optimizing structural parameters...")
+  res <- run_ACO(sIn, fIn, sOut, ind.vl, param, phero, solspace$sp.base, extargs, time.str, time.lim, trace, pbars, par.clust)
 
   # correct the howCalled of best model
   res$model@howCalled@string <- getCall_ACO(res$sol.vec, sIn, fIn, res$sol.args, solspace$sp.base, extargs)
@@ -583,10 +583,10 @@ getLog_ACO <- function(sIn, fIn, log.vec, log.fitness, base, extargs) {
 # ==========================================================================================================
 # Function to evaluate ants for the Q2loocv statistic
 # ==========================================================================================================
-#' @importFrom foreach foreach `%dopar%`
+#' @importFrom foreach foreach setDoPar
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #' @importFrom doFuture registerDoFuture
-#' @importFrom doRNG registerDoRNG
+#' @importFrom doRNG registerDoRNG `%dorng%`
 #' @importFrom future plan cluster
 #' @importFrom progressr with_progress progressor
 eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.lim, pbars, par.clust) {
@@ -595,14 +595,19 @@ eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.l
 
   if (!is.null(par.clust)) {
     # register parallel backend
-    registerDoFuture()
-    registerDoRNG()
-    plan(cluster, workers = par.clust)
+    oldDoPar <- registerDoFuture()
+    on.exit(with(oldDoPar, setDoPar(fun = fun, data = data, info = info)), add = TRUE)
+    # registerDoFuture()
+    # registerDoRNG()
+
+    # plan(cluster, workers = par.clust)
+    oplan <- plan(cluster, workers = par.clust)
+    on.exit(plan(oplan), add = TRUE)
 
     # evaluate the ants as models
     with_progress({
       if (pbars) p <- progressor(along = 1:n.pop, auto_finish = FALSE)
-      result <- foreach(i = 1:n.pop, .errorhandling = "pass") %dopar% {
+      result <- foreach(i = 1:n.pop, .errorhandling = "pass") %dorng% {
         dt <- difftime(Sys.time(), time.str, units = 'secs')
         if (dt < time.lim) {
           # build and validate the model
@@ -648,10 +653,10 @@ eval_loocv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, time.str, time.l
 # ==========================================================================================================
 # Function to evaluate ants for the Q2hout statistic
 # ==========================================================================================================
-#' @importFrom foreach foreach `%dopar%`
+#' @importFrom foreach foreach setDoPar
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #' @importFrom doFuture registerDoFuture
-#' @importFrom doRNG registerDoRNG
+#' @importFrom doRNG registerDoRNG `%dorng%`
 #' @importFrom future plan cluster
 #' @importFrom progressr with_progress progressor
 eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str, time.lim, pbars, par.clust) {
@@ -661,14 +666,19 @@ eval_houtv_ACO <- function(sIn, fIn, sOut, extargs, base, ants, ind.vl, time.str
 
   if (!is.null(par.clust)) {
     # register parallel backend
-    registerDoFuture()
-    registerDoRNG()
-    plan(cluster, workers = par.clust)
+    oldDoPar <- registerDoFuture()
+    on.exit(with(oldDoPar, setDoPar(fun = fun, data = data, info = info)), add = TRUE)
+    # registerDoFuture()
+    # registerDoRNG()
+
+    # plan(cluster, workers = par.clust)
+    oplan <- plan(cluster, workers = par.clust)
+    on.exit(plan(oplan), add = TRUE)
 
     # evaluate the ants as models
     with_progress({
       if (pbars) p <- progressor(along = 1:n.pop, auto_finish = FALSE)
-      result <- foreach(i = 1:n.pop, .errorhandling = "pass") %dopar% {
+      result <- foreach(i = 1:n.pop, .errorhandling = "pass") %dorng% {
         dt <- difftime(Sys.time(), time.str, units = 'secs')
         if (dt < time.lim) {
           sub_result <- list()
@@ -805,7 +815,7 @@ fitNtests_ACO <- function(ant, sIn, fIn, sOut, extargs, base,
       model <- suppressMessages(fgpm(sIn = args$sIn, fIn = args$fIn, sOut = sOut, kerType = args$kerType,
                                      f_disType = args$f_disType, f_pdims = args$f_pdims, f_basType = args$f_basType,
                                      nugget = extargs$nugget, n.starts = extargs$n.starts, n.presample = extargs$n.presample,
-                                     trace = F, pbars = F))
+                                     trace = F, pbars = F, control.optim = list(trace = 0)))
     },
     error = function(e) e
   )

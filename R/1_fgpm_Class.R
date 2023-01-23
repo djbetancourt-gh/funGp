@@ -45,6 +45,10 @@
 #' @slot preMats Object of class \code{"list"}. L and LInvY matrices pre-computed for prediction. L is a lower
 #'   diagonal matrix such that \eqn{L'L} equals the training auto-covariance matrix \eqn{K.tt}. On the other
 #'   hand, \eqn{LInvY = L^(-1) * sOut}.
+#' @slot convergence Object of class \code{"numeric"}. Integer code either confirming convergence or indicating
+#'  an error. Check the convergence component of the Value returned by \code{\link[stats]{optim}}.
+#' @slot negLogLik Object of class \code{"numeric"}. Negated log-likelihood obained by \code{\link[stats]{optim}}
+#'  during hyperparameter optimization.
 #'
 #' @section Useful material:
 #' \itemize{
@@ -65,7 +69,7 @@
 setClass("fgpm",
          slots = c(
            howCalled = "modelCall",    # reminder of function call
-           type = "character",         # Type of model. To be set from {"scalar", "functional", "hybrid"}.
+           type = "character",         # type of model. To be set from {"scalar", "functional", "hybrid"}.
            ds = "numeric",             # number of scalar inputs
            df = "numeric",             # number of functional inputs
            f_dims = "numeric",         # dimension of each functional input
@@ -77,7 +81,9 @@ setClass("fgpm",
            f_proj = "fgpProj",         # structures related to the projection of functional inputs
            kern = "fgpKern",           # structures related to the kernel of the model
            nugget = "numeric",         # variance parameter standing for the homogeneous nugget effect
-           preMats = "list"            # Pre-computed KttInv and KttInv.sOut matrices
+           preMats = "list",           # pre-computed KttInv and KttInv.sOut matrices
+           convergence = "numeric",    # indicator of convergence/error
+           negLogLik = "numeric"      # negated loglikelihood achieved during hypers optim
          ),
          validity = function(object) {TRUE})
 # ==========================================================================================================
@@ -151,9 +157,18 @@ setClass("fgpm",
 #'   n.starts will be assigned to n.presample if this last is smaller. Default is 20.
 #' @param par.clust An optional parallel processing cluster created with the \code{\link[parallel]{makeCluster}} function
 #'   of the \link[=parallel]{parallel package}. If not provided, multistart optimizations are done in sequence.
-#' @param trace An optional boolean indicating if control messages from the \link[stats]{optim} function regarding the
-#'   optimization of the hyperparameters should be printed to console. Default is TRUE.
+#' @param trace An optional boolean indicating if control messages native of the \link[=funGp-package]{funGp package} should be printed to
+#'   console. Default is TRUE. For complementary control on the display of funGp-native progress bars and
+#'   \code{\link[stats]{optim}} trace about the hyperparameter optimization process, have a look at the \code{pbars} and
+#'   \code{control.optim} arguments, respectively.
 #' @param pbars An optional boolean indicating if progress bars should be displayed. Default is TRUE.
+#' @param control.optim An optional list to be passed as the \code{control} argument to \code{\link[stats]{optim}}, the function
+#'   in charge of the non-linear optimization of the hyperparameters. Default is \code{list(trace = TRUE)}, equivalent to
+#'   \code{list(trace = 1)}, which enables the printing of tracing information on the progress of the optimization. Before
+#'   interacting with the \code{\link[funGp]{fgpm}()} \code{control.optim} argument, please carefully check the documentation about
+#'   the \code{control} argument provided in \code{\link[stats]{optim}} to ensure a coherent behavior and sound results. Note
+#'   that: (i) at this time, only the \code{"L-BFGS-B"} method (Byrd et. al., 1995) is enabled in \code{\link[funGp]{fgpm}()};
+#'   (ii) \code{control.optim$fnscale} should not be used since our optimization problem is strictly of minimization, not maximization.
 #'
 #' @return An object of class \linkS4class{fgpm} containing the data structures representing the fitted funGp model.
 #'
@@ -329,10 +344,10 @@ setClass("fgpm",
 #' @importFrom microbenchmark microbenchmark
 #' @export
 fgpm <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
-                  f_disType = "L2_bygroup", f_pdims = 3, f_basType = "B-splines",
-                  var.hyp = NULL, ls_s.hyp = NULL, ls_f.hyp = NULL, nugget = 1e-8,
-                  n.starts = 1, n.presample = 20, par.clust = NULL, trace = TRUE, pbars = TRUE) {
-
+                 f_disType = "L2_bygroup", f_pdims = 3, f_basType = "B-splines",
+                 var.hyp = NULL, ls_s.hyp = NULL, ls_f.hyp = NULL, nugget = 1e-8,
+                 n.starts = 1, n.presample = 20, par.clust = NULL, trace = TRUE, pbars = TRUE,
+                 control.optim = list(trace = TRUE)) {
   # extend simplified user inputs to full versions
   if (!is.null(sIn)) {
     if (is.numeric(sIn)) sIn <- as.matrix(sIn)
@@ -393,7 +408,10 @@ fgpm <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
       varHyp <- var.hyp
       lsHyps <- c(ls_s.hyp, ls_f.hyp)
     } else {
-      hypers <- setHypers_SF(sMs, fMs, sOut, kerType, var.hyp, ls_s.hyp, ls_f.hyp, n.starts, n.presample, nugget, par.clust, trace, pbars)
+      optResult <- setHypers_SF(sMs, fMs, sOut, kerType, var.hyp, ls_s.hyp, ls_f.hyp,
+                                n.starts, n.presample, nugget, par.clust, trace, pbars,
+                                control.optim)
+      hypers <- optResult$hypers
       varHyp <- hypers[1]
       lsHyps <- hypers[-1]
     }
@@ -442,7 +460,10 @@ fgpm <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
       varHyp <- var.hyp
       lsHyps <- ls_f.hyp
     } else {
-      hypers <- setHypers_F(fMs, sOut, kerType, var.hyp, ls_f.hyp, n.starts, n.presample, nugget, par.clust, trace, pbars)
+      optResult <- setHypers_F(fMs, sOut, kerType, var.hyp, ls_f.hyp,
+                               n.starts, n.presample, nugget, par.clust, trace, pbars,
+                               control.optim)
+      hypers <- optResult$hypers
       varHyp <- hypers[1]
       lsHyps <- hypers[-1]
     }
@@ -482,7 +503,10 @@ fgpm <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
       varHyp <- var.hyp
       lsHyps <- ls_s.hyp
     } else {
-      hypers <- setHypers_S(sIn, sMs, sOut, kerType, var.hyp, ls_s.hyp, n.starts, n.presample, nugget, par.clust, trace, pbars)
+      optResult <- setHypers_S(sIn, sMs, sOut, kerType, var.hyp, ls_s.hyp,
+                               n.starts, n.presample, nugget, par.clust, trace, pbars,
+                               control.optim)
+      hypers <- optResult$hypers
       varHyp <- hypers[1]
       lsHyps <- hypers[-1]
     }
@@ -515,6 +539,13 @@ fgpm <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
   model@n.tr <- n.tr
   model@kern <- kern
   model@nugget <- nugget
+  if (exists("optResult")) {
+    model@convergence <- optResult$convg
+    model@negLogLik <- optResult$nllik
+  } else {
+    model@convergence <- as.numeric(NA)
+    model@negLogLik <- as.numeric(NA)
+  }
 
   # ________________________________________________________________________________________________________
   # Attributes checklist
@@ -585,6 +616,8 @@ show.fgpm <- function(model) {
   cat(paste("* Trained with: ", model@n.tr, "\n", sep = ""))
 
   cat(paste("* Kernel type: ", model@kern@kerType, "\n", sep = ""))
+  cat(paste("* Convergence: ", model@convergence, "\n", sep = ""))
+  cat(paste("* NegLogLik: ", format(model@negLogLik, digits = 3, nsmall = 4), "\n", sep = ""))
   cat("* Hyperparameters:\n")
   cat(paste("  -> variance: ", format(model@kern@varHyp, digits = 3, nsmall = 4), "\n", sep = ""))
   cat("  -> length-scale:\n")
@@ -1126,6 +1159,15 @@ setGeneric(name = "update", def = function(object, ...) standardGeneric("update"
 #'   should be re-estimated. Default is FALSE.
 #' @param ls_f.re An optional boolean indicating whether the length-scale parameters of the functional
 #'   inputs should be re-estimated. Default is FALSE.
+#' @param trace An optional boolean indicating whether funGp-native progress messages and a summary update
+#'   should be displayed. Default is TRUE. See the \code{\link[funGp]{fgpm}()} documentation for more details.
+#' @param pbars An optional boolean indicating whether progress bars managed by \code{\link[funGp]{fgpm}()}
+#'  should be displayed (in case the update requires an \code{\link[funGp]{fgpm}()} call). Default is TRUE.
+#'  See the \code{\link[funGp]{fgpm}()} documentation for more details.
+#' @param control.optim An optional list to be passed as the control argument to \code{\link[stats]{optim}}()
+#'  (in case the update requires an \code{\link[funGp]{fgpm}()} call), the function in charge of the non-linear
+#'  optimization of the hyperparameters. Default is list(trace = TRUE). See the \code{\link[funGp]{fgpm}()}
+#'  documentation for more details.
 #'
 #' @return An object of class \linkS4class{fgpm} representing the updated funGp model.
 #'
@@ -1263,16 +1305,20 @@ setMethod("update", "fgpm",
           function(object, sIn.nw = NULL, fIn.nw = NULL, sOut.nw = NULL,
                    sIn.sb = NULL, fIn.sb = NULL, sOut.sb = NULL, ind.sb = NULL,
                    ind.dl = NULL, var.sb = NULL, ls_s.sb = NULL, ls_f.sb = NULL,
-                   var.re = FALSE, ls_s.re = FALSE, ls_f.re = FALSE, ...) {
+                   var.re = FALSE, ls_s.re = FALSE, ls_f.re = FALSE,
+                   trace = TRUE, pbars = TRUE, control.optim = list(trace = TRUE), ...) {
             update.fgpm(model = object, sIn.nw = sIn.nw, fIn.nw = fIn.nw, sOut.nw = sOut.nw,
-                         sIn.sb = sIn.sb, fIn.sb = fIn.sb, sOut.sb = sOut.sb, ind.sb = ind.sb,
-                         ind.dl = ind.dl,
-                         var.sb = var.sb, ls_s.sb = ls_s.sb, ls_f.sb = ls_f.sb,
-                         var.re = var.re, ls_s.re = ls_s.re, ls_f.re = ls_f.re)
-            })
+                        sIn.sb = sIn.sb, fIn.sb = fIn.sb, sOut.sb = sOut.sb, ind.sb = ind.sb,
+                        ind.dl = ind.dl,
+                        var.sb = var.sb, ls_s.sb = ls_s.sb, ls_f.sb = ls_f.sb,
+                        var.re = var.re, ls_s.re = ls_s.re, ls_f.re = ls_f.re,
+                        trace = trace, pbars, control.optim)
+
+          })
 
 update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb, ind.sb, ind.dl,
-                         var.sb, ls_s.sb, ls_f.sb, var.re, ls_s.re, ls_f.re) {
+                        var.sb, ls_s.sb, ls_f.sb, var.re, ls_s.re, ls_f.re,
+                        trace, pbars, control.optim) {
   # check what does the user want to do
   delInOut <- !is.null(ind.dl)
   subHypers <- any(!is.null(var.sb), !is.null(ls_s.sb), !is.null(ls_f.sb))
@@ -1294,8 +1340,10 @@ update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb,
   # (4) var substitution, (5) ls_s substitution, (6) ls_f substitution,
   # (7) var re-estimation, (8) ls_s re-estimation, (9) ls_f re-estimation
   tasknames <- c("data deletion", "data substitution", "data addition",
-                 "var substitution", "scalar length-scale substitution", "functional length-scale substitution",
-                 "var re-estimation", "scalar length-scale re-estimation", "functional length-scale re-estimation")
+                 "var substitution", "scalar length-scale substitution",
+                 "functional length-scale substitution",
+                 "var re-estimation", "scalar length-scale re-estimation",
+                 "functional length-scale re-estimation")
 
   # identify and drop conflicting tasks
   # ----------------------------------------------------
@@ -1351,35 +1399,48 @@ update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb,
   modelup <- model
   cptasks <- c()
   if (delInOut & !(1 %in% dptasks)) {
-    modelup <- upd_del(model = modelup, ind.dl = ind.dl, remake = all(!newInOut, !subHypers, remake = !reeHypers))
+    modelup <- upd_del(model = modelup, ind.dl = ind.dl, remake = all(!newInOut, !subHypers, !reeHypers),
+                       trace = trace, pbars = pbars, control.optim = control.optim)
     modelup@howCalled <- model@howCalled
     modelup@n.tr <- model@n.tr
+    modelup@convergence <- model@convergence
+    modelup@negLogLik <- model@negLogLik
     cptasks <- c(cptasks, 1)
   }
   if (subInOut & !(2 %in% dptasks)) {
     modelup <- upd_subData(model = modelup, sIn.sb = sIn.sb, fIn.sb = fIn.sb,
                            sOut.sb = tryCatch(as.matrix(sOut.sb), error = function(e) sOut.sb), ind.sb = ind.sb,
-                           remake = all(!newInOut, !subHypers, !reeHypers))
+                           remake = all(!newInOut, !subHypers, !reeHypers),
+                           trace = trace, pbars = pbars, control.optim = control.optim)
     modelup@howCalled <- model@howCalled
+    modelup@convergence <- model@convergence
+    modelup@negLogLik <- model@negLogLik
     cptasks <- c(cptasks, 2)
   }
   if (newInOut) {
     modelup <- upd_add(model = modelup, sIn.nw = sIn.nw, fIn.nw = fIn.nw, sOut.nw = as.matrix(sOut.nw),
-                       remake = all(!subHypers, !reeHypers))
+                       remake = all(!subHypers, !reeHypers),
+                       trace = trace, pbars = pbars, control.optim = control.optim)
     modelup@howCalled <- model@howCalled
     modelup@n.tr <- model@n.tr
+    modelup@convergence <- model@convergence
+    modelup@negLogLik <- model@negLogLik
     cptasks <- c(cptasks, 3)
   }
   if (subHypers & any(!(c(4,5,6) %in% dptasks))) {
-    modelup <- upd_subHypers(model = modelup, var.sb = var.sb, ls_s.sb = ls_s.sb, ls_f.sb = ls_f.sb)
+    modelup <- upd_subHypers(model = modelup, var.sb = var.sb, ls_s.sb = ls_s.sb, ls_f.sb = ls_f.sb,
+                             trace = trace, pbars = pbars, control.optim = control.optim)
     modelup@howCalled <- model@howCalled
     modelup@n.tr <- model@n.tr
+    modelup@convergence <- model@convergence
+    modelup@negLogLik <- model@negLogLik
     if (!is.null(var.sb) & !(4 %in% dptasks)) cptasks <- c(cptasks, 4)
     if (!is.null(ls_s.sb) & !(5 %in% dptasks)) cptasks <- c(cptasks, 5)
     if (!is.null(ls_f.sb) & !(6 %in% dptasks)) cptasks <- c(cptasks, 6)
   }
   if (reeHypers & any(!(c(7,8,9) %in% dptasks))) {
-    modelup <- upd_reeHypers(model = modelup, var.re = var.re, ls_s.re = ls_s.re, ls_f.re = ls_f.re)
+    modelup <- upd_reeHypers(model = modelup, var.re = var.re, ls_s.re = ls_s.re, ls_f.re = ls_f.re,
+                             trace = trace, pbars = pbars, control.optim = control.optim)
     modelup@howCalled <- model@howCalled
     if (isTRUE(var.re) & !(7 %in% dptasks)) cptasks <- c(cptasks, 7)
     if (isTRUE(ls_s.re) & !(8 %in% dptasks)) cptasks <- c(cptasks, 8)
@@ -1387,39 +1448,41 @@ update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb,
   }
   # ----------------------------------------------------
 
-  # print update summary
-  # ----------------------------------------------------
-  if (length(cptasks) > 0) { # list of complete tasks if there is any
-    cat("--------------\n")
-    cat("Update summary\n")
-    cat("--------------\n")
-
-    cat("* Complete tasks:\n")
-    ct <- tasknames[cptasks]
-    for (t in ct) {
-      cat(paste("  - ", t, "\n", sep = ""))
-    }
-  }
-
-  if (length(dptasks) > 0) { # list of dropped tasks if there is any
-    if (length(cptasks) == 0) {
+  # print update summary (only if trace is enabled)
+  if (trace) {
+    # ----------------------------------------------------
+    if (length(cptasks) > 0) { # list of complete tasks if there is any
       cat("--------------\n")
       cat("Update summary\n")
       cat("--------------\n")
+
+      cat("* Complete tasks:\n")
+      ct <- tasknames[cptasks]
+      for (t in ct) {
+        cat(paste("  - ", t, "\n", sep = ""))
+      }
     }
 
-    cat("\n* Dropped tasks:\n")
-    dt <- tasknames[dptasks]
-    for (t in dt) {
-      cat(paste("  - ", t, "\n", sep = ""))
+    if (length(dptasks) > 0) { # list of dropped tasks if there is any
+      if (length(cptasks) == 0) {
+        cat("--------------\n")
+        cat("Update summary\n")
+        cat("--------------\n")
+      }
+
+      cat("\n* Dropped tasks:\n")
+      dt <- tasknames[dptasks]
+      for (t in dt) {
+        cat(paste("  - ", t, "\n", sep = ""))
+      }
+      cat("\n* Recall that:\n")
+      cat(" - Data points deletion and substitution are not compatible tasks\n")
+      cat(" - Hyperparameters substitution and re-estimation are not compatible tasks\n")
+      cat(" - Hyperparameters re-estimation is automatically dropped when data deletion and substitution are both requested\n")
+      cat(" - Scalar length-scale coeficients re-estimation is automatically dropped when the model has only functional inputs\n")
+      cat(" - Functional length-scale coeficients re-estimation is automatically dropped when the model has only scalar inputs\n")
+      cat(" -> Please check ?funGp::update for more details\n")
     }
-    cat("\n* Recall that:\n")
-    cat(" - Data points deletion and substitution are not compatible tasks\n")
-    cat(" - Hyperparameters substitution and re-estimation are not compatible tasks\n")
-    cat(" - Hyperparameters re-estimation is automatically dropped when data deletion and substitution are both requested\n")
-    cat(" - Scalar length-scale coeficients re-estimation is automatically dropped when the model has only functional inputs\n")
-    cat(" - Functional length-scale coeficients re-estimation is automatically dropped when the model has only scalar inputs\n")
-    cat(" -> Please check ?funGp::update for more details\n")
   }
   # ----------------------------------------------------
 
@@ -1447,3 +1510,4 @@ update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb,
 ##' summary(m)
 ##' m
 setMethod("summary", "fgpm", function(object, ...) show(object, ...))
+

@@ -16,6 +16,7 @@ fgpm_factory(
   n.starts = 1,
   n.presample = 20,
   par.clust = NULL,
+  trace = TRUE,
   pbars = interactive()
 )
 }
@@ -130,7 +131,11 @@ n.starts will be assigned to n.presample if this last is smaller. Default is 20.
 function of the \link[=parallel]{parallel package}. If not provided, structural configurations are evaluated in
 sequence.}
 
-\item{pbars}{An optional boolean indicating if progress bars should be displayed.}
+\item{trace}{An optional boolean indicating if control messages native of the \link[=funGp-package]{funGp package} should be
+printed to console. Default is TRUE. For complementary control on the display of funGp-native progress bars, have a look at
+the \code{pbars} argument below.}
+
+\item{pbars}{An optional boolean indicating if progress bars should be displayed. Default is TRUE.}
 }
 \value{
 An object of class \linkS4class{Xfgpm} containing the data structures linked to the structural optimization
@@ -194,7 +199,7 @@ xm25 <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut,
                      setup = list(n.iter = 25))
 }
 
-#assessing evolution and quality
+# assessing evolution and quality
 plot(xm25, which = "evol")
 plot(xm25, which = "diag")
 
@@ -212,7 +217,7 @@ kerTypes = c("matern5_2", "gauss")) # test only Matern 5/2 and Gaussian kernels
 xmc <- fgpm_factory(sIn = sIn, fIn = fIn, sOut = sOut, ctraints = myctr)
 }
 
-#assessing evolution and quality
+# assessing evolution and quality
 plot(xmc, which = "evol")
 plot(xmc, which = "diag")
 

@@ -1,25 +1,57 @@
+# funGp 0.3.1 (2023-01-21)
+
+## Minor display changes
+
+* Line type of the mean function in `plotSims.fgpm` changed to dashed
+  (`lty` = 2) for easier inspection.
+
+* The `trace`, `pbars` and `control.optim` arguments were added to `update.fgpm`
+  for a wider control of displays.
+
+* Convergence code and negated log-likelihood value added as slots of
+  fgpm objects to make them more informative.
+
+* Forwarding of `optim()` `control` argument enabled in fgpm through
+  `control.optim`.
+
+* Following the addition of control.optim, we improved the functionality
+  of the `fgpm` and `fgpm_factory` arguments to control the display of
+  `funGp` native progress messages
+
+* The `trace`, `pbars` and `control.optim` arguments were added to `modelDef`
+  for a wider control of displays.
+
+* Pre-existent future backend registers protected as suggested by the
+  author of future in issue #14
+
+
+* Pre-existent foreach adapters registers protected as suggested by the
+  author of future in issue #15
+
+
+
 # funGp 0.3.0 (2022-05-30)
 
 ## Main functionality corrections
 
-* The `summary` method has been added for `Xfgpm` and `fgpm` objects
+* The `summary` method has been added for `Xfgpm` and `fgpm` objects.
 
-* New classes `"predict.Xfgpm"` and `"simulate.Xfgpm"`
+* New classes `"predict.Xfgpm"` and `"simulate.Xfgpm"`.
 
-* All plotters are now `plot` methods for the classes `"Xfgpm"`, `"fgpm"`
-`"predict.Xfgpm"` or `"simulate.Xfgpm"`
+* All plotters are now `plot` methods for the classes `"Xfgpm"`, `"fgpm"`,
+  `"predict.Xfgpm"` or `"simulate.Xfgpm"`.
 
-* New functions `modelDef` and `[[` to refit a `fgpm` object from a `Xfgpm` one
+* New functions `modelDef` and `[[` to refit a `fgpm` object from a `Xfgpm` one.
 
 ## Main flow changes
 
-* `format4pred()` removed and replaced by `get_active_in()` as anticipated in 0.2.0 release
+* `format4pred()` removed and replaced by `get_active_in()` as anticipated in 0.2.0 release.
 
 ## Minor flow changes
 
-* Own `rm_between()` function implemented to remove dependency on the `qdapRegex` package
+* Own `rm_between()` function implemented to remove dependency on the `qdapRegex` package.
   
-* Minor change to resolve a `%dopar%` issue during parallelized processes based on `%dorng%`
+* Minor change to resolve a `%dopar%` issue during parallelized processes based on `%dorng%`.
 
 
 
@@ -27,7 +59,7 @@
 
 ## Minor flow changes
 
-* Minor change to resolve a `check` issue evoked by CRAN
+* Minor change to resolve a `check` issue evoked by CRAN.
 
 
 
@@ -58,13 +90,13 @@
 
 ## Minor display changes
 
-* Improved display of progress bars for `fgpm()` and `fgpm_factory()`
+* Improved display of progress bars for `fgpm()` and `fgpm_factory()`.
 
-* Improved placing of the legend in `plotX()` to prevent hiding important information
+* Improved placing of the legend in `plotX()` to prevent hiding important information.
 
 ## Minor flow changes
 
-* `format4pred()` deprecated for `get_active_in()`
+* `format4pred()` deprecated for `get_active_in()`.
 
 
 
