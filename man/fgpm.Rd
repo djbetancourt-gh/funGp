@@ -21,7 +21,8 @@ fgpm(
   par.clust = NULL,
   trace = TRUE,
   pbars = TRUE,
-  control.optim = list(trace = TRUE)
+  control.optim = list(trace = TRUE),
+  ...
 )
 }
 \arguments{
@@ -113,6 +114,8 @@ interacting with the \code{\link[funGp]{fgpm}()} \code{control.optim} argument, 
 the \code{control} argument provided in \code{\link[stats]{optim}} to ensure a coherent behavior and sound results. Note
 that: (i) at this time, only the \code{"L-BFGS-B"} method (Byrd et. al., 1995) is enabled in \code{\link[funGp]{fgpm}()};
 (ii) \code{control.optim$fnscale} should not be used since our optimization problem is strictly of minimization, not maximization.}
+
+\item{...}{Extra control parameters. Currently only used internally for some \code{update()} calls.}
 }
 \value{
 An object of class \linkS4class{fgpm} containing the data structures representing the fitted funGp model.

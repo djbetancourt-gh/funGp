@@ -169,6 +169,7 @@ setClass("fgpm",
 #'   the \code{control} argument provided in \code{\link[stats]{optim}} to ensure a coherent behavior and sound results. Note
 #'   that: (i) at this time, only the \code{"L-BFGS-B"} method (Byrd et. al., 1995) is enabled in \code{\link[funGp]{fgpm}()};
 #'   (ii) \code{control.optim$fnscale} should not be used since our optimization problem is strictly of minimization, not maximization.
+#' @param ... Extra control parameters. Currently only used internally for some \code{update()} calls.
 #'
 #' @return An object of class \linkS4class{fgpm} containing the data structures representing the fitted funGp model.
 #'
@@ -347,7 +348,7 @@ fgpm <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
                  f_disType = "L2_bygroup", f_pdims = 3, f_basType = "B-splines",
                  var.hyp = NULL, ls_s.hyp = NULL, ls_f.hyp = NULL, nugget = 1e-8,
                  n.starts = 1, n.presample = 20, par.clust = NULL, trace = TRUE, pbars = TRUE,
-                 control.optim = list(trace = TRUE)) {
+                 control.optim = list(trace = TRUE), ...) {
   # extend simplified user inputs to full versions
   if (!is.null(sIn)) {
     if (is.numeric(sIn)) sIn <- as.matrix(sIn)
@@ -371,6 +372,11 @@ fgpm <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
   sOut <- as.matrix(sOut)
   n.tr <- length(sOut)
   n.presample <- max(n.presample, n.starts)
+
+  # recover extra optimization specifications if provided
+  ospec <- list(...)
+  # <---> initial points provided by the user (for now only coming from update calls)
+  if (!is.null(ospec$spoints.usr)) spoints.usr <- ospec$spoints.usr else spoints.usr <- NULL
 
   # 3 possible cases
   # Case 1: scalar and functional
@@ -409,7 +415,7 @@ fgpm <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
       lsHyps <- c(ls_s.hyp, ls_f.hyp)
     } else {
       optResult <- setHypers_SF(sMs, fMs, sOut, kerType, var.hyp, ls_s.hyp, ls_f.hyp,
-                                n.starts, n.presample, nugget, par.clust, trace, pbars,
+                                n.starts, n.presample, spoints.usr, nugget, par.clust, trace, pbars,
                                 control.optim)
       hypers <- optResult$hypers
       varHyp <- hypers[1]
@@ -461,7 +467,7 @@ fgpm <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
       lsHyps <- ls_f.hyp
     } else {
       optResult <- setHypers_F(fMs, sOut, kerType, var.hyp, ls_f.hyp,
-                               n.starts, n.presample, nugget, par.clust, trace, pbars,
+                               n.starts, n.presample, spoints.usr, nugget, par.clust, trace, pbars,
                                control.optim)
       hypers <- optResult$hypers
       varHyp <- hypers[1]
@@ -504,7 +510,7 @@ fgpm <- function(sIn = NULL, fIn = NULL, sOut, kerType = "matern5_2",
       lsHyps <- ls_s.hyp
     } else {
       optResult <- setHypers_S(sIn, sMs, sOut, kerType, var.hyp, ls_s.hyp,
-                               n.starts, n.presample, nugget, par.clust, trace, pbars,
+                               n.starts, n.presample, spoints.usr, nugget, par.clust, trace, pbars,
                                control.optim)
       hypers <- optResult$hypers
       varHyp <- hypers[1]
@@ -1159,6 +1165,12 @@ setGeneric(name = "update", def = function(object, ...) standardGeneric("update"
 #'   should be re-estimated. Default is FALSE.
 #' @param ls_f.re An optional boolean indicating whether the length-scale parameters of the functional
 #'   inputs should be re-estimated. Default is FALSE.
+#' @param extend An optional boolean indicating whether the re-optimization should extend from the current
+#'   hyperparameters of the model using them as initial points. Default is FALSE, meaning that the
+#'   re-optimization picks brand new initial points in the way described in \code{\link[funGp]{fgpm}()}. If
+#'   both hyperparameter substitution and re-estimation are requested in a single \code{update()} call and
+#'   \code{extend} is set to \code{TRUE}, the values used as initial points for the re-optimization are those
+#'   stored by the model after the substitution step.
 #' @param trace An optional boolean indicating whether funGp-native progress messages and a summary update
 #'   should be displayed. Default is TRUE. See the \code{\link[funGp]{fgpm}()} documentation for more details.
 #' @param pbars An optional boolean indicating whether progress bars managed by \code{\link[funGp]{fgpm}()}
@@ -1298,6 +1310,12 @@ setGeneric(name = "update", def = function(object, ...) standardGeneric("update"
 #' m1up <- update(m1, ls_s.re = TRUE, ls_f.re = TRUE) # all length-scale parameters
 #' m1up <- update(m1, var.re = TRUE, ls_s.re = TRUE, ls_f.re = TRUE) # all hyperparameters
 #'
+#' # same as above but now extending optimization from previously stored values
+#' m1up <- update(m1, var.re = TRUE, extend = TRUE)
+#' m1up <- update(m1, ls_s.re = TRUE, extend = TRUE)
+#' m1up <- update(m1, ls_s.re = TRUE, ls_f.re = TRUE, extend = TRUE)
+#' m1up <- update(m1, var.re = TRUE, ls_s.re = TRUE, ls_f.re = TRUE, extend = TRUE)
+#'
 #' @rdname update-methods
 #' @importFrom utils tail
 #' @aliases update,fgpm-method
@@ -1305,19 +1323,19 @@ setMethod("update", "fgpm",
           function(object, sIn.nw = NULL, fIn.nw = NULL, sOut.nw = NULL,
                    sIn.sb = NULL, fIn.sb = NULL, sOut.sb = NULL, ind.sb = NULL,
                    ind.dl = NULL, var.sb = NULL, ls_s.sb = NULL, ls_f.sb = NULL,
-                   var.re = FALSE, ls_s.re = FALSE, ls_f.re = FALSE,
+                   var.re = FALSE, ls_s.re = FALSE, ls_f.re = FALSE, extend = FALSE,
                    trace = TRUE, pbars = TRUE, control.optim = list(trace = TRUE), ...) {
             update.fgpm(model = object, sIn.nw = sIn.nw, fIn.nw = fIn.nw, sOut.nw = sOut.nw,
                         sIn.sb = sIn.sb, fIn.sb = fIn.sb, sOut.sb = sOut.sb, ind.sb = ind.sb,
                         ind.dl = ind.dl,
                         var.sb = var.sb, ls_s.sb = ls_s.sb, ls_f.sb = ls_f.sb,
-                        var.re = var.re, ls_s.re = ls_s.re, ls_f.re = ls_f.re,
+                        var.re = var.re, ls_s.re = ls_s.re, ls_f.re = ls_f.re, extend = extend,
                         trace = trace, pbars, control.optim)
 
           })
 
 update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb, ind.sb, ind.dl,
-                        var.sb, ls_s.sb, ls_f.sb, var.re, ls_s.re, ls_f.re,
+                        var.sb, ls_s.sb, ls_f.sb, var.re, ls_s.re, ls_f.re, extend,
                         trace, pbars, control.optim) {
   # check what does the user want to do
   delInOut <- !is.null(ind.dl)
@@ -1439,7 +1457,7 @@ update.fgpm <- function(model, sIn.nw, fIn.nw, sOut.nw, sIn.sb, fIn.sb, sOut.sb,
     if (!is.null(ls_f.sb) & !(6 %in% dptasks)) cptasks <- c(cptasks, 6)
   }
   if (reeHypers & any(!(c(7,8,9) %in% dptasks))) {
-    modelup <- upd_reeHypers(model = modelup, var.re = var.re, ls_s.re = ls_s.re, ls_f.re = ls_f.re,
+    modelup <- upd_reeHypers(model = modelup, var.re = var.re, ls_s.re = ls_s.re, ls_f.re = ls_f.re, extend = extend,
                              trace = trace, pbars = pbars, control.optim = control.optim)
     modelup@howCalled <- model@howCalled
     if (isTRUE(var.re) & !(7 %in% dptasks)) cptasks <- c(cptasks, 7)

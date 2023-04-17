@@ -564,36 +564,77 @@ upd_subHypers <- function(model, var.sb, ls_s.sb, ls_f.sb, trace, pbars, control
 
 # Function to substitute some Hyperparameters
 # ----------------------------------------------------------------------------------------------------------
-upd_reeHypers <- function(model, var.re, ls_s.re, ls_f.re, trace, pbars, control.optim) {
+upd_reeHypers <- function(model, var.re, ls_s.re, ls_f.re, extend, trace, pbars, control.optim) {
   # var is always necessary, so if no required to re-estimate, get it from original model
   if (!isTRUE(var.re)) var.up <- model@kern@varHyp else var.up <- NULL
-
   if (model@type == "hybrid") { # Hybrid-input case *******************************************
-    if (!isTRUE(ls_s.re)) ls_s.up <- model@kern@s_lsHyps else ls_s.up <- NULL
-    if (!isTRUE(ls_f.re)) ls_f.up <- model@kern@f_lsHyps else ls_f.up <- NULL
+    if (isTRUE(ls_s.re)) {
+      spoints.usr_s <- model@kern@s_lsHyps
+      ls_s.up <- NULL
+    } else {
+      spoints.usr_s <- c()
+      ls_s.up <- model@kern@s_lsHyps
+    }
+    if (isTRUE(ls_f.re)) {
+      spoints.usr_f <- model@kern@f_lsHyps
+      ls_f.up <- NULL
+    } else {
+      spoints.usr_f <- c()
+      ls_f.up <- model@kern@f_lsHyps
+    }
+
+    # prepare initial points from model if requested
+    spoints.usr <- NULL
+    if (extend == TRUE && any(!is.null(spoints.usr_s), !is.null(spoints.usr_f))) {
+      spoints.usr <- matrix(c(spoints.usr_s, spoints.usr_f), ncol = 1)
+    }
 
     # the model is always re-made
     modelup <- fgpm(sIn = model@sIn, fIn = model@fIn, sOut = model@sOut, kerType = model@kern@kerType,
                     f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims, f_basType = model@f_proj@basType,
                     var.hyp = var.up, ls_s.hyp = ls_s.up, ls_f.hyp = ls_f.up,
-                    trace = trace, pbars = pbars, control.optim = control.optim)
+                    trace = trace, pbars = pbars, control.optim = control.optim, spoints.usr = spoints.usr)
 
   } else if (model@type == "functional") { # functional-input case *******************************************
-    if (!isTRUE(ls_f.re)) ls_f.up <- model@kern@f_lsHyps else ls_f.up <- NULL
+    if (isTRUE(ls_f.re)) {
+      spoints.usr_f <- model@kern@f_lsHyps
+      ls_f.up <- NULL
+    } else {
+      spoints.usr_f <- c()
+      ls_f.up <- model@kern@f_lsHyps
+    }
+
+    # prepare initial points from model if requested
+    spoints.usr <- NULL
+    if (extend == TRUE && !is.null(spoints.usr_f)) {
+      spoints.usr <- matrix(spoints.usr_f, ncol = 1)
+    }
 
     # the model is always re-made
     modelup <- fgpm(fIn = model@fIn, sOut = model@sOut, kerType = model@kern@kerType,
                     f_disType = model@kern@f_disType, f_pdims = model@f_proj@pdims, f_basType = model@f_proj@basType,
                     var.hyp = var.up, ls_s.hyp = ls_s.up, ls_f.hyp = ls_f.up,
-                    trace = trace, pbars = pbars, control.optim = control.optim)
+                    trace = trace, pbars = pbars, control.optim = control.optim, spoints.usr = spoints.usr)
 
   } else { # scalar-input case *******************************************
-    if (!isTRUE(ls_s.re)) ls_s.up <- model@kern@s_lsHyps else ls_s.up <- NULL
+    if (isTRUE(ls_s.re)) {
+      spoints.usr_s <- model@kern@s_lsHyps
+      ls_s.up <- NULL
+    } else {
+      spoints.usr_s <- c()
+      ls_s.up <- model@kern@s_lsHyps
+    }
+
+    # prepare initial points from model if requested
+    spoints.usr <- NULL
+    if (extend == TRUE && !is.null(spoints.usr_s)) {
+      spoints.usr <- matrix(spoints.usr_s, ncol = 1)
+    }
 
     # the model is always re-made
     modelup <- fgpm(sIn = model@sIn, sOut = model@sOut, kerType = model@kern@kerType,
                     var.hyp = var.up, ls_s.hyp = ls_s.up, ls_f.hyp = ls_f.up,
-                    trace = trace, pbars = pbars, control.optim = control.optim)
+                    trace = trace, pbars = pbars, control.optim = control.optim, spoints.usr = spoints.usr)
 
   }
 
