@@ -4,6 +4,11 @@ This is a resubmission. In this version we have:
 * Added extend argument to update method enabling a new way of model updating
   where current hyperparameters are used as starting points for the new
   optimization.
+  
+* Replaced an \href{} based citation of a doi URL by a \doi{} based one to
+  avoid check NOTE.
+
+* Removed two non-essential unexported functions to avoid check NOTE.
 
 ## Test environments
 * local Windows install, R 4.2.0
