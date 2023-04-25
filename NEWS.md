@@ -1,3 +1,13 @@
+# funGp 0.3.2 (2023-04-24)
+
+## Main functionality changes
+
+* Argument `extend` added to the `update` method enabling to perform hyperparameter
+  re-estimation, using the previous hyperparameter values stored in the model as
+  starting points for the new optimization.
+
+
+
 # funGp 0.3.1 (2023-01-21)
 
 ## Minor display changes

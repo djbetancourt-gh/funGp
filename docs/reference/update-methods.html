@@ -19,7 +19,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">funGp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.2</span>
       </span>
     </div>
 
@@ -74,6 +74,7 @@
   var.re <span class="op">=</span> <span class="cn">FALSE</span>,
   ls_s.re <span class="op">=</span> <span class="cn">FALSE</span>,
   ls_f.re <span class="op">=</span> <span class="cn">FALSE</span>,
+  extend <span class="op">=</span> <span class="cn">FALSE</span>,
   trace <span class="op">=</span> <span class="cn">TRUE</span>,
   pbars <span class="op">=</span> <span class="cn">TRUE</span>,
   control.optim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>trace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
@@ -155,6 +156,15 @@ should be re-estimated. Default is FALSE.</p></dd>
 <dt>ls_f.re</dt>
 <dd><p>An optional boolean indicating whether the length-scale parameters of the functional
 inputs should be re-estimated. Default is FALSE.</p></dd>
+
+
+<dt>extend</dt>
+<dd><p>An optional boolean indicating whether the re-optimization should extend from the current
+hyperparameters of the model using them as initial points. Default is FALSE, meaning that the
+re-optimization picks brand new initial points in the way described in <code><a href="fgpm.html">fgpm</a>()</code>. If
+both hyperparameter substitution and re-estimation are requested in a single <code><a href="https://rdrr.io/r/stats/update.html" class="external-link">update()</a></code> call and
+<code>extend</code> is set to <code>TRUE</code>, the values used as initial points for the re-optimization are those
+stored by the model after the substitution step.</p></dd>
 
 
 <dt>trace</dt>
@@ -397,6 +407,54 @@ the model fully up to date.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   - scalar length-scale re-estimation</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   - functional length-scale re-estimation</span>
 <span class="r-in"><span class="va">m1up</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">m1</span>, var.re <span class="op">=</span> <span class="cn">TRUE</span>, ls_s.re <span class="op">=</span> <span class="cn">TRUE</span>, ls_f.re <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># all hyperparameters</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ** Presampling...</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ** Optimising hyperparameters...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 2.841058 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The function value is the negated log-likelihood</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ** Hyperparameters done!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> --------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Update summary</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> --------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> * Complete tasks:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   - var re-estimation</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   - scalar length-scale re-estimation</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   - functional length-scale re-estimation</span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># same as above but now extending optimization from previously stored values</span></span>
+<span class="r-in"><span class="va">m1up</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">m1</span>, var.re <span class="op">=</span> <span class="cn">TRUE</span>, extend <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ** Computing optimal variance...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> --------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Update summary</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> --------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> * Complete tasks:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   - var re-estimation</span>
+<span class="r-in"><span class="va">m1up</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">m1</span>, ls_s.re <span class="op">=</span> <span class="cn">TRUE</span>, extend <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ** Presampling...</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ** Optimising hyperparameters...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 2.841058 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The function value is the negated log-likelihood</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ** Hyperparameters done!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> --------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Update summary</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> --------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> * Complete tasks:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   - scalar length-scale re-estimation</span>
+<span class="r-in"><span class="va">m1up</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">m1</span>, ls_s.re <span class="op">=</span> <span class="cn">TRUE</span>, ls_f.re <span class="op">=</span> <span class="cn">TRUE</span>, extend <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ** Presampling...</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ** Optimising hyperparameters...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 2.841058 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The function value is the negated log-likelihood</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ** Hyperparameters done!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> --------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Update summary</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> --------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> * Complete tasks:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   - scalar length-scale re-estimation</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   - functional length-scale re-estimation</span>
+<span class="r-in"><span class="va">m1up</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">m1</span>, var.re <span class="op">=</span> <span class="cn">TRUE</span>, ls_s.re <span class="op">=</span> <span class="cn">TRUE</span>, ls_f.re <span class="op">=</span> <span class="cn">TRUE</span>, extend <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ** Presampling...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ** Optimising hyperparameters...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> final  value 2.841058 </span>
