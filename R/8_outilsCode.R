@@ -6,15 +6,15 @@ check.int <- function(x){
   x%%1 == 0
 }
 
-c.vecInMat_Match <- function(M, v) {
-  out <- sapply(M, function(x, v) isTRUE(all.equal(x, v)), v)
-  any(out)
-}
-
-r.vecInMat_Match <- function(M, v) {
-  out <- apply(M, MARGIN = 1, function(x, v) isTRUE(all.equal(x, v)), v)
-  which(out)
-}
+# c.vecInMat_Match <- function(M, v) {
+#   out <- sapply(M, function(x, v) isTRUE(all.equal(x, v)), v)
+#   any(out)
+# }
+#
+# r.vecInMat_Match <- function(M, v) {
+#   out <- apply(M, MARGIN = 1, function(x, v) isTRUE(all.equal(x, v)), v)
+#   which(out)
+# }
 
 matInList_Match <- function(L, M) {
   out <- sapply(L, function(X, M) isTRUE(all.equal(X, M)), M)

@@ -94,7 +94,7 @@
 #' @references Nanty, S., Helbert, C., Marrel, A., Pérot, N., and Prieur, C. (2016),
 #' "Sampling, metamodeling, and sensitivity analysis of numerical simulators with functional stochastic inputs".
 #' \emph{SIAM/ASA Journal on Uncertainty Quantification}, \strong{4}(1), 636-659.
-#' \href{https://epubs.siam.org/doi/10.1137/15M1033319}{[SA-JUQ]}
+#' \doi{10.1137/15M1033319}
 #'
 #' @name black-boxes
 #' @rdname black-boxes

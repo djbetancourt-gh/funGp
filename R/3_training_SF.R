@@ -1,7 +1,8 @@
 # ==========================================================================================================
 # Master function to manage the optimization of hybrid-input models
 # ==========================================================================================================
-setHypers_SF <- function(sMs, fMs, sOut, kerType, var.known, ls_s.known, ls_f.known, n.starts, n.presample, nugget, par.clust, trace, pbars, control.optim){
+setHypers_SF <- function(sMs, fMs, sOut, kerType, var.known, ls_s.known, ls_f.known, n.starts, n.presample, spoints.usr,
+                         nugget, par.clust, trace, pbars, control.optim){
   # if all the length-scale coefficients are known, skip optim and compute var analytically. Else optimize
   if (all(!is.null(ls_s.known), !is.null(ls_f.known))) {
     # 1. estimation of the correlation matrix
@@ -36,7 +37,8 @@ setHypers_SF <- function(sMs, fMs, sOut, kerType, var.known, ls_s.known, ls_f.kn
 
     # 3. set starting points
     if (trace) message("** Presampling...")
-    spoints <- setSPoints_SF(bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known, n.starts, n.presample, nugget)
+    spoints <- setSPoints_SF(bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known,
+                             n.starts, n.presample, spoints.usr, nugget)
 
     # 4. Perform optimization
     if (trace) message("** Optimising hyperparameters...")
@@ -78,7 +80,8 @@ setBounds_SF <- function(sMs, fMs){
 # Function to set the starting points for hyperparameters optimization - hybrid inputs
 # ==========================================================================================================
 #' @importFrom stats runif
-setSPoints_SF <- function(bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known, n.starts, n.presample, nugget){
+setSPoints_SF <- function(bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_f.known,
+                          n.starts, n.presample, spoints.usr, nugget){
   # recover lower and upper limits
   ll <- bnds[1,]
   ul <- bnds[2,]
@@ -93,6 +96,13 @@ setSPoints_SF <- function(bnds, sMs, fMs, sOut, kerType, varfun, ls_s.known, ls_
 
   # get the best n.starts points
   spoints <- allspoints[,order(fitvec)[1:n.starts], drop = FALSE]
+
+  # if starting points were provided by the user, use them in place of the worst randomly-generated ones
+  if (!is.null(spoints.usr)) {
+    n.sp.usr <- ncol(spoints.usr)
+    n.toRep <- min(n.starts, n.sp.usr)
+    spoints[,(n.starts - n.toRep + 1):n.starts] <- spoints.usr
+  }
 
   return(spoints)
 }

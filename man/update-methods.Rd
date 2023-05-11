@@ -20,6 +20,7 @@
   var.re = FALSE,
   ls_s.re = FALSE,
   ls_f.re = FALSE,
+  extend = FALSE,
   trace = TRUE,
   pbars = TRUE,
   control.optim = list(trace = TRUE),
@@ -70,6 +71,13 @@ should be re-estimated. Default is FALSE.}
 
 \item{ls_f.re}{An optional boolean indicating whether the length-scale parameters of the functional
 inputs should be re-estimated. Default is FALSE.}
+
+\item{extend}{An optional boolean indicating whether the re-optimization should extend from the current
+hyperparameters of the model using them as initial points. Default is FALSE, meaning that the
+re-optimization picks brand new initial points in the way described in \code{\link[funGp]{fgpm}()}. If
+both hyperparameter substitution and re-estimation are requested in a single \code{update()} call and
+\code{extend} is set to \code{TRUE}, the values used as initial points for the re-optimization are those
+stored by the model after the substitution step.}
 
 \item{trace}{An optional boolean indicating whether funGp-native progress messages and a summary update
 should be displayed. Default is TRUE. See the \code{\link[funGp]{fgpm}()} documentation for more details.}
@@ -211,6 +219,12 @@ m1up <- update(m1, var.re = TRUE) # only the variance
 m1up <- update(m1, ls_s.re = TRUE) # only the scalar length-scale parameters
 m1up <- update(m1, ls_s.re = TRUE, ls_f.re = TRUE) # all length-scale parameters
 m1up <- update(m1, var.re = TRUE, ls_s.re = TRUE, ls_f.re = TRUE) # all hyperparameters
+
+# same as above but now extending optimization from previously stored values
+m1up <- update(m1, var.re = TRUE, extend = TRUE)
+m1up <- update(m1, ls_s.re = TRUE, extend = TRUE)
+m1up <- update(m1, ls_s.re = TRUE, ls_f.re = TRUE, extend = TRUE)
+m1up <- update(m1, var.re = TRUE, ls_s.re = TRUE, ls_f.re = TRUE, extend = TRUE)
 
 }
 \seealso{

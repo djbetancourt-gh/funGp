@@ -1,7 +1,8 @@
 # ==========================================================================================================
 # Master function to manage the optimization of functional-input models
 # ==========================================================================================================
-setHypers_F <- function(fMs, sOut, kerType, var.known, ls_f.known, n.starts, n.presample, nugget, par.clust, trace, pbars, control.optim){
+setHypers_F <- function(fMs, sOut, kerType, var.known, ls_f.known, n.starts, n.presample, spoints.usr,
+                        nugget, par.clust, trace, pbars, control.optim){
   # if the length-scale coefficients are known, skip optim and compute var analytically. Else optimize
   if (!is.null(ls_f.known)) {
     # 1. estimation of the correlation matrix
@@ -30,7 +31,7 @@ setHypers_F <- function(fMs, sOut, kerType, var.known, ls_f.known, n.starts, n.p
 
     # 3. set starting points
     if (trace) message("** Presampling...")
-    spoints <- setSPoints_F(bnds, fMs, sOut, kerType, varfun, n.starts, n.presample, nugget)
+    spoints <- setSPoints_F(bnds, fMs, sOut, kerType, varfun, n.starts, n.presample, spoints.usr, nugget)
 
     # 4. Perform optimization
     if (trace) message("** Optimising hyperparameters...")
@@ -65,7 +66,7 @@ setBounds_F <- function(fMs){
 # Function to set the starting points for hyperparameters optimization - functional inputs
 # ==========================================================================================================
 #' @importFrom stats runif
-setSPoints_F <- function(bnds, fMs, sOut, kerType, varfun, n.starts, n.presample, nugget){
+setSPoints_F <- function(bnds, fMs, sOut, kerType, varfun, n.starts, n.presample, spoints.usr, nugget){
   # recover lower and upper limits
   ll <- bnds[1,]
   ul <- bnds[2,]
@@ -80,6 +81,13 @@ setSPoints_F <- function(bnds, fMs, sOut, kerType, varfun, n.starts, n.presample
 
   # get the best n.starts points
   spoints <- allspoints[,order(fitvec)[1:n.starts], drop = FALSE]
+
+  # if starting points were provided by the user, use them in place of the worst randomly-generated ones
+  if (!is.null(spoints.usr)) {
+    n.sp.usr <- ncol(spoints.usr)
+    n.toRep <- min(n.starts, n.sp.usr)
+    spoints[,(n.starts - n.toRep + 1):n.starts] <- spoints.usr
+  }
 
   return(spoints)
 }

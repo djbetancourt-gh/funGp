@@ -18,7 +18,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">funGp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.2</span>
       </span>
     </div>
 
@@ -72,7 +72,8 @@
   par.clust <span class="op">=</span> <span class="cn">NULL</span>,
   trace <span class="op">=</span> <span class="cn">TRUE</span>,
   pbars <span class="op">=</span> <span class="cn">TRUE</span>,
-  control.optim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>trace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+  control.optim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>trace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
+  <span class="va">...</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -199,6 +200,10 @@ interacting with the <code>fgpm()</code> <code>control.optim</code> argument, pl
 the <code>control</code> argument provided in <code><a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim</a></code> to ensure a coherent behavior and sound results. Note
 that: (i) at this time, only the <code>"L-BFGS-B"</code> method (Byrd et. al., 1995) is enabled in <code>fgpm()</code>;
 (ii) <code>control.optim$fnscale</code> should not be used since our optimization problem is strictly of minimization, not maximization.</p></dd>
+
+
+<dt>...</dt>
+<dd><p>Extra control parameters. Currently only used internally for some <code><a href="https://rdrr.io/r/stats/update.html" class="external-link">update()</a></code> calls.</p></dd>
 
 </dl></div>
     <div id="value">
