@@ -60,16 +60,24 @@ This is a resubmission. In this version we have:
     ```
     * checking CRAN incoming feasibility ... [17s] NOTE
     New maintainer:
-    Jose Betancourt <fungp.rpack@gmail.com>
+      Jose Betancourt <fungp.rpack@gmail.com>
     Old maintainer(s):
-    Jose Betancourt <djbetancourt@uninorte.edu.co>
+      Jose Betancourt <djbetancourt@uninorte.edu.co>
     ```
 
 Also checked with --run-donttest
 
 
 ## R CMD check results
-There were no ERRORs, NOTEs or WARNINGs.
+There were no ERRORs or WARNINGs. Only the following NOTE
+related to the maintainer's email update pointed out above
+in the resubmission notes:
+  ```
+  New maintainer:
+    Jose Betancourt <fungp.rpack@gmail.com>
+  Old maintainer(s):
+    Jose Betancourt <djbetancourt@uninorte.edu.co>
+  ```
 
 
 ## Downstream dependencies
