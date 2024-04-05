@@ -11,11 +11,11 @@ This is the formal representation for data structures linked to the kernel of a 
 \section{Slots}{
 
 \describe{
-\item{\code{kerType}}{Object of class \code{"character"}. Kernel type. To be set from {"gauss", "matern5_2",
-"matern3_2"}.}
+\item{\code{kerType}}{Object of class \code{"character"}. Kernel type. To be set from \{"gauss", "matern5_2",
+"matern3_2"\}.}
 
-\item{\code{f_disType}}{Object of class \code{"character"}. Distance type. To be set from {"L2_bygroup",
-"L2_index"}.}
+\item{\code{f_disType}}{Object of class \code{"character"}. Distance type. To be set from \{"L2_bygroup",
+"L2_index"\}.}
 
 \item{\code{varHyp}}{Object of class \code{"numeric"}. Estimated variance parameter.}
 

@@ -2,6 +2,7 @@
 % Please edit documentation in R/0_funGp_Doc.R
 \docType{package}
 \name{funGp-package}
+\alias{funGp}
 \alias{funGp-package}
 \title{Gaussian Process Models for Scalar and Functional Inputs}
 \description{
@@ -17,59 +18,46 @@ This package was first developed in the frame of the RISCOPE research project, f
 \section{Base functionalities}{
 
 \itemize{
- \item{\strong{Main methods}}{\cr
+ \item\strong{Main methods}\cr
        \link[funGp]{fgpm}: creation of funGp regression models \cr
        \link[funGp]{predict,fgpm-method}: output estimation at new input points based on a funGp model \cr
        \link[funGp]{simulate,fgpm-method}: random sampling from a funGp Gaussian process model \cr
        \link[funGp]{update,fgpm-method}: modification of data and hyperparameters of a funGp model
- }
- \item{\strong{Plotters}}{\cr
+ \item\strong{Plotters}\cr
        \link[funGp]{plot,fgpm-method}: validation plot for a \code{fgpm} model \cr
        \link[funGp]{plot.predict.fgpm}: plot of predictions based on a \code{fgpm} model \cr
        \link[funGp]{plot.simulate.fgpm}: plot of simulations based on a \code{fgpm} model
- }
 }
 }
 
 \section{Model selection}{
 
 \itemize{
- \item{\strong{Main method}}{\cr
+ \item\strong{Main method}\cr
        \link[funGp]{fgpm_factory}: structural parameter optimization
- }
- \item{\strong{Functions for pre-optimization}}{\cr
+ \item\strong{Functions for pre-optimization}\cr
        \link[funGp]{decay}: regularized initial pheromones \cr
        \link[funGp]{decay2probs}: normalized initial pheromones
- }
- \item{\strong{Plotters post-optimization}}{\cr
+ \item\strong{Plotters post-optimization}\cr
        \link[funGp]{plot,Xfgpm-method}: plot of the evolution of the algorithm with \code{which = "evolution"}
        or of the absolute and relative quality of the optimized model with \code{which = "diag"}
-
- }
- \item{\strong{Correction post-optimization of input data structures}}{\cr
+ \item\strong{Correction post-optimization of input data structures}\cr
        \link[funGp]{which_on}: indices of active inputs in a model
        structure delivered by \link[funGp]{fgpm_factory}\cr
        \link[funGp]{get_active_in}: extraction of active input
        data based on a model structure delivered by \link[funGp]{fgpm_factory}
- }
 }
 }
 
 \section{Useful material}{
 
 \itemize{
- \item{\strong{Manual}}{
- \href{https://hal.archives-ouvertes.fr/hal-02536624}{
- Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour
- }}
- \item{\strong{Paper}}{
- \href{https://www.sciencedirect.com/science/article/abs/pii/S0951832019301693}{
- Gaussian process metamodeling of functional-input code for coastal flood hazard assessment
- }}
- \item{\strong{Tech. report}}{
- \href{https://hal.archives-ouvertes.fr/hal-02532713}{
- Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression
- }}
+ \item\strong{Manual:} Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour
+ (\url{https://hal.science/hal-02536624})
+ \item\strong{Paper:} - Gaussian process metamodeling of functional-input code for coastal flood hazard assessment
+ (\doi{https://doi.org/10.1016/j.ress.2020.106870})
+ \item\strong{Tech. report:} Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression
+ (\url{https://hal.science/hal-02532713})
 }
 }
 
@@ -83,3 +71,29 @@ José Betancourt, François Bachoc and Thierry Klein
 Déborah Idier and Jérémy Rohmer
 }
 
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://djbetancourt-gh.github.io/funGp/}
+  \item \url{https://github.com/djbetancourt-gh/funGp}
+  \item Report bugs at \url{https://github.com/djbetancourt-gh/funGp/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Jose Betancourt \email{fungp.rpack@gmail.com}
+
+Authors:
+\itemize{
+  \item François Bachoc \email{francois.bachoc@math.univ-toulouse.fr}
+  \item Thierry Klein \email{thierry.klein@math.univ-toulouse.fr}
+  \item Jeremy Rohmer \email{J.Rohmer@brgm.fr}
+}
+
+Other contributors:
+\itemize{
+  \item Yves Deville \email{deville.yves@alpestat.com} [contributor]
+  \item Deborah Idier \email{D.Idier@brgm.fr} [contributor]
+}
+
+}

@@ -21,7 +21,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">funGp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.3</span>
       </span>
     </div>
 
@@ -61,7 +61,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">which_on</span><span class="op">(</span>sIn <span class="op">=</span> <span class="cn">NULL</span>, fIn <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">args</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">which_on</span><span class="op">(</span>sIn <span class="op">=</span> <span class="cn">NULL</span>, fIn <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">args</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -97,7 +97,7 @@ which the active inputs should be extracted.</p></dd>
     <p>Betancourt, J., Bachoc, F., and Klein, T. (2020),
 R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
 <em>RISCOPE project</em>.
-<a href="https://hal.archives-ouvertes.fr/hal-02536624" class="external-link">[HAL]</a></p>
+<a href="https://hal.science/hal-02536624" class="external-link">[HAL]</a></p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -114,25 +114,25 @@ active inputs;</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># extracting the indices of the active inputs in an optimized model________________________</span></span>
-<span class="r-in"><span class="co"># use precalculated Xfgpm object named xm</span></span>
-<span class="r-in"><span class="co"># active inputs in the best model</span></span>
-<span class="r-in"><span class="va">xm</span><span class="op">@</span><span class="va">log.success</span><span class="op">@</span><span class="va">args</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="co"># the full fgpm call</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># extracting the indices of the active inputs in an optimized model________________________</span></span></span>
+<span class="r-in"><span><span class="co"># use precalculated Xfgpm object named xm</span></span></span>
+<span class="r-in"><span><span class="co"># active inputs in the best model</span></span></span>
+<span class="r-in"><span><span class="va">xm</span><span class="op">@</span><span class="va">log.success</span><span class="op">@</span><span class="va">args</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="co"># the full fgpm call</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] fgpm(sIn = sIn[,2:5], fIn = fIn, sOut = sOut, f_disType = "L2_byindex", f_pdims = c(1, 3), f_basType = "B-splines", kerType = "gauss")</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">n.tr</span> <span class="op">&lt;-</span> <span class="fl">32</span></span>
-<span class="r-in"><span class="va">sIn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,length <span class="op">=</span> <span class="va">n.tr</span><span class="op">^</span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span>, x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,length <span class="op">=</span> <span class="va">n.tr</span><span class="op">^</span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span>,</span>
-<span class="r-in">x3 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,length <span class="op">=</span> <span class="va">n.tr</span><span class="op">^</span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span>, x4 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,length <span class="op">=</span> <span class="va">n.tr</span><span class="op">^</span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span>,</span>
-<span class="r-in">x5 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,length <span class="op">=</span> <span class="va">n.tr</span><span class="op">^</span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">fIn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>f1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">n.tr</span><span class="op">*</span><span class="fl">10</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>, f2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">n.tr</span><span class="op">*</span><span class="fl">22</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">22</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">which_on</span><span class="op">(</span><span class="va">sIn</span>, <span class="va">fIn</span>, <span class="va">xm</span><span class="op">@</span><span class="va">log.success</span><span class="op">@</span><span class="va">args</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="co"># only the indices extracted by which_on</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">n.tr</span> <span class="op">&lt;-</span> <span class="fl">32</span></span></span>
+<span class="r-in"><span><span class="va">sIn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,length <span class="op">=</span> <span class="va">n.tr</span><span class="op">^</span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span>, x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,length <span class="op">=</span> <span class="va">n.tr</span><span class="op">^</span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>x3 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,length <span class="op">=</span> <span class="va">n.tr</span><span class="op">^</span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span>, x4 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,length <span class="op">=</span> <span class="va">n.tr</span><span class="op">^</span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>x5 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,length <span class="op">=</span> <span class="va">n.tr</span><span class="op">^</span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fIn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>f1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">n.tr</span><span class="op">*</span><span class="fl">10</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>, f2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">n.tr</span><span class="op">*</span><span class="fl">22</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">22</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">which_on</span><span class="op">(</span><span class="va">sIn</span>, <span class="va">fIn</span>, <span class="va">xm</span><span class="op">@</span><span class="va">log.success</span><span class="op">@</span><span class="va">args</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="co"># only the indices extracted by which_on</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $s.inds</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2 3 4 5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $f.inds</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>

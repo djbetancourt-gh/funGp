@@ -1,3 +1,16 @@
+# funGp 0.3.3 (2024-04-05)
+
+## Minor documentation updates
+
+* Maintainer email updated from `djbetancourt@uninorte.edu.co` to
+  `fungp.rpack@gmail.com` to ensure a permanet  and stable channel
+  of communication with the community.
+
+* A couple syntax fixes in the package notation to keep up with
+  recent updates in Roxygen2.
+
+
+
 # funGp 0.3.2 (2023-04-24)
 
 ## Main functionality changes

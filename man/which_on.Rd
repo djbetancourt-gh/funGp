@@ -48,7 +48,7 @@ which_on(sIn, fIn, xm@log.success@args[[1]]) # only the indices extracted by whi
 Betancourt, J., Bachoc, F., and Klein, T. (2020),
 R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
 \emph{RISCOPE project}.
-\href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
+\href{https://hal.science/hal-02536624}{[HAL]}
 }
 \seealso{
 \strong{*} \link[funGp]{get_active_in} for details on how to obtain the data structures linked to the

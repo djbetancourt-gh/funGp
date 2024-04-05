@@ -101,7 +101,7 @@ plot(sims_l)
 #       extract only the scalar inputs required to re-build the model and then to make
 #       predictions with each model. Check also the funGp manual for further details
 #
-#       funGp manual: https://hal.archives-ouvertes.fr/hal-02536624
+#       funGp manual: https://hal.science/hal-02536624
 
 
 # <<<<<<< PART 1: calling fgpm_factory to perform the structural optimization >>>>>>>
@@ -165,7 +165,7 @@ legend("bottomleft", legend = c("Model 1", "Model 2", "Model 3"),
 Betancourt, J., Bachoc, F., and Klein, T. (2020),
 R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
 \emph{RISCOPE project}.
-\href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
+\href{https://hal.science/hal-02536624}{[HAL]}
 }
 \seealso{
 \strong{*} \link[funGp]{which_on} for details on how to obtain only the indices of the active inputs.

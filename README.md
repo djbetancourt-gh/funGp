@@ -41,20 +41,20 @@ This project is licensed under the GPL-3 License. <br /><br />
 
 <br />
 
-**Manual** :book: <br /> [Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour](https://hal.archives-ouvertes.fr/hal-02536624) <br /><br />
+**Manual** :book: <br /> [Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour](https://hal.science/hal-02536624) <br /><br />
 
 **Authors:** José Betancourt :wrench: (IMT, ENAC), François Bachoc (IMT), Thierry Klein (IMT, ENAC) and Jérémy Rohmer (BRGM).
 
 **Contributors:** Yves Deville (Alpestat) and Déborah Idier (BRGM).
 
-:wrench: maintainer - <a href = "mailto: djbetancourt@uninorte.edu.co">djbetancourt@uninorte.edu.co</a> <br /><br />
+:wrench: maintainer - <a href = "mailto: fungp.rpack@gmail.com">fungp.rpack@gmail.com</a> <br /><br />
 
 **Acknowledgments:** we are grateful to Yves Deville from Alpestat for his advice on the documentation of R packages and to Juliette Garcia from ENAC for her assistance on the stabilization of the Ant Colony algorithm for structural parameter optimization. <br /><br />
 
 **References** <br />
 
-Betancourt, J., Bachoc, F., Klein, T., Idier, D., Pedreros, R., and Rohmer, J. (2020), "Gaussian process metamodeling of functional-input code for coastal flood hazard assessment". *Reliability Engineering & System Safety*, **198**, 106870. [[RESS](https://doi.org/10.1016/j.ress.2020.106870)] - [[HAL](https://hal.archives-ouvertes.fr/hal-01998724)]
+Betancourt, J., Bachoc, F., Klein, T., Idier, D., Pedreros, R., and Rohmer, J. (2020), "Gaussian process metamodeling of functional-input code for coastal flood hazard assessment". *Reliability Engineering & System Safety*, **198**, 106870. [[RESS](https://doi.org/10.1016/j.ress.2020.106870)] - [[HAL](https://hal.science/hal-01998724)]
 
-Betancourt, J., Bachoc, F., Klein, T., and Gamboa, F. (2020), Technical Report: "Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression. Ref. D3.b (WP3.2)". *RISCOPE project*. [[HAL](https://hal.archives-ouvertes.fr/hal-02532713)]
+Betancourt, J., Bachoc, F., Klein, T., and Gamboa, F. (2020), Technical Report: "Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression. Ref. D3.b (WP3.2)". *RISCOPE project*. [[HAL](https://hal.science/hal-02532713)]
 
-Betancourt, J., Bachoc, F., and Klein, T. (2020), R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour". *RISCOPE project*. [[HAL](https://hal.archives-ouvertes.fr/hal-02536624)]
+Betancourt, J., Bachoc, F., and Klein, T. (2020), R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour". *RISCOPE project*. [[HAL](https://hal.science/hal-02536624)]

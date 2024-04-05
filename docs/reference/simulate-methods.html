@@ -18,7 +18,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">funGp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.3</span>
       </span>
     </div>
 
@@ -55,17 +55,17 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S4 method for fgpm</span>
-<span class="fu"><a href="https://rdrr.io/r/stats/simulate.html" class="external-link">simulate</a></span><span class="op">(</span>
-  <span class="va">object</span>,
-  nsim <span class="op">=</span> <span class="fl">1</span>,
-  seed <span class="op">=</span> <span class="cn">NULL</span>,
-  sIn.sm <span class="op">=</span> <span class="cn">NULL</span>,
-  fIn.sm <span class="op">=</span> <span class="cn">NULL</span>,
-  nugget.sm <span class="op">=</span> <span class="fl">0</span>,
-  detail <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"light"</span>, <span class="st">"full"</span><span class="op">)</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S4 method for fgpm</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/simulate.html" class="external-link">simulate</a></span><span class="op">(</span></span>
+<span>  <span class="va">object</span>,</span>
+<span>  nsim <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  seed <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  sIn.sm <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  fIn.sm <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  nugget.sm <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  detail <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"light"</span>, <span class="st">"full"</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -140,78 +140,78 @@ limits of the 95% confidence intervals at the simulation points.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># light simulations _______________________________________________________________________</span></span>
-<span class="r-in"><span class="co"># building the model</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">n.tr</span> <span class="op">&lt;-</span> <span class="fl">25</span></span>
-<span class="r-in"><span class="va">sIn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">n.tr</span><span class="op">)</span><span class="op">)</span>, x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">n.tr</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">fIn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>f1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">n.tr</span><span class="op">*</span><span class="fl">10</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>, f2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">n.tr</span><span class="op">*</span><span class="fl">22</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">22</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">sOut</span> <span class="op">&lt;-</span> <span class="fu"><a href="black-boxes.html">fgp_BB3</a></span><span class="op">(</span><span class="va">sIn</span>, <span class="va">fIn</span>, <span class="va">n.tr</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="fgpm.html">fgpm</a></span><span class="op">(</span>sIn <span class="op">=</span> <span class="va">sIn</span>, fIn <span class="op">=</span> <span class="va">fIn</span>, sOut <span class="op">=</span> <span class="va">sOut</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># light simulations _______________________________________________________________________</span></span></span>
+<span class="r-in"><span><span class="co"># building the model</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">n.tr</span> <span class="op">&lt;-</span> <span class="fl">25</span></span></span>
+<span class="r-in"><span><span class="va">sIn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">n.tr</span><span class="op">)</span><span class="op">)</span>, x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">n.tr</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fIn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>f1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">n.tr</span><span class="op">*</span><span class="fl">10</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>, f2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">n.tr</span><span class="op">*</span><span class="fl">22</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">22</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">sOut</span> <span class="op">&lt;-</span> <span class="fu"><a href="black-boxes.html">fgp_BB3</a></span><span class="op">(</span><span class="va">sIn</span>, <span class="va">fIn</span>, <span class="va">n.tr</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="fgpm.html">fgpm</a></span><span class="op">(</span>sIn <span class="op">=</span> <span class="va">sIn</span>, fIn <span class="op">=</span> <span class="va">fIn</span>, sOut <span class="op">=</span> <span class="va">sOut</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ** Presampling...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ** Optimising hyperparameters...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> final  value 2.841058 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The function value is the negated log-likelihood</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ** Hyperparameters done!</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># generating input data for simulation</span></span>
-<span class="r-in"><span class="va">n.sm</span> <span class="op">&lt;-</span> <span class="fl">100</span></span>
-<span class="r-in"><span class="va">sIn.sm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">n.sm</span><span class="op">)</span><span class="op">)</span>,</span>
-<span class="r-in">                                x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">n.sm</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">fIn.sm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>f1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">n.sm</span><span class="op">*</span><span class="fl">10</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">n.sm</span><span class="op">*</span><span class="fl">22</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">22</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># making light simulations</span></span>
-<span class="r-in"><span class="va">m1.sims_l</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/simulate.html" class="external-link">simulate</a></span><span class="op">(</span><span class="va">m1</span>, nsim <span class="op">=</span> <span class="fl">10</span>, sIn.sm <span class="op">=</span> <span class="va">sIn.sm</span>, fIn.sm <span class="op">=</span> <span class="va">fIn.sm</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># plotting light simulations</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">m1.sims_l</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># generating input data for simulation</span></span></span>
+<span class="r-in"><span><span class="va">n.sm</span> <span class="op">&lt;-</span> <span class="fl">100</span></span></span>
+<span class="r-in"><span><span class="va">sIn.sm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">n.sm</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                                x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">n.sm</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fIn.sm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>f1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">n.sm</span><span class="op">*</span><span class="fl">10</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">n.sm</span><span class="op">*</span><span class="fl">22</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">22</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># making light simulations</span></span></span>
+<span class="r-in"><span><span class="va">m1.sims_l</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/simulate.html" class="external-link">simulate</a></span><span class="op">(</span><span class="va">m1</span>, nsim <span class="op">=</span> <span class="fl">10</span>, sIn.sm <span class="op">=</span> <span class="va">sIn.sm</span>, fIn.sm <span class="op">=</span> <span class="va">fIn.sm</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># plotting light simulations</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">m1.sims_l</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="simulate-methods-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># full simulations ________________________________________________________________________</span></span>
-<span class="r-in"><span class="co"># building the model</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">n.tr</span> <span class="op">&lt;-</span> <span class="fl">25</span></span>
-<span class="r-in"><span class="va">sIn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">n.tr</span><span class="op">)</span><span class="op">)</span>, x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">n.tr</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">fIn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>f1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">n.tr</span><span class="op">*</span><span class="fl">10</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>, f2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">n.tr</span><span class="op">*</span><span class="fl">22</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">22</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">sOut</span> <span class="op">&lt;-</span> <span class="fu"><a href="black-boxes.html">fgp_BB3</a></span><span class="op">(</span><span class="va">sIn</span>, <span class="va">fIn</span>, <span class="va">n.tr</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="fgpm.html">fgpm</a></span><span class="op">(</span>sIn <span class="op">=</span> <span class="va">sIn</span>, fIn <span class="op">=</span> <span class="va">fIn</span>, sOut <span class="op">=</span> <span class="va">sOut</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># full simulations ________________________________________________________________________</span></span></span>
+<span class="r-in"><span><span class="co"># building the model</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">n.tr</span> <span class="op">&lt;-</span> <span class="fl">25</span></span></span>
+<span class="r-in"><span><span class="va">sIn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">n.tr</span><span class="op">)</span><span class="op">)</span>, x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">n.tr</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fIn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>f1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">n.tr</span><span class="op">*</span><span class="fl">10</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>, f2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">n.tr</span><span class="op">*</span><span class="fl">22</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">22</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">sOut</span> <span class="op">&lt;-</span> <span class="fu"><a href="black-boxes.html">fgp_BB3</a></span><span class="op">(</span><span class="va">sIn</span>, <span class="va">fIn</span>, <span class="va">n.tr</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="fgpm.html">fgpm</a></span><span class="op">(</span>sIn <span class="op">=</span> <span class="va">sIn</span>, fIn <span class="op">=</span> <span class="va">fIn</span>, sOut <span class="op">=</span> <span class="va">sOut</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ** Presampling...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ** Optimising hyperparameters...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> final  value 2.841058 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The function value is the negated log-likelihood</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ** Hyperparameters done!</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># making full simulations</span></span>
-<span class="r-in"><span class="va">m1.sims_f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/simulate.html" class="external-link">simulate</a></span><span class="op">(</span><span class="va">m1</span>, nsim <span class="op">=</span> <span class="fl">10</span>, sIn.sm <span class="op">=</span> <span class="va">sIn.sm</span>, fIn.sm <span class="op">=</span> <span class="va">fIn.sm</span>, detail <span class="op">=</span> <span class="st">"full"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># checking content of the list</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">m1.sims_f</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># making full simulations</span></span></span>
+<span class="r-in"><span><span class="va">m1.sims_f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/simulate.html" class="external-link">simulate</a></span><span class="op">(</span><span class="va">m1</span>, nsim <span class="op">=</span> <span class="fl">10</span>, sIn.sm <span class="op">=</span> <span class="va">sIn.sm</span>, fIn.sm <span class="op">=</span> <span class="va">fIn.sm</span>, detail <span class="op">=</span> <span class="st">"full"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># checking content of the list</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">m1.sims_f</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         Length Class  Mode   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> sims    1000   -none- numeric</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mean     100   -none- numeric</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> sd       100   -none- numeric</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> lower95  100   -none- numeric</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> upper95  100   -none- numeric</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># ~R output:~</span></span>
-<span class="r-in"><span class="co">#         Length Class  Mode</span></span>
-<span class="r-in"><span class="co"># sims    1000   -none- numeric</span></span>
-<span class="r-in"><span class="co"># mean     100   -none- numeric</span></span>
-<span class="r-in"><span class="co"># sd       100   -none- numeric</span></span>
-<span class="r-in"><span class="co"># lower95  100   -none- numeric</span></span>
-<span class="r-in"><span class="co"># upper95  100   -none- numeric</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># plotting full simulations in full mode</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">m1.sims_f</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># ~R output:~</span></span></span>
+<span class="r-in"><span><span class="co">#         Length Class  Mode</span></span></span>
+<span class="r-in"><span><span class="co"># sims    1000   -none- numeric</span></span></span>
+<span class="r-in"><span><span class="co"># mean     100   -none- numeric</span></span></span>
+<span class="r-in"><span><span class="co"># sd       100   -none- numeric</span></span></span>
+<span class="r-in"><span><span class="co"># lower95  100   -none- numeric</span></span></span>
+<span class="r-in"><span><span class="co"># upper95  100   -none- numeric</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># plotting full simulations in full mode</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">m1.sims_f</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="simulate-methods-2.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># plotting full simulations in light mode</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">m1.sims_f</span>, detail <span class="op">=</span> <span class="st">"light"</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># plotting full simulations in light mode</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">m1.sims_f</span>, detail <span class="op">=</span> <span class="st">"light"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="simulate-methods-3.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>

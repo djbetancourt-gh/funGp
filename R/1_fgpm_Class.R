@@ -6,22 +6,20 @@
 #'   \link[=funGp-package]{funGp package}. Gaussian process models are useful statistical tools in the
 #'   modeling of complex input-output relationships.
 #' \itemize{
-#'  \item{\strong{Main methods}}{\cr
+#'  \item\strong{Main methods}\cr
 #'        \link[funGp]{fgpm}: creation of funGp regression models \cr
 #'        \link[funGp]{predict,fgpm-method}: output estimation at new input points based on a \code{fgpm} model \cr
 #'        \link[funGp]{simulate,fgpm-method}: random sampling from a \code{fgpm} model \cr
 #'        \link[funGp]{update,fgpm-method}: modification of data and hyperparameters of a \code{fgpm} model
-#'  }
-#'  \item{\strong{Plotters}}{\cr
+#'  \item\strong{Plotters}\cr
 #'         \link[funGp]{plot,fgpm-method}: validation plot for a \code{fgpm} model \cr
 #'        \link[funGp]{plot.predict.fgpm}: plot of predictions based on a \code{fgpm} model \cr
 #'        \link[funGp]{plot.simulate.fgpm}: plot of simulations based on a \code{fgpm} model
-#'  }
 #' }
 #'
 #' @slot howCalled Object of class \code{"\linkS4class{modelCall}"}. User call reminder.
 #' @slot type Object of class \code{"character"}. Type of model based on type of inputs. To be set from
-#'   {"scalar", "functional", "hybrid"}.
+#'   \{"scalar", "functional", "hybrid"\}.
 #' @slot ds Object of class \code{"numeric"}. Number of scalar inputs.
 #' @slot df Object of class \code{"numeric"}. Number of functional inputs.
 #' @slot f_dims Object of class \code{"numeric"}. An array with the original dimension of each functional
@@ -52,10 +50,10 @@
 #'
 #' @section Useful material:
 #' \itemize{
-#'  \item{\strong{Manual}}{
-#'  \href{https://hal.archives-ouvertes.fr/hal-02536624}{
+#'  \item\strong{Manual}
+#'  \href{https://hal.science/hal-02536624}{
 #'  Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour
-#'  }}
+#'  }
 #' }
 #'
 #' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
@@ -115,11 +113,8 @@ setClass("fgpm",
 #'   a vector of size 8 will use 8 length-scale parameters when using L2_byindex. If dimension reduction of
 #'   a functional input is requested, then L2_byindex uses as many length scale parameters as effective
 #'   dimensions used to represent the input. A single character string can also be passed as a general
-#'   selection for all the functional inputs of the model. More details in
-#'   \href{https://www.sciencedirect.com/science/article/abs/pii/S0951832019301693}{
-#'   the reference article}
-#'   and
-#'   \href{https://hal.archives-ouvertes.fr/hal-02536624}{
+#'   selection for all the functional inputs of the model. More details in the reference article
+#'   (\doi{https://doi.org/10.1016/j.ress.2020.106870}) and \href{https://hal.science/hal-02536624}{
 #'   the in-depth package manual}. Default is "L2_bygroup".
 #' @param f_pdims An optional array with the projection dimension for each functional input. For each input,
 #'   the projection dimension should be an integer between 0 and its original dimension, with 0 denoting
@@ -178,18 +173,18 @@ setClass("fgpm",
 #' @references Betancourt, J., Bachoc, F., Klein, T., Idier, D., Pedreros, R., and Rohmer, J. (2020),
 #' "Gaussian process metamodeling of functional-input code for coastal flood hazard assessment".
 #' \emph{Reliability Engineering & System Safety}, \strong{198}, 106870.
-#' \href{https://www.sciencedirect.com/science/article/abs/pii/S0951832019301693}{[RESS]}
-#' \href{https://hal.archives-ouvertes.fr/hal-01998724}{[HAL]}
+#' (\doi{https://doi.org/10.1016/j.ress.2020.106870})
+#' \href{https://hal.science/hal-01998724}{[HAL]}
 #'
 #' @references Betancourt, J., Bachoc, F., Klein, T., and Gamboa, F. (2020),
 #' Technical Report: "Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression. Ref. D3.b (WP3.2)".
 #' \emph{RISCOPE project}.
-#' \href{https://hal.archives-ouvertes.fr/hal-02532713}{[HAL]}
+#' \href{https://hal.science/hal-02532713}{[HAL]}
 #'
 #' @references Betancourt, J., Bachoc, F., and Klein, T. (2020),
 #' R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
 #' \emph{RISCOPE project}.
-#' \href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
+#' \href{https://hal.science/hal-02536624}{[HAL]}
 #'
 #' @seealso \strong{*} \link[funGp]{plot,fgpm-method}: validation plot for a \code{fgpm} model;
 #' @seealso \strong{*} \link[funGp]{predict,fgpm-method} for predictions based on a \code{fgpm} model;
@@ -338,7 +333,7 @@ setClass("fgpm",
 #' #       of funGp, we provide a temporary solution to the issue and we remain attentive in
 #' #       case it appears a more elegant way to handle it or a manner to suppress it.
 #' #
-#' #       funGp manual: https://hal.archives-ouvertes.fr/hal-02536624
+#' #       funGp manual: https://hal.science/hal-02536624
 #' }
 #'
 #' @importFrom methods new

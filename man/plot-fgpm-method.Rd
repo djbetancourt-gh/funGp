@@ -13,12 +13,12 @@
 
 \item{...}{Graphical parameters. These currently include
 \itemize{
-   \item{\code{xlim}, \code{ylim}}{ to set the limits of the axes.}
-   \item{\code{pch}, \code{pt.col}, \code{pt.bg}, \code{pt.cex}}{ to set
-       the symbol used for the points and the related properties.}
-   \item{\code{line}}{ to set the color used for the line.}
-   \item{\code{xlab}, \code{ylab}, \code{main}}{ to set
-       the labels of the axes and the main title.} See
+   \item\code{xlim}, \code{ylim} to set the limits of the axes.
+   \item\code{pch}, \code{pt.col}, \code{pt.bg}, \code{pt.cex} to set
+       the symbol used for the points and the related properties.
+   \item\code{line} to set the color used for the line.
+   \item\code{xlab}, \code{ylab}, \code{main} to set
+       the labels of the axes and the main title. See
        \bold{Examples}.
 }}
 }

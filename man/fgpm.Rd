@@ -48,11 +48,8 @@ parameters per functional input as discretization points it has. For instance an
 a vector of size 8 will use 8 length-scale parameters when using L2_byindex. If dimension reduction of
 a functional input is requested, then L2_byindex uses as many length scale parameters as effective
 dimensions used to represent the input. A single character string can also be passed as a general
-selection for all the functional inputs of the model. More details in
-\href{https://www.sciencedirect.com/science/article/abs/pii/S0951832019301693}{
-the reference article}
-and
-\href{https://hal.archives-ouvertes.fr/hal-02536624}{
+selection for all the functional inputs of the model. More details in the reference article
+(\doi{https://doi.org/10.1016/j.ress.2020.106870}) and \href{https://hal.science/hal-02536624}{
 the in-depth package manual}. Default is "L2_bygroup".}
 
 \item{f_pdims}{An optional array with the projection dimension for each functional input. For each input,
@@ -265,7 +262,7 @@ parallel::stopCluster(cl)
 #       of funGp, we provide a temporary solution to the issue and we remain attentive in
 #       case it appears a more elegant way to handle it or a manner to suppress it.
 #
-#       funGp manual: https://hal.archives-ouvertes.fr/hal-02536624
+#       funGp manual: https://hal.science/hal-02536624
 }
 
 }
@@ -273,18 +270,18 @@ parallel::stopCluster(cl)
 Betancourt, J., Bachoc, F., Klein, T., Idier, D., Pedreros, R., and Rohmer, J. (2020),
 "Gaussian process metamodeling of functional-input code for coastal flood hazard assessment".
 \emph{Reliability Engineering & System Safety}, \strong{198}, 106870.
-\href{https://www.sciencedirect.com/science/article/abs/pii/S0951832019301693}{[RESS]}
-\href{https://hal.archives-ouvertes.fr/hal-01998724}{[HAL]}
+(\doi{https://doi.org/10.1016/j.ress.2020.106870})
+\href{https://hal.science/hal-01998724}{[HAL]}
 
 Betancourt, J., Bachoc, F., Klein, T., and Gamboa, F. (2020),
 Technical Report: "Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression. Ref. D3.b (WP3.2)".
 \emph{RISCOPE project}.
-\href{https://hal.archives-ouvertes.fr/hal-02532713}{[HAL]}
+\href{https://hal.science/hal-02532713}{[HAL]}
 
 Betancourt, J., Bachoc, F., and Klein, T. (2020),
 R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
 \emph{RISCOPE project}.
-\href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
+\href{https://hal.science/hal-02536624}{[HAL]}
 }
 \seealso{
 \strong{*} \link[funGp]{plot,fgpm-method}: validation plot for a \code{fgpm} model;

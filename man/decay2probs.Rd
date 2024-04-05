@@ -47,7 +47,7 @@ not specified, it takes the value of k.}
   mechanisms defining the initial pheromone and probability loads. The default values of
   \emph{tao0}, \emph{delta} and \emph{dispr}, are 0.1, 2 and 1.4, respectively, which match the default
   values used by the \link[funGp]{fgpm_factory} function. Check
-  \href{https://hal.archives-ouvertes.fr/hal-02532713}{this technical
+  \href{https://hal.science/hal-02532713}{this technical
   report} for more details.}
 
 \item{doplot}{An optional boolean indicating if the probability loads should be plotted. Default = TRUE.}
@@ -66,9 +66,9 @@ This function is intended to aid the selection of the heuristic parameters \emph
   probability load of the links pointing out to projection on each dimension. These values result from
   the normalization of the initial pheromone loads delivered by the \link[funGp]{decay} function, which
   are made to sum 1. For more details, check the
-  \href{https://hal.archives-ouvertes.fr/hal-02532713}{technical report}
+  \href{https://hal.science/hal-02532713}{technical report}
   explaining the ant colony algorithm implemented in funGp, and the
-  \href{https://hal.archives-ouvertes.fr/hal-02536624}{
+  \href{https://hal.science/hal-02536624}{
   manual} of the package.
 }
 \examples{
