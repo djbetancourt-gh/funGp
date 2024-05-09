@@ -11,3 +11,4 @@ README\.html$
 ^TODO.*$
 \.RData$
 ^CRAN-SUBMISSION$
+^\.github
