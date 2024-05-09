@@ -58,9 +58,8 @@ This function is intended to aid the selection of the heuristic parameters \emph
   The values computed by decay are the ones that would be used by the ant colony algorithm as initial
   pheromone load of the links pointing out to projection on each dimension. For more details, check the
   \href{https://hal.science/hal-02532713}{technical report}
-  explaining the ant colony algorithm implemented in funGp, and the
-  \href{https://hal.science/hal-02536624}{
-  manual} of the package.
+  explaining the ant colony algorithm implemented in funGp, and the manual of the package
+  (\doi{https://doi:10.18637/jss.v109.i05}).
 }
 \examples{
 # using default decay arguments____________________________________________________________

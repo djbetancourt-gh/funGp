@@ -18,6 +18,12 @@ This is a resubmission. In this version we have:
 * Updated a few links to reference files which now point to the
   general HAL site instead of the French ramification.
 
+* Replaced the `\url` and `\href` references of the funGp manual
+  with the `\doi` one pointing to the upcoming JSS publication.
+  
+* The DOI in the CITATION is for a new JSS publication that will
+  be registered after publication on CRAN.
+
 
 ## Test environments
 * local Windows install, R 4.3.1

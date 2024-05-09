@@ -858,6 +858,16 @@ fitNtests_ACO <- function(ant, sIn, fIn, sOut, extargs, base,
 #'
 #' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #'
+#' @references Betancourt, J., Bachoc, F., Klein, T., Idier, D., Rohmer, J., and Deville, Y. (2024),
+#' "funGp: An R Package for Gaussian Process Regression with Scalar and Functional Inputs".
+#' \emph{Journal of Statistical Software}, \strong{109}, 5, 1--51.
+#'  (\doi{https://doi:10.18637/jss.v109.i05})
+#'
+#' @references Betancourt, J., Bachoc, F., Klein, T., Idier, D., Rohmer, J., and Deville, Y. (2024),
+#' "funGp: An R Package for Gaussian Process Regression with Scalar and Functional Inputs".
+#' \emph{Journal of Statistical Software}, \strong{109}, 5, 1--51.
+#'  (\doi{https://doi:10.18637/jss.v109.i05})
+#'
 #' @references Betancourt, J., Bachoc, F., and Klein, T. (2020),
 #' R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
 #' \emph{RISCOPE project}.
@@ -985,6 +995,11 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #'
 #' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #'
+#' @references Betancourt, J., Bachoc, F., Klein, T., Idier, D., Rohmer, J., and Deville, Y. (2024),
+#' "funGp: An R Package for Gaussian Process Regression with Scalar and Functional Inputs".
+#' \emph{Journal of Statistical Software}, \strong{109}, 5, 1--51.
+#'  (\doi{https://doi:10.18637/jss.v109.i05})
+#'
 #' @references Betancourt, J., Bachoc, F., and Klein, T. (2020),
 #' R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
 #' \emph{RISCOPE project}.
@@ -1069,7 +1084,7 @@ which_on <- function (sIn = NULL, fIn = NULL, args) {
 #' #       extract only the scalar inputs required to re-build the model and then to make
 #' #       predictions with each model. Check also the funGp manual for further details
 #' #
-#' #       funGp manual: https://hal.science/hal-02536624
+#' #       funGp manual: https://doi:10.18637/jss.v109.i05
 #'
 #'
 #' # <<<<<<< PART 1: calling fgpm_factory to perform the structural optimization >>>>>>>

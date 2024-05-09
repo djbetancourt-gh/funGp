@@ -42,9 +42,8 @@
 #' @section Useful material:
 #' \itemize{
 #'  \item\strong{Manual}
-#'  \href{https://hal.science/hal-02536624}{
-#'  Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour
-#'  }
+#'  funGp: An R Package for Gaussian Process Regression with Scalar and Functional Inputs
+#'  (\doi{https://doi:10.18637/jss.v109.i05})
 #' }
 #'
 #' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
@@ -223,6 +222,11 @@ show.Xfgpm <- function(object) {
 #'
 #' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #'
+#' @references Betancourt, J., Bachoc, F., Klein, T., Idier, D., Rohmer, J., and Deville, Y. (2024),
+#' "funGp: An R Package for Gaussian Process Regression with Scalar and Functional Inputs".
+#' \emph{Journal of Statistical Software}, \strong{109}, 5, 1--51.
+#'  (\doi{https://doi:10.18637/jss.v109.i05})
+#'
 #' @references Betancourt, J., Bachoc, F., Klein, T., Idier, D., Pedreros, R., and Rohmer, J. (2020),
 #' "Gaussian process metamodeling of functional-input code for coastal flood hazard assessment".
 #' \emph{Reliability Engineering & System Safety}, \strong{198}, 106870.
@@ -371,11 +375,11 @@ show.Xfgpm <- function(object) {
 #' # NOTE: in order to provide progress bars for the monitoring of time consuming processes
 #' #       ran in parallel, funGp relies on the doFuture and future packages. Parallel processes
 #' #       suddenly interrupted by the user tend to leave corrupt connections. This problem is
-#' #       originated outside funGp, which limits our control over it. In the manual
-#' #       of funGp, we provide a temporary solution to the issue and we remain attentive in
-#' #       case it appears a more elegant way to handle it or a manner to suppress it.
+#' #       originated outside funGp, which limits our control over it. In the initial (unpublished)
+#' #       version of the funGp manual, we provide a temporary solution to the issue and we remain
+#' #       attentive in case it appears a more elegant way to handle it or a manner to suppress it.
 #' #
-#' #       funGp manual: https://hal.science/hal-02536624
+#' #       funGp original (unpublished) manual: https://hal.science/hal-02536624
 #' }
 #'
 #' @importFrom methods new

@@ -108,8 +108,8 @@ The functions listed above were used to validate the functionality and stability
 Several tests involving \link[=funGp-package]{all main functions, plotters and getters} were run
 for scalar-input, functional-input and hybrid-input models. In all cases, the output of the functions
 were correct from the statistical and programmatic perspectives. For an example on the kind of tests
-performed, the interested user is referred to
-\href{https://hal.science/hal-02536624}{the introductory funGp manual}.
+performed, the interested user is referred to the introductory funGp manual
+(\doi{https://doi:10.18637/jss.v109.i05}).
 }
 
 \references{

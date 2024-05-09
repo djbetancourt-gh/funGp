@@ -53,6 +53,9 @@ This project is licensed under the GPL-3 License. <br /><br />
 
 **References** <br />
 
+Betancourt, J., Bachoc, F., Klein, T., Idier, D., Rohmer, J., and Deville, Y. (2024), "funGp: An R Package for Gaussian Process Regression with Scalar and Functional Inputs". *Journal of Statistical Software*, **109**, 5, 1--51.
+[[JSS](https://doi:10.18637/jss.v109.i05})]
+
 Betancourt, J., Bachoc, F., Klein, T., Idier, D., Pedreros, R., and Rohmer, J. (2020), "Gaussian process metamodeling of functional-input code for coastal flood hazard assessment". *Reliability Engineering & System Safety*, **198**, 106870. [[RESS](https://doi.org/10.1016/j.ress.2020.106870)] - [[HAL](https://hal.science/hal-01998724)]
 
 Betancourt, J., Bachoc, F., Klein, T., and Gamboa, F. (2020), Technical Report: "Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression. Ref. D3.b (WP3.2)". *RISCOPE project*. [[HAL](https://hal.science/hal-02532713)]

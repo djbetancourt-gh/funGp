@@ -73,10 +73,8 @@ during hyperparameter optimization.}
 \section{Useful material}{
 
 \itemize{
- \item\strong{Manual}
- \href{https://hal.science/hal-02536624}{
- Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour
- }
+ \item\strong{Manual:} funGp: An R Package for Gaussian Process Regression with Scalar and Functional Inputs
+ (\doi{https://doi:10.18637/jss.v109.i05})
 }
 }
 

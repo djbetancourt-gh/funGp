@@ -1,4 +1,9 @@
-# funGp 0.3.3 (2024-04-05)
+# funGp 1.0.0 (2024-05-09)
+
+## Main package life cycle updates
+
+* This release accompanies the publication of the funGp in-depth manual
+  in the Journal of Statistical Software.
 
 ## Minor documentation updates
 
