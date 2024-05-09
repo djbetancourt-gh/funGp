@@ -9,17 +9,15 @@ This is the formal representation of Gaussian process models within the
   \link[=funGp-package]{funGp package}. Gaussian process models are useful statistical tools in the
   modeling of complex input-output relationships.
 \itemize{
- \item{\strong{Main methods}}{\cr
+ \item\strong{Main methods}\cr
        \link[funGp]{fgpm}: creation of funGp regression models \cr
        \link[funGp]{predict,fgpm-method}: output estimation at new input points based on a \code{fgpm} model \cr
        \link[funGp]{simulate,fgpm-method}: random sampling from a \code{fgpm} model \cr
        \link[funGp]{update,fgpm-method}: modification of data and hyperparameters of a \code{fgpm} model
- }
- \item{\strong{Plotters}}{\cr
+ \item\strong{Plotters}\cr
         \link[funGp]{plot,fgpm-method}: validation plot for a \code{fgpm} model \cr
        \link[funGp]{plot.predict.fgpm}: plot of predictions based on a \code{fgpm} model \cr
        \link[funGp]{plot.simulate.fgpm}: plot of simulations based on a \code{fgpm} model
- }
 }
 }
 \section{Slots}{
@@ -28,7 +26,7 @@ This is the formal representation of Gaussian process models within the
 \item{\code{howCalled}}{Object of class \code{"\linkS4class{modelCall}"}. User call reminder.}
 
 \item{\code{type}}{Object of class \code{"character"}. Type of model based on type of inputs. To be set from
-{"scalar", "functional", "hybrid"}.}
+\{"scalar", "functional", "hybrid"\}.}
 
 \item{\code{ds}}{Object of class \code{"numeric"}. Number of scalar inputs.}
 
@@ -75,10 +73,8 @@ during hyperparameter optimization.}
 \section{Useful material}{
 
 \itemize{
- \item{\strong{Manual}}{
- \href{https://hal.archives-ouvertes.fr/hal-02536624}{
- Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour
- }}
+ \item\strong{Manual:} funGp: An R Package for Gaussian Process Regression with Scalar and Functional Inputs
+ (\doi{https://doi:10.18637/jss.v109.i05})
 }
 }
 

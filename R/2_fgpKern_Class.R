@@ -5,10 +5,10 @@
 #' @description This is the formal representation for data structures linked to the kernel of a Gaussian
 #'   process model within the \link[=funGp-package]{funGp package}.
 #'
-#' @slot kerType Object of class \code{"character"}. Kernel type. To be set from {"gauss", "matern5_2",
-#'   "matern3_2"}.
-#' @slot f_disType Object of class \code{"character"}. Distance type. To be set from {"L2_bygroup",
-#'   "L2_index"}.
+#' @slot kerType Object of class \code{"character"}. Kernel type. To be set from \{"gauss", "matern5_2",
+#'   "matern3_2"\}.
+#' @slot f_disType Object of class \code{"character"}. Distance type. To be set from \{"L2_bygroup",
+#'   "L2_index"\}.
 #' @slot varHyp Object of class \code{"numeric"}. Estimated variance parameter.
 #' @slot s_lsHyps Object of class \code{"numeric"}. Estimated length-scale parameters for scalar inputs.
 #' @slot f_lsHyps Object of class \code{"numeric"}. Estimated length-scale parameters for functional

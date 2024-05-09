@@ -45,10 +45,20 @@ which_on(sIn, fIn, xm@log.success@args[[1]]) # only the indices extracted by whi
 
 }
 \references{
+Betancourt, J., Bachoc, F., Klein, T., Idier, D., Rohmer, J., and Deville, Y. (2024),
+"funGp: An R Package for Gaussian Process Regression with Scalar and Functional Inputs".
+\emph{Journal of Statistical Software}, \strong{109}, 5, 1--51.
+ (\doi{https://doi:10.18637/jss.v109.i05})
+
+Betancourt, J., Bachoc, F., Klein, T., Idier, D., Rohmer, J., and Deville, Y. (2024),
+"funGp: An R Package for Gaussian Process Regression with Scalar and Functional Inputs".
+\emph{Journal of Statistical Software}, \strong{109}, 5, 1--51.
+ (\doi{https://doi:10.18637/jss.v109.i05})
+
 Betancourt, J., Bachoc, F., and Klein, T. (2020),
 R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
 \emph{RISCOPE project}.
-\href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
+\href{https://hal.science/hal-02536624}{[HAL]}
 }
 \seealso{
 \strong{*} \link[funGp]{get_active_in} for details on how to obtain the data structures linked to the

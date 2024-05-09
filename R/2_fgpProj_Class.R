@@ -6,7 +6,7 @@
 #'   Gaussian process model within the \link[=funGp-package]{funGp package}.
 #'
 #' @slot pdims Object of class \code{"numeric"}. Projection dimension of each input.
-#' @slot basType Object of class \code{"character"}. To be chosen from {"PCA", "B-splines"}.
+#' @slot basType Object of class \code{"character"}. To be chosen from \{"PCA", "B-splines"\}.
 #' @slot basis Object of class \code{"list"}. Projection basis. For functional inputs, each element
 #'   (fDims_i x fpDims_i) contains the basis functions used for the projection of one functional input.
 #' @slot coefs Object of class \code{"list"}. Each element (n x fpDims_i) contains the coefficients used for

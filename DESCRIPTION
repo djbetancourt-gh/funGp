@@ -1,15 +1,15 @@
 Package: funGp
 Type: Package
 Title: Gaussian Process Models for Scalar and Functional Inputs
-Version: 0.3.2
+Version: 1.0.0
 Authors@R: c(
-    person("Jose", "Betancourt", email = "djbetancourt@uninorte.edu.co", role = c("cre", "aut")),
+    person("Jose", "Betancourt", email = "fungp.rpack@gmail.com", role = c("cre", "aut")),
     person("François", "Bachoc", email = "francois.bachoc@math.univ-toulouse.fr", role = "aut"),
     person("Thierry", "Klein", email = "thierry.klein@math.univ-toulouse.fr", role = "aut"),
     person("Jeremy", "Rohmer", email = "J.Rohmer@brgm.fr", role = "aut"),
     person("Yves", "Deville", email = "deville.yves@alpestat.com", role = "ctb"),
     person("Deborah", "Idier", email = "D.Idier@brgm.fr", role = "ctb"))
-Maintainer: Jose Betancourt <djbetancourt@uninorte.edu.co>
+Maintainer: Jose Betancourt <fungp.rpack@gmail.com>
 Description: Construction and smart selection of Gaussian process models
 	for analysis of computer experiments
 	with emphasis on treatment of functional inputs that are regularly sampled. This package
@@ -18,10 +18,12 @@ Description: Construction and smart selection of Gaussian process models
 	built-in dimension reduction for functional inputs; (iii)
 	heuristic optimization of the structural parameters of the model
 	(e.g., active inputs, kernel function, type of distance).
+	An in-depth tutorial in the use of funGp is provided in
+	Betancourt et al. (2024) <doi:10.18637/jss.v109.i05> and
 	Metamodeling background is provided in
 	Betancourt et al. (2020) <doi:10.1016/j.ress.2020.106870>.
 	The algorithm for structural parameter optimization is described
-	in <https://hal.archives-ouvertes.fr/hal-02532713>.
+	in <https://hal.science/hal-02532713>.
 Note: research product of the RISCOPE project
     (ANR, project No.16CE04-0011) <https://perso.math.univ-toulouse.fr/riscope/>.
 License: GPL-3
@@ -31,7 +33,7 @@ Depends: R (>= 3.5.0)
 Imports: methods, foreach, knitr, scales, microbenchmark, doFuture, doRNG, future, progressr
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.1
+RoxygenNote: 7.3.1
 Collate: 
     '0_funGp_Doc.R'
     '0_show_Doc.R'

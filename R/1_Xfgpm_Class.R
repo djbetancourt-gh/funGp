@@ -6,14 +6,12 @@
 #' selection routines in the \link[=funGp-package]{funGp package}. An \code{Xfgpm} object contains the
 #' trace of an optimization process, conducted to build Gaussian process models of outstanding performance.
 #' \itemize{
-#'  \item{\strong{Main methods}}{\cr
+#'  \item\strong{Main methods}\cr
 #'        \link[funGp]{fgpm_factory}: structural optimization of \code{fgpm} models,
 #'        creator of the \code{"Xfgpm"} class. \cr
-#'  }
-#'  \item{\strong{Plotters}}{\cr
+#'  \item\strong{Plotters}\cr
 #'        \link[funGp]{plot,Xfgpm-method}: plot of the evolution of the algorithm with \code{which = "evolution"}
 #'        or of the absolute and relative quality of the optimized model with \code{which = "diag"}.
-#'  }
 #' }
 #'
 #' @slot factoryCall Object of class \code{"\linkS4class{factoryCall}"}. User call reminder.
@@ -43,10 +41,9 @@
 #' @slot sOut An object of class \code{"matrix"} containing a copy of the provided outputs.
 #' @section Useful material:
 #' \itemize{
-#'  \item{\strong{Manual}}{
-#'  \href{https://hal.archives-ouvertes.fr/hal-02536624}{
-#'  Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour
-#'  }}
+#'  \item\strong{Manual}
+#'  funGp: An R Package for Gaussian Process Regression with Scalar and Functional Inputs
+#'  (\doi{https://doi:10.18637/jss.v109.i05})
 #' }
 #'
 #' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
@@ -111,7 +108,7 @@ show.Xfgpm <- function(object) {
 #'   solution space based on the levels of each structural parameter currently available in the
 #'   \link[funGp]{fgpm} function, and performs a smart exploration of it. More details on the algorithm are
 #'   provided in a dedicated
-#'   \href{https://hal.archives-ouvertes.fr/hal-02532713}{technical report}.
+#'   \href{https://hal.science/hal-02532713}{technical report}.
 #'   funGp might evolve in the future to include improvements in the current algorithm or alternative
 #'   solution methods.
 #'
@@ -225,21 +222,26 @@ show.Xfgpm <- function(object) {
 #'
 #' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
 #'
+#' @references Betancourt, J., Bachoc, F., Klein, T., Idier, D., Rohmer, J., and Deville, Y. (2024),
+#' "funGp: An R Package for Gaussian Process Regression with Scalar and Functional Inputs".
+#' \emph{Journal of Statistical Software}, \strong{109}, 5, 1--51.
+#'  (\doi{https://doi:10.18637/jss.v109.i05})
+#'
 #' @references Betancourt, J., Bachoc, F., Klein, T., Idier, D., Pedreros, R., and Rohmer, J. (2020),
 #' "Gaussian process metamodeling of functional-input code for coastal flood hazard assessment".
 #' \emph{Reliability Engineering & System Safety}, \strong{198}, 106870.
-#' \href{https://www.sciencedirect.com/science/article/abs/pii/S0951832019301693}{[RESS]}
-#' \href{https://hal.archives-ouvertes.fr/hal-01998724}{[HAL]}
+#' (\doi{https://doi.org/10.1016/j.ress.2020.106870})
+#' \href{https://hal.science/hal-01998724}{[HAL]}
 #'
 #' @references Betancourt, J., Bachoc, F., Klein, T., and Gamboa, F. (2020),
 #' Technical Report: "Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression. Ref. D3.b (WP3.2)".
 #' \emph{RISCOPE project}.
-#' \href{https://hal.archives-ouvertes.fr/hal-02532713}{[HAL]}
+#' \href{https://hal.science/hal-02532713}{[HAL]}
 #'
 #' @references Betancourt, J., Bachoc, F., and Klein, T. (2020),
 #' R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".
 #' \emph{RISCOPE project}.
-#' \href{https://hal.archives-ouvertes.fr/hal-02536624}{[HAL]}
+#' \href{https://hal.science/hal-02536624}{[HAL]}
 #'
 #' @references Dubrule, O. (1983),
 #' "Cross validation of kriging in a unique neighborhood".
@@ -373,11 +375,11 @@ show.Xfgpm <- function(object) {
 #' # NOTE: in order to provide progress bars for the monitoring of time consuming processes
 #' #       ran in parallel, funGp relies on the doFuture and future packages. Parallel processes
 #' #       suddenly interrupted by the user tend to leave corrupt connections. This problem is
-#' #       originated outside funGp, which limits our control over it. In the manual
-#' #       of funGp, we provide a temporary solution to the issue and we remain attentive in
-#' #       case it appears a more elegant way to handle it or a manner to suppress it.
+#' #       originated outside funGp, which limits our control over it. In the initial (unpublished)
+#' #       version of the funGp manual, we provide a temporary solution to the issue and we remain
+#' #       attentive in case it appears a more elegant way to handle it or a manner to suppress it.
 #' #
-#' #       funGp manual: https://hal.archives-ouvertes.fr/hal-02536624
+#' #       funGp original (unpublished) manual: https://hal.science/hal-02536624
 #' }
 #'
 #' @importFrom methods new

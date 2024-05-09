@@ -9,14 +9,12 @@ This is the formal representation of the assembly of data structures delivered b
 selection routines in the \link[=funGp-package]{funGp package}. An \code{Xfgpm} object contains the
 trace of an optimization process, conducted to build Gaussian process models of outstanding performance.
 \itemize{
- \item{\strong{Main methods}}{\cr
+ \item\strong{Main methods}\cr
        \link[funGp]{fgpm_factory}: structural optimization of \code{fgpm} models,
        creator of the \code{"Xfgpm"} class. \cr
- }
- \item{\strong{Plotters}}{\cr
+ \item\strong{Plotters}\cr
        \link[funGp]{plot,Xfgpm-method}: plot of the evolution of the algorithm with \code{which = "evolution"}
        or of the absolute and relative quality of the optimized model with \code{which = "diag"}.
- }
 }
 }
 \section{Slots}{
@@ -64,10 +62,9 @@ the provided functional inputs.}
 \section{Useful material}{
 
 \itemize{
- \item{\strong{Manual}}{
- \href{https://hal.archives-ouvertes.fr/hal-02536624}{
- Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour
- }}
+ \item\strong{Manual}
+ funGp: An R Package for Gaussian Process Regression with Scalar and Functional Inputs
+ (\doi{https://doi:10.18637/jss.v109.i05})
 }
 }
 

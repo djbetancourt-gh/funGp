@@ -54,47 +54,47 @@ the \eqn{d_f}{df} functional inputs
 
 \itemize{
 
-\item{\bold{\code{fgp_BB1 }}}{With \eqn{d_s = 2}{ds = 2} \eqn{d_f = 2}{df = 2}
+\item\bold{\code{fgp_BB1 }}With \eqn{d_s = 2}{ds = 2} \eqn{d_f = 2}{df = 2}
    \preformatted{
-   x1 * sin(x2) + x1 * mean(f1) - x2^2 * diff(range(f2))}}
+   x1 * sin(x2) + x1 * mean(f1) - x2^2 * diff(range(f2))}
 
-\item{\bold{\code{fgp_BB2 }}}{With \eqn{d_s = 2}{ds = 2} and \eqn{d_f = 2}{df = 2}
+\item\bold{\code{fgp_BB2 }}With \eqn{d_s = 2}{ds = 2} and \eqn{d_f = 2}{df = 2}
    \preformatted{
-   x1 * sin(x2) + mean(exp(x1 * t1) * f1) - x2^2 * mean(f2^2 * t2)}}
+   x1 * sin(x2) + mean(exp(x1 * t1) * f1) - x2^2 * mean(f2^2 * t2)}
 
-\item{\bold{\code{fgp_BB3 }}}{With  \eqn{d_s = 2}{ds = 2} and \eqn{d_f = 2}{df = 2}
+\item\bold{\code{fgp_BB3 }}With  \eqn{d_s = 2}{ds = 2} and \eqn{d_f = 2}{df = 2}
   is the first analytical example in Muehlenstaedt et al (2017)
    \preformatted{
-   x1 + 2 * x2 + 4 * mean(t1 * f1) + mean(f2)}}
+   x1 + 2 * x2 + 4 * mean(t1 * f1) + mean(f2)}
 
-\item{\bold{\code{fgp_BB4 }}}{With  \eqn{d_s = 2}{ds = 2} and \eqn{d_f = 2}{df = 2} is the
+\item\bold{\code{fgp_BB4 }}With  \eqn{d_s = 2}{ds = 2} and \eqn{d_f = 2}{df = 2} is the
     second analytical example in \emph{preprint} of Muehlenstaedt et al (2017)
    \preformatted{
    (x2 - (5 / (4 * pi^2)) * x1^2 + (5 / pi) * x1 - 6)^2 +
        10 * (1 - (1 / (8 * pi))) * cos(x1) + 10 +
        (4 / 3) * pi * (42 * mean(f1 * (1 - t1)) +
-                       pi * ((x1 + 5) / 5) + 15) * mean(t2 * f2))}}
+                       pi * ((x1 + 5) / 5) + 15) * mean(t2 * f2))}
 
-\item{\bold{\code{fgp_BB5 }}}{With  \eqn{d_s=2}{ds = 2} and \eqn{d_f=2}{df = 2} is
+\item\bold{\code{fgp_BB5 }}With  \eqn{d_s=2}{ds = 2} and \eqn{d_f=2}{df = 2} is
     inspired by the  second analytical example in \emph{final version} of Muehlenstaedt et al (2017)
    \preformatted{
    (x2 - (5 / (4 * pi^2)) * x1^2 + (5 / pi) * x1 - 6)^2 +
        10 * (1 - (1 / (8 * pi))) * cos(x1) + 10 +
        (4 / 3) * pi * (42 * mean(15 * f1 * (1 - t1) - 5) +
-                       pi * ((x1 + 5) / 5) + 15) * mean(15 * t2 * f2))}}
+                       pi * ((x1 + 5) / 5) + 15) * mean(15 * t2 * f2))}
 
-\item{\bold{\code{fgp_BB6 }}}{With  \eqn{d_s = 2}{ds = 2} and \eqn{d_f = 2}{df = 2}
+\item\bold{\code{fgp_BB6 }}With  \eqn{d_s = 2}{ds = 2} and \eqn{d_f = 2}{df = 2}
     is inspired by the analytical example in Nanty et al (2016)
    \preformatted{
-   2 * x1^2 + 2 * mean(f1 + t1) + 2 * mean(f2 + t2) + max(f2) + x2}}
+   2 * x1^2 + 2 * mean(f1 + t1) + 2 * mean(f2 + t2) + max(f2) + x2}
 
-\item{\bold{\code{fgp_BB7 }}}{With \eqn{d_s = 5}{ds = 5} and \eqn{d_f = 2}{df = 2} is
+\item\bold{\code{fgp_BB7 }}With \eqn{d_s = 5}{ds = 5} and \eqn{d_f = 2}{df = 2} is
    inspired by the second analytical example in \emph{final version} of Muehlenstaedt et al (2017)
    \preformatted{
    (x2 + 4 * x3 - (5 / (4 * pi^2)) * x1^2 + (5 / pi) * x1 - 6)^2 +
        10 * (1 - (1 / (8 * pi))) * cos(x1) * x2^2 * x5^3 + 10 +
        (4 / 3) * pi * (42 * sin(x4) * mean(15 * f1 * (1 - t1) - 5) +
-                       pi * (((x1 * x5 + 5) / 5) + 15) * mean(15 * t2 * f2))}}
+                       pi * (((x1 * x5 + 5) / 5) + 15) * mean(15 * t2 * f2))}
 }
 }
 \section{Value}{
@@ -108,8 +108,8 @@ The functions listed above were used to validate the functionality and stability
 Several tests involving \link[=funGp-package]{all main functions, plotters and getters} were run
 for scalar-input, functional-input and hybrid-input models. In all cases, the output of the functions
 were correct from the statistical and programmatic perspectives. For an example on the kind of tests
-performed, the interested user is referred to
-\href{https://hal.archives-ouvertes.fr/hal-02536624}{the introductory funGp manual}.
+performed, the interested user is referred to the introductory funGp manual
+(\doi{https://doi:10.18637/jss.v109.i05}).
 }
 
 \references{

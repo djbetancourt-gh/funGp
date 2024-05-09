@@ -40,7 +40,7 @@ not specified, it takes the value of k.}
   a projection in a space of the same dimension, are equally heavy for the model. The default values of
   \emph{tao0}, \emph{delta} and \emph{dispr}, are 0.1, 2 and 1.4, respectively, which match the default
   values used by the \link[funGp]{fgpm_factory} function. Check
-  \href{https://hal.archives-ouvertes.fr/hal-02532713}{this technical
+  \href{https://hal.science/hal-02532713}{this technical
   report} for more details.}
 
 \item{doplot}{An optional boolean indicating if the pheromone loads should be plotted. Default = TRUE.}
@@ -57,10 +57,9 @@ This function is intended to aid the selection of the heuristic parameters \emph
   \emph{delta} and \emph{dispr} in the call to the model selection function \link[funGp]{fgpm_factory}.
   The values computed by decay are the ones that would be used by the ant colony algorithm as initial
   pheromone load of the links pointing out to projection on each dimension. For more details, check the
-  \href{https://hal.archives-ouvertes.fr/hal-02532713}{technical report}
-  explaining the ant colony algorithm implemented in funGp, and the
-  \href{https://hal.archives-ouvertes.fr/hal-02536624}{
-  manual} of the package.
+  \href{https://hal.science/hal-02532713}{technical report}
+  explaining the ant colony algorithm implemented in funGp, and the manual of the package
+  (\doi{https://doi:10.18637/jss.v109.i05}).
 }
 \examples{
 # using default decay arguments____________________________________________________________

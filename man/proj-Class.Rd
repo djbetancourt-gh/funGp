@@ -13,7 +13,7 @@ This is the formal representation for data structures linked to projection of in
 \describe{
 \item{\code{pdims}}{Object of class \code{"numeric"}. Projection dimension of each input.}
 
-\item{\code{basType}}{Object of class \code{"character"}. To be chosen from {"PCA", "B-splines"}.}
+\item{\code{basType}}{Object of class \code{"character"}. To be chosen from \{"PCA", "B-splines"\}.}
 
 \item{\code{basis}}{Object of class \code{"list"}. Projection basis. For functional inputs, each element
 (fDims_i x fpDims_i) contains the basis functions used for the projection of one functional input.}
