@@ -35,7 +35,7 @@
 #' @section Useful material:
 #' \itemize{
 #'  \item\strong{Manual:} funGp: An R Package for Gaussian Process Regression with Scalar and Functional Inputs
-#'  (\doi{https://doi:10.18637/jss.v109.i05})
+#'  (\doi{https://doi.org/10.18637/jss.v109.i05})
 #'  \item\strong{Paper:} - Gaussian process metamodeling of functional-input code for coastal flood hazard assessment
 #'  (\doi{https://doi.org/10.1016/j.ress.2020.106870})
 #'  \item\strong{Tech. report:} Ant Colony Based Model Selection for Functional-Input Gaussian Process Regression

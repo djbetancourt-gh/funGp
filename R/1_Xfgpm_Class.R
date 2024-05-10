@@ -43,7 +43,7 @@
 #' \itemize{
 #'  \item\strong{Manual}
 #'  funGp: An R Package for Gaussian Process Regression with Scalar and Functional Inputs
-#'  (\doi{https://doi:10.18637/jss.v109.i05})
+#'  (\doi{https://doi.org/10.18637/jss.v109.i05})
 #' }
 #'
 #' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
@@ -225,7 +225,7 @@ show.Xfgpm <- function(object) {
 #' @references Betancourt, J., Bachoc, F., Klein, T., Idier, D., Rohmer, J., and Deville, Y. (2024),
 #' "funGp: An R Package for Gaussian Process Regression with Scalar and Functional Inputs".
 #' \emph{Journal of Statistical Software}, \strong{109}, 5, 1--51.
-#'  (\doi{https://doi:10.18637/jss.v109.i05})
+#'  (\doi{https://doi.org/10.18637/jss.v109.i05})
 #'
 #' @references Betancourt, J., Bachoc, F., Klein, T., Idier, D., Pedreros, R., and Rohmer, J. (2020),
 #' "Gaussian process metamodeling of functional-input code for coastal flood hazard assessment".

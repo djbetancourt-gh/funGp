@@ -1,6 +1,9 @@
 ## Resubmission
 This is a resubmission. In this version we have:
 
+* Fixed an invalid `\doi` specification that was present in multiple
+  md files. We corrected it as requested by the CRAN team.
+
 * Replaced the `djbetancourt@uninorte.edu.co` belonging to the
   package maintainer with the new `fungp.rpack@gmail.com` one.
   The former is about to turn inactive. The later, being a personal
