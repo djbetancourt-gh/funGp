@@ -333,7 +333,7 @@ plotSims.fgpm <- function(sims, detail, ...) {
 #'   pheromone load of the links pointing out to projection on each dimension. For more details, check the
 #'   \href{https://hal.science/hal-02532713}{technical report}
 #'   explaining the ant colony algorithm implemented in funGp, and the manual of the package
-#'   (\doi{https://doi:10.18637/jss.v109.i05}).
+#'   (\doi{https://doi.org/10.18637/jss.v109.i05}).
 #'
 #' @param k A number indicating the dimension of the functional input under analysis.
 #' @param pmax An optional number specifying the hypothetical maximum projection dimension of this input. The
@@ -442,7 +442,7 @@ decay <- function(k, pmax = NULL, tao0 = .1, delta = 2, dispr = 1.4, doplot = TR
 #'   are made to sum 1. For more details, check the
 #'   \href{https://hal.science/hal-02532713}{technical report}
 #'   explaining the ant colony algorithm implemented in funGp, and the manual of the package
-#'   (\doi{https://doi:10.18637/jss.v109.i05}).
+#'   (\doi{https://doi.org/10.18637/jss.v109.i05}).
 #'
 #' @param k A number indicating the dimension of the functional input under analysis.
 #' @param pmax An optional number specifying the hypothetical maximum projection dimension of this input. The

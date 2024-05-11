@@ -51,7 +51,7 @@
 #' @section Useful material:
 #' \itemize{
 #'  \item\strong{Manual:} funGp: An R Package for Gaussian Process Regression with Scalar and Functional Inputs
-#'  (\doi{https://doi:10.18637/jss.v109.i05})
+#'  (\doi{https://doi.org/10.18637/jss.v109.i05})
 #' }
 #'
 #' @author José Betancourt, François Bachoc, Thierry Klein and Jérémy Rohmer
@@ -113,7 +113,7 @@ setClass("fgpm",
 #'   dimensions used to represent the input. A single character string can also be passed as a general
 #'   selection for all the functional inputs of the model. More details in the reference article
 #'   (\doi{https://doi.org/10.1016/j.ress.2020.106870}) and the in-depth package manual
-#'   (\doi{https://doi:10.18637/jss.v109.i05}). Default is "L2_bygroup".
+#'   (\doi{https://doi.org/10.18637/jss.v109.i05}). Default is "L2_bygroup".
 #' @param f_pdims An optional array with the projection dimension for each functional input. For each input,
 #'   the projection dimension should be an integer between 0 and its original dimension, with 0 denoting
 #'   no projection. A single character string can also be passed as a general selection for all the functional
@@ -171,7 +171,7 @@ setClass("fgpm",
 #' @references Betancourt, J., Bachoc, F., Klein, T., Idier, D., Rohmer, J., and Deville, Y. (2024),
 #' "funGp: An R Package for Gaussian Process Regression with Scalar and Functional Inputs".
 #' \emph{Journal of Statistical Software}, \strong{109}, 5, 1--51.
-#'  (\doi{https://doi:10.18637/jss.v109.i05})
+#'  (\doi{https://doi.org/10.18637/jss.v109.i05})
 #'
 #' @references Betancourt, J., Bachoc, F., Klein, T., Idier, D., Pedreros, R., and Rohmer, J. (2020),
 #' "Gaussian process metamodeling of functional-input code for coastal flood hazard assessment".

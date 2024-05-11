@@ -68,7 +68,7 @@ This function is intended to aid the selection of the heuristic parameters \emph
   are made to sum 1. For more details, check the
   \href{https://hal.science/hal-02532713}{technical report}
   explaining the ant colony algorithm implemented in funGp, and the manual of the package
-  (\doi{https://doi:10.18637/jss.v109.i05}).
+  (\doi{https://doi.org/10.18637/jss.v109.i05}).
 }
 \examples{
 # using default decay arguments____________________________________________________________

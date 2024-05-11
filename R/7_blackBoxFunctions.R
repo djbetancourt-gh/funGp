@@ -84,7 +84,7 @@
 #' for scalar-input, functional-input and hybrid-input models. In all cases, the output of the functions
 #' were correct from the statistical and programmatic perspectives. For an example on the kind of tests
 #' performed, the interested user is referred to the introductory funGp manual
-#' (\doi{https://doi:10.18637/jss.v109.i05}).
+#' (\doi{https://doi.org/10.18637/jss.v109.i05}).
 #'
 #' @references Muehlenstaedt, T., Fruth, J., and Roustant, O. (2017),
 #' "Computer experiments with functional inputs and scalar outputs by a norm-based approach".

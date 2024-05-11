@@ -1,6 +1,9 @@
 ## Resubmission
 This is a resubmission. In this version we have:
 
+* Fixed an invalid `\doi` specification that was present in multiple
+  md files. We corrected it as requested by the CRAN team.
+
 * Replaced the `djbetancourt@uninorte.edu.co` belonging to the
   package maintainer with the new `fungp.rpack@gmail.com` one.
   The former is about to turn inactive. The later, being a personal
@@ -28,40 +31,25 @@ This is a resubmission. In this version we have:
 ## Test environments
 * local Windows install, R 4.3.1
   - 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
-* rhub, Fedora Linux, R-devel, clang, gfortran
-  - 0 errors ✔ | 0 warnings ✔
-  - Gave the following note, which is unrelated to funGp:
-  ```
-  * checking HTML version of manual ... NOTE
-  Skipping checking HTML validation: no command 'tidy' found
-  Skipping checking math rendering: package 'V8' unavailable
-  ```
-* rhub, Ubuntu Linux 20.04.1 LTS, R-release, GCC
-  - 0 errors ✔ | 0 warnings ✔
-  - Gave the following note, which is unrelated to funGp:
-  ```
-  * checking HTML version of manual ... NOTE
-  Skipping checking HTML validation: no command 'tidy' found
-  Skipping checking math rendering: package 'V8' unavailable
-  ```
-* rhub, Windows Server 2022, R-devel, 64 bit
-  - 0 errors ✔ | 0 warnings ✔
-  - Gave following notes, which are unrelated to funGp:
-    ```
-    * checking HTML version of manual ... NOTE
-    Skipping checking math rendering: package 'V8' unavailable
+  - Status: OK
+* rhub v2, linux, R-* (any version), ubuntu-latest on GitHub
+  - 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
+  - Status: OK
+* rhub v2, macos, R-* (any version), macos-13 on GitHub
+  - 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
+  - Status: OK
+* rhub v2, windows, R-* (any version), windows-latest on GitHub
+  - 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
+  - Status: OK
+* rhub v2, atlas, R-devel (2024-05-07 r86527), Fedora Linux 38 (Container Image)
+  - 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
+  - Status: OK
+* rhub v2, ubuntu-release, R-4.4.0 (2024-04-24), Ubuntu 22.04.4 LTS
+  - 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
+  - Status: OK
     
-    * checking for non-standard things in the check directory ... NOTE
-    Found the following files/directories:
-    ''NULL''
-    
-    * checking for detritus in the temp directory ... NOTE
-    Found the following files/directories:
-    'lastMiKTeXException'
-    ```
-    
-  - All environments gave the following note related to the
-    maintainer's email update pointed out above in the
+  - Previous checks with Rhub v1 gave the following note related
+    to the maintainer's email update pointed out above in the
     resubmission notes:
     ```
     * checking CRAN incoming feasibility ... [17s] NOTE
@@ -75,15 +63,8 @@ Also checked with --run-donttest
 
 
 ## R CMD check results
-There were no ERRORs or WARNINGs. Only the following NOTE
-related to the maintainer's email update pointed out above
-in the resubmission notes:
-  ```
-  New maintainer:
-    Jose Betancourt <fungp.rpack@gmail.com>
-  Old maintainer(s):
-    Jose Betancourt <djbetancourt@uninorte.edu.co>
-  ```
+  - 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
+  - Status: OK
 
 
 ## Downstream dependencies

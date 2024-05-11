@@ -48,12 +48,12 @@ which_on(sIn, fIn, xm@log.success@args[[1]]) # only the indices extracted by whi
 Betancourt, J., Bachoc, F., Klein, T., Idier, D., Rohmer, J., and Deville, Y. (2024),
 "funGp: An R Package for Gaussian Process Regression with Scalar and Functional Inputs".
 \emph{Journal of Statistical Software}, \strong{109}, 5, 1--51.
- (\doi{https://doi:10.18637/jss.v109.i05})
+ (\doi{https://doi.org/10.18637/jss.v109.i05})
 
 Betancourt, J., Bachoc, F., Klein, T., Idier, D., Rohmer, J., and Deville, Y. (2024),
 "funGp: An R Package for Gaussian Process Regression with Scalar and Functional Inputs".
 \emph{Journal of Statistical Software}, \strong{109}, 5, 1--51.
- (\doi{https://doi:10.18637/jss.v109.i05})
+ (\doi{https://doi.org/10.18637/jss.v109.i05})
 
 Betancourt, J., Bachoc, F., and Klein, T. (2020),
 R Package Manual: "Gaussian Process Regression for Scalar and Functional Inputs with funGp - The in-depth tour".

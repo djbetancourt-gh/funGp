@@ -64,7 +64,7 @@ the provided functional inputs.}
 \itemize{
  \item\strong{Manual}
  funGp: An R Package for Gaussian Process Regression with Scalar and Functional Inputs
- (\doi{https://doi:10.18637/jss.v109.i05})
+ (\doi{https://doi.org/10.18637/jss.v109.i05})
 }
 }
 
