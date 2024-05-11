@@ -8,8 +8,8 @@
 ## Minor documentation updates
 
 * Maintainer email updated from `djbetancourt@uninorte.edu.co` to
-  `fungp.rpack@gmail.com` to ensure a permanet  and stable channel
-  of communication with the community.
+  `fungp.rpack@gmail.com` to ensure a stable channel of
+  communication with the community.
 
 * A couple syntax fixes in the package notation to keep up with
   recent updates in Roxygen2.
